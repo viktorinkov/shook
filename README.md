@@ -2,6 +2,10 @@
 
 A hook set for Claude Code. When the `simple-english` skill triggers, it applies its rules. Most replies do not trigger it. With this hook set, the rules apply to every reply.
 
+## Origin
+
+This project is a companion to **[AminBlg/SimpleEnglish](https://github.com/AminBlg/SimpleEnglish)**. That plugin brings ASD-STE100 Simplified Technical English to Claude Code and other agents. All rule text and the linter come from that plugin. This repo adds only the hooks, the `/ste` command, the status line badge, and the installer. The plugin is a prerequisite. The installer installs it.
+
 ## Why a hook
 
 When Claude decides that a task fits a skill, the skill loads. Otherwise, it does not load. Most replies never see the rules. A hook runs on every prompt. The harness runs it, not Claude.
