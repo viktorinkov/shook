@@ -14,7 +14,8 @@ input="$(cat)"
 message="$(printf '%s' "$input" | jq -r '.last_assistant_message // ""')"
 [ -z "$message" ] && exit 0
 
-report="$(printf '%s' "$message" | python3 "$(ste_lint_script)" --type "${STE_LINT_TYPE:-descriptive}" - 2>/dev/null)" || exit 0
+lint="$(ste_lint_script)" || exit 0
+report="$(printf '%s' "$message" | python3 "$lint" --type "${STE_LINT_TYPE:-descriptive}" - 2>/dev/null)" || exit 0
 
 words="$(printf '%s' "$report" | jq -r '.words')"
 total="$(printf '%s' "$report" | jq -r '.violations_total')"

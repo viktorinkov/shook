@@ -22,9 +22,12 @@ SOFTWARE.
 
 ---
 
-Third-party content, also MIT:
+Third-party content:
 
-- vendor/ste_lint.py and rules/full.md come from AminBlg/SimpleEnglish
-  (https://github.com/AminBlg/SimpleEnglish), Copyright (c) AminBlg.
-  ASD-STE100 is a registered trademark of ASD. This project is not affiliated
+- This project depends on the simple-english plugin from AminBlg/SimpleEnglish
+  (https://github.com/AminBlg/SimpleEnglish), MIT, Copyright (c) AminBlg.
+  The hooks read the rule text (output-styles/simple-english.md) and the
+  linter (evals/ste_lint.py) from that plugin at run time. No file from that
+  project is copied here.
+- ASD-STE100 is a registered trademark of ASD. This project is not affiliated
   with or endorsed by ASD or STEMG.

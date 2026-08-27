@@ -67,25 +67,30 @@ ste_set_project_mode() {
   esac
 }
 
-# Prefer the installed plugin copy of a file, so plugin updates flow through.
-# Fall back to the copy in this repository.
+# Locate a file inside the installed simple-english plugin (AminBlg/SimpleEnglish).
+# The plugin is a prerequisite. install.sh installs it. Prints nothing when missing.
 ste_plugin_file() {
-  local rel="$1" fallback="$2" f
+  local rel="$1" f
   for f in \
     "$STE_CLAUDE_DIR"/plugins/cache/simple-english/simple-english/*/"$rel" \
     "$STE_CLAUDE_DIR/plugins/marketplaces/simple-english/$rel"; do
     [ -f "$f" ] && { printf '%s' "$f"; return; }
   done
-  printf '%s' "$fallback"
+  return 1
 }
 
-# Full rule set (the plugin's output style, frontmatter removed).
+STE_PLUGIN_MISSING_NOTE='SIMPLE ENGLISH HOOK: the simple-english plugin is not installed, so the rule text is unavailable. Tell the user to run install.sh from the simple-english-hook repo, or: claude plugin marketplace add AminBlg/SimpleEnglish && claude plugin install simple-english@simple-english'
+
+# Full rule set (the plugin output style, frontmatter removed).
 ste_rules_text() {
   local f
-  f="$(ste_plugin_file output-styles/simple-english.md "$STE_DIR/rules/full.md")"
-  awk 'NR==1 && $0=="---" {fm=1; next} fm && $0=="---" {fm=0; next} !fm' "$f" | sed '/./,$!d'
+  if f="$(ste_plugin_file output-styles/simple-english.md)"; then
+    awk 'NR==1 && $0=="---" {fm=1; next} fm && $0=="---" {fm=0; next} !fm' "$f" | sed '/./,$!d'
+  else
+    printf '%s\n' "$STE_PLUGIN_MISSING_NOTE"
+  fi
 }
 
 ste_lint_script() {
-  ste_plugin_file evals/ste_lint.py "$STE_DIR/vendor/ste_lint.py"
+  ste_plugin_file evals/ste_lint.py
 }

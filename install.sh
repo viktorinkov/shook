@@ -10,6 +10,30 @@ MARK="simple-english-hook"   # every command we add contains this path segment
 
 command -v jq >/dev/null || { echo "install: jq is required" >&2; exit 1; }
 command -v python3 >/dev/null || { echo "install: python3 is required" >&2; exit 1; }
+command -v claude >/dev/null || { echo "install: the claude CLI is required" >&2; exit 1; }
+
+# 0. Prerequisite: the simple-english plugin by AminBlg (https://github.com/AminBlg/SimpleEnglish).
+#    The hooks read the rule text and the linter from it.
+PLUGIN="simple-english@simple-english"
+if claude plugin list 2>/dev/null | grep -q "$PLUGIN"; then
+  echo "install: prerequisite $PLUGIN is installed"
+else
+  echo "install: prerequisite $PLUGIN is missing, installing it now"
+  claude plugin marketplace add AminBlg/SimpleEnglish >/dev/null 2>&1 || true
+  claude plugin install -y "$PLUGIN" || {
+    echo "install: could not install $PLUGIN. Run these two commands, then run install.sh again:" >&2
+    echo "  claude plugin marketplace add AminBlg/SimpleEnglish" >&2
+    echo "  claude plugin install $PLUGIN" >&2
+    exit 1
+  }
+fi
+if claude plugin list 2>/dev/null | grep -A3 "$PLUGIN" | grep -q "disabled"; then
+  claude plugin enable "$PLUGIN" >/dev/null 2>&1 || true
+fi
+source "$HERE/hooks/common.sh"
+ste_plugin_file output-styles/simple-english.md >/dev/null || { echo "install: plugin file output-styles/simple-english.md not found under $CFG/plugins" >&2; exit 1; }
+ste_plugin_file evals/ste_lint.py >/dev/null || { echo "install: plugin file evals/ste_lint.py not found under $CFG/plugins" >&2; exit 1; }
+echo "install: plugin files found ($(ste_plugin_file evals/ste_lint.py))"
 
 # 1. Hook entries. Each has a key so a re-run replaces, not duplicates.
 hook_entry() {
