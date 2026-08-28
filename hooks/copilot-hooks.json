@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "type": "command",
+        "bash": "bash \"${PLUGIN_ROOT}/hooks/session-start.sh\"",
+        "timeoutSec": 15
+      }
+    ],
+    "userPromptSubmitted": [
+      {
+        "type": "command",
+        "bash": "bash \"${PLUGIN_ROOT}/hooks/user-prompt-submit.sh\"",
+        "timeoutSec": 15
+      }
+    ]
+  }
+}

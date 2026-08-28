@@ -1,0 +1,25 @@
+{
+  "name": "simple-english-hook",
+  "version": "0.3.0",
+  "description": "Enforces ASD-STE100 Simplified Technical English on every Codex reply. Hooks, $ste toggle, strict lint gate. Companion to the simple-english plugin.",
+  "author": {
+    "name": "Viktor Minchev",
+    "url": "https://github.com/viktorinkov"
+  },
+  "homepage": "https://github.com/viktorinkov/simple-english-hook",
+  "repository": "https://github.com/viktorinkov/simple-english-hook",
+  "license": "MIT",
+  "keywords": ["technical-writing", "ste", "asd-ste100", "hooks", "simple-english"],
+  "skills": "./skills/",
+  "hooks": "./hooks/hooks.json",
+  "interface": {
+    "displayName": "Simple English Hook",
+    "shortDescription": "Simplified Technical English on every reply",
+    "longDescription": "Loads the ASD-STE100 rules at session start, reminds the model on every prompt, and in strict mode lints each reply and asks for a rewrite.",
+    "developerName": "Viktor Minchev",
+    "category": "Productivity",
+    "capabilities": ["Lifecycle hooks", "Skills"],
+    "websiteURL": "https://github.com/viktorinkov/simple-english-hook",
+    "defaultPrompt": ["$ste on", "$ste strict", "$ste status"]
+  }
+}
