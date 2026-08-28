@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "simple-english-hook",
+  "description": "Hooks that make the simple-english plugin apply to every reply.",
+  "owner": {
+    "name": "Viktor Minchev",
+    "url": "https://github.com/viktorinkov"
+  },
+  "plugins": [
+    {
+      "name": "simple-english-hook",
+      "description": "Enforces ASD-STE100 Simplified Technical English on every reply. Requires the simple-english plugin.",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}

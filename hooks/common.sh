@@ -94,3 +94,11 @@ ste_rules_text() {
 ste_lint_script() {
   ste_plugin_file evals/ste_lint.py
 }
+
+# True when the user's status line script contains the badge marker.
+ste_badge_installed() {
+  local cmd f
+  cmd="$(jq -r '.statusLine.command // ""' "$STE_CLAUDE_DIR/settings.json" 2>/dev/null)"
+  f="$(printf '%s' "$cmd" | sed -E 's/^(bash|sh) +//; s/^"(.*)"$/\1/; s/^'"'"'(.*)'"'"'$/\1/')"
+  [ -n "$f" ] && [ -f "$f" ] && grep -q "simple-english-hook" "$f"
+}

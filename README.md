@@ -17,33 +17,35 @@ When Claude decides that a task fits a skill, the skill loads. Otherwise, it doe
 | `SessionStart` | New session, resume, clear, compact | Loads the full STE rule set as context. |
 | `UserPromptSubmit` | Every prompt | Adds a short STE reminder. Handles `/ste` commands. |
 | `Stop` | End of every reply, `strict` mode only | Runs `ste_lint.py` on the reply. If the reply fails, Claude must rewrite it. |
-| Status line | Always | Shows `[STE]` or `[STE:STRICT]` while the mode is on. |
+| Status line (optional) | Always | Shows `[STE]` or `[STE:STRICT]` while the mode is on. |
 
 The rule text and the linter come from the installed `simple-english` plugin at run time. Plugin updates apply to the hooks at once.
 
-## Prerequisites
+## Install
 
-| Tool | Why |
-|---|---|
-| Claude Code (`claude` CLI) | Runs the hooks and installs the plugin |
-| `simple-english@simple-english` plugin | Provides the rule text and `ste_lint.py`. If it is missing, the installer installs it. |
-| `jq` | Parses hook input and edits `settings.json` |
-| `python3` | Runs the linter in strict mode |
-
-To install the plugin by hand:
+Run these four commands. The first two install the prerequisite plugin. The last two install this one.
 
 ```bash
 claude plugin marketplace add AminBlg/SimpleEnglish
 claude plugin install simple-english@simple-english
+claude plugin marketplace add viktorinkov/simple-english-hook
+claude plugin install simple-english-hook@simple-english-hook
 ```
 
-## Install
+Then start a new Claude Code session. The mode is off until you type `/ste on`.
 
-1. Clone this repo. Keep the clone where it is. The hook paths point at it.
-2. Run `bash install.sh`.
-3. Start a new Claude Code session.
+Requirements: Claude Code, `jq`, and `python3` (strict mode only).
 
-The installer checks the prerequisites. If the plugin is missing, the installer installs it. The installer makes a backup of `settings.json` before it writes. You can run it again at any time.
+### Optional: the status line badge
+
+A plugin cannot change the status line, so this step is by hand. Ask Claude: *install the STE status line badge*. Claude runs `statusline-install.sh` from the plugin folder. The script adds one line to your status line script. If you have no status line, the script creates one.
+
+### Update
+
+```bash
+claude plugin marketplace update simple-english-hook
+claude plugin update simple-english-hook@simple-english-hook
+```
 
 ## Enable it
 
@@ -63,7 +65,7 @@ Order of precedence: environment, then the repo file, then the global flag, then
 
 1. Open Claude Code in the repo.
 2. Type `/ste project strict` (or `on`).
-3. If the whole team must use it, commit `.claude/ste-mode`. Each team member also runs `install.sh` once.
+3. If the whole team must use it, commit `.claude/ste-mode`. Each team member also installs the plugin once.
 
 To turn the mode off for one repo only, type `/ste project off`. The repo file wins over the global flag.
 
@@ -91,7 +93,7 @@ The gate runs at most one rewrite per turn. Claude Code sets `stop_hook_active` 
 
 ## Uninstall
 
-1. Remove the three hook entries that contain `Simple English Hook` from `~/.claude/settings.json`.
-2. Remove the badge line from your status line script. It ends with `# simple-english-hook`.
-3. Delete `~/.claude/skills/ste` and `~/.claude/.simple-english-active`.
+1. Run `claude plugin uninstall simple-english-hook@simple-english-hook`.
+2. If you installed the badge, remove the line that ends with `# simple-english-hook` from your status line script.
+3. Delete `~/.claude/.simple-english-active` and `~/.claude/simple-english-hook/`.
 4. Delete `.claude/ste-mode` from any repo that has one.

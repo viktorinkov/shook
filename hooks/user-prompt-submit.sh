@@ -9,8 +9,7 @@ input="$(cat)"
 prompt="$(printf '%s' "$input" | jq -r '.prompt // ""' 2>/dev/null | tr -d '\r')"
 first="$(printf '%s' "$prompt" | head -n1 | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' | tr '[:upper:]' '[:lower:]')"
 
-case "$first" in
-  /ste|/ste:ste|/ste\ *|/ste:ste\ *)
+if printf '%s' "$first" | grep -Eq '^/([a-z0-9-]+:)?ste( |$)'; then
     arg="$(printf '%s' "$first" | awk '{print $2}')"
     arg2="$(printf '%s' "$first" | awk '{print $3}')"
     case "$arg" in
@@ -30,8 +29,7 @@ case "$first" in
       ste_rules_text
     fi
     exit 0
-    ;;
-esac
+fi
 
 mode="$(ste_mode)"
 [ "$mode" = "off" ] && exit 0

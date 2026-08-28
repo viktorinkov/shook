@@ -12,7 +12,11 @@ mode="$(ste_mode)"
   if [ "$mode" = "strict" ]; then
     printf 'STRICT: a linter checks each reply. If the reply fails, you must rewrite it before you stop.\n'
   fi
-  printf 'Toggle: /ste on | /ste strict | /ste off | /ste status\n\n'
+  printf 'Toggle: /ste on | /ste strict | /ste off | /ste status\n'
+  if ! ste_badge_installed; then
+    printf 'The [STE] status line badge is not installed. If the user asks for it, run: bash "%s/statusline-install.sh"\n' "$STE_DIR"
+  fi
+  printf '\n'
   ste_rules_text
 } | jq -Rs '{hookSpecificOutput:{hookEventName:"SessionStart",additionalContext:.}}'
 exit 0

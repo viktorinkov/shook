@@ -1,0 +1,42 @@
+{
+  "description": "Simple English (ASD-STE100) enforcement: rules at session start, a reminder on every prompt, a lint gate in strict mode.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/session-start.sh\"",
+            "timeout": 15,
+            "statusMessage": "Loading Simple English rules..."
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/user-prompt-submit.sh\"",
+            "timeout": 15,
+            "statusMessage": "Simple English check..."
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/stop-gate.sh\"",
+            "timeout": 30,
+            "statusMessage": "Simple English lint..."
+          }
+        ]
+      }
+    ]
+  }
+}
