@@ -1,0 +1,70 @@
+{
+  "arm": "hook-strict",
+  "id": "runbook-02",
+  "cat": "runbook",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 22.6,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.08722060000000001,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 12155,
+    "cache_read_input_tokens": 92563,
+    "output_tokens": 2008,
+    "output_tokens_details": {
+      "thinking_tokens": 1416
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12155,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1752,
+        "cache_read_input_tokens": 48309,
+        "cache_creation_input_tokens": 8100,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8100
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "procedural",
+    "words": 210,
+    "sentences": 17,
+    "mean_sentence_words": 11.5,
+    "longest_sentence_words": 19,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.48
+  },
+  "text": "# Runbook: Restart of the Worker Service and Check of Queue Drain\n\nThis runbook gives the steps to restart the `worker` service on a host. It also gives the steps to check the queue drain, and the actions if the queue does not drain.\n\n## Part 1: Restart the Service and Check the Queue\n\n1. Connect to the host that runs the `worker` service.\n2. Stop the `worker` service with `systemctl stop worker`.\n3. Examine the process list to make sure that no `worker` process remains.\n4. Start the `worker` service with `systemctl start worker`.\n5. Examine the service status to make sure that the `worker` service is active.\n6. Open the queue dashboard.\n7. Measure the queue length every 30 seconds for 5 minutes.\n8. If the queue length reaches zero within 5 minutes, the restart is complete.\n\n## Part 2: If the Queue Does Not Drain\n\nIf the queue length does not reach zero within 5 minutes, do the steps that follow:\n\n1. Examine the `worker` log for error messages.\n2. If the log shows connection errors, make sure that the `worker` can reach the queue broker.\n3. Restart the `worker` service one more time with `systemctl restart worker`.\n4. Measure the queue length for 5 more minutes after the second restart.\n5. If the queue still does not drain, escalate the incident to the on-call engineer.\n6. Give the on-call engineer the host name, the queue length, and the error log.",
+  "stderr_tail": ""
+}

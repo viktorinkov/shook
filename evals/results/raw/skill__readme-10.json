@@ -1,0 +1,70 @@
+{
+  "arm": "skill",
+  "id": "readme-10",
+  "cat": "docs",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 27.0,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.0879774,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 10872,
+    "cache_read_input_tokens": 91297,
+    "output_tokens": 2525,
+    "output_tokens_details": {
+      "thinking_tokens": 2067
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10872,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2282,
+        "cache_read_input_tokens": 47043,
+        "cache_creation_input_tokens": 8083,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8083
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 45,
+    "sentences": 3,
+    "mean_sentence_words": 15.0,
+    "longest_sentence_words": 19,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 1,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 2,
+    "violations_per_100w": 4.44
+  },
+  "text": "Here's a Security section following Simplified Technical English conventions (short sentences, active voice, one instruction per step). Replace the placeholder email with your actual security contact.\n\n```markdown\n## Security\n\n### Report a Vulnerability\n\nDo not open a public issue for a security problem.\n\nTo report a vulnerability:\n\n1. Send an email to `security@example.com`.\n2. Describe the vulnerability and give the steps to reproduce it.\n3. Include the affected version.\n4. If you have a proof of concept, attach it.\n5. Keep the report private until we release a fix.\n\nWe reply to reports within 5 business days.\n\n### Disclosure Window\n\nWe use a 90-day disclosure window. This window starts on the date we confirm your report.\n\nWe aim to release a fix and publish an advisory before the window ends. If we need more time, we contact you and agree on a new date.\n\nAfter we release a fix, we credit you in the release notes. We do this unless you ask us not to.\n```\n\nSwap `security@example.com` for your real address and adjust the response-time figure if 5 business days doesn't match your process.",
+  "stderr_tail": ""
+}

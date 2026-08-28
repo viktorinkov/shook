@@ -1,0 +1,70 @@
+{
+  "arm": "style",
+  "id": "incident-02",
+  "cat": "incident",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 7.9,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.0669282,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 10803,
+    "cache_read_input_tokens": 92886,
+    "output_tokens": 414,
+    "output_tokens_details": {
+      "thinking_tokens": 81
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10803,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 255,
+        "cache_read_input_tokens": 47842,
+        "cache_creation_input_tokens": 8005,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8005
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 106,
+    "sentences": 10,
+    "mean_sentence_words": 10.6,
+    "longest_sentence_words": 17,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "## Incident Summary: Login Service Disruption\n\n**Date:** August 28, 2026\n\nThe login service was unavailable for 18 minutes. An expired certificate caused the disruption.\n\nThe certificate expired at a scheduled renewal point. The renewal process was manual at that time, so the certificate was not replaced before it expired. As a result, the login service rejected connections during this period.\n\nWe fixed the problem by renewal of the certificate. The login service returned to normal operation after the fix.\n\nWe now use an automated process for certificate renewal. This process renews certificates before they expire, so this type of disruption will not occur again.\n\nWe apologize for the inconvenience this incident caused.",
+  "stderr_tail": ""
+}

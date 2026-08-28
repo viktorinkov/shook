@@ -1,0 +1,70 @@
+{
+  "arm": "baseline",
+  "id": "explain-02",
+  "cat": "explain",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 8.8,
+  "skill_available": false,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.046247399999999994,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 7954,
+    "cache_read_input_tokens": 38872,
+    "output_tokens": 567,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 7954,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 567,
+        "cache_read_input_tokens": 38872,
+        "cache_creation_input_tokens": 7954,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7954
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 234,
+    "sentences": 11,
+    "mean_sentence_words": 20.9,
+    "longest_sentence_words": 35,
+    "violations": {
+      "sentence_over_limit": 2,
+      "contraction": 4,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 0
+    },
+    "violations_total": 8,
+    "violations_per_100w": 3.42
+  },
+  "text": "## Race Conditions & Mutexes\n\nA **race condition** happens when two or more threads access shared data at the same time, and the final result depends on the unpredictable order in which they run. It's most dangerous when at least one thread is *writing* to that data.\n\nClassic example \u2014 two threads both running `counter++`:\n\n```\nThread A reads counter (0)\nThread B reads counter (0)\nThread A writes counter = 1\nThread B writes counter = 1   // Thread A's increment is lost!\n```\n\nEven though both threads \"incremented,\" the counter only went up by 1 instead of 2, because `counter++` isn't a single atomic step \u2014 it's really *read, modify, write*, and the threads interleaved between those steps.\n\n### How a mutex fixes this\n\nA **mutex** (mutual exclusion lock) ensures only one thread can execute a given section of code \u2014 the \"critical section\" \u2014 at a time. Any other thread that tries to enter must wait until the lock is released.\n\n```\nlock(mutex)\ncounter++\nunlock(mutex)\n```\n\nNow Thread A's read-modify-write completes as one uninterrupted unit before Thread B can start theirs, so no update gets silently overwritten.\n\n### Guidelines for contributors\n\n- Lock the smallest scope you can \u2014 holding a mutex too long hurts performance and increases the chance of contention.\n- Always release the lock, even on error paths (use RAII / `defer` / `try-finally` patterns rather than manual unlock calls).\n- Never call code that acquires the *same* lock again from inside a locked section \u2014 that causes deadlock unless you're using a reentrant/recursive mutex.\n- If two mutexes are ever locked together, always acquire them in the same order everywhere in the codebase to avoid deadlock.",
+  "stderr_tail": ""
+}

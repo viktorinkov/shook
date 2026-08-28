@@ -1,0 +1,70 @@
+{
+  "arm": "skill",
+  "id": "review-09",
+  "cat": "review",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 11.2,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.0292468,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2800,
+    "cache_read_input_tokens": 44254,
+    "output_tokens": 819,
+    "output_tokens_details": {
+      "thinking_tokens": 247
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2800,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 819,
+        "cache_read_input_tokens": 44254,
+        "cache_creation_input_tokens": 2800,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2800
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 51,
+    "sentences": 1,
+    "mean_sentence_words": 51.0,
+    "longest_sentence_words": 51,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 1,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 2,
+    "violations_per_100w": 3.92
+  },
+  "text": "```markdown\n**Two issues here:**\n\n1. **No synchronization** \u2014 the goroutines are fire-and-forget. If this loop is inside a function that returns shortly after, the program (or that function's caller) may proceed before `process` finishes for any item. Needs a `sync.WaitGroup`:\n\n```go\nvar wg sync.WaitGroup\nfor _, item := range items {\n    wg.Add(1)\n    go func(item Item) {\n        defer wg.Done()\n        process(item)\n    }(item)\n}\nwg.Wait()\n```\n\n2. **Loop variable capture** (only matters if this targets Go < 1.22) \u2014 `item` was shared across all iterations pre-1.22, so goroutines could see the wrong/last value if they ran after the loop advanced. Passing `item` as a parameter (as above) sidesteps this regardless of Go version. If the module's `go.mod` already requires Go \u22651.22, this specific point is moot since each iteration gets its own variable now \u2014 but the WaitGroup issue still applies.\n\n**Also worth considering:**\n- Unbounded concurrency \u2014 if `items` is large, this spawns one goroutine per item with no cap. Consider a worker pool or `errgroup.Group` with `SetLimit` if `items` can be large.\n- No error handling \u2014 if `process` can fail, errors are silently dropped. `errgroup` would solve both this and the WaitGroup issue in one shot:\n\n```go\ng := new(errgroup.Group)\nfor _, item := range items {\n    g.Go(func() error {\n        return process(item)\n    })\n}\nif err := g.Wait(); err != nil {\n    // handle\n}\n```\n(errgroup's `Go` closure also captures `item` correctly on Go 1.22+.)\n```",
+  "stderr_tail": ""
+}

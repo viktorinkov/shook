@@ -1,0 +1,70 @@
+{
+  "arm": "baseline",
+  "id": "incident-03",
+  "cat": "incident",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 9.0,
+  "skill_available": false,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.025859800000000002,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2576,
+    "cache_read_input_tokens": 44254,
+    "output_tokens": 570,
+    "output_tokens_details": {
+      "thinking_tokens": 29
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2576,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 570,
+        "cache_read_input_tokens": 44254,
+        "cache_creation_input_tokens": 2576,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2576
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 258,
+    "sentences": 9,
+    "mean_sentence_words": 28.2,
+    "longest_sentence_words": 37,
+    "violations": {
+      "sentence_over_limit": 5,
+      "contraction": 1,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 1,
+      "semicolon": 0,
+      "latin_abbrev": 1,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 1
+    },
+    "violations_total": 9,
+    "violations_per_100w": 3.49
+  },
+  "text": "## What went wrong\n\nA cron-scheduled job executed twice within the same run window, causing [duplicate side effects / data to be processed twice \u2014 adjust to actual impact].\n\n**Root cause:** During a failover event, both the previously active scheduler instance and the newly promoted instance were running simultaneously for a period of time. Because the scheduler did not enforce mutual exclusion (no distributed lock or leader-election check before dispatching jobs), each instance independently evaluated the cron schedule, found the job due, and triggered it \u2014 resulting in two concurrent executions.\n\n**Contributing factors:**\n- The failover process did not confirm that the old instance had fully stopped (or been fenced off) before the new instance began accepting scheduling responsibility.\n- The scheduler had no idempotency or locking mechanism (e.g., a distributed lock, leader election, or \"job already claimed\" check) to prevent two instances from acting as active schedulers at the same time.\n- The job itself was not idempotent, so the duplicate trigger produced duplicate effects rather than a harmless no-op.\n- There was no alerting on \"multiple scheduler instances active,\" so the overlap went undetected until [downstream symptom was noticed].\n\n**Why it wasn't caught sooner:** Monitoring covered whether *a* scheduler instance was healthy, but not whether *more than one* was active at the same time, so the dual-active state was invisible to existing alerts.\n\n---\n\nLet me know the specifics (job name, failover trigger, actual downstream impact, timestamps) and I can tighten this up with real details, or draft the Impact, Detection, Resolution, and Action Items sections to go with it.",
+  "stderr_tail": ""
+}

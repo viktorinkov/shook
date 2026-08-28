@@ -1,0 +1,70 @@
+{
+  "arm": "style",
+  "id": "runbook-02",
+  "cat": "runbook",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 19.6,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.0849844,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 13588,
+    "cache_read_input_tokens": 55412,
+    "output_tokens": 1855,
+    "output_tokens_details": {
+      "thinking_tokens": 1125
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 13588,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1698,
+        "cache_read_input_tokens": 45044,
+        "cache_creation_input_tokens": 10793,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 10793
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "procedural",
+    "words": 238,
+    "sentences": 29,
+    "mean_sentence_words": 7.5,
+    "longest_sentence_words": 16,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "# Runbook: Restart the `worker` Service and Drain the Queue\n\n## Prerequisites\n\nGet access to the host that runs the `worker` service. Get access to the queue dashboard or the queue CLI.\n\n## Procedure: Restart the Service\n\n1. Connect to the host that runs the `worker` service.\n2. Stop the `worker` service. Run `systemctl stop worker`.\n3. Start the `worker` service. Run `systemctl start worker`.\n4. Make sure that the `worker` service is active. Run `systemctl status worker`.\n5. If the service is not active, examine the logs. Run `journalctl -u worker -n 200`.\n\n## Procedure: Confirm the Queue Drains\n\n1. Open the queue dashboard.\n2. Record the current queue depth.\n3. Wait 5 minutes.\n4. Check the queue depth again.\n5. Compare the new depth to the recorded depth.\n6. If the new depth is lower, mark the restart as complete.\n7. If the new depth is equal or higher, go to \"If the Queue Does Not Drain\".\n\n## If the Queue Does Not Drain\n\n1. Examine the `worker` logs for errors. Run `journalctl -u worker -n 200`.\n2. If the logs show connection errors, make sure that the worker can reach the queue backend.\n3. If the worker cannot reach the queue backend, restart the network service on the host.\n4. Restart the `worker` service again.\n5. Wait 5 minutes.\n6. Check the queue depth again.\n7. If the queue depth still does not decrease, escalate to the on-call engineer.\n8. Give the on-call engineer the queue depth, the error messages, and the host name.\n\nWARNING: Do not restart the `worker` service more than 2 times within 10 minutes. Repeated restarts can cause message loss.",
+  "stderr_tail": ""
+}

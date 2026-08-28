@@ -1,0 +1,70 @@
+{
+  "arm": "skill",
+  "id": "incident-05",
+  "cat": "incident",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 17.3,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.0759968,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 10876,
+    "cache_read_input_tokens": 91294,
+    "output_tokens": 1322,
+    "output_tokens_details": {
+      "thinking_tokens": 617
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10876,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1069,
+        "cache_read_input_tokens": 47040,
+        "cache_creation_input_tokens": 8090,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8090
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 318,
+    "sentences": 18,
+    "mean_sentence_words": 17.7,
+    "longest_sentence_words": 29,
+    "violations": {
+      "sentence_over_limit": 3,
+      "contraction": 1,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 1
+    },
+    "violations_total": 7,
+    "violations_per_100w": 2.2
+  },
+  "text": "# Action Items\n\n| # | Action item | Owner | Priority | Due date |\n|---|---|---|---|---|\n| 1 | Add a disk usage alert at 80% capacity for all production hosts. | SRE team | High | TBD |\n| 2 | Configure log rotation for [service name]. Set a maximum log size and a retention period of 7 days. | Owning team | High | TBD |\n| 3 | Add automated cleanup of old logs to the deploy pipeline. | Platform team | High | TBD |\n| 4 | Increase the disk size on [affected hosts] from [X] GB to [Y] GB. | Infrastructure team | Medium | TBD |\n| 5 | Reduce log verbosity in [component]. Remove debug-level logs from the production configuration. | Owning team | Medium | TBD |\n| 6 | Write a runbook for disk space incidents. Include steps to find the largest log files and free space fast. | On-call lead | Medium | TBD |\n| 7 | Add a check to CI that fails the build when a service has no log rotation configuration. | Platform team | Medium | TBD |\n| 8 | Move logs from [affected hosts] to a separate log volume, apart from the application disk. | Infrastructure team | Low | TBD |\n| 9 | Review disk usage alert thresholds for all other production services. Confirm each service has an alert. | SRE team | Low | TBD |\n\nNote: Fill in the owner, priority, and due date for each item during the postmortem review. Assign a single owner per action item, since a shared owner often means no owner.\n\n---\n\nI used placeholder brackets (`[service name]`, `[X] GB`) for specifics I don't have \u2014 swap those in with your real host/service names. Let me know if you want this tailored to your actual system details or trimmed to fewer items.",
+  "stderr_tail": ""
+}

@@ -1,0 +1,70 @@
+{
+  "arm": "hook-on",
+  "id": "incident-03",
+  "cat": "incident",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 10.1,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.0312768,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3988,
+    "cache_read_input_tokens": 44254,
+    "output_tokens": 647,
+    "output_tokens_details": {
+      "thinking_tokens": 428
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3988,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 647,
+        "cache_read_input_tokens": 44254,
+        "cache_creation_input_tokens": 3988,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3988
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 125,
+    "sentences": 12,
+    "mean_sentence_words": 10.4,
+    "longest_sentence_words": 15,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.8
+  },
+  "text": "## What went wrong\n\nA primary node failure triggered a failover. The failover process started a new scheduler instance on a healthy node.\n\nThe old scheduler instance did not stop before the new instance started. Both instances stayed active at the same time.\n\nThe scheduler had no leader election mechanism. Neither instance checked for an existing active instance before it began work. As a result, both instances read the same cron schedule and held it as valid.\n\nAt the scheduled time, each instance triggered the cron job independently. The job ran twice. Each run performed the same operations against the same data.\n\nThe system had no lock or lease to enforce a single active scheduler. This gap allowed both instances to operate as if each was the only instance.",
+  "stderr_tail": ""
+}

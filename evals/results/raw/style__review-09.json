@@ -1,0 +1,70 @@
+{
+  "arm": "style",
+  "id": "review-09",
+  "cat": "review",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 10.5,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.029399800000000004,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2800,
+    "cache_read_input_tokens": 45044,
+    "output_tokens": 818,
+    "output_tokens_details": {
+      "thinking_tokens": 326
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2800,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 818,
+        "cache_read_input_tokens": 45044,
+        "cache_creation_input_tokens": 2800,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2800
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 152,
+    "sentences": 10,
+    "mean_sentence_words": 14.8,
+    "longest_sentence_words": 29,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 1,
+      "banned_modal": 1,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 4,
+    "violations_per_100w": 2.63
+  },
+  "text": "Here's a review comment for that snippet:\n\n---\n\n**Two issues here:**\n\n1. **No synchronization \u2014 goroutines may never complete.** There's no `sync.WaitGroup` (or similar) to wait for the goroutines to finish. If this loop is inside `main()` or returns immediately after, the program can exit before `process()` runs for any/all items.\n\n2. **Loop variable capture bug (if Go < 1.22).** Before Go 1.22, `item` is reused across iterations, so all goroutines can capture the same variable and see the last value. Go 1.22+ fixed this (per-iteration scoping), but if this needs to build on an older toolchain, pass `item` explicitly:\n   ```go\n   go func(item Item) {\n       process(item)\n   }(item)\n   ```\n\n**Also worth considering:**\n- **Unbounded concurrency.** One goroutine per item with no limit. For a large `items` slice, this can exhaust resources (memory, file descriptors, connections). Consider a worker pool or `errgroup.Group` with `SetLimit`.\n- **No error handling.** If `process` returns an error, it's silently dropped.\n\nSuggested fix using `errgroup`:\n```go\ng, ctx := errgroup.WithContext(context.Background())\ng.SetLimit(10) // cap concurrency\nfor _, item := range items {\n    g.Go(func() error {\n        return process(item)\n    })\n}\nif err := g.Wait(); err != nil {\n    // handle error\n}\n```",
+  "stderr_tail": ""
+}

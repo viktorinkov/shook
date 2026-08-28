@@ -1,0 +1,70 @@
+{
+  "arm": "hook-strict",
+  "id": "release-01",
+  "cat": "release",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 7.1,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.0301128,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4057,
+    "cache_read_input_tokens": 44254,
+    "output_tokens": 503,
+    "output_tokens_details": {
+      "thinking_tokens": 372
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4057,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 503,
+        "cache_read_input_tokens": 44254,
+        "cache_creation_input_tokens": 4057,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4057
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 54,
+    "sentences": 5,
+    "mean_sentence_words": 10.2,
+    "longest_sentence_words": 13,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 1.85
+  },
+  "text": "# Release Notes \u2014 Version 2.4.0\n\n## New Features\n- The application now supports dark mode. Users can switch between light and dark themes in the settings menu.\n\n## Bug Fixes\n- The application no longer crashes when a user submits an empty search query.\n\n## Removed Support\n- Version 2.4.0 does not support Node 16. Users must upgrade to Node 18 or later before they install this version.",
+  "stderr_tail": ""
+}

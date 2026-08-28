@@ -1,0 +1,70 @@
+{
+  "arm": "hook-on",
+  "id": "readme-09",
+  "cat": "docs",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 5.3,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.0278708,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4004,
+    "cache_read_input_tokens": 44254,
+    "output_tokens": 300,
+    "output_tokens_details": {
+      "thinking_tokens": 34
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4004,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 300,
+        "cache_read_input_tokens": 44254,
+        "cache_creation_input_tokens": 4004,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4004
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 97,
+    "sentences": 8,
+    "mean_sentence_words": 11.8,
+    "longest_sentence_words": 23,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 1
+    },
+    "violations_total": 1,
+    "violations_per_100w": 1.03
+  },
+  "text": "## Upgrade from Version 1 to Version 2\n\nVersion 2 moves the config file to a new location.\n\n| Version | Config file path |\n|---|---|\n| 1 | `~/.tool.json` |\n| 2 | `~/.config/tool/config.json` |\n\nTo upgrade, follow these steps:\n\n1. Create the new config directory: `mkdir -p ~/.config/tool`\n2. Move the old config file to the new location: `mv ~/.tool.json ~/.config/tool/config.json`\n3. Run `tool --version` to confirm that the tool reads the new config file.\n\nIf `tool` cannot find the config file after the move, check the file path with `ls ~/.config/tool/config.json`.\n\n**Note:** Version 2 does not read `~/.tool.json`. Move the file before you run version 2.",
+  "stderr_tail": ""
+}

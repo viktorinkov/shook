@@ -1,0 +1,70 @@
+{
+  "arm": "skill",
+  "id": "incident-04",
+  "cat": "incident",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 5.2,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.06433140000000001,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 10765,
+    "cache_read_input_tokens": 91297,
+    "output_tokens": 202,
+    "output_tokens_details": {
+      "thinking_tokens": 34
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10765,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 62,
+        "cache_read_input_tokens": 47043,
+        "cache_creation_input_tokens": 7976,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7976
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 37,
+    "sentences": 4,
+    "mean_sentence_words": 9.2,
+    "longest_sentence_words": 15,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 2.7
+  },
+  "text": "**Search delayed**\n\nWe reindex search at this time. New and updated items can take up to 10 minutes to appear in search results. No data is lost.\n\nWe will post an update when the reindex is complete.",
+  "stderr_tail": ""
+}

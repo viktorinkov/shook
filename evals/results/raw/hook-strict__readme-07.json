@@ -1,0 +1,70 @@
+{
+  "arm": "hook-strict",
+  "id": "readme-07",
+  "cat": "docs",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 10.1,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 2,
+  "strict_blocks": 1,
+  "num_turns": 2,
+  "cost_usd": 0.0441456,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 4638,
+    "cache_read_input_tokens": 92578,
+    "output_tokens": 707,
+    "output_tokens_details": {
+      "thinking_tokens": 29
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4638,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 339,
+        "cache_read_input_tokens": 48324,
+        "cache_creation_input_tokens": 568,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 568
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 144,
+    "sentences": 14,
+    "mean_sentence_words": 10.3,
+    "longest_sentence_words": 23,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.69
+  },
+  "text": "## Environment Variables\n\nThe service uses these environment variables.\n\n| Variable | Required | Default | Description |\n|---|---|---|---|\n| `DATABASE_URL` | Yes | None | The connection string for the database. |\n| `REDIS_URL` | No | None | The connection string for Redis. If set, the service turns on caching. |\n| `LOG_JSON` | No | `false` | If set to `true`, the service writes logs in JSON format. |\n\n### DATABASE_URL\n\n`DATABASE_URL` is required. If this variable is not set, the service will not start.\n\n### REDIS_URL\n\n`REDIS_URL` is optional. If you set `REDIS_URL`, the service turns on caching. If you do not set `REDIS_URL`, the service runs without a cache.\n\n### LOG_JSON\n\n`LOG_JSON` is optional. The default value is `false`. If `LOG_JSON` is `true`, the service writes logs in JSON format. If `LOG_JSON` is `false`, the service writes logs in plain text format.",
+  "stderr_tail": ""
+}

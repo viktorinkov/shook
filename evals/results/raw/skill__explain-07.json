@@ -1,0 +1,70 @@
+{
+  "arm": "skill",
+  "id": "explain-07",
+  "cat": "explain",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 8.8,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.0260788,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2773,
+    "cache_read_input_tokens": 44254,
+    "output_tokens": 516,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2773,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 516,
+        "cache_read_input_tokens": 44254,
+        "cache_creation_input_tokens": 2773,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2773
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 275,
+    "sentences": 13,
+    "mean_sentence_words": 20.8,
+    "longest_sentence_words": 40,
+    "violations": {
+      "sentence_over_limit": 3,
+      "contraction": 3,
+      "banned_modal": 1,
+      "perfect_tense": 0,
+      "ing_clause": 1,
+      "semicolon": 1,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 10,
+    "violations_per_100w": 3.64
+  },
+  "text": "Here's a simple explanation you could use with a PM:\n\n**An index trades write speed and storage for read speed.** It's not a free performance dial you turn up \u2014 it's a tradeoff.\n\n**Costs:**\n- **Slower writes** \u2014 every `INSERT`, `UPDATE`, or `DELETE` on that table now also has to update the index, not just the table. More indexes = more overhead per write. On write-heavy tables this can meaningfully slow things down.\n- **Storage** \u2014 an index is a separate data structure that duplicates (part of) the data it indexes, sorted for fast lookup. Large tables with several indexes can end up with the indexes taking as much space as the data itself.\n- **Memory pressure** \u2014 databases like to keep indexes in memory (cache) for speed. More/bigger indexes compete for that same cache space, which can slow down *other* queries.\n- **Maintenance cost** \u2014 indexes can fragment over time and need periodic rebuilding/reorganizing; migrations that add indexes to large existing tables can lock the table or take a long time to run, causing downtime or degraded performance during deploy.\n- **Query planner complexity** \u2014 more indexes means the database has more options to consider when deciding how to run a query, which can occasionally lead it to pick a worse plan.\n\n**The short version to say out loud:** \"An index makes *reading* one specific pattern faster, but every write pays a small tax to keep it updated, it takes extra disk space, and adding it to a big table isn't instant. So we only add indexes for queries that are actually slow and frequent \u2014 not preemptively for 'just in case.'\"",
+  "stderr_tail": ""
+}

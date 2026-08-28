@@ -1,0 +1,70 @@
+{
+  "arm": "skill",
+  "id": "explain-03",
+  "cat": "explain",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 9.0,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.0457844,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 8175,
+    "cache_read_input_tokens": 38872,
+    "output_tokens": 432,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 8175,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 432,
+        "cache_read_input_tokens": 38872,
+        "cache_creation_input_tokens": 8175,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8175
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 214,
+    "sentences": 12,
+    "mean_sentence_words": 17.2,
+    "longest_sentence_words": 25,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 5,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 3,
+      "synonym_rotation": 0
+    },
+    "violations_total": 8,
+    "violations_per_100w": 3.74
+  },
+  "text": "Both integrate changes from one branch into another, but they leave different history behind.\n\n**`git merge`**\n- Creates a new merge commit that ties the two histories together.\n- Non-destructive \u2014 nothing is rewritten, so it's safe on shared/public branches.\n- History shows exactly when and how branches diverged and came back together (useful audit trail), but can get messy with lots of \"Merge branch...\" commits.\n\n**`git rebase`**\n- Replays your feature branch's commits on top of the target branch, producing a linear history.\n- Rewrites commit hashes, so it's unsafe on commits others have already pulled \u2014 never rebase shared/public branches.\n- Result reads as if you built your feature straight off the latest main, no merge commits, easier to follow with `git log` or `bisect`.\n\n**Rule of thumb for a feature branch:**\n- If it's just yours and not pushed/shared yet: `git rebase main` before opening the PR (or to keep it updated) \u2014 keeps history clean.\n- Once it's pushed and others are working off it, or you're merging it into `main`: use `git merge` (often via the PR's merge button) to avoid rewriting shared history.\n\nMany teams do \"rebase locally to clean up, merge (often squash-merge) into main via PR\" \u2014 that gets a linear-ish main without rebase's shared-history risk.",
+  "stderr_tail": ""
+}

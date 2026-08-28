@@ -1,0 +1,70 @@
+{
+  "arm": "hook-on",
+  "id": "incident-01",
+  "cat": "incident",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 7.5,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.07820840000000001,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 16091,
+    "cache_read_input_tokens": 53832,
+    "output_tokens": 307,
+    "output_tokens_details": {
+      "thinking_tokens": 19
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 16091,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 138,
+        "cache_read_input_tokens": 44254,
+        "cache_creation_input_tokens": 12070,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 12070
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 47,
+    "sentences": 5,
+    "mean_sentence_words": 9.4,
+    "longest_sentence_words": 15,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "## Incident Report\n\n**Summary**\nFrom 14:02 UTC to 14:31 UTC, 12% of API requests returned a 500 error.\n\n**Cause**\nA deploy at 14:00 UTC removed the cache warmup step.\n\n**Fix**\nAt 14:27 UTC, the team reverted the deploy. The error rate returned to normal by 14:31 UTC.\n\n**Duration**\n29 minutes.",
+  "stderr_tail": ""
+}

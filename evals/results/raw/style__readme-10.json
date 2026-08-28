@@ -1,0 +1,70 @@
+{
+  "arm": "style",
+  "id": "readme-10",
+  "cat": "docs",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 9.7,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.06941939999999999,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 10891,
+    "cache_read_input_tokens": 92877,
+    "output_tokens": 630,
+    "output_tokens_details": {
+      "thinking_tokens": 254
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10891,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 365,
+        "cache_read_input_tokens": 47833,
+        "cache_creation_input_tokens": 8102,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8102
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 136,
+    "sentences": 13,
+    "mean_sentence_words": 10.2,
+    "longest_sentence_words": 19,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "## Security\n\n### Report a vulnerability\n\nDo not report security vulnerabilities in a public issue.\n\n1. Send an email to security@[project-domain].\n2. Give a description of the vulnerability.\n3. Give the steps to reproduce the vulnerability.\n4. Give the affected version.\n\nWe send a reply within 3 business days.\n\n### Disclosure window\n\nWe use a 90-day disclosure window. The window starts on the day we confirm the report. Within this period, we investigate the report and develop a fix. We ask that you do not disclose the vulnerability in public before the window ends. If we release a fix before the window ends, we can agree with you on an earlier disclosure date. If we need more time, we contact you before the window ends and give a reason.\n\n---\n\nReplace `security@[project-domain]` with your real contact address before you add this section to the README.",
+  "stderr_tail": ""
+}

@@ -1,0 +1,70 @@
+{
+  "arm": "baseline",
+  "id": "explain-01",
+  "cat": "explain",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 7.0,
+  "skill_available": false,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.04519139999999999,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 8013,
+    "cache_read_input_tokens": 38872,
+    "output_tokens": 433,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 8013,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 433,
+        "cache_read_input_tokens": 38872,
+        "cache_creation_input_tokens": 8013,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8013
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 149,
+    "sentences": 6,
+    "mean_sentence_words": 24.8,
+    "longest_sentence_words": 55,
+    "violations": {
+      "sentence_over_limit": 2,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 3,
+    "violations_per_100w": 2.01
+  },
+  "text": "The test fails because `client.upload.return_value = None` makes the mock's `upload()` call return `None`.\n\nThen inside `service.sync`, something like this happens:\n\n```python\nresponse = client.upload()   # response is None\nif response.status == \"ok\": # AttributeError: 'NoneType' object has no attribute 'status'\n    ...\n```\n\nSince `None` has no `.status` attribute, `service.sync` raises an `AttributeError` before it ever gets to return a `result` \u2014 so the test fails with that exception, not with a failed assertion on `result.ok`.\n\n**The fix:** the mock needs to return an object that actually has a `.status` attribute, e.g.:\n\n```python\ndef test_upload():\n    client = Mock()\n    client.upload.return_value = Mock(status=\"ok\")\n    result = service.sync(client)\n    assert result.ok\n```\n\nThis way `client.upload()` returns a fake response object with `.status` set, letting `service.sync` run its real logic and return a proper `result`.\n\n**Takeaway:** when mocking a method, make sure the `return_value` matches the *shape* the real code expects to interact with \u2014 if the code does `.attribute` or `.method()` on what's returned, the mock's return value needs to support that too, otherwise `Mock()`'s default (`None` here, since you explicitly set it) breaks the call chain.",
+  "stderr_tail": ""
+}

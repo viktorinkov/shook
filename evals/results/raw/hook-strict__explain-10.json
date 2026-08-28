@@ -1,0 +1,70 @@
+{
+  "arm": "hook-strict",
+  "id": "explain-10",
+  "cat": "explain",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 7.7,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.0300888,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4051,
+    "cache_read_input_tokens": 44254,
+    "output_tokens": 503,
+    "output_tokens_details": {
+      "thinking_tokens": 187
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4051,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 503,
+        "cache_read_input_tokens": 44254,
+        "cache_creation_input_tokens": 4051,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4051
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 130,
+    "sentences": 7,
+    "mean_sentence_words": 17.7,
+    "longest_sentence_words": 54,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.77
+  },
+  "text": "## Purpose of a `.gitignore` File\n\nA `.gitignore` file tells Git which files and folders to ignore. Git does not track these files, so they do not appear in commits or in the repository history.\n\nThis file keeps the repository clean. It also stops the accidental commit of secrets, temporary files, and large generated files.\n\n## What Belongs in a `.gitignore` File\n\nA typical `.gitignore` file lists these items:\n\n- Dependency folders, for example `node_modules/` or `vendor/`\n- Build output, for example `dist/` or `build/`\n- Environment files with secrets, for example `.env`\n- Log files, for example `*.log`\n- Editor and IDE files, for example `.vscode/` or `.idea/`\n- Operating system files, for example `.DS_Store` or `Thumbs.db`\n\n## How to Use It\n\nCreate a file named `.gitignore` at the root of the repository. Add one pattern per line for each file or folder that Git must ignore.",
+  "stderr_tail": ""
+}

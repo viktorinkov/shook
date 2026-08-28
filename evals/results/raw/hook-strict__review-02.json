@@ -1,0 +1,70 @@
+{
+  "arm": "hook-strict",
+  "id": "review-02",
+  "cat": "review",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 37.7,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.0604568,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4118,
+    "cache_read_input_tokens": 44254,
+    "output_tokens": 3513,
+    "output_tokens_details": {
+      "thinking_tokens": 3130
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4118,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3513,
+        "cache_read_input_tokens": 44254,
+        "cache_creation_input_tokens": 4118,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4118
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 204,
+    "sentences": 23,
+    "mean_sentence_words": 8.6,
+    "longest_sentence_words": 15,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "## Migration Review\n\nThis migration adds a NOT NULL email column to the `users` table. It backfills the column with placeholder addresses, then makes the column required. The migration has six issues to fix before merge.\n\n- **Lock risk**: The `SET NOT NULL` command scans the full table and holds a lock during the scan. On a large table, this command blocks other queries. Split this step into a separate migration, after the backfill step completes.\n\n- **Fake data**: The `UPDATE` statement writes placeholder addresses, not real email addresses. Add a comment that states this fact for future readers.\n\n- **No unique constraint**: The migration does not add a unique index on `email`. If the application requires unique email addresses, add a unique index in a separate migration.\n\n- **No transaction**: The three statements run without an explicit transaction. If the second statement fails, the table stays in a partial state. Wrap the statements in a transaction, or split them across separate migration files.\n\n- **No rollback**: The migration does not include a down migration. Add a down migration that drops the `email` column.\n\n- **Collision risk**: Two users with the same `username` value produce the same email address. Verify that `username` is unique before this migration runs.",
+  "stderr_tail": ""
+}

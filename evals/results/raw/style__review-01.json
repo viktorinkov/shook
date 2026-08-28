@@ -1,0 +1,70 @@
+{
+  "arm": "style",
+  "id": "review-01",
+  "cat": "review",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 4.7,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.023568799999999997,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2822,
+    "cache_read_input_tokens": 45044,
+    "output_tokens": 226,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2822,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 226,
+        "cache_read_input_tokens": 45044,
+        "cache_creation_input_tokens": 2822,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2822
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 63,
+    "sentences": 4,
+    "mean_sentence_words": 15.5,
+    "longest_sentence_words": 42,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 1.59
+  },
+  "text": "**No error handling for failed requests.** `fetch` only rejects on network failure \u2014 an HTTP error (404, 500) still resolves successfully, so `res.json()` runs on an error body and either throws a confusing parse error or returns bad data to the caller.\n\nFix:\n\n```js\nasync function getUser(id) {\n  const res = await fetch('/api/users/' + id);\n  if (!res.ok) {\n    throw new Error(`Failed to fetch user ${id}: ${res.status}`);\n  }\n  return res.json();\n}\n```\n\nAlso worth checking: does `id` need encoding? If it can contain special characters, use `encodeURIComponent(id)` to avoid a malformed URL.",
+  "stderr_tail": ""
+}

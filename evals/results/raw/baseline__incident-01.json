@@ -1,0 +1,70 @@
+{
+  "arm": "baseline",
+  "id": "incident-01",
+  "cat": "incident",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 4.3,
+  "skill_available": false,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.0231308,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2609,
+    "cache_read_input_tokens": 44254,
+    "output_tokens": 282,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2609,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 282,
+        "cache_read_input_tokens": 44254,
+        "cache_creation_input_tokens": 2609,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2609
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 98,
+    "sentences": 3,
+    "mean_sentence_words": 31.3,
+    "longest_sentence_words": 45,
+    "violations": {
+      "sentence_over_limit": 2,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 1,
+      "semicolon": 1,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 4,
+    "violations_per_100w": 4.08
+  },
+  "text": "**Incident Report \u2014 API 500 Errors**\n\n**Date:** 2026-08-28\n**Duration:** 14:02\u201314:31 UTC (29 minutes)\n**Impact:** ~12% of API requests returned HTTP 500 errors\n\n**Root Cause:**\nA deploy at 14:00 UTC removed the cache warmup step, leading to elevated error rates as requests hit an unwarmed cache.\n\n**Resolution:**\nThe deploy was reverted at 14:27 UTC; error rates returned to normal shortly after.\n\n**Timeline:**\n- 14:00 UTC \u2014 Deploy shipped, removing cache warmup step\n- 14:02 UTC \u2014 Elevated 500 error rate begins (~12% of requests)\n- 14:27 UTC \u2014 Revert deployed\n- 14:31 UTC \u2014 Error rate returns to baseline",
+  "stderr_tail": ""
+}

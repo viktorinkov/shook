@@ -1,0 +1,70 @@
+{
+  "arm": "baseline",
+  "id": "incident-05",
+  "cat": "incident",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 9.9,
+  "skill_available": false,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.0266238,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2567,
+    "cache_read_input_tokens": 44254,
+    "output_tokens": 649,
+    "output_tokens_details": {
+      "thinking_tokens": 44
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2567,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 649,
+        "cache_read_input_tokens": 44254,
+        "cache_creation_input_tokens": 2567,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2567
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 251,
+    "sentences": 2,
+    "mean_sentence_words": 125.5,
+    "longest_sentence_words": 211,
+    "violations": {
+      "sentence_over_limit": 2,
+      "contraction": 1,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 1,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 5,
+    "violations_per_100w": 1.99
+  },
+  "text": "## Action Items\n\n| # | Action | Owner | Priority | Due Date |\n|---|--------|-------|----------|----------|\n| 1 | Add disk usage alerting at 75%/85%/95% thresholds on all production hosts | Infra | P0 | 2026-09-04 |\n| 2 | Configure log rotation (`logrotate` or equivalent) with size/age caps on the affected service | Service owner | P0 | 2026-09-04 |\n| 3 | Set explicit retention policy and automated cleanup for application logs | Service owner | P0 | 2026-09-11 |\n| 4 | Migrate log storage to a dedicated volume, separate from the OS/application partition | Infra | P1 | 2026-09-18 |\n| 5 | Ship logs to centralized logging (e.g., existing log aggregation pipeline) instead of relying on local disk retention | Infra | P1 | 2026-09-25 |\n| 6 | Add automated runbook/alert for \"disk full\" that includes immediate remediation steps | On-call/SRE | P1 | 2026-09-11 |\n| 7 | Audit other services for the same missing log rotation/retention gap | Service owner | P1 | 2026-09-25 |\n| 8 | Add disk space checks to pre-deploy/health-check tooling | Infra | P2 | 2026-10-02 |\n| 9 | Document incident response steps for disk-full scenarios in the on-call runbook | On-call/SRE | P2 | 2026-09-18 |\n\n*Priority key: P0 = immediate/this week, P1 = within 2\u20134 weeks, P2 = within 1 quarter.*\n\nLet me know if you'd like this tailored with real owner names, actual thresholds, or folded into a full postmortem doc (timeline, root cause, impact sections).",
+  "stderr_tail": ""
+}

@@ -1,0 +1,70 @@
+{
+  "arm": "style",
+  "id": "incident-05",
+  "cat": "incident",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 44.1,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.10023480000000001,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 10764,
+    "cache_read_input_tokens": 92874,
+    "output_tokens": 3759,
+    "output_tokens_details": {
+      "thinking_tokens": 3235
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10764,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3618,
+        "cache_read_input_tokens": 47830,
+        "cache_creation_input_tokens": 7978,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7978
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 213,
+    "sentences": 11,
+    "mean_sentence_words": 19.4,
+    "longest_sentence_words": 26,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 2,
+    "violations_per_100w": 0.94
+  },
+  "text": "## Action Items\n\nThe team completed the actions below to prevent a repeat of this outage. Owner and due date fields use placeholders until the team assigns them.\n\n| # | Action Item | Owner | Due Date | Priority |\n|---|---|---|---|---|\n| 1 | Add an alert for disk usage above 80 percent. | [Owner] | [Date] | High |\n| 2 | Configure log rotation on all hosts that write logs. | [Owner] | [Date] | High |\n| 3 | Set a retention policy that erases logs after a fixed number of days. | [Owner] | [Date] | High |\n| 4 | Move application logs to a separate volume from the OS disk. | [Owner] | [Date] | Medium |\n| 5 | Add a runbook step to check disk space during on-call handoff. | [Owner] | [Date] | Medium |\n| 6 | Review log verbosity settings for the affected service. | [Owner] | [Date] | Medium |\n| 7 | Remove log lines that give no value. | [Owner] | [Date] | Low |\n| 8 | Add automatic cleanup of temporary files when disk space is low. | [Owner] | [Date] | Low |\n\nFill in the owner and due date for each item before you close this postmortem.",
+  "stderr_tail": ""
+}
