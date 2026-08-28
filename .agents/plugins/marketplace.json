@@ -1,0 +1,21 @@
+{
+  "name": "simple-english-hook",
+  "interface": {
+    "displayName": "Simple English Hook"
+  },
+  "plugins": [
+    {
+      "name": "simple-english-hook",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/viktorinkov/simple-english-hook.git",
+        "ref": "main"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

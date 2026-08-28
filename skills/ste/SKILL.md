@@ -10,6 +10,8 @@ Reply with one short line that confirms the mode and the source, for example: "S
 
 Do not run tools. Do not do other work in this reply.
 
+On GitHub Copilot CLI the hook output is dropped. If no "STE MODE IS NOW" line is above, reply: "STE mode saved. It applies at the next session start." On Codex the command is typed as `$ste`.
+
 Modes:
 - on: the hook adds the STE rules to every prompt.
 - strict: "on" plus a lint gate. A reply with STE violations goes back to you for a rewrite.
