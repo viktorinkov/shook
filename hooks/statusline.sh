@@ -9,5 +9,8 @@ fi
 source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 case "$(ste_mode)" in
   on)     printf '\033[38;5;75m[STE]\033[0m' ;;
-  strict) printf '\033[38;5;203m[STE:STRICT]\033[0m' ;;
+  strict)
+    score=""
+    [ -f "$STE_SCORE" ] && score="$(awk '{printf " %.1f", $1}' "$STE_SCORE" 2>/dev/null)"
+    printf '\033[38;5;203m[STE:STRICT%s]\033[0m' "$score" ;;
 esac

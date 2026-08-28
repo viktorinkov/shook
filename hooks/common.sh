@@ -5,6 +5,7 @@
 STE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 STE_CLAUDE_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
 STE_FLAG="$STE_CLAUDE_DIR/.simple-english-active"
+STE_SCORE="$STE_CLAUDE_DIR/.simple-english-score"   # last lint result, written by the Stop hook
 
 # Valid modes: off | on | strict
 #   off    - hooks are silent

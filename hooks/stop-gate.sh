@@ -17,6 +17,8 @@ message="$(printf '%s' "$input" | jq -r '.last_assistant_message // ""')"
 lint="$(ste_lint_script)" || exit 0
 report="$(printf '%s' "$message" | python3 "$lint" --type "${STE_LINT_TYPE:-descriptive}" - 2>/dev/null)" || exit 0
 
+# Record the score for the status line badge: "<per100> <total> <words>".
+printf '%s' "$report" | jq -r '"\(.violations_per_100w) \(.violations_total) \(.words)"' > "$STE_SCORE" 2>/dev/null || true
 words="$(printf '%s' "$report" | jq -r '.words')"
 total="$(printf '%s' "$report" | jq -r '.violations_total')"
 per100="$(printf '%s' "$report" | jq -r '.violations_per_100w')"
@@ -45,5 +47,6 @@ longest="$(printf '%s' "$report" | jq -r '.longest_sentence_words')"
 
 reason="STE LINT FAILED (${total} violations in ${words} words, ${per100} per 100 words; longest sentence ${longest} words). Found: ${detail}. Rewrite your whole last reply in ASD-STE100 Simplified Technical English. Keep every fact and every code block unchanged. Fix each listed violation: split long sentences, remove contractions and should/would/may/might/could, replace present perfect and -ing clauses with simple tenses, remove semicolons and filler words, and use one word per meaning. Do not mention this lint message. Output only the rewritten reply."
 
+[ -n "${STE_LOG:-}" ] && printf '%s block %s %s\n' "$(date -u +%FT%TZ)" "$(printf '%s' "$input" | jq -r '.session_id // "-"')" "$per100" >> "$STE_LOG"
 jq -n --arg r "$reason" '{decision:"block", reason:$r}'
 exit 0
