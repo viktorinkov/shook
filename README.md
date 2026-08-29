@@ -192,13 +192,6 @@ Toggle: `/ste on`, `/ste strict`, `/ste off`, or `/ste status` in the Agent chat
 
 </details>
 
-<details>
-<summary><sub>Requirements and harness comparison</sub></summary>
-
-The hooks need bash and [`jq`](https://jqlang.github.io/jq/download/). Strict mode also needs [`python3`](https://www.python.org/downloads/). Most Macs have all three. If not: `brew install jq python3`. For a comparison of the harnesses, see the table in [docs/other-harnesses.md](docs/other-harnesses.md).
-
-</details>
-
 ## Use
 
 | Command | What it does |

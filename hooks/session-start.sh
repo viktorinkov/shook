@@ -3,6 +3,7 @@
 # Runs under Claude Code, Codex, Copilot CLI and Antigravity CLI. common.sh picks the output format.
 set -u
 source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
+ste_require_jq
 
 input="$(cat 2>/dev/null)"
 ste_project_from_input "$input"

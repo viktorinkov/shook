@@ -5,6 +5,7 @@
 #   3. When the mode is on, add a short reminder to every prompt.
 set -u
 source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
+ste_require_jq
 
 input="$(cat)"
 ste_project_from_input "$input"

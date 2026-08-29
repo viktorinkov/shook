@@ -463,3 +463,11 @@ if [ "$STE_HARNESS_NAME" = "cursor" ]; then
   }
 fi
 # ==== cursor block end ========================================================
+
+# jq is the one dependency that macOS does not ship. Without it the hooks fail silently,
+# so the prompt hooks call this first and tell the user what to install.
+ste_require_jq() {
+  command -v jq >/dev/null 2>&1 && return 0
+  printf 'SIMPLE ENGLISH HOOK: jq is not installed, so the hooks cannot run. Tell the user to install it: brew install jq (macOS) or apt install jq (Linux), then start a new session.\n'
+  exit 0
+}
