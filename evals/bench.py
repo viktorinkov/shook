@@ -28,7 +28,7 @@ with harness=claude. Other harness runners (for example evals/codex_bench.py)
 write the same schema with their own harness name, and --report reads them all.
 Runs that already exist with exit 0 are skipped, so the benchmark can resume.
 """
-import argparse, glob, json, os, statistics, subprocess, sys, tempfile, time
+import argparse, re, glob, json, os, statistics, subprocess, sys, tempfile, time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
@@ -91,6 +91,8 @@ def run_one(arm, item, model, workdir, max_turns, timeout):
     t0 = time.time()
     proc = subprocess.run(cmd, input=item["prompt"], cwd=workdir, env=env,
                           capture_output=True, text=True, timeout=timeout)
+    if proc.returncode != 0 and re.search(r"log ?in|logged.?in|authenticat|api key|/login", proc.stderr, re.I):
+        sys.exit("bench: the claude CLI is not logged in. Run `claude` once and log in, then rerun.")
     events = []
     for line in proc.stdout.splitlines():
         line = line.strip()
