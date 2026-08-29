@@ -66,7 +66,7 @@ Order of precedence: environment, then the repo file, then the global flag, then
 
 To use it in a team repo, type `/ste project strict` and commit `.claude/ste-mode`. Each team member installs both plugins once.
 
-## 📊 Numbers
+## 📊 Benchmark
 
 This plugin only changes how often the rules apply, so the comparison that matters is the simple-english skill alone against the hook. The benchmark runs on several Claude models in Claude Code and on GPT models in Codex CLI.
 
