@@ -15,7 +15,7 @@ Based on the virality research of ponytail and SimpleEnglish (2026-08-28).
 
 ## In progress
 
-- Verify the other harnesses in live sessions. Not yet run: a Codex session with `$ste on`, a Copilot session (does `COPILOT_PLUGIN_DATA` exist at hook time?), an interactive Antigravity session.
+- Live checks still open: a Copilot CLI session (does `COPILOT_PLUGIN_DATA` exist at hook time?), an interactive Antigravity session and `--continue`, how a strict block renders in the Codex TUI. Codex `exec` and Antigravity print mode are verified.
 
 ## Future
 

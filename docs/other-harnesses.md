@@ -35,7 +35,7 @@ Each harness keeps its own global flag. A toggle in Codex does not change the mo
 
 ## Codex CLI
 
-Codex plugin hooks use the same file format as Claude Code. The Codex manifest `.codex-plugin/plugin.json` points at `hooks/hooks.json` and `skills/`. Codex sets `CLAUDE_PLUGIN_ROOT` for compatibility, so the commands in `hooks/hooks.json` work without change.
+Verified in a live session with Codex CLI 0.149.0 on macOS. Codex plugin hooks use the same file format as Claude Code. The Codex manifest `.codex-plugin/plugin.json` points at `hooks/hooks.json` and `skills/`. Codex sets `CLAUDE_PLUGIN_ROOT` as an alias of `PLUGIN_ROOT`, so the commands in `hooks/hooks.json` work without change.
 
 ### Install
 
@@ -44,22 +44,35 @@ codex plugin marketplace add viktorinkov/simple-english-hook
 codex plugin add simple-english-hook@simple-english-hook
 ```
 
-Then start Codex, open `/hooks`, and trust the three hooks. Start a new thread. Set `STE_PLUGIN_DIR` as shown above.
+The first command clones the repo to `~/.codex/.tmp/marketplaces/simple-english-hook` and adds `[marketplaces.simple-english-hook]` to `~/.codex/config.toml`. The second copies the plugin to `~/.codex/plugins/cache/simple-english-hook/simple-english-hook/<version>/` and adds `[plugins."simple-english-hook@simple-english-hook"]`. `codex plugin list` shows the result.
+
+Set `STE_PLUGIN_DIR` as shown above. Then start Codex in a project. At the first start Codex shows `Hooks need review`. Choose `Review hooks`, open each event, select the `simple-english-hook` entry, and press `t`. `Trust all` also trusts hooks from other plugins and from `~/.codex/hooks.json`, so read the list first. The `/hooks` panel shows the same list at any time. Codex records the trust in `[hooks.state]` in `config.toml`. Scripts can run `codex exec --dangerously-bypass-hook-trust` instead. That flag skips the review for one run.
+
+For a local checkout, write a marketplace file with `"source": "local"` and a `path` to the checkout. Then run `codex plugin marketplace add <folder>` on the folder that holds `.agents/plugins/marketplace.json`. The repo file uses a Git URL, so the repo folder itself is not a local marketplace.
 
 ### Toggle
 
-Type `$ste on`, `$ste strict`, `$ste off`, or `$ste status`. The `$` prefix is the Codex skill mention. `$ste project on` writes `.claude/ste-mode` in the current repo. The hook reads the prompt before the model sees it, so `/ste` and `@ste` also work.
+Type `$ste on`, `$ste strict`, `$ste off`, or `$ste status`. The `$` opens the Codex skill picker. The picker lists `ste (simple-english-hook)` and inserts `$simple-english-hook:ste`. The hook receives the prompt as typed. Two observed values are `$ste on` and `$simple-english-hook:ste  status`. The hook accepts both forms. `$ste project on` writes `.claude/ste-mode` in the current repo. In the TUI, `/` opens the Codex command menu and `@` opens the file picker. `/ste` and `@ste` are not verified.
+
+### What Codex sends to the hooks
+
+All events carry `session_id`, `transcript_path`, `cwd`, `hook_event_name`, `model`, and `permission_mode`. `SessionStart` adds `source`. `UserPromptSubmit` adds `turn_id` and `prompt`. `Stop` adds `turn_id`, `stop_hook_active`, and `last_assistant_message`. Codex reads `hookSpecificOutput.additionalContext`, `systemMessage`, and `decision: block` with `reason` from the hook output.
+
+Hook commands run in the project directory with the shell environment plus `PLUGIN_ROOT`, `PLUGIN_DATA`, `CLAUDE_PLUGIN_ROOT`, and `CLAUDE_PLUGIN_DATA`. `CLAUDE_PROJECT_DIR` is not set, so the hooks read `cwd` from the input. `STE_PLUGIN_DIR` and `STE_MODE` from your shell profile reach the hooks. `PLUGIN_DATA` is `~/.codex/plugins/data/simple-english-hook-simple-english-hook`. Codex does not create that folder. The hook creates it at the first toggle.
 
 ### What works
 
-- `on`: the rules load at session start. Each prompt gets a reminder.
-- `strict`: the Stop hook lints `last_assistant_message`. On failure it returns `decision: block`, and Codex asks the model to rewrite.
-- Skill: `$ste` is listed as a plugin skill.
-- Badge: Codex shows `STE mode: on` as a system message at session start and after each toggle.
+- `on`: the rules load at session start, and each prompt gets the reminder. In the TUI, the SessionStart hooks run at the first prompt, not at launch. A 113-word test reply had 2 violations, 1.77 per 100 words, and a longest sentence of 15 words.
+- `strict`: the Stop hook lints `last_assistant_message`. On `decision: block`, Codex starts a rewrite turn with the reason. The second Stop call has `stop_hook_active: true`, so the hook exits. Both replies stay in the transcript. A 128-word test reply had 0 violations. The hook writes `.simple-english-score` next to the flag.
+- Skill: `ste (simple-english-hook)` appears in the `$` picker.
+- Badge: the TUI shows `SessionStart (completed) says: STE mode: on` and the same line after each toggle. The rule text appears as collapsed `hook context:` lines.
+- `codex exec`: the same three hooks run. Use `--dangerously-bypass-hook-trust` when the hooks are not trusted yet.
 
 ### What does not work
 
 - The status line badge. Codex has no status line script.
+- `systemMessage` in `codex exec --json` output. The JSONL stream has no event for it.
+- The look of a blocked reply in the TUI is not verified. Only `codex exec` runs were checked in strict mode.
 
 ### Uninstall
 
@@ -68,7 +81,7 @@ codex plugin remove simple-english-hook@simple-english-hook
 codex plugin marketplace remove simple-english-hook
 ```
 
-Then delete `.simple-english-active` from the plugin data directory. `/hooks` shows the path.
+`codex plugin remove` keeps the data folder. Delete `~/.codex/plugins/data/simple-english-hook-simple-english-hook/`. It holds `.simple-english-active` and `.simple-english-score`. The empty folder `~/.codex/plugins/cache/simple-english-hook/` also stays. Delete it if you want a clean cache.
 
 ## GitHub Copilot CLI
 
@@ -161,13 +174,13 @@ The hook contracts come from the official docs and from the CLI binaries. The te
 
 Where the docs and the ponytail plugin differ, the hooks follow the docs:
 
-- Codex docs say `systemMessage` surfaces as a warning in the UI. Ponytail sends it on every prompt. These hooks send it at session start and after a toggle only.
+- Codex shows `systemMessage` as `<Event> (completed) says: ...` in the TUI. Ponytail sends it on every prompt. These hooks send it at session start and after a toggle only.
 - Copilot docs say `userPromptSubmitted` output is dropped. Ponytail prints `{}`. These hooks print nothing.
 - Ponytail ships no hooks for Antigravity. These hooks use the events from the hooks guide inside the `agy` binary, plus `SessionStart`. That event is not in the guide, but a live run confirmed it.
 
-Four points are not verified in a live session:
+Status of the open points in a live session:
 
-- Codex: the exact prompt text that the hook sees after a `$ste` skill mention.
+- Codex: verified. The hook sees the skill mention as text, for example `$simple-english-hook:ste  status`. See the Codex section.
 - Copilot: the `COPILOT_PLUGIN_DATA` variable at hook run time. The plugin reference documents it.
 - Antigravity: interactive sessions and `--continue`. All four live runs used print mode (`agy -p`).
 - Antigravity: `agy plugin install` from a GitHub URL. The local clone path is verified.

@@ -7,7 +7,8 @@ STE_CLAUDE_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
 
 # Harness detection. The same scripts run under four harnesses.
 #   claude      - Claude Code (default)
-#   codex       - OpenAI Codex CLI. Sets PLUGIN_DATA (and CLAUDE_PLUGIN_ROOT for compatibility).
+#   codex       - OpenAI Codex CLI. Sets PLUGIN_ROOT and PLUGIN_DATA, plus CLAUDE_PLUGIN_ROOT and
+#                 CLAUDE_PLUGIN_DATA as aliases. Verified with Codex CLI 0.149.0.
 #   copilot     - GitHub Copilot CLI. Sets COPILOT_PLUGIN_DATA.
 #   antigravity - Antigravity CLI (agy). Sets ANTIGRAVITY_CONVERSATION_ID. The root
 #                 hooks.json also sets STE_HARNESS=antigravity, so a nested Claude Code
@@ -227,7 +228,7 @@ ste_plugin_file() {
   return 1
 }
 
-STE_PLUGIN_MISSING_NOTE='SIMPLE ENGLISH HOOK: the simple-english plugin is not installed, so the rule text is unavailable. Tell the user to run install.sh from the simple-english-hook repo, or: claude plugin marketplace add AminBlg/SimpleEnglish && claude plugin install simple-english@simple-english. On Codex, Copilot CLI or Antigravity CLI: git clone https://github.com/AminBlg/SimpleEnglish and set STE_PLUGIN_DIR to the clone.'
+STE_PLUGIN_MISSING_NOTE='SIMPLE ENGLISH HOOK: the simple-english plugin is not installed, so the rule text is unavailable. Tell the user to install it: claude plugin marketplace add AminBlg/SimpleEnglish && claude plugin install simple-english@simple-english. Outside Claude Code, set STE_PLUGIN_DIR to a clone of https://github.com/AminBlg/SimpleEnglish.'
 
 # Full rule set (the plugin output style, frontmatter removed).
 ste_rules_text() {

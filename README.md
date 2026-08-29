@@ -163,7 +163,7 @@ claude plugin update simple-english-hook@simple-english-hook
 ## Uninstall
 
 1. Run `claude plugin uninstall simple-english-hook@simple-english-hook`.
-2. If you installed the badge, remove the line that ends with `# simple-english-hook` from your status line script.
+2. If you installed the badge, remove the line that ends with `# simple-english-hook` from your status line script. Delete the `.bak` copy next to it.
 3. Delete `~/.claude/.simple-english-active`, `~/.claude/.simple-english-score`, and `~/.claude/simple-english-hook/`.
 4. Delete `.claude/ste-mode` from any repo that has one.
 5. If you do not need the simple-english plugin, run `claude plugin uninstall simple-english@simple-english`.

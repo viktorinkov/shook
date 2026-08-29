@@ -16,7 +16,7 @@ STE_BLOCK_MARK="STE LINT FAILED"
 # The harness sets stop_hook_active when a Stop hook already forced a continuation.
 # Exit here, or the rewrite could loop forever. Antigravity has no such field: its
 # transcript shows the earlier block as a system message in the same turn.
-[ "$(printf '%s' "$input" | jq -r '.stop_hook_active // false')" = "true" ] && exit 0
+second_pass="$(printf '%s' "$input" | jq -r '.stop_hook_active // false')"
 [ "$STE_HARNESS_NAME" = "antigravity" ] && ste_transcript_has_block "$input" "$STE_BLOCK_MARK" && exit 0
 
 # Claude Code and Codex send last_assistant_message. Antigravity sends no reply
@@ -30,6 +30,9 @@ report="$(printf '%s' "$message" | python3 "$lint" --type "${STE_LINT_TYPE:-desc
 
 # Record the score for the status line badge: "<per100> <total> <words>".
 printf '%s' "$report" | jq -r '"\(.violations_per_100w) \(.violations_total) \(.words)"' > "$STE_SCORE" 2>/dev/null || true
+# Second pass: the harness sets stop_hook_active after a block. The score of the rewrite
+# is recorded above for the badge. Stop here. Never block twice, or the rewrite loops forever.
+[ "$second_pass" = "true" ] && exit 0
 words="$(printf '%s' "$report" | jq -r '.words')"
 total="$(printf '%s' "$report" | jq -r '.violations_total')"
 per100="$(printf '%s' "$report" | jq -r '.violations_per_100w')"
