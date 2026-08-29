@@ -63,8 +63,6 @@ bash "$(ls -d ~/.claude/plugins/cache/simple-english-hook/simple-english-hook/*/
 
 The script adds one line to your status line script. If you have no status line script, it creates one. The badge shows `[STE]` in `on` mode and `[STE:STRICT 0.3]` in `strict` mode.
 
-- Works: `on`, `strict`, and the badge. The rules load at session start, each prompt gets the reminder, and the Stop hook sends a failed reply back once.
-
 </details>
 
 <details>
@@ -95,11 +93,6 @@ $ste strict
 ```
 
 Toggle: `$ste on`, `$ste strict`, `$ste off`, or `$ste status`.
-
-- Works: `on` and `strict`. The rules load at session start, each prompt gets the reminder, and the Stop hook sends a failed reply back once.
-- Does not work: the status line badge. Codex has no status line. The mode shows as a system message at session start and after each toggle.
-
-Details: [Codex CLI](docs/other-harnesses.md#codex-cli) in the harness docs.
 
 </details>
 
@@ -133,11 +126,6 @@ Start a new `agy` session and type the mode.
 
 Toggle: `/ste on`, `/ste strict`, `/ste off`, or `/ste status`.
 
-- Works: `on` and `strict`. The rules load at session start, each model call gets the reminder, and the Stop hook lints the reply from the transcript.
-- Does not work: the badge. In print mode (`agy -p`) outside a project, the hooks do not read the per-repo file. Use the global flag or `STE_MODE`.
-
-Details: [Antigravity CLI](docs/other-harnesses.md#antigravity-cli) in the harness docs.
-
 </details>
 
 <details>
@@ -169,17 +157,10 @@ Start a new Copilot session and type the mode. The new mode applies at the next 
 
 Toggle: `/simple-english-hook:ste on` or `/simple-english-hook:ste off`. To set the mode for one session, start Copilot with `STE_MODE=on copilot`.
 
-- Works: `on`. The rules load at session start.
-- Does not work: the reminder on each prompt, `strict`, and the badge. Copilot sends no reply text to its stop hook, so the hooks treat `strict` as `on`.
-
-Details: [GitHub Copilot CLI](docs/other-harnesses.md#github-copilot-cli) in the harness docs.
-
 </details>
 
 <details>
 <summary><strong>Cursor</strong></summary>
-
-Cursor loads no plugins, so an install script writes the files that Cursor reads: an always-on rule file and four hooks. This support comes from the Cursor docs and from simulated tests. No live Cursor session verified it.
 
 **1. Prerequisite**
 
@@ -208,11 +189,6 @@ bash ~/shook/cursor-install.sh strict
 ```
 
 Toggle: `/ste on`, `/ste strict`, `/ste off`, or `/ste status` in the Agent chat. Or run `bash ~/shook/cursor-install.sh <mode>` from the shell.
-
-- Works: `on` and `strict`. The rule file applies the rules to every request, and the `stop` hook sends a failed reply back once.
-- Does not work: the badge, a reminder injected on each prompt, an `ste` skill, and cloud agents. The always-on rule file replaces the reminder.
-
-Details: [Cursor](docs/other-harnesses.md#cursor) in the harness docs.
 
 </details>
 
@@ -243,7 +219,8 @@ The hooks enforce the mode, so the badge is how you see that the mode is on and 
 | `[STE:STRICT 0.3]` | Mode `strict`, with the lint score of the last reply. |
 | nothing | Mode `off`. |
 
-To install the badge, see **3. Enable** in the Claude Code block of [Installation](#-installation).
+- Ask Claude: Install the STE status line badge.
+- Or install manually: Run `statusline-install.sh` from this plugin's folder.
 
 ## Enable it
 
@@ -356,6 +333,39 @@ The gate reads each key from the first place that has it:
 - Any repo with `/ste project off`. Any session with `/ste off`.
 
 STE is flat by design. Use it for docs, reviews, runbooks, error messages, and explanations. Turn it off for a blog post.
+
+## Codex CLI
+
+Toggle: `$ste on`, `$ste strict`, `$ste off`, or `$ste status`. The `$` opens the Codex skill picker.
+
+- Works: `on` and `strict`. The rules load at session start, each prompt gets the reminder, and the Stop hook sends a failed reply back once.
+- Does not work: the status line badge. Codex has no status line. The mode shows as a system message at session start and after each toggle.
+
+At the first start, Codex asks you to review the hooks. See [Codex CLI](docs/other-harnesses.md#codex-cli) in the harness docs.
+
+## Antigravity CLI
+
+Toggle: `/ste on`, `/ste strict`, `/ste off`, or `/ste status`.
+
+- Works: `on` and `strict`. The rules load at session start, each model call gets the reminder, and the Stop hook lints the reply from the transcript.
+- Does not work: the badge. In print mode (`agy -p`) outside a project, the hooks do not read the per-repo file. Use the global flag or `STE_MODE`.
+
+See [Antigravity CLI](docs/other-harnesses.md#antigravity-cli) in the harness docs.
+
+## Copilot CLI
+
+Toggle: `/simple-english-hook:ste on` or `/simple-english-hook:ste off`. The new mode applies at the next session start.
+
+- Works: `on`. The rules load at session start.
+- Does not work: the reminder on each prompt, `strict`, and the badge. Copilot sends no reply text to its stop hook, so the hooks treat `strict` as `on`.
+
+See [GitHub Copilot CLI](docs/other-harnesses.md#github-copilot-cli) in the harness docs.
+
+## Cursor
+
+Cursor loads no plugins, so an install script writes the files that Cursor reads: an always-on rule file and four hooks.
+
+Toggle with `/ste on`, `/ste strict`, `/ste off`, or `/ste status` in the Agent chat, or with `cursor-install.sh <mode>` from the shell. Modes `on` and `strict` both work: the rule file applies the rules to every request, and the `stop` hook sends a failed reply back once. Details: [docs/other-harnesses.md](docs/other-harnesses.md#cursor).
 
 ## ❓ FAQ
 
