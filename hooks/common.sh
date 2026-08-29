@@ -5,7 +5,7 @@
 STE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 STE_CLAUDE_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
 
-# Harness detection. The same scripts run under four harnesses.
+# Harness detection. The same scripts run under five harnesses.
 #   claude      - Claude Code (default)
 #   codex       - OpenAI Codex CLI. Sets PLUGIN_ROOT and PLUGIN_DATA, plus CLAUDE_PLUGIN_ROOT and
 #                 CLAUDE_PLUGIN_DATA as aliases. Verified with Codex CLI 0.149.0.
