@@ -10,11 +10,12 @@ Based on the virality research of ponytail and SimpleEnglish (2026-08-28).
 - Badge with the last lint score: `[STE:STRICT 0.3]`.
 - Benchmark runner: `evals/bench.py`, 50 prompts, 5 arms. Results in `evals/results/RESULTS.md`.
 - README first screen: hook line, badges, real before/after, four install commands, numbers, FAQ.
-- Codex CLI, Copilot CLI, and Gemini CLI support. Docs in `docs/other-harnesses.md`. Tests in `tests/run.sh`.
+- Codex CLI, Copilot CLI, and Antigravity CLI support. Docs in `docs/other-harnesses.md`. Tests in `tests/run.sh`.
+- Antigravity CLI verified in four live print-mode runs: session start, `/ste strict`, reminder, and the strict gate. Gemini CLI adapter removed.
 
 ## In progress
 
-- Verify the other harnesses in live sessions. Not yet run: a Codex session with `$ste on`, a Copilot session (does `COPILOT_PLUGIN_DATA` exist at hook time?), a Gemini session (does `/ste` expand before `BeforeAgent`?).
+- Verify the other harnesses in live sessions. Not yet run: a Codex session with `$ste on`, a Copilot session (does `COPILOT_PLUGIN_DATA` exist at hook time?), an interactive Antigravity session.
 
 ## Future
 

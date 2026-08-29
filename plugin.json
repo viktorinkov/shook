@@ -1,0 +1,4 @@
+{
+  "name": "simple-english-hook",
+  "description": "Enforces ASD-STE100 Simplified Technical English on every Antigravity CLI reply. Hooks, /ste toggle, strict lint gate. Companion to AminBlg/SimpleEnglish."
+}

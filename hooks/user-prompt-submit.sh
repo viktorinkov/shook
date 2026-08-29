@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# UserPromptSubmit hook (BeforeAgent on Gemini CLI, userPromptSubmitted on Copilot CLI):
+# UserPromptSubmit hook (userPromptSubmitted on Copilot CLI, PreInvocation on Antigravity CLI):
 #   1. Handle "/ste on|strict|off|status" and update the flag file.
 #   2. When the mode is on, add a short reminder to every prompt.
 set -u
@@ -8,6 +8,11 @@ source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 input="$(cat)"
 ste_project_from_input "$input"
 prompt="$(printf '%s' "$input" | jq -r '.prompt // ""' 2>/dev/null | tr -d '\r')"
+# Antigravity sends no prompt. Read the newest user message from the transcript,
+# but only on the first model call of the turn. Later calls get the reminder only.
+if [ -z "$prompt" ] && [ "$STE_HARNESS_NAME" = "antigravity" ] && ste_transcript_turn_start "$input"; then
+  prompt="$(ste_transcript_prompt "$input" | tr -d '\r')"
+fi
 first="$(printf '%s' "$prompt" | head -n1 | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' | tr '[:upper:]' '[:lower:]')"
 cmd="$(ste_cmd)"
 
@@ -29,7 +34,7 @@ if printf '%s' "$first" | grep -Eq '^[/$@]([a-z0-9-]+:)?ste( |$)'; then
     mode="$(ste_mode)"
     text="$(
       [ -n "$note" ] && printf '%s\n' "$note"
-      printf 'STE MODE IS NOW: %s (source: %s, project file: %s). Reply with one short line that confirms the mode and its source. Do not do other work.\n' "$mode" "$(ste_mode_source)" "$STE_PROJECT_FLAG"
+      printf 'STE MODE IS NOW: %s (source: %s, project file: %s). Reply with one short line that confirms the mode and its source. Do not do other work.\n' "$mode" "$(ste_mode_source)" "${STE_PROJECT_FLAG:-none}"
       if [ "$mode" != "off" ] && [ "$arg" != "status" ] && [ -n "$arg" ]; then
         printf '\nThe rules below apply from this reply on.\n\n'
         ste_rules_text

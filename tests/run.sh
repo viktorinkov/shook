@@ -38,7 +38,7 @@ GOOD="Run the tests. Then commit the change. The build takes one minute. $(print
 hook() {
   local script="$1" json="$2"; shift 2
   printf '%s' "$json" | env -u STE_MODE -u CLAUDE_PROJECT_DIR -u PLUGIN_DATA -u COPILOT_PLUGIN_DATA \
-    -u GEMINI_SESSION_ID -u GEMINI_CLI_HOME -u STE_HARNESS \
+    -u ANTIGRAVITY_CONVERSATION_ID -u STE_HARNESS \
     HOME="$T/home" CLAUDE_CONFIG_DIR="$T/claude" STE_PLUGIN_DIR="$PLUG" "$@" bash "$H/$script" 2>/dev/null
 }
 flag() { head -n1 "$1" 2>/dev/null; }
@@ -112,22 +112,48 @@ check "copilot: stop gate is a no-op" test -z "$out"
 hook user-prompt-submit.sh "$IN"',"prompt":"/simple-english-hook:ste off"}' "${CP[@]}" >/dev/null
 check "copilot: off removes the flag" test ! -e "$T/copilot-data/.simple-english-active"
 
-# ---- Gemini CLI -------------------------------------------------------------
-GM=(GEMINI_SESSION_ID=s1 GEMINI_CWD="$PROJ" GEMINI_PROJECT_DIR="$PROJ" CLAUDE_PROJECT_DIR="$PROJ" GEMINI_CLI_HOME="$T/gemhome")
-IN='{"cwd":"'"$PROJ"'","session_id":"s1"'
-out="$(hook user-prompt-submit.sh "$IN"',"hook_event_name":"BeforeAgent","prompt":"/ste strict"}' "${GM[@]}")"
-check "gemini: /ste strict is BeforeAgent JSON" jqok "$out" '.hookSpecificOutput.hookEventName == "BeforeAgent" and .systemMessage == "STE mode: strict"'
-check "gemini: flag written under GEMINI_CLI_HOME/.gemini" test "$(flag "$T/gemhome/.gemini/.simple-english-active")" = strict
-out="$(hook session-start.sh "$IN"',"source":"startup"}' "${GM[@]}")"
-check "gemini: session start JSON" jqok "$out" '.hookSpecificOutput.hookEventName == "SessionStart" and (.hookSpecificOutput.additionalContext | test("RULE TEXT MARKER"))'
-out="$(hook user-prompt-submit.sh "$IN"',"prompt":"hello"}' "${GM[@]}")"
-check "gemini: reminder is BeforeAgent JSON" jqok "$out" '.hookSpecificOutput.hookEventName == "BeforeAgent" and (.hookSpecificOutput.additionalContext | test("STE MODE ACTIVE"))'
-out="$(hook stop-gate.sh "$IN"',"prompt":"hi","prompt_response":"'"$BAD"'","stop_hook_active":false}' "${GM[@]}")"
-check "gemini: AfterAgent blocks a bad reply" jqok "$out" '.decision == "block"'
-out="$(hook stop-gate.sh "$IN"',"prompt":"hi","prompt_response":"'"$BAD"'","stop_hook_active":true}' "${GM[@]}")"
-check "gemini: AfterAgent runs once per turn" test -z "$out"
-hook user-prompt-submit.sh "$IN"',"prompt":"/ste off"}' "${GM[@]}" >/dev/null
-check "gemini: /ste off removes the flag" test ! -e "$T/gemhome/.gemini/.simple-english-active"
+# ---- Antigravity CLI --------------------------------------------------------
+# agy (1.1.22) sends no prompt and no reply text. Both come from the transcript file.
+# The hook cwd is the installed plugin copy, and the root hooks.json sets STE_HARNESS.
+AG=(ANTIGRAVITY_CONVERSATION_ID=c1 STE_HARNESS=antigravity HOME="$T/aghome")
+TP="$T/transcript.jsonl"; : > "$TP"
+IN='{"conversationId":"c1","modelName":"m","transcriptPath":"'"$TP"'"'
+tstep() { # tstep <index> <source> <type> <content>   appends one transcript step
+  jq -nc --argjson i "$1" --arg s "$2" --arg t "$3" --arg c "$4" '{step_index:$i,source:$s,type:$t,content:$c}' >> "$TP"
+}
+tuser() { tstep "$1" USER_EXPLICIT USER_INPUT "$(printf '<USER_REQUEST>\n%s\n</USER_REQUEST>\n<ADDITIONAL_METADATA>\nx\n</ADDITIONAL_METADATA>' "$2")"; }
+tuser 0 "/ste strict"
+out="$(hook user-prompt-submit.sh "$IN"',"workspacePaths":[],"invocationNum":0}' "${AG[@]}")"
+check "antigravity: /ste strict injects an ephemeral message" jqok "$out" '.injectSteps[0].ephemeralMessage | test("STE MODE IS NOW: strict") and test("RULE TEXT MARKER") and test("project file: none")'
+check "antigravity: flag written under ~/.gemini/config" test "$(flag "$T/aghome/.gemini/config/.simple-english-active")" = strict
+check "antigravity: Claude flag untouched" test ! -e "$T/claude/.simple-english-active"
+out="$(hook session-start.sh "$IN"',"workspacePaths":[]}' "${AG[@]}")"
+check "antigravity: session start injects a system message" jqok "$out" '.injectSteps[0].systemMessage.systemMessage | test("RULE TEXT MARKER") and test("Level: strict") and test("/ste off") and (test("status line badge") | not)'
+tstep 1 MODEL PLANNER_RESPONSE "STE mode is strict."
+out="$(hook user-prompt-submit.sh "$IN"',"workspacePaths":[],"invocationNum":1}' "${AG[@]}")"
+check "antigravity: later model calls get the reminder only" jqok "$out" '.injectSteps[0].ephemeralMessage | test("STE MODE ACTIVE") and test("STRICT:") and (test("STE MODE IS NOW") | not)'
+tuser 2 "hello"; tstep 3 MODEL PLANNER_RESPONSE "$BAD"
+out="$(hook stop-gate.sh "$IN"',"workspacePaths":[],"executionNum":0,"terminationReason":"NO_TOOL_CALL","fullyIdle":true}' "${AG[@]}")"
+check "antigravity: stop gate continues on a bad reply" jqok "$out" '.decision == "continue" and (.reason | test("STE LINT FAILED"))'
+check "antigravity: score written next to the flag" test -s "$T/aghome/.gemini/config/.simple-english-score"
+tstep 4 SYSTEM SYSTEM_MESSAGE "Stop hook blocked termination: STE LINT FAILED (x)"; tstep 5 MODEL PLANNER_RESPONSE "$BAD"
+out="$(hook stop-gate.sh "$IN"',"workspacePaths":[],"executionNum":1}' "${AG[@]}")"
+check "antigravity: stop gate runs once per turn" test -z "$out"
+tuser 6 "again"; tstep 7 MODEL PLANNER_RESPONSE "$GOOD"
+out="$(hook stop-gate.sh "$IN"',"workspacePaths":[],"executionNum":0}' "${AG[@]}")"
+check "antigravity: stop gate passes a good reply" test -z "$out"
+mkdir -p "$T/agplugin/.claude"; printf 'off\n' > "$T/agplugin/.claude/ste-mode"
+out="$(cd "$T/agplugin" && hook session-start.sh "$IN"',"workspacePaths":[]}' "${AG[@]}")"
+check "antigravity: .claude/ste-mode in the plugin copy is ignored" jqok "$out" '.injectSteps[0].systemMessage.systemMessage | test("Level: strict")'
+mkdir -p "$PROJ/.claude"; printf 'off\n' > "$PROJ/.claude/ste-mode"
+out="$(hook session-start.sh "$IN"',"workspacePaths":["'"$PROJ"'"]}' "${AG[@]}")"
+check "antigravity: project file found through workspacePaths" test -z "$out"
+rm -f "$PROJ/.claude/ste-mode"
+out="$(hook user-prompt-submit.sh "$IN"',"workspacePaths":[]}' ANTIGRAVITY_CONVERSATION_ID=c1 HOME="$T/aghome")"
+check "antigravity: detected from ANTIGRAVITY_CONVERSATION_ID alone" jqok "$out" '.injectSteps[0].ephemeralMessage | test("STE MODE ACTIVE")'
+tuser 8 "/ste off"
+hook user-prompt-submit.sh "$IN"',"workspacePaths":[]}' "${AG[@]}" >/dev/null
+check "antigravity: /ste off removes the flag" test ! -e "$T/aghome/.gemini/config/.simple-english-active"
 
 # ---- Overrides and missing plugin -------------------------------------------
 out="$(hook session-start.sh '{}' STE_MODE=on STE_HARNESS=codex CLAUDE_PROJECT_DIR="$PROJ")"
@@ -136,21 +162,21 @@ out="$(hook session-start.sh '{}' STE_MODE=on STE_PLUGIN_DIR="$T/nowhere" CLAUDE
 check "missing plugin: note names STE_PLUGIN_DIR" jqok "$out" '.hookSpecificOutput.additionalContext | test("STE_PLUGIN_DIR")'
 
 # ---- Manifests --------------------------------------------------------------
-for f in hooks/hooks.json hooks/copilot-hooks.json gemini/hooks/hooks.json .claude-plugin/plugin.json \
+for f in hooks/hooks.json hooks/copilot-hooks.json hooks.json plugin.json .claude-plugin/plugin.json \
          .claude-plugin/marketplace.json .codex-plugin/plugin.json .agents/plugins/marketplace.json \
-         .github/plugin/plugin.json .github/plugin/marketplace.json gemini/gemini-extension.json; do
+         .github/plugin/plugin.json .github/plugin/marketplace.json; do
   check "valid JSON: $f" jq -e . "$ROOT/$f"
 done
 check "claude hooks.json keeps its three events" jq -e '.hooks | keys == ["SessionStart","Stop","UserPromptSubmit"]' "$ROOT/hooks/hooks.json"
 check "codex manifest reuses hooks/hooks.json and skills" jq -e '.hooks == "./hooks/hooks.json" and .skills == "./skills/"' "$ROOT/.codex-plugin/plugin.json"
 check "copilot hooks use the native format" jq -e '.version == 1 and (.hooks | keys == ["sessionStart","userPromptSubmitted"]) and (.hooks.sessionStart[0].bash | test("PLUGIN_ROOT"))' "$ROOT/hooks/copilot-hooks.json"
 check "copilot manifest points at copilot-hooks.json" jq -e '.hooks == "hooks/copilot-hooks.json" and .skills == "skills/"' "$ROOT/.github/plugin/plugin.json"
-check "gemini hooks use Gemini events only" jq -e '.hooks | keys == ["AfterAgent","BeforeAgent","SessionStart"]' "$ROOT/gemini/hooks/hooks.json"
-check "gemini hooks point at the shared scripts" jq -e '[.hooks[][].hooks[].command] | all(test("extensionPath\\}/\\.\\./hooks/"))' "$ROOT/gemini/hooks/hooks.json"
-check "gemini extension exposes the ste skill" test -f "$ROOT/gemini/skills/ste/SKILL.md"
-check "gemini /ste command forwards its arguments" grep -q '^prompt = "/ste {{args}}"' "$ROOT/gemini/commands/ste.toml"
+check "antigravity hooks.json is one named hook with agy events" jq -e 'keys == ["simple-english-hook"] and (.["simple-english-hook"] | keys == ["PreInvocation","SessionStart","Stop"])' "$ROOT/hooks.json"
+check "antigravity hooks use relative paths and set the harness" jq -e '[.["simple-english-hook"][][] | .command] | length == 3 and all(test("^STE_HARNESS=antigravity bash hooks/[a-z-]+\\.sh$"))' "$ROOT/hooks.json"
+check "antigravity plugin.json has name and description only" jq -e '.name == "simple-english-hook" and keys == ["description","name"]' "$ROOT/plugin.json"
+check "gemini directory removed" test ! -e "$ROOT/gemini"
 v="$(jq -r .version "$ROOT/.claude-plugin/plugin.json")"
-for f in .codex-plugin/plugin.json .github/plugin/plugin.json gemini/gemini-extension.json; do
+for f in .codex-plugin/plugin.json .github/plugin/plugin.json; do
   check "version $v in $f" test "$(jq -r .version "$ROOT/$f")" = "$v"
 done
 

@@ -1,2 +1,0 @@
-description = "Toggle Simple English (ASD-STE100) mode: /ste on | strict | off | status | project <mode>"
-prompt = "/ste {{args}}"
