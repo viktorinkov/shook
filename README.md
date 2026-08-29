@@ -214,10 +214,6 @@ Toggle: `/ste on`, `/ste strict`, `/ste off`, or `/ste status` in the Agent chat
 
 Details: [Cursor](docs/other-harnesses.md#cursor) in the harness docs.
 
-</details>
-
-There is no `npx` install. The skills CLI installs skills only, and this plugin is hooks.
-
 ## Use
 
 | Command | What it does |
