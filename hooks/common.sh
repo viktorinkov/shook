@@ -7,7 +7,8 @@ STE_CLAUDE_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
 
 # Harness detection. The same scripts run under four harnesses.
 #   claude  - Claude Code (default)
-#   codex   - OpenAI Codex CLI. Sets PLUGIN_DATA (and CLAUDE_PLUGIN_ROOT for compatibility).
+#   codex   - OpenAI Codex CLI. Sets PLUGIN_ROOT and PLUGIN_DATA, plus CLAUDE_PLUGIN_ROOT and
+#             CLAUDE_PLUGIN_DATA as aliases. Verified with Codex CLI 0.149.0.
 #   copilot - GitHub Copilot CLI. Sets COPILOT_PLUGIN_DATA.
 #   gemini  - Gemini CLI. Sets GEMINI_SESSION_ID, GEMINI_CWD and CLAUDE_PROJECT_DIR.
 # Override with STE_HARNESS=<name>. See docs/other-harnesses.md.

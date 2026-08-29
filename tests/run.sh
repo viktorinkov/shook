@@ -75,26 +75,35 @@ check "claude: /ste off removes the flag" test ! -e "$T/claude/.simple-english-a
 check "claude: /ste off confirms" has "$out" 'STE MODE IS NOW: off'
 
 # ---- Codex CLI --------------------------------------------------------------
-CX=(PLUGIN_DATA="$T/codex-data" CLAUDE_PLUGIN_ROOT="$ROOT" PLUGIN_ROOT="$ROOT")
-IN='{"cwd":"'"$PROJ"'","session_id":"s1"'
-out="$(hook user-prompt-submit.sh "$IN"',"prompt":"$ste strict"}' "${CX[@]}")"
+# Environment and stdin as observed in Codex CLI 0.149.0 (see docs/other-harnesses.md).
+# Codex sets PLUGIN_ROOT, PLUGIN_DATA and the CLAUDE_* aliases. It does not set CLAUDE_PROJECT_DIR.
+CX=(PLUGIN_DATA="$T/codex-data" CLAUDE_PLUGIN_DATA="$T/codex-data" CLAUDE_PLUGIN_ROOT="$ROOT" PLUGIN_ROOT="$ROOT")
+IN='{"session_id":"01a04aca-7796-7500-bb6c-e66bbf5d49af","turn_id":"01a04aca-781c-7ee3-9cf8-810b08fc401c","transcript_path":"'"$T"'/rollout.jsonl","cwd":"'"$PROJ"'","model":"gpt-5.6-sol","permission_mode":"default"'
+out="$(hook user-prompt-submit.sh "$IN"',"hook_event_name":"UserPromptSubmit","prompt":"$ste strict"}' "${CX[@]}")"
 check "codex: \$ste strict is UserPromptSubmit JSON" jqok "$out" '.hookSpecificOutput.hookEventName == "UserPromptSubmit"'
 check "codex: \$ste strict confirms in additionalContext" jqok "$out" '.hookSpecificOutput.additionalContext | test("STE MODE IS NOW: strict") and test("RULE TEXT MARKER")'
 check "codex: systemMessage on toggle" jqok "$out" '.systemMessage == "STE mode: strict"'
 check "codex: flag written to PLUGIN_DATA" test "$(flag "$T/codex-data/.simple-english-active")" = strict
 check "codex: Claude flag untouched" test ! -e "$T/claude/.simple-english-active"
-out="$(hook session-start.sh "$IN"',"source":"startup"}' "${CX[@]}")"
+# The skill picker inserts "$simple-english-hook:ste " (with a trailing space) in front of the arguments.
+out="$(hook user-prompt-submit.sh "$IN"',"hook_event_name":"UserPromptSubmit","prompt":"$simple-english-hook:ste  status"}' "${CX[@]}")"
+check "codex: picker mention reaches the hook as text" jqok "$out" '.hookSpecificOutput.additionalContext | test("STE MODE IS NOW: strict \\(source: global")'
+check "codex: status keeps the flag" test "$(flag "$T/codex-data/.simple-english-active")" = strict
+out="$(hook session-start.sh "$IN"',"hook_event_name":"SessionStart","source":"startup"}' "${CX[@]}")"
 check "codex: session start JSON" jqok "$out" '.hookSpecificOutput.hookEventName == "SessionStart" and .systemMessage == "STE mode: strict"'
 check "codex: session start names \$ste" jqok "$out" '.hookSpecificOutput.additionalContext | test("\\$ste off") and (test("status line badge") | not)'
-out="$(hook user-prompt-submit.sh "$IN"',"prompt":"hello"}' "${CX[@]}")"
+out="$(hook user-prompt-submit.sh "$IN"',"hook_event_name":"UserPromptSubmit","prompt":"hello"}' "${CX[@]}")"
 check "codex: reminder is JSON without systemMessage" jqok "$out" '(.hookSpecificOutput.additionalContext | test("STE MODE ACTIVE")) and (has("systemMessage") | not)'
-out="$(hook stop-gate.sh "$IN"',"last_assistant_message":"'"$BAD"'","stop_hook_active":false}' "${CX[@]}")"
+out="$(hook stop-gate.sh "$IN"',"hook_event_name":"Stop","stop_hook_active":false,"last_assistant_message":"'"$BAD"'"}' "${CX[@]}")"
 check "codex: stop gate blocks" jqok "$out" '.decision == "block"'
+check "codex: score written to PLUGIN_DATA" test -s "$T/codex-data/.simple-english-score"
+out="$(hook stop-gate.sh "$IN"',"hook_event_name":"Stop","stop_hook_active":true,"last_assistant_message":"'"$BAD"'"}' "${CX[@]}")"
+check "codex: stop gate runs once per turn" test -z "$out"
 mkdir -p "$PROJ/.claude"; printf 'off\n' > "$PROJ/.claude/ste-mode"
-out="$(hook user-prompt-submit.sh "$IN"',"prompt":"hello"}' "${CX[@]}")"
+out="$(hook user-prompt-submit.sh "$IN"',"hook_event_name":"UserPromptSubmit","prompt":"hello"}' "${CX[@]}")"
 check "codex: project file found through cwd" test -z "$out"
 rm -f "$PROJ/.claude/ste-mode"
-out="$(hook user-prompt-submit.sh "$IN"',"prompt":"$ste off"}' "${CX[@]}")"
+out="$(hook user-prompt-submit.sh "$IN"',"hook_event_name":"UserPromptSubmit","prompt":"$ste off"}' "${CX[@]}")"
 check "codex: \$ste off removes the flag" test ! -e "$T/codex-data/.simple-english-active"
 
 # ---- GitHub Copilot CLI -----------------------------------------------------
