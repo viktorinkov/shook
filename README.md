@@ -24,7 +24,14 @@ claude plugin marketplace add AminBlg/SimpleEnglish && claude plugin install sim
 
 Then start a new session and type `/ste strict`.
 
-The hooks need bash and `jq`. Strict mode also needs `python3`. Open the block for your harness. For a comparison of the harnesses, see the table in [docs/other-harnesses.md](docs/other-harnesses.md).
+Open the block for your harness.
+
+<details>
+<summary><sub>Requirements and harness comparison</sub></summary>
+
+The hooks need bash and [`jq`](https://jqlang.github.io/jq/download/). Strict mode also needs [`python3`](https://www.python.org/downloads/). Most Macs have all three. If not: `brew install jq python3`. For a comparison of the harnesses, see the table in [docs/other-harnesses.md](docs/other-harnesses.md).
+
+</details>
 
 <details open>
 <summary><strong>Claude Code</strong></summary>
