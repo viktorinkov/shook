@@ -91,7 +91,7 @@ How to read it: Claude alone decides whether the skill fires. On Fable 5, it fir
 
 Read the tables with care. The linter is a regex pass. It undercounts and it cannot judge meaning. The numbers compare arms against each other. They are not a compliance score. No tool can certify ASD-STE100 compliance.
 
-Reproduce: `python3 evals/bench.py` for Claude Code, and `python3 evals/codex_bench.py` for Codex. The scripts need a logged-in CLI and the installed simple-english plugin. Full tables, including a no-plugin baseline and the output-style arm for Sonnet 5, live in [`evals/results/RESULTS.md`](evals/results/RESULTS.md).
+Reproduce: `python3 evals/bench.py` for Claude Code, and `python3 evals/codex_bench.py` for Codex.
 
 ## How it works
 
