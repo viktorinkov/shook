@@ -14,14 +14,12 @@ This plugin is a companion to **[AminBlg/SimpleEnglish](https://github.com/AminB
 
 ## Install
 
+First install the [simple-english plugin](https://github.com/AminBlg/SimpleEnglish#-install), the prerequisite. Then install this plugin:
+
 ```bash
-claude plugin marketplace add AminBlg/SimpleEnglish
-claude plugin install simple-english@simple-english
 claude plugin marketplace add viktorinkov/simple-english-hook
 claude plugin install simple-english-hook@simple-english-hook
 ```
-
-The first two commands install the simple-english plugin, the prerequisite. The last two install this plugin.
 
 Requirements: Claude Code, the simple-english plugin, `jq`, and `python3` (strict mode only). No Node. No telemetry. Six shell files.
 
@@ -204,7 +202,7 @@ claude plugin update simple-english-hook@simple-english-hook
 1. Type `/ste uninstall`. It removes the status line badge, the state files, and the mode and config files in the current repo.
 2. Run `claude plugin uninstall simple-english-hook@simple-english-hook`.
 
-If other repos have a `.claude/ste-mode` or `.claude/ste-config.json` file, delete those by hand. To remove the simple-english plugin too, run `claude plugin uninstall simple-english@simple-english`.
+If other repos have a `.claude/ste-mode` or `.claude/ste-config.json` file, delete those by hand. To remove the [simple-english plugin](https://github.com/AminBlg/SimpleEnglish) too, follow the steps in its README.
 
 ---
 
