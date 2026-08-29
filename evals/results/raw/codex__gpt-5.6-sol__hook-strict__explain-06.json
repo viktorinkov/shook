@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "hook-strict",
+  "id": "explain-06",
+  "cat": "explain",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 16.0,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 16672,
+    "cached_input_tokens": 9984,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 370,
+    "reasoning_output_tokens": 169
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 122,
+    "sentences": 15,
+    "mean_sentence_words": 7.6,
+    "longest_sentence_words": 10,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "This command searches from the current directory through all subdirectories.\n\nIt removes each item that meets both conditions:\n\n- Its name ends with `.log`.\n- Its modification time is more than seven full days old.\n\n`{}` represents each matched path. `\\;` runs `rm` once for each match.\n\nIt is dangerous in these cases:\n\n- The current directory is incorrect or too broad.\n- Old log files contain audit, security, or diagnostic data.\n- The search enters mounted filesystems under the current directory.\n- A privileged account runs the command.\n- Another process changes a matched path before `rm` runs.\n- No backup or retention policy protects the files.\n\nTest the match list first:\n\n```sh\nfind . -name '*.log' -mtime +7 -print\n```\n\nRestrict matches to regular files for better safety:\n\n```sh\nfind . -type f -name '*.log' -mtime +7 -exec rm -- {} \\;\n```",
+  "texts": [
+    "This command searches from the current directory through all subdirectories.\n\nIt removes each item that meets both conditions:\n\n- Its name ends with `.log`.\n- Its modification time is more than seven full days old.\n\n`{}` represents each matched path. `\\;` runs `rm` once for each match.\n\nIt is dangerous in these cases:\n\n- The current directory is incorrect or too broad.\n- Old log files contain audit, security, or diagnostic data.\n- The search enters mounted filesystems under the current directory.\n- A privileged account runs the command.\n- Another process changes a matched path before `rm` runs.\n- No backup or retention policy protects the files.\n\nTest the match list first:\n\n```sh\nfind . -name '*.log' -mtime +7 -print\n```\n\nRestrict matches to regular files for better safety:\n\n```sh\nfind . -type f -name '*.log' -mtime +7 -exec rm -- {} \\;\n```"
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

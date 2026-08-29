@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "hook-strict",
+  "id": "readme-02",
+  "cat": "docs",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 8.3,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 14013,
+    "cached_input_tokens": 13568,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 239,
+    "reasoning_output_tokens": 64
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 40,
+    "sentences": 4,
+    "mean_sentence_words": 10.0,
+    "longest_sentence_words": 13,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "## Getting Started\n\nInstall `quickcache` and `redis`:\n\n```bash\nnpm install quickcache redis\n```\n\nCreate a Redis client and pass it to `quickcache`:\n\n```js\nimport { createClient } from \"redis\";\nimport QuickCache from \"quickcache\";\n\nconst client = createClient({ url: \"redis://localhost:6379\" });\n\nawait client.connect();\n\nconst cache = new QuickCache(client);\n```\n\nUse `set` to store a value and `get` to read it back:\n\n```js\nawait cache.set(\"user:1\", { id: 1, name: \"Ada\" }, { ttl: 60 });\n\nconst user = await cache.get(\"user:1\");\n\nconsole.log(user);\n```\n\nIf Redis runs on another host, update the `url` value before you connect.",
+  "texts": [
+    "## Getting Started\n\nInstall `quickcache` and `redis`:\n\n```bash\nnpm install quickcache redis\n```\n\nCreate a Redis client and pass it to `quickcache`:\n\n```js\nimport { createClient } from \"redis\";\nimport QuickCache from \"quickcache\";\n\nconst client = createClient({ url: \"redis://localhost:6379\" });\n\nawait client.connect();\n\nconst cache = new QuickCache(client);\n```\n\nUse `set` to store a value and `get` to read it back:\n\n```js\nawait cache.set(\"user:1\", { id: 1, name: \"Ada\" }, { ttl: 60 });\n\nconst user = await cache.get(\"user:1\");\n\nconsole.log(user);\n```\n\nIf Redis runs on another host, update the `url` value before you connect."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

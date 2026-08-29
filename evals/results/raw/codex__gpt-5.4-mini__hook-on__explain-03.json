@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "hook-on",
+  "id": "explain-03",
+  "cat": "explain",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 6.8,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 13967,
+    "cached_input_tokens": 4352,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 233,
+    "reasoning_output_tokens": 23
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 149,
+    "sentences": 20,
+    "mean_sentence_words": 6.8,
+    "longest_sentence_words": 17,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 0
+    },
+    "violations_total": 2,
+    "violations_per_100w": 1.34
+  },
+  "text": "Use `git merge` when you want to keep the branch history as it happened.\n\nUse `git rebase` when you want to move your feature commits on top of the latest base branch.\n\n`git merge`:\n- Keeps both branch histories.\n- Creates a merge commit in many cases.\n- Shows the real join points.\n- Works well for shared branches.\n\n`git rebase`:\n- Rewrites your feature branch history.\n- Makes the history linear.\n- Can make the log easier to read.\n- Works best on local feature branches before you share them.\n\nFor a feature branch, use this rule:\n- If other people already use the branch, use `git merge`.\n- If the branch is only yours, use `git rebase` to keep history clean.\n\nMain difference:\n- `merge` preserves history.\n- `rebase` rewrites history.\n\nIf you want one short recommendation: use `git rebase` on your private feature branch, and use `git merge` for shared work.",
+  "texts": [
+    "Use `git merge` when you want to keep the branch history as it happened.\n\nUse `git rebase` when you want to move your feature commits on top of the latest base branch.\n\n`git merge`:\n- Keeps both branch histories.\n- Creates a merge commit in many cases.\n- Shows the real join points.\n- Works well for shared branches.\n\n`git rebase`:\n- Rewrites your feature branch history.\n- Makes the history linear.\n- Can make the log easier to read.\n- Works best on local feature branches before you share them.\n\nFor a feature branch, use this rule:\n- If other people already use the branch, use `git merge`.\n- If the branch is only yours, use `git rebase` to keep history clean.\n\nMain difference:\n- `merge` preserves history.\n- `rebase` rewrites history.\n\nIf you want one short recommendation: use `git rebase` on your private feature branch, and use `git merge` for shared work."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

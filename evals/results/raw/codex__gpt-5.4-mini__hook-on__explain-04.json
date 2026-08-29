@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "hook-on",
+  "id": "explain-04",
+  "cat": "explain",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 6.0,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 13977,
+    "cached_input_tokens": 9472,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 209,
+    "reasoning_output_tokens": 21
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 127,
+    "sentences": 7,
+    "mean_sentence_words": 18.0,
+    "longest_sentence_words": 22,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.79
+  },
+  "text": "`SELECT * FROM orders WHERE created_at > NOW() - INTERVAL '1 day'` can be slow because the database must find rows from a very large table.\n\nIf the table has no useful index on `created_at`, the planner often scans many or all 50 million rows.\n\nEven with an index, the query can still read a large number of rows if many orders fall within the last day.\n\n`SELECT *` also adds cost because the database must fetch full row data after it finds matching index entries.\n\nThe index that helps is a B-tree index on `created_at`.\n\nExample:\n\n```sql\nCREATE INDEX idx_orders_created_at ON orders (created_at);\n```\n\nIf you often filter by time and also sort by time, this index helps the search use a range scan.\n\nIf the query returns many rows, the index helps less, because the database still reads much of the table data.",
+  "texts": [
+    "`SELECT * FROM orders WHERE created_at > NOW() - INTERVAL '1 day'` can be slow because the database must find rows from a very large table.\n\nIf the table has no useful index on `created_at`, the planner often scans many or all 50 million rows.\n\nEven with an index, the query can still read a large number of rows if many orders fall within the last day.\n\n`SELECT *` also adds cost because the database must fetch full row data after it finds matching index entries.\n\nThe index that helps is a B-tree index on `created_at`.\n\nExample:\n\n```sql\nCREATE INDEX idx_orders_created_at ON orders (created_at);\n```\n\nIf you often filter by time and also sort by time, this index helps the search use a range scan.\n\nIf the query returns many rows, the index helps less, because the database still reads much of the table data."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

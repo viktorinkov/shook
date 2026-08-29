@@ -1,0 +1,49 @@
+{
+  "harness": "codex",
+  "arm": "hook-strict",
+  "id": "readme-10",
+  "cat": "docs",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 15.8,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 2,
+  "strict_blocks": 1,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 33711,
+    "cached_input_tokens": 32256,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 384,
+    "reasoning_output_tokens": 151
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 77,
+    "sentences": 11,
+    "mean_sentence_words": 7.0,
+    "longest_sentence_words": 10,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 1.3
+  },
+  "text": "## Security\n\n### Report a Vulnerability\n\nSend vulnerability reports to `security@example.com`.\n\nInclude a description of the vulnerability.\n\nInclude the affected version.\n\nInclude steps that reproduce the vulnerability.\n\nInclude the potential impact.\n\nIf you have a proposed fix, include it.\n\nBefore the disclosure date, do not disclose the vulnerability publicly.\n\n### Disclosure Window\n\nWe use a 90-day disclosure window.\n\nThe window starts when we receive the report.\n\nWe plan to release a fix within 90 days.\n\nAfter 90 days, the reporter can disclose the vulnerability publicly.",
+  "texts": [
+    "## Security\n\n### Report a Vulnerability\n\nSend vulnerability reports to `security@example.com`.\n\nInclude these details:\n\n- A description of the vulnerability\n- The affected version\n- Steps to reproduce the vulnerability\n- The potential impact\n- A proposed fix, if available\n\nDo not disclose the vulnerability publicly before the disclosure date.\n\n### Disclosure Window\n\nWe use a 90-day disclosure window. The window starts when we receive the report.\n\nWe plan to release a fix within 90 days. After 90 days, the reporter can disclose the vulnerability publicly.",
+    "## Security\n\n### Report a Vulnerability\n\nSend vulnerability reports to `security@example.com`.\n\nInclude a description of the vulnerability.\n\nInclude the affected version.\n\nInclude steps that reproduce the vulnerability.\n\nInclude the potential impact.\n\nIf you have a proposed fix, include it.\n\nBefore the disclosure date, do not disclose the vulnerability publicly.\n\n### Disclosure Window\n\nWe use a 90-day disclosure window.\n\nThe window starts when we receive the report.\n\nWe plan to release a fix within 90 days.\n\nAfter 90 days, the reporter can disclose the vulnerability publicly."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

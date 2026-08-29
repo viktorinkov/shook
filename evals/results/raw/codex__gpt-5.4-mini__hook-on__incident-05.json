@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "hook-on",
+  "id": "incident-05",
+  "cat": "incident",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 7.2,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 13962,
+    "cached_input_tokens": 13568,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 199,
+    "reasoning_output_tokens": 67
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 109,
+    "sentences": 12,
+    "mean_sentence_words": 8.1,
+    "longest_sentence_words": 11,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "**Action Items**\n\n- Set log retention limits on every host and service.\n- Move verbose logs to lower priority storage.\n- Add disk usage alerts at 70 percent and 90 percent.\n- Add alerts for log directory growth rate.\n- Review log levels in production each week.\n- Remove debug logging from steady state code paths.\n- Add disk capacity checks to deployment and release steps.\n- Test log rotation on each service after changes.\n- Set a hard limit for local log volume.\n- Document the runbook for disk full events.\n- Assign an owner for log storage health.\n- Review these actions after the next incident review.",
+  "texts": [
+    "**Action Items**\n\n- Set log retention limits on every host and service.\n- Move verbose logs to lower priority storage.\n- Add disk usage alerts at 70 percent and 90 percent.\n- Add alerts for log directory growth rate.\n- Review log levels in production each week.\n- Remove debug logging from steady state code paths.\n- Add disk capacity checks to deployment and release steps.\n- Test log rotation on each service after changes.\n- Set a hard limit for local log volume.\n- Document the runbook for disk full events.\n- Assign an owner for log storage health.\n- Review these actions after the next incident review."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

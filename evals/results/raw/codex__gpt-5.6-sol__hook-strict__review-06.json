@@ -1,0 +1,49 @@
+{
+  "harness": "codex",
+  "arm": "hook-strict",
+  "id": "review-06",
+  "cat": "review",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 27.1,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 59976,
+    "cached_input_tokens": 52480,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 915,
+    "reasoning_output_tokens": 471
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 28,
+    "sentences": 3,
+    "mean_sentence_words": 9.3,
+    "longest_sentence_words": 13,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "`apt-get update` runs in an earlier image layer. Docker can reuse that cached layer, so `git` can use stale package indexes.\n\nInstall all packages in the same `RUN` command:\n\n```dockerfile\nRUN apt-get update \\\n    && apt-get install -y --no-install-recommends curl git \\\n    && rm -rf /var/lib/apt/lists/*\n```",
+  "texts": [
+    "I will use the Simplified Technical English skill to write a clear PR comment.",
+    "`apt-get update` runs in an earlier image layer. Docker can reuse that cached layer, so `git` can use stale package indexes.\n\nInstall all packages in the same `RUN` command:\n\n```dockerfile\nRUN apt-get update \\\n    && apt-get install -y --no-install-recommends curl git \\\n    && rm -rf /var/lib/apt/lists/*\n```"
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

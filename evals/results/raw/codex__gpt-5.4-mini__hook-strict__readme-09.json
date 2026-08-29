@@ -1,0 +1,49 @@
+{
+  "harness": "codex",
+  "arm": "hook-strict",
+  "id": "readme-09",
+  "cat": "docs",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 9.4,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 2,
+  "strict_blocks": 1,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 28356,
+    "cached_input_tokens": 27136,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 275,
+    "reasoning_output_tokens": 46
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 67,
+    "sentences": 6,
+    "mean_sentence_words": 10.5,
+    "longest_sentence_words": 13,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 2
+    },
+    "violations_total": 2,
+    "violations_per_100w": 2.99
+  },
+  "text": "**Upgrade**\n\nVersion 2 moves the config file from `~/.tool.json` to `~/.config/tool/config.json`.\n\n1. Move your config file to `~/.config/tool/config.json`.\n2. If the `~/.config/tool` directory does not exist, create it first.\n3. Check that the new file keeps your current settings.\n4. Remove `~/.tool.json` after you confirm that version 2 reads the new file.\n\nIf you use automated setup scripts, update each script with the new path.",
+  "texts": [
+    "**Upgrade**\n\nVersion 2 moves the config file from `~/.tool.json` to `~/.config/tool/config.json`.\n\n1. Move your existing config file to `~/.config/tool/config.json`.\n2. If the `~/.config/tool` directory does not exist, create it first.\n3. Check that the new file keeps your current settings.\n4. Remove `~/.tool.json` after you confirm that version 2 reads the new file.\n\nIf you use automated setup scripts, update each script with the new path.",
+    "**Upgrade**\n\nVersion 2 moves the config file from `~/.tool.json` to `~/.config/tool/config.json`.\n\n1. Move your config file to `~/.config/tool/config.json`.\n2. If the `~/.config/tool` directory does not exist, create it first.\n3. Check that the new file keeps your current settings.\n4. Remove `~/.tool.json` after you confirm that version 2 reads the new file.\n\nIf you use automated setup scripts, update each script with the new path."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

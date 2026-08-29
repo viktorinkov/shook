@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "hook-on",
+  "id": "runbook-01",
+  "cat": "runbook",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 10.1,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 13975,
+    "cached_input_tokens": 9472,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 426,
+    "reasoning_output_tokens": 95
+  },
+  "lint": {
+    "type": "procedural",
+    "words": 249,
+    "sentences": 21,
+    "mean_sentence_words": 11.4,
+    "longest_sentence_words": 19,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 2
+    },
+    "violations_total": 3,
+    "violations_per_100w": 1.2
+  },
+  "text": "**Runbook: Rotate `app` Database Password With Zero Downtime**\n\n**Purpose**\nRotate the database password for the `app` user without stopping traffic.\n\nThe app reads the password from an environment variable.\nThe app reloads that value after `SIGHUP`.\n\n**Prerequisites**\nConfirm that you can update the app environment and send `SIGHUP` to each app process.\n\nConfirm that you have database access to change the `app` password.\n\nConfirm that the current deployment runs more than one app instance or one load-balanced process.\n\n**Procedure**\n1. Add the new password to the app environment store.\n2. Keep the old password active in the database.\n3. Reload one app instance with `SIGHUP`.\n4. Verify that the instance reconnects and serves requests.\n5. Repeat the reload for each remaining app instance.\n6. Change the `app` password in the database to the new value.\n7. Keep the old password active until every instance reloads.\n8. Remove the old password from any secret store or fallback path.\n9. Record the rotation time and the new secret version.\n\n**Validation**\nCheck application logs for successful reconnects after each `SIGHUP`.\n\nCheck that new requests succeed during the full rotation.\n\nCheck that no instance uses the old password after the database change.\n\n**Rollback**\nIf an instance fails after reload, restore the old password in the app environment and send `SIGHUP` again.\n\nIf the database password change fails, keep the old password active and retry the database update.\n\nIf traffic fails, stop the rotation and verify one instance before you continue.",
+  "texts": [
+    "**Runbook: Rotate `app` Database Password With Zero Downtime**\n\n**Purpose**\nRotate the database password for the `app` user without stopping traffic.\n\nThe app reads the password from an environment variable.\nThe app reloads that value after `SIGHUP`.\n\n**Prerequisites**\nConfirm that you can update the app environment and send `SIGHUP` to each app process.\n\nConfirm that you have database access to change the `app` password.\n\nConfirm that the current deployment runs more than one app instance or one load-balanced process.\n\n**Procedure**\n1. Add the new password to the app environment store.\n2. Keep the old password active in the database.\n3. Reload one app instance with `SIGHUP`.\n4. Verify that the instance reconnects and serves requests.\n5. Repeat the reload for each remaining app instance.\n6. Change the `app` password in the database to the new value.\n7. Keep the old password active until every instance reloads.\n8. Remove the old password from any secret store or fallback path.\n9. Record the rotation time and the new secret version.\n\n**Validation**\nCheck application logs for successful reconnects after each `SIGHUP`.\n\nCheck that new requests succeed during the full rotation.\n\nCheck that no instance uses the old password after the database change.\n\n**Rollback**\nIf an instance fails after reload, restore the old password in the app environment and send `SIGHUP` again.\n\nIf the database password change fails, keep the old password active and retry the database update.\n\nIf traffic fails, stop the rotation and verify one instance before you continue."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

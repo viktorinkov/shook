@@ -1,0 +1,49 @@
+{
+  "harness": "codex",
+  "arm": "hook-on",
+  "id": "explain-10",
+  "cat": "explain",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 15.0,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 37344,
+    "cached_input_tokens": 26112,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 455,
+    "reasoning_output_tokens": 92
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 112,
+    "sentences": 7,
+    "mean_sentence_words": 15.0,
+    "longest_sentence_words": 50,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.89
+  },
+  "text": "## `.gitignore`\n\nA `.gitignore` file tells Git which untracked files and directories to ignore. Git does not include ignored items in new commits.\n\nTypical entries include:\n\n- Build output, such as `dist/` and `build/`\n- Dependency directories, such as `node_modules/`\n- Local environment files, such as `.env`\n- Editor files, such as `.idea/` and `.vscode/`\n- Operating-system files, such as `.DS_Store`\n- Log and temporary files\n- Generated files that the project can recreate\n\nDo not ignore source code or shared project configuration. Never commit passwords, API keys, or other secrets.\n\nA `.gitignore` file does not affect files that Git already tracks. Remove such files from the Git index before Git can ignore them.",
+  "texts": [
+    "I will use the Simple English skill because this text belongs in a getting-started guide.",
+    "## `.gitignore`\n\nA `.gitignore` file tells Git which untracked files and directories to ignore. Git does not include ignored items in new commits.\n\nTypical entries include:\n\n- Build output, such as `dist/` and `build/`\n- Dependency directories, such as `node_modules/`\n- Local environment files, such as `.env`\n- Editor files, such as `.idea/` and `.vscode/`\n- Operating-system files, such as `.DS_Store`\n- Log and temporary files\n- Generated files that the project can recreate\n\nDo not ignore source code or shared project configuration. Never commit passwords, API keys, or other secrets.\n\nA `.gitignore` file does not affect files that Git already tracks. Remove such files from the Git index before Git can ignore them."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

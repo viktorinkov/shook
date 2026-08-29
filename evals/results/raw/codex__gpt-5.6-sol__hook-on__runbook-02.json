@@ -1,0 +1,49 @@
+{
+  "harness": "codex",
+  "arm": "hook-on",
+  "id": "runbook-02",
+  "cat": "runbook",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 21.9,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 37412,
+    "cached_input_tokens": 32256,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 691,
+    "reasoning_output_tokens": 205
+  },
+  "lint": {
+    "type": "procedural",
+    "words": 142,
+    "sentences": 14,
+    "mean_sentence_words": 9.1,
+    "longest_sentence_words": 13,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "## Restart the `worker` Service\n\n1. Record the initial queue depth.\n\n   ```sh\n   <queue-depth-command>\n   ```\n\n2. Restart the `worker` service.\n\n   ```sh\n   sudo systemctl restart worker\n   ```\n\n3. Make sure that the service is active.\n\n   ```sh\n   sudo systemctl is-active worker\n   ```\n\n4. If the service is not active, examine the service log.\n\n   ```sh\n   sudo journalctl -u worker --since \"10 minutes ago\"\n   ```\n\n5. Measure the queue depth at regular intervals.\n\n   ```sh\n   watch -n 10 '<queue-depth-command>'\n   ```\n\n6. Make sure that the queue depth decreases until it reaches zero.\n\n7. If the queue depth does not decrease, examine the worker log for errors.\n\n   ```sh\n   sudo journalctl -u worker -f\n   ```\n\n8. Make sure that the worker can connect to the queue and its dependencies.\n\n9. If the log identifies a safe correction, apply the correction.\n\n10. Restart the `worker` service after the correction.\n\n11. If the queue still does not decrease, stop further restarts.\n\n12. Record the queue depth, service status, errors, and restart time.\n\n13. Contact the service owner with the recorded information.\n\n14. If the queue growth can cause data loss, follow the incident process immediately.",
+  "texts": [
+    "I will use the Simple English skill because this runbook requires clear technical instructions.",
+    "## Restart the `worker` Service\n\n1. Record the initial queue depth.\n\n   ```sh\n   <queue-depth-command>\n   ```\n\n2. Restart the `worker` service.\n\n   ```sh\n   sudo systemctl restart worker\n   ```\n\n3. Make sure that the service is active.\n\n   ```sh\n   sudo systemctl is-active worker\n   ```\n\n4. If the service is not active, examine the service log.\n\n   ```sh\n   sudo journalctl -u worker --since \"10 minutes ago\"\n   ```\n\n5. Measure the queue depth at regular intervals.\n\n   ```sh\n   watch -n 10 '<queue-depth-command>'\n   ```\n\n6. Make sure that the queue depth decreases until it reaches zero.\n\n7. If the queue depth does not decrease, examine the worker log for errors.\n\n   ```sh\n   sudo journalctl -u worker -f\n   ```\n\n8. Make sure that the worker can connect to the queue and its dependencies.\n\n9. If the log identifies a safe correction, apply the correction.\n\n10. Restart the `worker` service after the correction.\n\n11. If the queue still does not decrease, stop further restarts.\n\n12. Record the queue depth, service status, errors, and restart time.\n\n13. Contact the service owner with the recorded information.\n\n14. If the queue growth can cause data loss, follow the incident process immediately."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

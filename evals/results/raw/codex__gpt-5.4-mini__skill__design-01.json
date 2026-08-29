@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "skill",
+  "id": "design-01",
+  "cat": "design",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 8.7,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 13155,
+    "cached_input_tokens": 12544,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 425,
+    "reasoning_output_tokens": 26
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 289,
+    "sentences": 25,
+    "mean_sentence_words": 10.7,
+    "longest_sentence_words": 25,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 3,
+      "synonym_rotation": 1
+    },
+    "violations_total": 4,
+    "violations_per_100w": 1.38
+  },
+  "text": "For an order-processing pipeline, I recommend a **message queue** over direct HTTP calls.\n\n**Why a queue fits better**\n- **Decoupling**: The order service does not need the downstream service to be available right now.\n- **Resilience**: If inventory, payment, or fulfillment is slow or temporarily down, messages can wait and be retried.\n- **Load smoothing**: Sudden spikes in orders are absorbed by the queue instead of overwhelming the target service.\n- **Better failure handling**: Retries, dead-letter queues, and replay are standard patterns.\n- **Asynchronous workflow**: Order processing is usually a multi-step, eventually consistent pipeline, which maps well to queues.\n\n**When direct HTTP is better**\n- You need an immediate user-facing response from the downstream service.\n- The operation is simple, fast, and tightly coupled.\n- You need strong request/response semantics right away, such as validation or read-after-write confirmation.\n\n**Tradeoffs of a queue**\n- More operational complexity.\n- Eventual consistency instead of immediate completion.\n- You need idempotency and deduplication to handle retries safely.\n- Observability and tracing across services take more work.\n\n**Tradeoffs of direct HTTP**\n- Simpler to implement.\n- Easier to debug for synchronous flows.\n- But it creates tighter coupling and higher blast radius when one service slows down or fails.\n\n**Recommendation**\nUse a **message queue** for the order-processing pipeline, especially if the flow includes payment, inventory reservation, fulfillment, or notifications. Use **direct HTTP only for the small parts that truly need synchronous confirmation**.\n\nA common pattern is:\n- API receives order\n- API validates and stores order\n- API publishes `OrderCreated`\n- downstream services consume and act independently\n\nIf you want, I can also give you:\n1. a reference architecture for this pipeline, or\n2. a decision matrix for when to mix HTTP and queues.",
+  "texts": [
+    "For an order-processing pipeline, I recommend a **message queue** over direct HTTP calls.\n\n**Why a queue fits better**\n- **Decoupling**: The order service does not need the downstream service to be available right now.\n- **Resilience**: If inventory, payment, or fulfillment is slow or temporarily down, messages can wait and be retried.\n- **Load smoothing**: Sudden spikes in orders are absorbed by the queue instead of overwhelming the target service.\n- **Better failure handling**: Retries, dead-letter queues, and replay are standard patterns.\n- **Asynchronous workflow**: Order processing is usually a multi-step, eventually consistent pipeline, which maps well to queues.\n\n**When direct HTTP is better**\n- You need an immediate user-facing response from the downstream service.\n- The operation is simple, fast, and tightly coupled.\n- You need strong request/response semantics right away, such as validation or read-after-write confirmation.\n\n**Tradeoffs of a queue**\n- More operational complexity.\n- Eventual consistency instead of immediate completion.\n- You need idempotency and deduplication to handle retries safely.\n- Observability and tracing across services take more work.\n\n**Tradeoffs of direct HTTP**\n- Simpler to implement.\n- Easier to debug for synchronous flows.\n- But it creates tighter coupling and higher blast radius when one service slows down or fails.\n\n**Recommendation**\nUse a **message queue** for the order-processing pipeline, especially if the flow includes payment, inventory reservation, fulfillment, or notifications. Use **direct HTTP only for the small parts that truly need synchronous confirmation**.\n\nA common pattern is:\n- API receives order\n- API validates and stores order\n- API publishes `OrderCreated`\n- downstream services consume and act independently\n\nIf you want, I can also give you:\n1. a reference architecture for this pipeline, or\n2. a decision matrix for when to mix HTTP and queues."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

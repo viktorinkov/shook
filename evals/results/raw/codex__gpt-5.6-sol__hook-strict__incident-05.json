@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "hook-strict",
+  "id": "incident-05",
+  "cat": "incident",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 9.6,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 16664,
+    "cached_input_tokens": 9984,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 258,
+    "reasoning_output_tokens": 40
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 134,
+    "sentences": 14,
+    "mean_sentence_words": 6.3,
+    "longest_sentence_words": 10,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.75
+  },
+  "text": "## Action items\n\n- Set log retention limits on all production hosts. Owner: Platform. Due: [date].\n- Configure log rotation with file size and age limits. Owner: Platform. Due: [date].\n- Set disk usage alerts at 70, 80, and 90 percent. Owner: SRE. Due: [date].\n- Send disk alerts to the on-call service. Owner: SRE. Due: [date].\n- Stop nonessential log output when disk usage reaches 90 percent. Owner: Application Team. Due: [date].\n- Add disk capacity checks to deployment tests. Owner: Release Engineering. Due: [date].\n- Test log rotation and disk alerts each quarter. Owner: SRE. Due: [date].\n- Add disk cleanup steps to the outage runbook. Owner: SRE. Due: [date].\n- Review log levels for all production services. Owner: Service Owners. Due: [date].\n- Remove duplicate and low-value log events. Owner: Service Owners. Due: [date].",
+  "texts": [
+    "## Action items\n\n- Set log retention limits on all production hosts. Owner: Platform. Due: [date].\n- Configure log rotation with file size and age limits. Owner: Platform. Due: [date].\n- Set disk usage alerts at 70, 80, and 90 percent. Owner: SRE. Due: [date].\n- Send disk alerts to the on-call service. Owner: SRE. Due: [date].\n- Stop nonessential log output when disk usage reaches 90 percent. Owner: Application Team. Due: [date].\n- Add disk capacity checks to deployment tests. Owner: Release Engineering. Due: [date].\n- Test log rotation and disk alerts each quarter. Owner: SRE. Due: [date].\n- Add disk cleanup steps to the outage runbook. Owner: SRE. Due: [date].\n- Review log levels for all production services. Owner: Service Owners. Due: [date].\n- Remove duplicate and low-value log events. Owner: Service Owners. Due: [date]."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

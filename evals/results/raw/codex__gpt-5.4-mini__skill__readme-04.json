@@ -1,0 +1,49 @@
+{
+  "harness": "codex",
+  "arm": "skill",
+  "id": "readme-04",
+  "cat": "docs",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 9.1,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 13153,
+    "cached_input_tokens": 12544,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 405,
+    "reasoning_output_tokens": 86
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 202,
+    "sentences": 11,
+    "mean_sentence_words": 17.0,
+    "longest_sentence_words": 46,
+    "violations": {
+      "sentence_over_limit": 3,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 3,
+    "violations_per_100w": 1.49
+  },
+  "text": "## Troubleshooting\n\n### App does not start and shows `EADDRINUSE`\n\n`EADDRINUSE` means the app tried to use a network port that was already in use by another process. This is usually caused by:\n\n- Another copy of the app is already running\n- The app did not shut down cleanly\n- A different program is using the same port\n\n### Try this first\n\n1. Close the app completely.\n2. Check whether another app window or background process is still running.\n3. Start the app again.\n\n### If the problem continues\n\n- Restart your computer.\n- Make sure no other local development tools, servers, or desktop apps are using the same port.\n- If your app supports changing the port, set it to a different unused port and try again.\n- If you are on Windows, macOS, or Linux and know how to inspect running processes, look for the process that is holding the port and stop it.\n\n### If you are still blocked\n\nCollect the error message and any startup logs, then send them to support. Include:\n\n- Your operating system\n- The exact error text\n- The time the problem started\n- Whether the app was already running in the background\n\nIf you want, I can also turn this into a more user-friendly version for a help center article or a more technical version for developers.",
+  "texts": [
+    "I\u2019m drafting a concise Troubleshooting section that explains `EADDRINUSE` in plain language and gives users practical recovery steps without assuming deep technical knowledge.",
+    "## Troubleshooting\n\n### App does not start and shows `EADDRINUSE`\n\n`EADDRINUSE` means the app tried to use a network port that was already in use by another process. This is usually caused by:\n\n- Another copy of the app is already running\n- The app did not shut down cleanly\n- A different program is using the same port\n\n### Try this first\n\n1. Close the app completely.\n2. Check whether another app window or background process is still running.\n3. Start the app again.\n\n### If the problem continues\n\n- Restart your computer.\n- Make sure no other local development tools, servers, or desktop apps are using the same port.\n- If your app supports changing the port, set it to a different unused port and try again.\n- If you are on Windows, macOS, or Linux and know how to inspect running processes, look for the process that is holding the port and stop it.\n\n### If you are still blocked\n\nCollect the error message and any startup logs, then send them to support. Include:\n\n- Your operating system\n- The exact error text\n- The time the problem started\n- Whether the app was already running in the background\n\nIf you want, I can also turn this into a more user-friendly version for a help center article or a more technical version for developers."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

@@ -1,0 +1,49 @@
+{
+  "harness": "codex",
+  "arm": "skill",
+  "id": "explain-02",
+  "cat": "explain",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 19.4,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 57369,
+    "cached_input_tokens": 35072,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 642,
+    "reasoning_output_tokens": 77
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 139,
+    "sentences": 13,
+    "mean_sentence_words": 10.7,
+    "longest_sentence_words": 18,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.72
+  },
+  "text": "## Race conditions and mutexes\n\nA race condition occurs when multiple threads access shared data, and the result depends on their execution order.\n\nFor example, two threads increment the same counter. Each thread reads the value, adds one, and writes the new value.\n\nBoth threads can read `10` before either thread writes. Both then write `11`, although the correct result is `12`.\n\nA mutex protects this read-modify-write sequence. A thread must lock the mutex before it accesses the counter.\n\nOnly one thread can hold the mutex at a time. Other threads must wait until the owner unlocks it.\n\n```text\nlock mutex\nread counter\nincrement counter\nwrite counter\nunlock mutex\n```\n\nThe protected code is called a critical section. Every thread that accesses the shared data must use the same mutex.\n\nA mutex prevents concurrent access to the critical section. It does not prevent race conditions in code that does not use the mutex correctly.",
+  "texts": [
+    "I\u2019m using the Simplified Technical English skill because this is contributor documentation for readers who may be new to the topic.",
+    "## Race conditions and mutexes\n\nA race condition occurs when multiple threads access shared data, and the result depends on their execution order.\n\nFor example, two threads increment the same counter. Each thread reads the value, adds one, and writes the new value.\n\nBoth threads can read `10` before either thread writes. Both then write `11`, although the correct result is `12`.\n\nA mutex protects this read-modify-write sequence. A thread must lock the mutex before it accesses the counter.\n\nOnly one thread can hold the mutex at a time. Other threads must wait until the owner unlocks it.\n\n```text\nlock mutex\nread counter\nincrement counter\nwrite counter\nunlock mutex\n```\n\nThe protected code is called a critical section. Every thread that accesses the shared data must use the same mutex.\n\nA mutex prevents concurrent access to the critical section. It does not prevent race conditions in code that does not use the mutex correctly."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

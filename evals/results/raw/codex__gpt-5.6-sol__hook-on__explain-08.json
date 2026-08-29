@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "hook-on",
+  "id": "explain-08",
+  "cat": "explain",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 6.5,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 16621,
+    "cached_input_tokens": 9984,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 177,
+    "reasoning_output_tokens": 35
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 50,
+    "sentences": 6,
+    "mean_sentence_words": 8.3,
+    "longest_sentence_words": 20,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 2.0
+  },
+  "text": "The N+1 problem occurs when an ORM runs one query for a list, then one extra query for each item.\n\nExample with Django:\n\n```python\nposts = Post.objects.all()  # 1 query\n\nfor post in posts:\n    print(post.author.name)  # N queries\n```\n\nFor 100 posts, this code runs 101 queries.\n\nLoad related authors with the initial query:\n\n```python\nposts = Post.objects.select_related(\"author\")  # 1 query\n\nfor post in posts:\n    print(post.author.name)\n```\n\nUse `select_related()` for foreign-key relations. Use `prefetch_related()` for many-to-many and reverse relations.",
+  "texts": [
+    "The N+1 problem occurs when an ORM runs one query for a list, then one extra query for each item.\n\nExample with Django:\n\n```python\nposts = Post.objects.all()  # 1 query\n\nfor post in posts:\n    print(post.author.name)  # N queries\n```\n\nFor 100 posts, this code runs 101 queries.\n\nLoad related authors with the initial query:\n\n```python\nposts = Post.objects.select_related(\"author\")  # 1 query\n\nfor post in posts:\n    print(post.author.name)\n```\n\nUse `select_related()` for foreign-key relations. Use `prefetch_related()` for many-to-many and reverse relations."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

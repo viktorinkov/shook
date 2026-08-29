@@ -1,0 +1,49 @@
+{
+  "harness": "codex",
+  "arm": "hook-strict",
+  "id": "explain-02",
+  "cat": "explain",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 11.9,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 2,
+  "strict_blocks": 1,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 28336,
+    "cached_input_tokens": 26112,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 372,
+    "reasoning_output_tokens": 124
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 106,
+    "sentences": 8,
+    "mean_sentence_words": 13.2,
+    "longest_sentence_words": 23,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 0
+    },
+    "violations_total": 2,
+    "violations_per_100w": 1.89
+  },
+  "text": "A race condition happens when two or more threads use the same data at the same time, and the result depends on timing.\n\nThis timing can change from run to run. The program can then produce wrong or unstable results.\n\nA mutex prevents this by giving one thread exclusive access to the shared data.\n\nIf one thread locks the mutex, other threads wait until it unlocks it. This rule keeps the critical section from running at the same time in more than one thread.\n\nUse a mutex when a block of code reads or writes shared state. This keeps the state consistent and the result predictable.",
+  "texts": [
+    "A race condition happens when two or more threads use the same data at the same time, and the result depends on the timing.\n\nThis timing can change from run to run. The program can then produce wrong or unstable results.\n\nA mutex prevents this by giving one thread exclusive access to the shared data.\n\nWhen one thread locks the mutex, other threads must wait until it unlocks it. This rule keeps the critical section from running at the same time in more than one thread.\n\nUse a mutex when a block of code reads or writes shared state. This keeps the state consistent and the result predictable.",
+    "A race condition happens when two or more threads use the same data at the same time, and the result depends on timing.\n\nThis timing can change from run to run. The program can then produce wrong or unstable results.\n\nA mutex prevents this by giving one thread exclusive access to the shared data.\n\nIf one thread locks the mutex, other threads wait until it unlocks it. This rule keeps the critical section from running at the same time in more than one thread.\n\nUse a mutex when a block of code reads or writes shared state. This keeps the state consistent and the result predictable."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

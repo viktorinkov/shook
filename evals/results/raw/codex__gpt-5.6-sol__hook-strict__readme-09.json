@@ -1,0 +1,49 @@
+{
+  "harness": "codex",
+  "arm": "hook-strict",
+  "id": "readme-09",
+  "cat": "docs",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 21.7,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 60004,
+    "cached_input_tokens": 52480,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 726,
+    "reasoning_output_tokens": 248
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 30,
+    "sentences": 5,
+    "mean_sentence_words": 5.4,
+    "longest_sentence_words": 9,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "## Upgrade from version 1 to version 2\n\nVersion 2 reads the config file from `~/.config/tool/config.json`. Version 1 reads it from `~/.tool.json`.\n\n### Move the config file\n\n1. Create the new directory.\n\n   ```sh\n   mkdir -p ~/.config/tool\n   ```\n\n2. Move the config file.\n\n   ```sh\n   mv ~/.tool.json ~/.config/tool/config.json\n   ```\n\n3. Start version 2.",
+  "texts": [
+    "I will use the Simple English skill to keep the upgrade steps clear and safe.",
+    "## Upgrade from version 1 to version 2\n\nVersion 2 reads the config file from `~/.config/tool/config.json`. Version 1 reads it from `~/.tool.json`.\n\n### Move the config file\n\n1. Create the new directory.\n\n   ```sh\n   mkdir -p ~/.config/tool\n   ```\n\n2. Move the config file.\n\n   ```sh\n   mv ~/.tool.json ~/.config/tool/config.json\n   ```\n\n3. Start version 2."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

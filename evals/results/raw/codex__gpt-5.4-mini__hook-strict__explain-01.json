@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "hook-strict",
+  "id": "explain-01",
+  "cat": "explain",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 6.9,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 14044,
+    "cached_input_tokens": 12544,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 190,
+    "reasoning_output_tokens": 27
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 69,
+    "sentences": 8,
+    "mean_sentence_words": 8.6,
+    "longest_sentence_words": 17,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "The test fails because `client.upload()` returns `None`.\n\n`service.sync(client)` calls `client.upload()` and then reads `.status` from the returned value.\n\n`None` has no `.status` attribute.\n\nSo this line fails inside `service.sync`:\n\n```python\nclient.upload.return_value = None\n```\n\nIf you want the test to work, make `upload()` return an object that has a `status` field.\n\nFor example:\n\n```python\nfrom types import SimpleNamespace\n\ndef test_upload():\n    client = Mock()\n    client.upload.return_value = SimpleNamespace(status=200)\n    result = service.sync(client)\n    assert result.ok\n```\n\nThe main lesson is this: mock the full return shape that the code uses, not only the call itself.",
+  "texts": [
+    "The test fails because `client.upload()` returns `None`.\n\n`service.sync(client)` calls `client.upload()` and then reads `.status` from the returned value.\n\n`None` has no `.status` attribute.\n\nSo this line fails inside `service.sync`:\n\n```python\nclient.upload.return_value = None\n```\n\nIf you want the test to work, make `upload()` return an object that has a `status` field.\n\nFor example:\n\n```python\nfrom types import SimpleNamespace\n\ndef test_upload():\n    client = Mock()\n    client.upload.return_value = SimpleNamespace(status=200)\n    result = service.sync(client)\n    assert result.ok\n```\n\nThe main lesson is this: mock the full return shape that the code uses, not only the call itself."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "hook-strict",
+  "id": "design-01",
+  "cat": "design",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 12.0,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 16664,
+    "cached_input_tokens": 16128,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 343,
+    "reasoning_output_tokens": 77
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 231,
+    "sentences": 12,
+    "mean_sentence_words": 18.8,
+    "longest_sentence_words": 138,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.43
+  },
+  "text": "| Factor | Direct HTTP | Message queue |\n|---|---|---|\n| Response | Immediate response | Delayed response |\n| Service dependency | Both services must operate at the same time | Services operate independently |\n| Failure response | The caller must retry failed requests | The queue stores messages until delivery |\n| Traffic spikes | Spikes can overload the target service | The queue controls the delivery rate |\n| Data order | The caller controls request order | Queue configuration controls message order |\n| Complexity | Lower operational complexity | Higher operational complexity |\n| Error risk | Retries can create duplicate orders | Repeated delivery can create duplicate events |\n| Traceability | Request traces are direct | Event traces require correlation identifiers |\n\nUse a message queue for the order pipeline.\n\nOrders must survive temporary service failures and traffic spikes. A queue provides durable storage and isolates each service from failures.\n\nUse these controls:\n\n- Assign a unique idempotency key to each order.\n- Use a dead-letter queue for repeated failures.\n- Set clear retry limits.\n- Preserve message order for events from the same order.\n- Record a correlation identifier in every event.\n- Monitor queue depth, message age, and failure counts.\n\nUse direct HTTP for immediate queries, such as an inventory check before order acceptance. Avoid HTTP for the main order workflow.",
+  "texts": [
+    "| Factor | Direct HTTP | Message queue |\n|---|---|---|\n| Response | Immediate response | Delayed response |\n| Service dependency | Both services must operate at the same time | Services operate independently |\n| Failure response | The caller must retry failed requests | The queue stores messages until delivery |\n| Traffic spikes | Spikes can overload the target service | The queue controls the delivery rate |\n| Data order | The caller controls request order | Queue configuration controls message order |\n| Complexity | Lower operational complexity | Higher operational complexity |\n| Error risk | Retries can create duplicate orders | Repeated delivery can create duplicate events |\n| Traceability | Request traces are direct | Event traces require correlation identifiers |\n\nUse a message queue for the order pipeline.\n\nOrders must survive temporary service failures and traffic spikes. A queue provides durable storage and isolates each service from failures.\n\nUse these controls:\n\n- Assign a unique idempotency key to each order.\n- Use a dead-letter queue for repeated failures.\n- Set clear retry limits.\n- Preserve message order for events from the same order.\n- Record a correlation identifier in every event.\n- Monitor queue depth, message age, and failure counts.\n\nUse direct HTTP for immediate queries, such as an inventory check before order acceptance. Avoid HTTP for the main order workflow."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

@@ -1,0 +1,49 @@
+{
+  "harness": "codex",
+  "arm": "hook-strict",
+  "id": "explain-06",
+  "cat": "explain",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 9.1,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 2,
+  "strict_blocks": 1,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 28377,
+    "cached_input_tokens": 26112,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 332,
+    "reasoning_output_tokens": 32
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 106,
+    "sentences": 12,
+    "mean_sentence_words": 8.8,
+    "longest_sentence_words": 14,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 4,
+      "synonym_rotation": 0
+    },
+    "violations_total": 4,
+    "violations_per_100w": 3.77
+  },
+  "text": "This command finds `*.log` files under the current directory.\n\nIt selects files older than 7 days with `-mtime +7`.\n\nIt then runs `rm` on each matched file.\n\nIt is dangerous if the current directory is wrong.\n\nIt is dangerous if a file name contains spaces, quotes, or special shell characters.\n\nIt is dangerous if the command runs with broad access. It deletes files without a prompt.\n\nIt is dangerous if `find` matches more files than you expect. It can include logs in shared or important paths.\n\nFirst print matches with `find . -name '*.log' -mtime +7`.\n\nThen review them.\n\nIf you want, I can also show a safer replacement command.",
+  "texts": [
+    "This command finds `*.log` files under the current directory.\n\nIt selects files older than 7 days with `-mtime +7`.\n\nIt then runs `rm` on each matched file.\n\nIt is dangerous if the current directory is wrong.\n\nIt is dangerous if a file name contains spaces, quotes, or special shell characters.\n\nIt is dangerous if the command runs with broad access, because it deletes files without a prompt.\n\nIt is dangerous if `find` matches more files than you expect, including logs in shared or important paths.\n\nSafer options are to first print matches with `find . -name '*.log' -mtime +7`, then review them.\n\nIf you want, I can also show a safer replacement command.",
+    "This command finds `*.log` files under the current directory.\n\nIt selects files older than 7 days with `-mtime +7`.\n\nIt then runs `rm` on each matched file.\n\nIt is dangerous if the current directory is wrong.\n\nIt is dangerous if a file name contains spaces, quotes, or special shell characters.\n\nIt is dangerous if the command runs with broad access. It deletes files without a prompt.\n\nIt is dangerous if `find` matches more files than you expect. It can include logs in shared or important paths.\n\nFirst print matches with `find . -name '*.log' -mtime +7`.\n\nThen review them.\n\nIf you want, I can also show a safer replacement command."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

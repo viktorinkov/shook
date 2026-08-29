@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "skill",
+  "id": "readme-06",
+  "cat": "docs",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 4.2,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 13160,
+    "cached_input_tokens": 12544,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 102,
+    "reasoning_output_tokens": 14
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 63,
+    "sentences": 3,
+    "mean_sentence_words": 21.0,
+    "longest_sentence_words": 28,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 2,
+    "violations_per_100w": 3.17
+  },
+  "text": "`sqlpipe` is a simple, reliable way to move Postgres table data into S3 as Parquet files on a schedule. It is built for teams that need regular, queryable exports without running a heavy ETL pipeline: define the tables you want, choose when to run, and `sqlpipe` handles the recurring copy into S3 in a format that is efficient for downstream analytics and storage.",
+  "texts": [
+    "`sqlpipe` is a simple, reliable way to move Postgres table data into S3 as Parquet files on a schedule. It is built for teams that need regular, queryable exports without running a heavy ETL pipeline: define the tables you want, choose when to run, and `sqlpipe` handles the recurring copy into S3 in a format that is efficient for downstream analytics and storage."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

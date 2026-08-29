@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "skill",
+  "id": "readme-09",
+  "cat": "docs",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 5.2,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 13171,
+    "cached_input_tokens": 12544,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 178,
+    "reasoning_output_tokens": 19
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 79,
+    "sentences": 7,
+    "mean_sentence_words": 10.9,
+    "longest_sentence_words": 19,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 1.27
+  },
+  "text": "**Upgrade from v1 to v2**\n\nVersion 2 moves the config file from `~/.tool.json` to `~/.config/tool/config.json`.\n\nIf you are upgrading from version 1:\n\n1. Create the new config directory if it does not exist:\n   ```bash\n   mkdir -p ~/.config/tool\n   ```\n\n2. Move your existing config file:\n   ```bash\n   mv ~/.tool.json ~/.config/tool/config.json\n   ```\n\n3. If you prefer to edit manually, copy the contents of `~/.tool.json` into `~/.config/tool/config.json` and then remove the old file.\n\nVersion 2 will only read the new location. If the old file is still present, it will be ignored.",
+  "texts": [
+    "**Upgrade from v1 to v2**\n\nVersion 2 moves the config file from `~/.tool.json` to `~/.config/tool/config.json`.\n\nIf you are upgrading from version 1:\n\n1. Create the new config directory if it does not exist:\n   ```bash\n   mkdir -p ~/.config/tool\n   ```\n\n2. Move your existing config file:\n   ```bash\n   mv ~/.tool.json ~/.config/tool/config.json\n   ```\n\n3. If you prefer to edit manually, copy the contents of `~/.tool.json` into `~/.config/tool/config.json` and then remove the old file.\n\nVersion 2 will only read the new location. If the old file is still present, it will be ignored."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

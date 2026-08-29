@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "hook-strict",
+  "id": "design-01",
+  "cat": "design",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 6.7,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 14003,
+    "cached_input_tokens": 13568,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 186,
+    "reasoning_output_tokens": 27
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 125,
+    "sentences": 16,
+    "mean_sentence_words": 7.0,
+    "longest_sentence_words": 17,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.8
+  },
+  "text": "For an order-processing pipeline, use a message queue.\n\nMessage queue:\n- It decouples the two services.\n- It buffers spikes in order volume.\n- It retries after transient failures.\n- It fits async work and fan-out.\n- It can preserve work during short outages.\n\nDirect HTTP calls:\n- They are simpler at first.\n- They give immediate request and response.\n- They create tight service coupling.\n- They fail fast when the target service fails.\n- They handle retries and backpressure with more effort.\n\nRecommendation:\n- Use a message queue for order processing.\n- Use direct HTTP only for a small, synchronous step that must return at once.\n\nIf you want, I can also give a concrete flow for order intake, payment, inventory, and fulfillment.",
+  "texts": [
+    "For an order-processing pipeline, use a message queue.\n\nMessage queue:\n- It decouples the two services.\n- It buffers spikes in order volume.\n- It retries after transient failures.\n- It fits async work and fan-out.\n- It can preserve work during short outages.\n\nDirect HTTP calls:\n- They are simpler at first.\n- They give immediate request and response.\n- They create tight service coupling.\n- They fail fast when the target service fails.\n- They handle retries and backpressure with more effort.\n\nRecommendation:\n- Use a message queue for order processing.\n- Use direct HTTP only for a small, synchronous step that must return at once.\n\nIf you want, I can also give a concrete flow for order intake, payment, inventory, and fulfillment."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

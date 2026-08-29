@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "skill",
+  "id": "explain-07",
+  "cat": "explain",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 6.4,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 13146,
+    "cached_input_tokens": 4352,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 249,
+    "reasoning_output_tokens": 10
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 193,
+    "sentences": 17,
+    "mean_sentence_words": 10.8,
+    "longest_sentence_words": 22,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 1,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 2,
+    "violations_per_100w": 1.04
+  },
+  "text": "Adding a database index is not free because it trades read speed for extra work, storage, and operational risk.\n\nFor a product manager, the practical version is:\n\n- It makes some queries faster.\n- It makes writes slower.\n- It uses more disk and memory.\n- It adds maintenance overhead.\n- It can change the query planner\u2019s choices in ways you do not always predict.\n\nWhy that matters:\n\n- Every `INSERT`, `UPDATE`, or `DELETE` has to update the index too, not just the table.\n- If the table is large, building the index can take time and consume CPU, I/O, and sometimes lock resources.\n- More indexes mean more data structures to keep in sync, which increases system complexity.\n- An index is only valuable if the workload actually uses it. A bad or unused index is pure cost.\n\nA simple analogy: an index is like adding a second filing system. Finding a document gets faster, but every time a document changes, you now have to update both systems.\n\nSo the decision is not \u201cShould we add an index?\u201d but \u201cIs the read-time improvement worth the write-time, storage, and operational cost?\u201d",
+  "texts": [
+    "Adding a database index is not free because it trades read speed for extra work, storage, and operational risk.\n\nFor a product manager, the practical version is:\n\n- It makes some queries faster.\n- It makes writes slower.\n- It uses more disk and memory.\n- It adds maintenance overhead.\n- It can change the query planner\u2019s choices in ways you do not always predict.\n\nWhy that matters:\n\n- Every `INSERT`, `UPDATE`, or `DELETE` has to update the index too, not just the table.\n- If the table is large, building the index can take time and consume CPU, I/O, and sometimes lock resources.\n- More indexes mean more data structures to keep in sync, which increases system complexity.\n- An index is only valuable if the workload actually uses it. A bad or unused index is pure cost.\n\nA simple analogy: an index is like adding a second filing system. Finding a document gets faster, but every time a document changes, you now have to update both systems.\n\nSo the decision is not \u201cShould we add an index?\u201d but \u201cIs the read-time improvement worth the write-time, storage, and operational cost?\u201d"
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

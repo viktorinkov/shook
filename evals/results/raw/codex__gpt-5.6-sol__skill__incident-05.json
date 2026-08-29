@@ -1,0 +1,49 @@
+{
+  "harness": "codex",
+  "arm": "skill",
+  "id": "incident-05",
+  "cat": "incident",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 33.7,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 80092,
+    "cached_input_tokens": 70656,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 1007,
+    "reasoning_output_tokens": 117
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 258,
+    "sentences": 16,
+    "mean_sentence_words": 16.1,
+    "longest_sentence_words": 27,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 0
+    },
+    "violations_total": 3,
+    "violations_per_100w": 1.16
+  },
+  "text": "## Action items\n\n| Priority | Action | Owner | Due date | Success measure |\n|---|---|---|---|---|\n| P0 | Configure log rotation and retention limits for all service logs. | [Owner] | [Date] | Logs cannot use more than the assigned disk limit. |\n| P0 | Alert the on-call engineer when disk use reaches 70%, 80%, and 90%. | [Owner] | [Date] | The alert test sends the correct notification at each limit. |\n| P0 | Stop or reduce nonessential logging when available disk space falls below 10%. | [Owner] | [Date] | A load test shows that the service remains available. |\n| P1 | Move service logs to storage with automatic retention and deletion rules. | [Owner] | [Date] | Local disk use stays within its assigned limit for 30 days. |\n| P1 | Add disk growth and log volume to the operations dashboard. | [Owner] | [Date] | The dashboard shows current use, growth rate, and estimated time to full capacity. |\n| P1 | Add a monthly test of disk alerts and log rotation. | [Owner] | [Date] | The test records results and creates a ticket for each failure. |\n| P1 | Update the on-call runbook with steps to find and remove excess logs safely. | [Owner] | [Date] | An engineer who was not involved in the outage completes the procedure successfully. |\n| P2 | Review log levels and remove unnecessary high-volume messages. | [Owner] | [Date] | Normal log volume decreases without loss of required diagnostic data. |",
+  "texts": [
+    "I\u2019m using the Simplified Technical English skill because this is an incident-report section. It will keep each action specific, clear, and easy to verify.",
+    "## Action items\n\n| Priority | Action | Owner | Due date | Success measure |\n|---|---|---|---|---|\n| P0 | Configure log rotation and retention limits for all service logs. | [Owner] | [Date] | Logs cannot use more than the assigned disk limit. |\n| P0 | Alert the on-call engineer when disk use reaches 70%, 80%, and 90%. | [Owner] | [Date] | The alert test sends the correct notification at each limit. |\n| P0 | Stop or reduce nonessential logging when available disk space falls below 10%. | [Owner] | [Date] | A load test shows that the service remains available. |\n| P1 | Move service logs to storage with automatic retention and deletion rules. | [Owner] | [Date] | Local disk use stays within its assigned limit for 30 days. |\n| P1 | Add disk growth and log volume to the operations dashboard. | [Owner] | [Date] | The dashboard shows current use, growth rate, and estimated time to full capacity. |\n| P1 | Add a monthly test of disk alerts and log rotation. | [Owner] | [Date] | The test records results and creates a ticket for each failure. |\n| P1 | Update the on-call runbook with steps to find and remove excess logs safely. | [Owner] | [Date] | An engineer who was not involved in the outage completes the procedure successfully. |\n| P2 | Review log levels and remove unnecessary high-volume messages. | [Owner] | [Date] | Normal log volume decreases without loss of required diagnostic data. |"
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

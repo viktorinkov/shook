@@ -1,0 +1,50 @@
+{
+  "harness": "codex",
+  "arm": "skill",
+  "id": "runbook-02",
+  "cat": "runbook",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 11.3,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 3,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 30170,
+    "cached_input_tokens": 25088,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 509,
+    "reasoning_output_tokens": 56
+  },
+  "lint": {
+    "type": "procedural",
+    "words": 182,
+    "sentences": 15,
+    "mean_sentence_words": 11.1,
+    "longest_sentence_words": 23,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 1
+    },
+    "violations_total": 4,
+    "violations_per_100w": 2.2
+  },
+  "text": "**Runbook: Restart `worker` and Drain the Queue**\n\n1. Identify the host and the queue name.\n2. Record the current queue depth.\n3. Pause new work for the `worker` service, if your system supports that.\n4. Restart the `worker` service on the host.\n5. Wait for the service to start and become healthy.\n6. Check the queue depth every 1 to 5 minutes.\n7. Continue until the queue depth reaches zero or the expected steady state.\n8. Resume normal traffic if the queue drains.\n9. If the queue does not drain, collect the `worker` logs.\n10. Check for repeated errors, timeouts, or connection failures.\n11. Verify that the `worker` can reach its dependencies.\n12. Restart the `worker` one more time after you fix the cause.\n13. If the queue still does not drain, stop new work and escalate to the on-call engineer.\n14. Include the host name, queue depth, logs, and the time of each restart in the escalation report.\n\nIf you want, I can turn this into a stricter SOP format with a `Purpose`, `Prerequisites`, `Procedure`, and `Escalation` section.",
+  "texts": [
+    "I\u2019m going to draft this as a concise runbook entry and make the steps operational, including the drain check and the fallback path if the queue stays stuck.",
+    "I have the wording rules I need. Next I\u2019m drafting the runbook in a clean step list with a clear drain check and an escalation path if the queue does not drain.",
+    "**Runbook: Restart `worker` and Drain the Queue**\n\n1. Identify the host and the queue name.\n2. Record the current queue depth.\n3. Pause new work for the `worker` service, if your system supports that.\n4. Restart the `worker` service on the host.\n5. Wait for the service to start and become healthy.\n6. Check the queue depth every 1 to 5 minutes.\n7. Continue until the queue depth reaches zero or the expected steady state.\n8. Resume normal traffic if the queue drains.\n9. If the queue does not drain, collect the `worker` logs.\n10. Check for repeated errors, timeouts, or connection failures.\n11. Verify that the `worker` can reach its dependencies.\n12. Restart the `worker` one more time after you fix the cause.\n13. If the queue still does not drain, stop new work and escalate to the on-call engineer.\n14. Include the host name, queue depth, logs, and the time of each restart in the escalation report.\n\nIf you want, I can turn this into a stricter SOP format with a `Purpose`, `Prerequisites`, `Procedure`, and `Escalation` section."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "hook-strict",
+  "id": "explain-10",
+  "cat": "explain",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 5.8,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 14004,
+    "cached_input_tokens": 13568,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 179,
+    "reasoning_output_tokens": 22
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 105,
+    "sentences": 6,
+    "mean_sentence_words": 16.5,
+    "longest_sentence_words": 51,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.95
+  },
+  "text": "A `.gitignore` file tells `git` which files to leave out of version control.\n\nUse it for files that are local, generated, or machine-specific. It keeps the repository clean and avoids accidental commits.\n\nTypical entries include:\n\n- Build output, such as `dist/` or `build/`\n- Dependency folders, such as `node_modules/`\n- Log files, such as `*.log`\n- Environment files, such as `.env`\n- Editor and IDE files, such as `.idea/` or `.vscode/`\n- OS files, such as `.DS_Store`\n\nAdd any file that your project creates locally and does not need in the repository.\n\nDo not add source files that the project needs to run or build.",
+  "texts": [
+    "A `.gitignore` file tells `git` which files to leave out of version control.\n\nUse it for files that are local, generated, or machine-specific. It keeps the repository clean and avoids accidental commits.\n\nTypical entries include:\n\n- Build output, such as `dist/` or `build/`\n- Dependency folders, such as `node_modules/`\n- Log files, such as `*.log`\n- Environment files, such as `.env`\n- Editor and IDE files, such as `.idea/` or `.vscode/`\n- OS files, such as `.DS_Store`\n\nAdd any file that your project creates locally and does not need in the repository.\n\nDo not add source files that the project needs to run or build."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

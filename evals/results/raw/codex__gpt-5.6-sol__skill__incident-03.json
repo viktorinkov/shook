@@ -1,0 +1,49 @@
+{
+  "harness": "codex",
+  "arm": "skill",
+  "id": "incident-03",
+  "cat": "incident",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 21.6,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 80129,
+    "cached_input_tokens": 70656,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 641,
+    "reasoning_output_tokens": 52
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 36,
+    "sentences": 3,
+    "mean_sentence_words": 12.0,
+    "longest_sentence_words": 14,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "## What went wrong\n\nAfter the failover, two scheduler instances started and remained active. Both instances ran the same cron job, which caused the job to run twice. The scheduler had no leader election or lock to prevent concurrent execution.",
+  "texts": [
+    "I\u2019m using the Simplified Technical English skill because this is an incident-report section and needs clear, unambiguous wording.",
+    "## What went wrong\n\nAfter the failover, two scheduler instances started and remained active. Both instances ran the same cron job, which caused the job to run twice. The scheduler had no leader election or lock to prevent concurrent execution."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

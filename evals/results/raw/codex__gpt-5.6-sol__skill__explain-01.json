@@ -1,0 +1,49 @@
+{
+  "harness": "codex",
+  "arm": "skill",
+  "id": "explain-01",
+  "cat": "explain",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 17.2,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 35847,
+    "cached_input_tokens": 25088,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 491,
+    "reasoning_output_tokens": 127
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 59,
+    "sentences": 7,
+    "mean_sentence_words": 8.4,
+    "longest_sentence_words": 12,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "The test fails because `client.upload()` returns `None`.\n\nInside `service.sync`, this code is effectively executed:\n\n```python\nresponse = client.upload()\nstatus = response.status\n```\n\nBecause `response` is `None`, Python raises:\n\n```text\nAttributeError: 'NoneType' object has no attribute 'status'\n```\n\nThe test never reaches `assert result.ok`.\n\nMock the response object that `upload()` must return:\n\n```python\ndef test_upload():\n    client = Mock()\n    client.upload.return_value = Mock(status=200)\n\n    result = service.sync(client)\n\n    assert result.ok\n    client.upload.assert_called_once()\n```\n\nUse the exact `status` value that `service.sync` treats as successful. The mock must match the real API contract, including nested return objects.",
+  "texts": [
+    "I\u2019m using the Simplified Technical English skill to keep the explanation clear for a junior developer.",
+    "The test fails because `client.upload()` returns `None`.\n\nInside `service.sync`, this code is effectively executed:\n\n```python\nresponse = client.upload()\nstatus = response.status\n```\n\nBecause `response` is `None`, Python raises:\n\n```text\nAttributeError: 'NoneType' object has no attribute 'status'\n```\n\nThe test never reaches `assert result.ok`.\n\nMock the response object that `upload()` must return:\n\n```python\ndef test_upload():\n    client = Mock()\n    client.upload.return_value = Mock(status=200)\n\n    result = service.sync(client)\n\n    assert result.ok\n    client.upload.assert_called_once()\n```\n\nUse the exact `status` value that `service.sync` treats as successful. The mock must match the real API contract, including nested return objects."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

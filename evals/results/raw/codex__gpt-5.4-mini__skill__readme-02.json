@@ -1,0 +1,49 @@
+{
+  "harness": "codex",
+  "arm": "skill",
+  "id": "readme-02",
+  "cat": "docs",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 7.6,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 13165,
+    "cached_input_tokens": 12544,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 358,
+    "reasoning_output_tokens": 39
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 71,
+    "sentences": 6,
+    "mean_sentence_words": 11.8,
+    "longest_sentence_words": 20,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "## Getting Started\n\n`quickcache` is a small Node.js library that wraps Redis with a simple cache-first API.\n\n### Install\n\n```bash\nnpm install quickcache\n```\n\nor\n\n```bash\nyarn add quickcache\n```\n\n### Connect\n\nCreate a client and point it at your Redis server:\n\n```js\nimport { QuickCache } from \"quickcache\";\n\nconst cache = new QuickCache({\n  url: \"redis://localhost:6379\",\n});\n\nawait cache.connect();\n```\n\nIf you prefer environment variables:\n\n```js\nimport { QuickCache } from \"quickcache\";\n\nconst cache = new QuickCache({\n  url: process.env.REDIS_URL,\n});\n\nawait cache.connect();\n```\n\n### Get and Set\n\nUse `set` to store a value and `get` to read it back:\n\n```js\nawait cache.set(\"user:42\", { id: 42, name: \"Ada\" }, { ttl: 60 });\n\nconst user = await cache.get(\"user:42\");\nconsole.log(user);\n// { id: 42, name: \"Ada\" }\n```\n\n### Close the Connection\n\nWhen your app shuts down, close the Redis connection:\n\n```js\nawait cache.disconnect();\n```\n\nIf you want, I can also turn this into a more polished README-style section with headings, notes, and TypeScript examples.",
+  "texts": [
+    "I\u2019m drafting a concise Getting Started section for `quickcache` with install, connection setup, and a minimal `get`/`set` example.",
+    "## Getting Started\n\n`quickcache` is a small Node.js library that wraps Redis with a simple cache-first API.\n\n### Install\n\n```bash\nnpm install quickcache\n```\n\nor\n\n```bash\nyarn add quickcache\n```\n\n### Connect\n\nCreate a client and point it at your Redis server:\n\n```js\nimport { QuickCache } from \"quickcache\";\n\nconst cache = new QuickCache({\n  url: \"redis://localhost:6379\",\n});\n\nawait cache.connect();\n```\n\nIf you prefer environment variables:\n\n```js\nimport { QuickCache } from \"quickcache\";\n\nconst cache = new QuickCache({\n  url: process.env.REDIS_URL,\n});\n\nawait cache.connect();\n```\n\n### Get and Set\n\nUse `set` to store a value and `get` to read it back:\n\n```js\nawait cache.set(\"user:42\", { id: 42, name: \"Ada\" }, { ttl: 60 });\n\nconst user = await cache.get(\"user:42\");\nconsole.log(user);\n// { id: 42, name: \"Ada\" }\n```\n\n### Close the Connection\n\nWhen your app shuts down, close the Redis connection:\n\n```js\nawait cache.disconnect();\n```\n\nIf you want, I can also turn this into a more polished README-style section with headings, notes, and TypeScript examples."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

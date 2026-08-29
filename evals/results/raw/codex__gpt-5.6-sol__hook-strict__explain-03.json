@@ -1,0 +1,50 @@
+{
+  "harness": "codex",
+  "arm": "hook-strict",
+  "id": "explain-03",
+  "cat": "explain",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 96.8,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 3,
+  "strict_blocks": 1,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 83006,
+    "cached_input_tokens": 64512,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 1000,
+    "reasoning_output_tokens": 286
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 123,
+    "sentences": 13,
+    "mean_sentence_words": 9.3,
+    "longest_sentence_words": 13,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.81
+  },
+  "text": "`git merge` combines two branch histories. It usually creates a merge commit and preserves the original commit structure.\n\n`git rebase` moves feature commits onto a new base. It rewrites those commits and gives them new commit hashes.\n\nIf you want a linear history, use `git rebase` for a private feature branch.\n\nIf the branch is shared, use `git merge`. Also use it if you want to preserve the branch history.\n\nIf teammates already use the commits, do not rebase them. New commit hashes can cause duplicate commits and difficult conflicts.\n\nA common approach is:\n\n1. Rebase your private feature branch onto the current main branch.\n2. Merge the feature branch through the normal pull request process.\n\nFull ASD-STE100 compliance requires the official dictionary from [ASD-STE100](https://www.asd-ste100.org/).",
+  "texts": [
+    "I will use the Simple English skill because this technical explanation must follow strict ASD-STE100 rules.",
+    "`git merge` combines two branch histories. It usually creates a merge commit and preserves the original commit structure.\n\n`git rebase` moves feature commits onto a new base. It rewrites those commits and gives them new commit hashes.\n\nUse `git rebase` for a private feature branch when you want a linear history.\n\nUse `git merge` for a shared branch or when you want to preserve the branch history.\n\nDo not rebase commits that teammates already use. The new commit hashes can cause duplicate commits and difficult conflicts.\n\nA common approach is:\n\n1. Rebase your private feature branch onto the current main branch.\n2. Merge the feature branch through the normal pull request process.\n\nFull ASD-STE100 compliance requires the official dictionary from [ASD-STE100](https://www.asd-ste100.org/).",
+    "`git merge` combines two branch histories. It usually creates a merge commit and preserves the original commit structure.\n\n`git rebase` moves feature commits onto a new base. It rewrites those commits and gives them new commit hashes.\n\nIf you want a linear history, use `git rebase` for a private feature branch.\n\nIf the branch is shared, use `git merge`. Also use it if you want to preserve the branch history.\n\nIf teammates already use the commits, do not rebase them. New commit hashes can cause duplicate commits and difficult conflicts.\n\nA common approach is:\n\n1. Rebase your private feature branch onto the current main branch.\n2. Merge the feature branch through the normal pull request process.\n\nFull ASD-STE100 compliance requires the official dictionary from [ASD-STE100](https://www.asd-ste100.org/)."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

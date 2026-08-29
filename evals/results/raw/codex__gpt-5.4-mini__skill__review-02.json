@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "skill",
+  "id": "review-02",
+  "cat": "review",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 10.7,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 13180,
+    "cached_input_tokens": 12544,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 486,
+    "reasoning_output_tokens": 273
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 153,
+    "sentences": 7,
+    "mean_sentence_words": 21.1,
+    "longest_sentence_words": 41,
+    "violations": {
+      "sentence_over_limit": 3,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 1,
+      "ing_clause": 1,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 6,
+    "violations_per_100w": 3.92
+  },
+  "text": "**PR comment**\n\nThere\u2019s a correctness risk here if this migration runs in a live system with concurrent writes.\n\n- `ALTER TABLE users ADD COLUMN email ...` creates the column as nullable.\n- The `UPDATE` backfills existing rows.\n- But any new `users` rows inserted between those two statements, or after the backfill and before `SET NOT NULL`, can still end up with `email = NULL`, causing the final `ALTER COLUMN ... SET NOT NULL` to fail.\n\nI\u2019d recommend making the rollout atomic from the application\u2019s point of view, or at least doing this in a way that prevents concurrent inserts from slipping through, for example by:\n- adding the column with a temporary default or using a controlled backfill in a locked/maintenance window,\n- or adding the column nullable, backfilling, then validating and enforcing `NOT NULL` only after writes are blocked or the app has been updated to populate it.\n\nIf this is meant to be safe for production traffic, the current sequence is a bit brittle.",
+  "texts": [
+    "**PR comment**\n\nThere\u2019s a correctness risk here if this migration runs in a live system with concurrent writes.\n\n- `ALTER TABLE users ADD COLUMN email ...` creates the column as nullable.\n- The `UPDATE` backfills existing rows.\n- But any new `users` rows inserted between those two statements, or after the backfill and before `SET NOT NULL`, can still end up with `email = NULL`, causing the final `ALTER COLUMN ... SET NOT NULL` to fail.\n\nI\u2019d recommend making the rollout atomic from the application\u2019s point of view, or at least doing this in a way that prevents concurrent inserts from slipping through, for example by:\n- adding the column with a temporary default or using a controlled backfill in a locked/maintenance window,\n- or adding the column nullable, backfilling, then validating and enforcing `NOT NULL` only after writes are blocked or the app has been updated to populate it.\n\nIf this is meant to be safe for production traffic, the current sequence is a bit brittle."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

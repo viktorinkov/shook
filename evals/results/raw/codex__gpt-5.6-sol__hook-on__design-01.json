@@ -1,0 +1,49 @@
+{
+  "harness": "codex",
+  "arm": "hook-on",
+  "id": "design-01",
+  "cat": "design",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 20.4,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 37353,
+    "cached_input_tokens": 26112,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 646,
+    "reasoning_output_tokens": 122
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 272,
+    "sentences": 25,
+    "mean_sentence_words": 10.9,
+    "longest_sentence_words": 20,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.37
+  },
+  "text": "## Comparison\n\n| Factor | Direct HTTP calls | Message queue |\n|---|---|---|\n| Response | The caller receives an immediate result. | The caller receives an acceptance result before the work finishes. |\n| Service dependency | Both services must operate at the same time. | The queue stores messages during a service outage. |\n| Failure handling | The caller controls retries and timeouts. | The queue controls retries and failed-message storage. |\n| Traffic spikes | High traffic can overload the receiving service. | The queue holds work and controls the work rate. |\n| Data consistency | A failure can leave a partial order state. | Each consumer can process the order independently. |\n| Complexity | HTTP requires less infrastructure and less code. | A queue requires message schemas, monitoring, and failure controls. |\n| Duplicate work | A retry can repeat an operation. | Message delivery can repeat, so consumers must support idempotency. |\n| Order | Requests follow the call sequence. | Some queue types require special configuration to preserve message order. |\n\n## Recommendation\n\nUse a message queue as the main connection for the order-processing pipeline.\n\nOrder pipelines often include payment, inventory, fulfillment, notifications, and analytics. A queue isolates these services and absorbs traffic spikes.\n\nUse an order identifier as the idempotency key. Store messages that exceed the retry limit in a dead-letter queue.\n\nUse direct HTTP only when the customer needs an immediate result. Payment authorization and initial order validation often require this result.\n\nA practical design uses HTTP to accept the order. The order service then sends an event to the queue for each later operation.",
+  "texts": [
+    "I will use the Simple English skill because this technical comparison requires clear and unambiguous text.",
+    "## Comparison\n\n| Factor | Direct HTTP calls | Message queue |\n|---|---|---|\n| Response | The caller receives an immediate result. | The caller receives an acceptance result before the work finishes. |\n| Service dependency | Both services must operate at the same time. | The queue stores messages during a service outage. |\n| Failure handling | The caller controls retries and timeouts. | The queue controls retries and failed-message storage. |\n| Traffic spikes | High traffic can overload the receiving service. | The queue holds work and controls the work rate. |\n| Data consistency | A failure can leave a partial order state. | Each consumer can process the order independently. |\n| Complexity | HTTP requires less infrastructure and less code. | A queue requires message schemas, monitoring, and failure controls. |\n| Duplicate work | A retry can repeat an operation. | Message delivery can repeat, so consumers must support idempotency. |\n| Order | Requests follow the call sequence. | Some queue types require special configuration to preserve message order. |\n\n## Recommendation\n\nUse a message queue as the main connection for the order-processing pipeline.\n\nOrder pipelines often include payment, inventory, fulfillment, notifications, and analytics. A queue isolates these services and absorbs traffic spikes.\n\nUse an order identifier as the idempotency key. Store messages that exceed the retry limit in a dead-letter queue.\n\nUse direct HTTP only when the customer needs an immediate result. Payment authorization and initial order validation often require this result.\n\nA practical design uses HTTP to accept the order. The order service then sends an event to the queue for each later operation."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

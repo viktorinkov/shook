@@ -1,0 +1,49 @@
+{
+  "harness": "codex",
+  "arm": "hook-strict",
+  "id": "explain-10",
+  "cat": "explain",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 26.3,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 59956,
+    "cached_input_tokens": 43264,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 874,
+    "reasoning_output_tokens": 317
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 128,
+    "sentences": 8,
+    "mean_sentence_words": 15.1,
+    "longest_sentence_words": 54,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.78
+  },
+  "text": "## What is a `.gitignore` file?\n\nA `.gitignore` file tells Git which untracked files and directories to exclude from commits.\n\nTeams usually commit the `.gitignore` file to the repository. Thus, all team members use the same exclusion rules.\n\nTypical entries include:\n\n- Dependency directories, such as `node_modules/`\n- Build output, such as `dist/` or `build/`\n- Cache, log, and temporary files\n- Editor files, such as `.vscode/` or `.idea/`\n- Operating-system files, such as `.DS_Store`\n- Local configuration files, such as `.env`\n- Files that contain passwords, tokens, or private keys\n\nA `.gitignore` file does not remove files that Git already tracks. Git continues to track these files after you add them to `.gitignore`.\n\nDo not exclude source code or shared project configuration. The repository must contain all files that other developers require.",
+  "texts": [
+    "I will use the Simple English skill to keep this guide clear and consistent.",
+    "## What is a `.gitignore` file?\n\nA `.gitignore` file tells Git which untracked files and directories to exclude from commits.\n\nTeams usually commit the `.gitignore` file to the repository. Thus, all team members use the same exclusion rules.\n\nTypical entries include:\n\n- Dependency directories, such as `node_modules/`\n- Build output, such as `dist/` or `build/`\n- Cache, log, and temporary files\n- Editor files, such as `.vscode/` or `.idea/`\n- Operating-system files, such as `.DS_Store`\n- Local configuration files, such as `.env`\n- Files that contain passwords, tokens, or private keys\n\nA `.gitignore` file does not remove files that Git already tracks. Git continues to track these files after you add them to `.gitignore`.\n\nDo not exclude source code or shared project configuration. The repository must contain all files that other developers require."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

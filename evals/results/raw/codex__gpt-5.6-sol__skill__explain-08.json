@@ -1,0 +1,49 @@
+{
+  "harness": "codex",
+  "arm": "skill",
+  "id": "explain-08",
+  "cat": "explain",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 19.7,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 57422,
+    "cached_input_tokens": 39168,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 618,
+    "reasoning_output_tokens": 58
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 89,
+    "sentences": 10,
+    "mean_sentence_words": 8.7,
+    "longest_sentence_words": 15,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 1.12
+  },
+  "text": "The N+1 query problem occurs when an ORM runs:\n\n- One query to load a list of records.\n- One additional query for each record\u2019s related data.\n\nExample with Django ORM:\n\n```python\nposts = Post.objects.all()  # 1 query\n\nfor post in posts:\n    print(post.author.name)  # N author queries\n```\n\nFor 100 posts, this code can run 101 queries.\n\nLoad the related authors in the first query:\n\n```python\nposts = Post.objects.select_related(\"author\")\n\nfor post in posts:\n    print(post.author.name)\n```\n\n`select_related()` uses a SQL join. The ORM can now load the posts and authors with one query.\n\nFor many-to-many or reverse relationships, Django uses `prefetch_related()`:\n\n```python\nposts = Post.objects.prefetch_related(\"tags\")\n```\n\nOther ORMs use names such as eager loading, `JOIN FETCH`, `includes`, or `joinedload`.",
+  "texts": [
+    "I\u2019m using the Simplified Technical English skill to keep the example concise and unambiguous.",
+    "The N+1 query problem occurs when an ORM runs:\n\n- One query to load a list of records.\n- One additional query for each record\u2019s related data.\n\nExample with Django ORM:\n\n```python\nposts = Post.objects.all()  # 1 query\n\nfor post in posts:\n    print(post.author.name)  # N author queries\n```\n\nFor 100 posts, this code can run 101 queries.\n\nLoad the related authors in the first query:\n\n```python\nposts = Post.objects.select_related(\"author\")\n\nfor post in posts:\n    print(post.author.name)\n```\n\n`select_related()` uses a SQL join. The ORM can now load the posts and authors with one query.\n\nFor many-to-many or reverse relationships, Django uses `prefetch_related()`:\n\n```python\nposts = Post.objects.prefetch_related(\"tags\")\n```\n\nOther ORMs use names such as eager loading, `JOIN FETCH`, `includes`, or `joinedload`."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

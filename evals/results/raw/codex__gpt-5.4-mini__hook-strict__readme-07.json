@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "hook-strict",
+  "id": "readme-07",
+  "cat": "docs",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 4.3,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 14014,
+    "cached_input_tokens": 13568,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 102,
+    "reasoning_output_tokens": 42
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 34,
+    "sentences": 7,
+    "mean_sentence_words": 4.0,
+    "longest_sentence_words": 7,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "## Environment Variables\n\n- `DATABASE_URL`: Required. Set the database connection string.\n- `REDIS_URL`: Optional. Set this to enable caching.\n- `LOG_JSON`: Optional. Default value is `false`. Set this to `true` for JSON logs.",
+  "texts": [
+    "## Environment Variables\n\n- `DATABASE_URL`: Required. Set the database connection string.\n- `REDIS_URL`: Optional. Set this to enable caching.\n- `LOG_JSON`: Optional. Default value is `false`. Set this to `true` for JSON logs."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}
