@@ -9,7 +9,7 @@
     {
       "name": "simple-english-hook",
       "description": "Enforces ASD-STE100 Simplified Technical English on every reply. Requires a clone of AminBlg/SimpleEnglish.",
-      "version": "0.3.0",
+      "version": "0.4.0",
       "source": "./",
       "category": "productivity",
       "tags": ["technical-writing", "ste", "asd-ste100", "hooks"],

@@ -189,5 +189,122 @@ for f in .codex-plugin/plugin.json .github/plugin/plugin.json; do
   check "version $v in $f" test "$(jq -r .version "$ROOT/$f")" = "$v"
 done
 
+# ---- Settings: /ste config, /ste set, /ste unset ----------------------------
+# The config file and the gate settings. See the settings block in hooks/common.sh.
+unset STE_MIN_WORDS STE_MIN_TOTAL STE_MAX_PER_100W STE_LINT_TYPE 2>/dev/null || true
+hasE() { printf '%s' "$1" | grep -Eq -- "$2"; }
+CFG_G="$T/claude/simple-english-hook.json"
+CFG_P="$PROJ/.claude/ste-config.json"
+
+out="$(hook user-prompt-submit.sh '{"prompt":"/ste config"}' "${CL[@]}")"
+check "config: prints plain text" lacks "$out" '^{'
+check "config: header names mode and source" has "$out" 'STE CONFIG (mode: off, source: default):'
+check "config: min-words default row" hasE "$out" 'min-words +40 +default +STE_MIN_WORDS'
+check "config: min-total default row" hasE "$out" 'min-total +2 +default +STE_MIN_TOTAL'
+check "config: max-per-100w default row" hasE "$out" 'max-per-100w +1.0 +default +STE_MAX_PER_100W'
+check "config: lint-type default row" hasE "$out" 'lint-type +descriptive +default +STE_LINT_TYPE'
+check "config: names both files" has "$out" 'project file:'
+check "config: reply instruction" has "$out" 'Reply with the STE CONFIG table above'
+
+out="$(hook user-prompt-submit.sh '{"prompt":"/ste set min-words 10"}' "${CL[@]}")"
+check "set: confirms key, value and file" has "$out" "STE SETTING SAVED: min-words = 10 (global file: $CFG_G)"
+check "set: writes the global file" jq -e '.min_words == 10' "$CFG_G"
+check "set: table shows the global source" hasE "$out" 'min-words +10 +global'
+
+out="$(hook user-prompt-submit.sh '{"prompt":"/ste project set max-per-100w 50"}' "${CL[@]}")"
+check "project set: writes the project file" jq -e '.max_per_100w == 50' "$CFG_P"
+check "project set: table shows the project source" hasE "$out" 'max-per-100w +50 +project'
+
+hook user-prompt-submit.sh '{"prompt":"/ste project set min-words 20"}' "${CL[@]}" >/dev/null
+out="$(hook user-prompt-submit.sh '{"prompt":"/ste config"}' STE_MIN_WORDS=30 "${CL[@]}")"
+check "precedence: env beats project" hasE "$out" 'min-words +30 +env'
+out="$(hook user-prompt-submit.sh '{"prompt":"/ste config"}' "${CL[@]}")"
+check "precedence: project beats global" hasE "$out" 'min-words +20 +project'
+out="$(hook user-prompt-submit.sh '{"prompt":"/ste project unset min-words"}' "${CL[@]}")"
+check "project unset: confirms" has "$out" 'STE SETTING REMOVED: min-words (project file:'
+check "precedence: global after project unset" hasE "$out" 'min-words +10 +global'
+out="$(hook user-prompt-submit.sh '{"prompt":"/ste unset min-words"}' "${CL[@]}")"
+check "unset: removes the key" jq -e 'has("min_words") | not' "$CFG_G"
+check "precedence: default after unset" hasE "$out" 'min-words +40 +default'
+
+out="$(hook user-prompt-submit.sh '{"prompt":"/ste set min-words abc"}' "${CL[@]}")"
+check "validation: min-words abc rejected" has "$out" 'STE: invalid value "abc" for min-words'
+out="$(hook user-prompt-submit.sh '{"prompt":"/ste set max-per-100w -1"}' "${CL[@]}")"
+check "validation: max-per-100w -1 rejected" has "$out" 'STE: invalid value "-1" for max-per-100w'
+out="$(hook user-prompt-submit.sh '{"prompt":"/ste set lint-type foo"}' "${CL[@]}")"
+check "validation: lint-type foo rejected" has "$out" 'STE: invalid value "foo" for lint-type'
+check "validation: usage message is present" has "$out" 'usage:'
+out="$(hook user-prompt-submit.sh '{"prompt":"/ste set bogus 1"}' "${CL[@]}")"
+check "validation: unknown key rejected" has "$out" 'STE: unknown key "bogus"'
+check "validation: nothing invalid written" jq -e '(has("min_words") or has("lint_type") or has("bogus")) | not' "$CFG_G"
+
+out="$(hook user-prompt-submit.sh '{"prompt":"/ste project set lint-type procedural"}' "${CL[@]}")"
+check "lint-type: procedural accepted" hasE "$out" 'lint-type +procedural +project'
+hook user-prompt-submit.sh '{"prompt":"/ste project unset lint-type"}' "${CL[@]}" >/dev/null
+hook user-prompt-submit.sh '{"prompt":"/ste project unset max-per-100w"}' "${CL[@]}" >/dev/null
+
+# The gate reads the settings. A project min_words of 10 blocks a 20-word slop reply.
+hook user-prompt-submit.sh '{"prompt":"/ste strict"}' "${CL[@]}" >/dev/null
+hook user-prompt-submit.sh '{"prompt":"/ste project set min-words 10"}' "${CL[@]}" >/dev/null
+SHORTBAD="You should refactor this right now because it would be nicer and it could go faster and it may break."
+out="$(hook stop-gate.sh '{"last_assistant_message":"'"$SHORTBAD"'","stop_hook_active":false}' "${CL[@]}")"
+check "gate: project min-words 10 blocks a short slop reply" jqok "$out" '.decision == "block"'
+hook user-prompt-submit.sh '{"prompt":"/ste project unset min-words"}' "${CL[@]}" >/dev/null
+out="$(hook stop-gate.sh '{"last_assistant_message":"'"$SHORTBAD"'","stop_hook_active":false}' "${CL[@]}")"
+check "gate: default min-words passes the same reply" test -z "$out"
+# A global max_per_100w of 50 lets a bad reply through.
+hook user-prompt-submit.sh '{"prompt":"/ste set max-per-100w 50"}' "${CL[@]}" >/dev/null
+out="$(hook stop-gate.sh '{"last_assistant_message":"'"$BAD"'","stop_hook_active":false}' "${CL[@]}")"
+check "gate: global max-per-100w 50 passes a bad reply" test -z "$out"
+hook user-prompt-submit.sh '{"prompt":"/ste unset max-per-100w"}' "${CL[@]}" >/dev/null
+out="$(hook stop-gate.sh '{"last_assistant_message":"'"$BAD"'","stop_hook_active":false}' "${CL[@]}")"
+check "gate: defaults block the bad reply again" jqok "$out" '.decision == "block"'
+hook user-prompt-submit.sh '{"prompt":"/ste off"}' "${CL[@]}" >/dev/null
+
+# Codex and Antigravity keep the config file in their own state directories.
+out="$(hook user-prompt-submit.sh '{"cwd":"'"$PROJ"'","hook_event_name":"UserPromptSubmit","prompt":"$ste set min-total 3"}' "${CX[@]}")"
+check "codex: \$ste set confirms in additionalContext" jqok "$out" '.hookSpecificOutput.additionalContext | test("STE SETTING SAVED: min-total = 3")'
+check "codex: config written to PLUGIN_DATA" jq -e '.min_total == 3' "$T/codex-data/simple-english-hook.json"
+rm -f "$T/codex-data/simple-english-hook.json"
+TP2="$T/transcript-settings.jsonl"; : > "$TP2"
+jq -nc --arg c "$(printf '<USER_REQUEST>\n/ste set min-total 3\n</USER_REQUEST>')" \
+  '{step_index:0,source:"USER_EXPLICIT",type:"USER_INPUT",content:$c}' >> "$TP2"
+out="$(hook user-prompt-submit.sh '{"conversationId":"c9","transcriptPath":"'"$TP2"'","workspacePaths":[],"invocationNum":0}' "${AG[@]}")"
+check "antigravity: /ste set works from the transcript" jqok "$out" '.injectSteps[0].ephemeralMessage | test("STE SETTING SAVED: min-total = 3")'
+check "antigravity: config under ~/.gemini/config" jq -e '.min_total == 3' "$T/aghome/.gemini/config/simple-english-hook.json"
+
+# ---- /ste uninstall ---------------------------------------------------------
+U="$T/uclaude"; UP="$T/uproj"; UCL=(CLAUDE_PLUGIN_ROOT="$ROOT" CLAUDE_CONFIG_DIR="$U" CLAUDE_PROJECT_DIR="$UP")
+mkdir -p "$U/simple-english-hook" "$UP/.claude"
+printf '#!/usr/bin/env bash\ninput=$(cat)\nste_badge=x  # simple-english-hook\necho custom-line\n' > "$U/sl.sh"
+cp "$U/sl.sh" "$U/sl.sh.bak"
+jq -n --arg c "bash \"$U/sl.sh\"" '{statusLine:{type:"command",command:$c},other:1}' > "$U/settings.json"
+printf 'strict\n' > "$U/.simple-english-active"
+printf '0.0 0 10\n' > "$U/.simple-english-score"
+printf '{"min_words":10}\n' > "$U/simple-english-hook.json"
+printf 'on\n' > "$UP/.claude/ste-mode"
+printf '{"min_total":3}\n' > "$UP/.claude/ste-config.json"
+out="$(hook user-prompt-submit.sh '{"prompt":"/ste uninstall"}' "${UCL[@]}")"
+check "uninstall: badge line removed" lacks "$(cat "$U/sl.sh")" 'simple-english-hook'
+check "uninstall: other statusline lines survive" has "$(cat "$U/sl.sh")" 'custom-line'
+check "uninstall: statusline backup deleted" test ! -e "$U/sl.sh.bak"
+check "uninstall: settings.json untouched for a user script" jq -e '.statusLine.command != null and .other == 1' "$U/settings.json"
+check "uninstall: badge scripts deleted" test ! -e "$U/simple-english-hook"
+check "uninstall: flag, score and config deleted" test ! -e "$U/.simple-english-active" -a ! -e "$U/.simple-english-score" -a ! -e "$U/simple-english-hook.json"
+check "uninstall: project files deleted" test ! -e "$UP/.claude/ste-mode" -a ! -e "$UP/.claude/ste-config.json"
+check "uninstall: empty project .claude removed" test ! -e "$UP/.claude"
+check "uninstall: names the plugin uninstall command" has "$out" 'claude plugin uninstall simple-english-hook@simple-english-hook'
+check "uninstall: repos note present" has "$out" 'Repos other than this one: delete .claude/ste-mode and .claude/ste-config.json by hand.'
+check "uninstall: tells Claude to echo the lines" has "$out" 'Reply with the lines above and nothing else. Do not run tools.'
+out="$(hook user-prompt-submit.sh '{"prompt":"/ste uninstall"}' "${UCL[@]}")"
+check "uninstall: second run deletes nothing" lacks "$out" 'deleted '
+U2="$T/uclaude2"; mkdir -p "$U2"
+printf '#!/usr/bin/env bash\ninput=$(cat)\nste_badge=x  # simple-english-hook\nprintf "%%s" "$(printf "%%s" "$input" | jq -r .model.display_name)"\n' > "$U2/statusline.sh"
+jq -n --arg c "bash \"$U2/statusline.sh\"" '{statusLine:{type:"command",command:$c}}' > "$U2/settings.json"
+hook user-prompt-submit.sh '{"prompt":"/ste uninstall"}' CLAUDE_PLUGIN_ROOT="$ROOT" CLAUDE_CONFIG_DIR="$U2" CLAUDE_PROJECT_DIR="$UP" >/dev/null
+check "uninstall: installer statusline deleted" test ! -e "$U2/statusline.sh"
+check "uninstall: statusLine removed from settings.json" jq -e 'has("statusLine") | not' "$U2/settings.json"
+check "uninstall: settings backup written" test -e "$U2/settings.json.bak"
+
 printf '%d passed, %d failed\n' "$pass" "$fail"
 [ "$fail" -eq 0 ]
