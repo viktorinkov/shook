@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "readme-10",
+  "cat": "docs",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 28.5,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.161661,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 10985,
+    "cache_read_input_tokens": 11048,
+    "output_tokens": 1812,
+    "output_tokens_details": {
+      "thinking_tokens": 1097
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10985,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1410,
+        "cache_read_input_tokens": 6903,
+        "cache_creation_input_tokens": 8227,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8227
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 115,
+    "sentences": 9,
+    "mean_sentence_words": 12.4,
+    "longest_sentence_words": 17,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 2,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 1,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 3,
+    "violations_per_100w": 2.61
+  },
+  "text": "## Security\n\n```markdown\n## Security\n\nWe thank the people who report security problems to us. This section tells you how to\nsend a report and what happens after it.\n\n### Report a vulnerability\n\nCAUTION: Do not report a security vulnerability in a public issue or a pull request. A\npublic report gives attackers the information before a fix exists.\n\n1. Send an email to security@example.com.\n2. In the email, give this information:\n   - A description of the vulnerability\n   - The steps to reproduce it\n   - The version or the commit that you tested\n   - The impact that an attacker can get.\n3. If you have a proof of concept, attach it to the same email.\n\nWe send a confirmation of your report in 3 business days. Then we send an update every\n7 days until the problem is closed.\n\n### Disclosure window\n\nWe use a disclosure window of 90 days. The window starts on the day that we receive\nyour report.\n\nWe release a fix in this period. If we release the fix earlier, you can make your\nreport public on the day of the release. After day 90, you can make your report public,\nalso when there is no fix.\n\nIf the fix needs more time, we ask you for an extension before day 90. You can accept\nor refuse this request.\n\nWe do not take legal action against a researcher who obeys this policy.\n```\n\nThree values are placeholders \u2014 replace them with your own: the address `security@example.com`, the 3-business-day confirmation, and the 7-day update interval. I invented no other specifics.\n\nA few style notes on the choices, in case you edit it:\n\n- The public-report warning comes first, as a `CAUTION` with the command before the reason. A reader who stops after one line still gets the important part.\n- The reporting steps are procedural (imperative, one instruction per sentence); the window is descriptive (facts, no imperative). Keeping them apart stops the policy from reading like a set of instructions to you.\n- \"can\" and \"must\" only \u2014 no \"should\" or \"may\", which readers and translators split on.",
+  "texts": [
+    "## Security\n\n```markdown\n## Security\n\nWe thank the people who report security problems to us. This section tells you how to\nsend a report and what happens after it.\n\n### Report a vulnerability\n\nCAUTION: Do not report a security vulnerability in a public issue or a pull request. A\npublic report gives attackers the information before a fix exists.\n\n1. Send an email to security@example.com.\n2. In the email, give this information:\n   - A description of the vulnerability\n   - The steps to reproduce it\n   - The version or the commit that you tested\n   - The impact that an attacker can get.\n3. If you have a proof of concept, attach it to the same email.\n\nWe send a confirmation of your report in 3 business days. Then we send an update every\n7 days until the problem is closed.\n\n### Disclosure window\n\nWe use a disclosure window of 90 days. The window starts on the day that we receive\nyour report.\n\nWe release a fix in this period. If we release the fix earlier, you can make your\nreport public on the day of the release. After day 90, you can make your report public,\nalso when there is no fix.\n\nIf the fix needs more time, we ask you for an extension before day 90. You can accept\nor refuse this request.\n\nWe do not take legal action against a researcher who obeys this policy.\n```\n\nThree values are placeholders \u2014 replace them with your own: the address `security@example.com`, the 3-business-day confirmation, and the 7-day update interval. I invented no other specifics.\n\nA few style notes on the choices, in case you edit it:\n\n- The public-report warning comes first, as a `CAUTION` with the command before the reason. A reader who stops after one line still gets the important part.\n- The reporting steps are procedural (imperative, one instruction per sentence); the window is descriptive (facts, no imperative). Keeping them apart stops the policy from reading like a set of instructions to you.\n- \"can\" and \"must\" only \u2014 no \"should\" or \"may\", which readers and translators split on."
+  ],
+  "stderr_tail": ""
+}

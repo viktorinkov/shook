@@ -1,0 +1,71 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "explain-02",
+  "cat": "explain",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 39.1,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.10507999999999998,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 11871,
+    "cache_read_input_tokens": 92490,
+    "output_tokens": 3909,
+    "output_tokens_details": {
+      "thinking_tokens": 3426
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 11871,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3815,
+        "cache_read_input_tokens": 48238,
+        "cache_creation_input_tokens": 7885,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7885
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 209,
+    "sentences": 17,
+    "mean_sentence_words": 12.2,
+    "longest_sentence_words": 22,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.48
+  },
+  "text": "## Race Conditions and How a Mutex Prevents Them\n\n**What is a race condition?**\n\nA race condition occurs when two or more threads access shared data at the same time. The result then depends on the order in which the threads run. The final state of the data becomes unpredictable.\n\nThis happens because an operation that looks like one step, such as `counter++`, is often three steps at the machine level. First, the machine reads the current value. Then it adds one to it. Finally, it writes the result back to memory. If two threads run these steps at the same time, one update can overwrite the other. The program then loses an increment.\n\n**How a mutex prevents it**\n\nA mutex (short for mutual exclusion lock) prevents this problem. A mutex allows only one thread to enter a protected section of code at a time. Before a thread reads or writes the shared data, it must acquire the mutex. If another thread already holds the mutex, the new thread waits until the mutex becomes free. This way, the read-modify-write sequence never splits between two threads. Each update then completes fully before the next update starts.\n\nExample in Go:\n\n```go\nvar mu sync.Mutex\nvar counter int\n\nfunc increment() {\n    mu.Lock()\n    defer mu.Unlock()\n    counter++\n}\n```\n\nNote: A thread must release the mutex after it finishes with the shared data, or other threads wait forever.",
+  "stderr_tail": ""
+}

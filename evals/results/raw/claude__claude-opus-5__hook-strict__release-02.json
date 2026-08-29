@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "release-02",
+  "cat": "release",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 48.7,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.215628,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 13002,
+    "cache_read_input_tokens": 12276,
+    "output_tokens": 3178,
+    "output_tokens_details": {
+      "thinking_tokens": 2543
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 13002,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1985,
+        "cache_read_input_tokens": 8131,
+        "cache_creation_input_tokens": 9016,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 9016
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 255,
+    "sentences": 27,
+    "mean_sentence_words": 9.2,
+    "longest_sentence_words": 20,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.39
+  },
+  "text": "STE mode is active. The release notes that follow use strict Simplified Technical English.\n\n---\n\n# Release notes \u2014 version `X.Y.Z`\n\n## Breaking change: the default value of `--output` is now `json`\n\n### Summary\n\nThe default value of the `--output` flag changed. Before this release, the flag used the value `text`. Now the flag uses the value `json`. A command without an explicit `--output` flag prints JSON.\n\n### Who this change affects\n\nIf a script reads the standard output of a command and does not set `--output`, this change affects you. The change also affects a person who reads the output in a terminal.\n\n### What breaks\n\nThis change affects these items:\n\n- Scripts that parse plain text with `grep`, `awk`, or `cut` get JSON. These scripts can stop with an error.\n- Filters that depend on column positions get no columns.\n- Terminal output shows a JSON object instead of aligned text.\n\n### How to keep the plain text output\n\n1. Add `--output text` to each command in your scripts.\n2. If you cannot edit each command, make a shell alias that contains `--output text`.\n\nNote: the alias applies to an interactive shell only. A script that calls the command directly does not use the alias.\n\n### What does not change\n\nThe format of `--output text` is the same as before. The permitted values of `--output` are the same as before. Only the default value changed.\n\n### Why we made this change\n\nMost callers of this command send the output to another program. JSON is easier to parse than plain text. A machine-readable default prevents errors in scripts.\n\n---\n\nTwo facts were not available to me: the version number and the release date. Replace `X.Y.Z` with the version number. Add the date if your notes show one.",
+  "texts": [
+    "STE mode is active. The release notes that follow use strict Simplified Technical English.\n\n---\n\n# Release notes \u2014 version `X.Y.Z`\n\n## Breaking change: the default value of `--output` is now `json`\n\n### Summary\n\nThe default value of the `--output` flag changed. Before this release, the flag used the value `text`. Now the flag uses the value `json`. A command without an explicit `--output` flag prints JSON.\n\n### Who this change affects\n\nIf a script reads the standard output of a command and does not set `--output`, this change affects you. The change also affects a person who reads the output in a terminal.\n\n### What breaks\n\nThis change affects these items:\n\n- Scripts that parse plain text with `grep`, `awk`, or `cut` get JSON. These scripts can stop with an error.\n- Filters that depend on column positions get no columns.\n- Terminal output shows a JSON object instead of aligned text.\n\n### How to keep the plain text output\n\n1. Add `--output text` to each command in your scripts.\n2. If you cannot edit each command, make a shell alias that contains `--output text`.\n\nNote: the alias applies to an interactive shell only. A script that calls the command directly does not use the alias.\n\n### What does not change\n\nThe format of `--output text` is the same as before. The permitted values of `--output` are the same as before. Only the default value changed.\n\n### Why we made this change\n\nMost callers of this command send the output to another program. JSON is easier to parse than plain text. A machine-readable default prevents errors in scripts.\n\n---\n\nTwo facts were not available to me: the version number and the release date. Replace `X.Y.Z` with the version number. Add the date if your notes show one."
+  ],
+  "stderr_tail": ""
+}

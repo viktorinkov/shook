@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "explain-09",
+  "cat": "explain",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 31.8,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.0995525,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3917,
+    "cache_read_input_tokens": 4145,
+    "output_tokens": 2332,
+    "output_tokens_details": {
+      "thinking_tokens": 1479
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3917,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2332,
+        "cache_read_input_tokens": 4145,
+        "cache_creation_input_tokens": 3917,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3917
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 318,
+    "sentences": 37,
+    "mean_sentence_words": 8.4,
+    "longest_sentence_words": 17,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "## Why `0.1 + 0.2 != 0.3`\n\nComputers store `float` and `double` values in base 2. A binary fraction is a sum of 1/2, 1/4, 1/8, and so on. The decimal value 0.1 needs an infinite repeat in base 2. Base 10 has the same problem with 1/3. The hardware keeps only 53 significant bits and discards the rest.\n\nSo the program never holds 0.1. It holds the nearest double, about 0.1000000000000000055511151231. The value 0.2 carries a similar error. The two errors add up. The result is 0.30000000000000004, and the nearest double to 0.3 is a different value. The comparison returns false.\n\n```python\n>>> 0.1 + 0.2\n0.30000000000000004\n>>> 0.1 + 0.2 == 0.3\nFalse\n```\n\nThis is not a bug in Python. IEEE 754 works the same way in C, Java, Go, and JavaScript.\n\n## What to use for money\n\nUse one of these three options:\n\n- **Integers in minor units.** Store 1050 for $10.50. This is exact, fast, and easy to put in a database. It is the best default for a new system.\n- **A decimal type.** Use `decimal.Decimal` in Python, `BigDecimal` in Java, `decimal` in C#, or `shopspring/decimal` in Go. In SQL, use `NUMERIC(19, 4)`, never `FLOAT` or `REAL`.\n- **A money library.** Use `py-moneyed`, `javax.money`, or the Ruby `money` gem. These types keep the currency code with the amount.\n\n```python\n>>> from decimal import Decimal\n>>> Decimal(\"0.1\") + Decimal(\"0.2\") == Decimal(\"0.3\")\nTrue\n```\n\n## Rules for the money path\n\n1. Build decimals from strings. Write `Decimal(\"0.1\")`, not `Decimal(0.1)`. The second form copies the binary error.\n2. Keep floats out of the whole path. One JSON parse or one `float()` call destroys the exact value.\n3. Round one time, at the end of the calculation. Set the rule explicitly, for example `ROUND_HALF_EVEN`.\n4. Store the currency code next to the amount. Never add two amounts in different currencies.\n5. Check the minor unit count per currency. USD and EUR use 2 digits. JPY uses 0. BHD and KWD use 3.\n\nAn epsilon comparison such as `abs(a - b) < 1e-9` is correct for science and graphics. Do not use it for money. It hides real differences of one cent.",
+  "texts": [
+    "## Why `0.1 + 0.2 != 0.3`\n\nComputers store `float` and `double` values in base 2. A binary fraction is a sum of 1/2, 1/4, 1/8, and so on. The decimal value 0.1 needs an infinite repeat in base 2. Base 10 has the same problem with 1/3. The hardware keeps only 53 significant bits and discards the rest.\n\nSo the program never holds 0.1. It holds the nearest double, about 0.1000000000000000055511151231. The value 0.2 carries a similar error. The two errors add up. The result is 0.30000000000000004, and the nearest double to 0.3 is a different value. The comparison returns false.\n\n```python\n>>> 0.1 + 0.2\n0.30000000000000004\n>>> 0.1 + 0.2 == 0.3\nFalse\n```\n\nThis is not a bug in Python. IEEE 754 works the same way in C, Java, Go, and JavaScript.\n\n## What to use for money\n\nUse one of these three options:\n\n- **Integers in minor units.** Store 1050 for $10.50. This is exact, fast, and easy to put in a database. It is the best default for a new system.\n- **A decimal type.** Use `decimal.Decimal` in Python, `BigDecimal` in Java, `decimal` in C#, or `shopspring/decimal` in Go. In SQL, use `NUMERIC(19, 4)`, never `FLOAT` or `REAL`.\n- **A money library.** Use `py-moneyed`, `javax.money`, or the Ruby `money` gem. These types keep the currency code with the amount.\n\n```python\n>>> from decimal import Decimal\n>>> Decimal(\"0.1\") + Decimal(\"0.2\") == Decimal(\"0.3\")\nTrue\n```\n\n## Rules for the money path\n\n1. Build decimals from strings. Write `Decimal(\"0.1\")`, not `Decimal(0.1)`. The second form copies the binary error.\n2. Keep floats out of the whole path. One JSON parse or one `float()` call destroys the exact value.\n3. Round one time, at the end of the calculation. Set the rule explicitly, for example `ROUND_HALF_EVEN`.\n4. Store the currency code next to the amount. Never add two amounts in different currencies.\n5. Check the minor unit count per currency. USD and EUR use 2 digits. JPY uses 0. BHD and KWD use 3.\n\nAn epsilon comparison such as `abs(a - b) < 1e-9` is correct for science and graphics. Do not use it for money. It hides real differences of one cent."
+  ],
+  "stderr_tail": ""
+}

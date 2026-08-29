@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "incident-05",
+  "cat": "incident",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 27.6,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.0876625,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3983,
+    "cache_read_input_tokens": 4145,
+    "output_tokens": 1830,
+    "output_tokens_details": {
+      "thinking_tokens": 1038
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3983,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1830,
+        "cache_read_input_tokens": 4145,
+        "cache_creation_input_tokens": 3983,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3983
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 372,
+    "sentences": 27,
+    "mean_sentence_words": 13.8,
+    "longest_sentence_words": 26,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.27
+  },
+  "text": "## Action items\n\nOwners and dates below are placeholders. Replace them before you publish the postmortem.\n\n| ID | Action | Type | Owner | Due date | Priority |\n|----|--------|------|-------|----------|----------|\n| AI-1 | Configure `logrotate` for `/var/log/app` on all application hosts. Set the maximum file size to 100 MB. Keep 7 files. | Prevent | Platform team | 2026-09-04 | P1 |\n| AI-2 | Change the log level in production from `DEBUG` to `INFO`. | Prevent | Application team | 2026-09-02 | P1 |\n| AI-3 | Send application logs to the central log store. Do not keep the only copy on local disk. | Prevent | Platform team | 2026-09-25 | P2 |\n| AI-4 | Add an alert for disk use above 80 percent on every host. Send the alert to the team channel. | Detect | Observability team | 2026-09-04 | P1 |\n| AI-5 | Add a second alert for disk use above 90 percent. This alert pages the on-call engineer. | Detect | Observability team | 2026-09-04 | P1 |\n| AI-6 | Add a dashboard panel that shows free disk space for each host. | Detect | Observability team | 2026-09-11 | P3 |\n| AI-7 | Write a runbook for a full disk. Include the commands to find large files and to release space safely. | Mitigate | On-call lead | 2026-09-11 | P2 |\n| AI-8 | Move the write-ahead log to a separate volume. A full log volume then does not stop the database. | Mitigate | Database team | 2026-10-09 | P2 |\n| AI-9 | Add a log rotation check to the checklist for new services. | Process | Service owners | 2026-09-18 | P3 |\n| AI-10 | Test the disk alerts in staging. Repeat this test every quarter. | Process | Observability team | 2026-09-30 | P3 |\n\n### Notes on the action items\n\nAI-1, AI-2, AI-4, and AI-5 close the direct cause of the outage. Complete these items first.\n\nAI-3 and AI-8 reduce the effect of a future full disk. They need a change to the deployment and to the storage layout.\n\nTrack all items in the issue tracker. Link each item to this postmortem. Review the open items at the weekly operations meeting.",
+  "texts": [
+    "## Action items\n\nOwners and dates below are placeholders. Replace them before you publish the postmortem.\n\n| ID | Action | Type | Owner | Due date | Priority |\n|----|--------|------|-------|----------|----------|\n| AI-1 | Configure `logrotate` for `/var/log/app` on all application hosts. Set the maximum file size to 100 MB. Keep 7 files. | Prevent | Platform team | 2026-09-04 | P1 |\n| AI-2 | Change the log level in production from `DEBUG` to `INFO`. | Prevent | Application team | 2026-09-02 | P1 |\n| AI-3 | Send application logs to the central log store. Do not keep the only copy on local disk. | Prevent | Platform team | 2026-09-25 | P2 |\n| AI-4 | Add an alert for disk use above 80 percent on every host. Send the alert to the team channel. | Detect | Observability team | 2026-09-04 | P1 |\n| AI-5 | Add a second alert for disk use above 90 percent. This alert pages the on-call engineer. | Detect | Observability team | 2026-09-04 | P1 |\n| AI-6 | Add a dashboard panel that shows free disk space for each host. | Detect | Observability team | 2026-09-11 | P3 |\n| AI-7 | Write a runbook for a full disk. Include the commands to find large files and to release space safely. | Mitigate | On-call lead | 2026-09-11 | P2 |\n| AI-8 | Move the write-ahead log to a separate volume. A full log volume then does not stop the database. | Mitigate | Database team | 2026-10-09 | P2 |\n| AI-9 | Add a log rotation check to the checklist for new services. | Process | Service owners | 2026-09-18 | P3 |\n| AI-10 | Test the disk alerts in staging. Repeat this test every quarter. | Process | Observability team | 2026-09-30 | P3 |\n\n### Notes on the action items\n\nAI-1, AI-2, AI-4, and AI-5 close the direct cause of the outage. Complete these items first.\n\nAI-3 and AI-8 reduce the effect of a future full disk. They need a change to the deployment and to the storage layout.\n\nTrack all items in the issue tracker. Link each item to this postmortem. Review the open items at the weekly operations meeting."
+  ],
+  "stderr_tail": ""
+}

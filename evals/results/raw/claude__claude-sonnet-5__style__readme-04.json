@@ -1,0 +1,71 @@
+{
+  "harness": "claude",
+  "arm": "style",
+  "id": "readme-04",
+  "cat": "docs",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 11.8,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.0699192,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 10672,
+    "cache_read_input_tokens": 92881,
+    "output_tokens": 764,
+    "output_tokens_details": {
+      "thinking_tokens": 299
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10672,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 676,
+        "cache_read_input_tokens": 47837,
+        "cache_creation_input_tokens": 7879,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7879
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 213,
+    "sentences": 19,
+    "mean_sentence_words": 10.7,
+    "longest_sentence_words": 22,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 1,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 0
+    },
+    "violations_total": 3,
+    "violations_per_100w": 1.41
+  },
+  "text": "## Troubleshooting: App Fails to Start with `EADDRINUSE`\n\nThe error `EADDRINUSE` means that another process already uses the network port that the app needs. The app cannot start until the port is free.\n\nTo fix this problem, do the steps that follow.\n\n1. Close the app if it is open.\n2. Find the process that uses the port.\n   - On macOS or Linux, open a terminal and run `lsof -i :PORT`. Replace `PORT` with the port number from the error message.\n   - On Windows, open a command prompt and run `netstat -ano | findstr PORT`.\n3. Note the process ID (PID) in the command output.\n4. Stop the process.\n   - On macOS or Linux, run `kill PID`.\n   - On Windows, run `taskkill /PID PID /F`.\n5. Start the app again.\n\nIf the app still fails to start, restart your computer. A restart clears all processes and frees the port.\n\n**Note:** If a previous instance of the app did not close correctly, it can hold the port open. Check your task manager or activity monitor for extra copies of the app before you repeat these steps.\n\nIf the problem continues after a restart, another app on your system may use the same port on every start. In this case, change the port number in the app settings, or contact support with the port number from the error message.",
+  "stderr_tail": ""
+}

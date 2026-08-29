@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "explain-05",
+  "cat": "explain",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 27.6,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.1070205,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3915,
+    "cache_read_input_tokens": 38821,
+    "output_tokens": 1938,
+    "output_tokens_details": {
+      "thinking_tokens": 1179
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3915,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1938,
+        "cache_read_input_tokens": 38821,
+        "cache_creation_input_tokens": 3915,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3915
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 384,
+    "sentences": 39,
+    "mean_sentence_words": 9.6,
+    "longest_sentence_words": 24,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "## JWT authentication\n\nA JSON Web Token (JWT) is a signed string that carries facts about a user. The token has three parts: a header, a payload, and a signature. The header and the payload are Base64URL-encoded JSON. The server creates the signature with a secret key. Anyone can decode and read the payload. Therefore the payload must not contain secret data.\n\n### The flow\n\n1. The browser sends the credentials of the user to the API.\n2. The API verifies the credentials and creates a token.\n3. The API returns the token to the browser.\n4. The browser stores the token.\n5. For each later request, the browser sends the token in the `Authorization` header.\n6. The API verifies the signature and the claims of the token.\n7. If the token is valid, the API answers the request. If the token is not valid, the API returns `401 Unauthorized`.\n\nThe header format is:\n\n```\nAuthorization: Bearer <token>\n```\n\n### Why the API keeps no session\n\nThe API stores no session data for the user. The signature proves that nobody changed the payload. The API verifies the token with the key alone. Because of this, many API servers can accept the same token.\n\n### Claims\n\nThe payload contains claims. The standard claims are `sub` (the user), `iss` (the issuer), `aud` (the audience), `iat` (the time of issue), and `exp` (the time of expiry). The API must verify `exp` and `aud` on every request. A signature that is correct does not make an expired token valid.\n\n### Token storage in the browser\n\nTwo options exist:\n\n- An `httpOnly` cookie. A script on the page cannot read the cookie. The browser sends the cookie automatically, so the API needs protection against CSRF.\n- `localStorage`. The application code must add the header. A cross-site script attack can steal the token.\n\nDo not store a long-lived token in `localStorage`. One cross-site script attack gives an attacker full access to the account.\n\n### Expiry and refresh\n\nAn access token must have a short lifetime, from 5 to 15 minutes. A refresh token has a longer lifetime and stays in an `httpOnly` cookie. When the access token expires, the browser sends the refresh token to the API and gets a new access token.\n\nThe API cannot cancel a JWT before the time of expiry. To remove access immediately, the API must keep a deny list of token identifiers. A short lifetime limits the damage without a deny list.",
+  "texts": [
+    "## JWT authentication\n\nA JSON Web Token (JWT) is a signed string that carries facts about a user. The token has three parts: a header, a payload, and a signature. The header and the payload are Base64URL-encoded JSON. The server creates the signature with a secret key. Anyone can decode and read the payload. Therefore the payload must not contain secret data.\n\n### The flow\n\n1. The browser sends the credentials of the user to the API.\n2. The API verifies the credentials and creates a token.\n3. The API returns the token to the browser.\n4. The browser stores the token.\n5. For each later request, the browser sends the token in the `Authorization` header.\n6. The API verifies the signature and the claims of the token.\n7. If the token is valid, the API answers the request. If the token is not valid, the API returns `401 Unauthorized`.\n\nThe header format is:\n\n```\nAuthorization: Bearer <token>\n```\n\n### Why the API keeps no session\n\nThe API stores no session data for the user. The signature proves that nobody changed the payload. The API verifies the token with the key alone. Because of this, many API servers can accept the same token.\n\n### Claims\n\nThe payload contains claims. The standard claims are `sub` (the user), `iss` (the issuer), `aud` (the audience), `iat` (the time of issue), and `exp` (the time of expiry). The API must verify `exp` and `aud` on every request. A signature that is correct does not make an expired token valid.\n\n### Token storage in the browser\n\nTwo options exist:\n\n- An `httpOnly` cookie. A script on the page cannot read the cookie. The browser sends the cookie automatically, so the API needs protection against CSRF.\n- `localStorage`. The application code must add the header. A cross-site script attack can steal the token.\n\nDo not store a long-lived token in `localStorage`. One cross-site script attack gives an attacker full access to the account.\n\n### Expiry and refresh\n\nAn access token must have a short lifetime, from 5 to 15 minutes. A refresh token has a longer lifetime and stays in an `httpOnly` cookie. When the access token expires, the browser sends the refresh token to the API and gets a new access token.\n\nThe API cannot cancel a JWT before the time of expiry. To remove access immediately, the API must keep a deny list of token identifiers. A short lifetime limits the damage without a deny list."
+  ],
+  "stderr_tail": ""
+}

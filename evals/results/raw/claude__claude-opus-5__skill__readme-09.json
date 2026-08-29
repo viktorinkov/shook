@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "readme-09",
+  "cat": "docs",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 19.6,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.149432,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 10886,
+    "cache_read_input_tokens": 11070,
+    "output_tokens": 1359,
+    "output_tokens_details": {
+      "thinking_tokens": 755
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10886,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1095,
+        "cache_read_input_tokens": 6925,
+        "cache_creation_input_tokens": 8106,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8106
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 207,
+    "sentences": 19,
+    "mean_sentence_words": 10.5,
+    "longest_sentence_words": 26,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 0
+    },
+    "violations_total": 3,
+    "violations_per_100w": 1.45
+  },
+  "text": "## Upgrade from version 1 to version 2\n\nVersion 2 reads the configuration file from `~/.config/tool/config.json`. Version 1 read it from `~/.tool.json`. Version 2 does not read the old path. Move the file before you start version 2.\n\nTo move the configuration file:\n\n1. Create the new directory:\n   ```sh\n   mkdir -p ~/.config/tool\n   ```\n2. Move the file to the new path:\n   ```sh\n   mv ~/.tool.json ~/.config/tool/config.json\n   ```\n3. Start the tool again.\n\nCAUTION: Do not overwrite an existing `~/.config/tool/config.json`. The `mv` command replaces the file without a prompt. If the file is already there, examine both files first.\n\n---\n\nNotes on what I wrote:\n\n- **Mode:** pragmatic Simplified Technical English. Descriptive text is under 25 words per sentence, steps are under 20, one instruction per step, conditions before commands, one term for the file (\"configuration file\").\n- **Facts I did not invent:** I left out the file format, any automatic migration, an upgrade command, and the behavior when the file is missing. You gave only the path change. Add those subsections if version 2 has them \u2014 tell me the behavior and I will write them in the same style.\n- **One assumption, stated in the text:** version 2 does not fall back to `~/.tool.json`. If it does read the old path as a fallback, change the third sentence to say so.",
+  "texts": [
+    "## Upgrade from version 1 to version 2\n\nVersion 2 reads the configuration file from `~/.config/tool/config.json`. Version 1 read it from `~/.tool.json`. Version 2 does not read the old path. Move the file before you start version 2.\n\nTo move the configuration file:\n\n1. Create the new directory:\n   ```sh\n   mkdir -p ~/.config/tool\n   ```\n2. Move the file to the new path:\n   ```sh\n   mv ~/.tool.json ~/.config/tool/config.json\n   ```\n3. Start the tool again.\n\nCAUTION: Do not overwrite an existing `~/.config/tool/config.json`. The `mv` command replaces the file without a prompt. If the file is already there, examine both files first.\n\n---\n\nNotes on what I wrote:\n\n- **Mode:** pragmatic Simplified Technical English. Descriptive text is under 25 words per sentence, steps are under 20, one instruction per step, conditions before commands, one term for the file (\"configuration file\").\n- **Facts I did not invent:** I left out the file format, any automatic migration, an upgrade command, and the behavior when the file is missing. You gave only the path change. Add those subsections if version 2 has them \u2014 tell me the behavior and I will write them in the same style.\n- **One assumption, stated in the text:** version 2 does not fall back to `~/.tool.json`. If it does read the old path as a fallback, change the third sentence to say so."
+  ],
+  "stderr_tail": ""
+}

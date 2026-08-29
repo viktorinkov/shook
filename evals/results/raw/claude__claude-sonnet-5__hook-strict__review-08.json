@@ -1,0 +1,71 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "review-08",
+  "cat": "review",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 5.1,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.026674800000000002,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4040,
+    "cache_read_input_tokens": 44254,
+    "output_tokens": 166,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4040,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 166,
+        "cache_read_input_tokens": 44254,
+        "cache_creation_input_tokens": 4040,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4040
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 93,
+    "sentences": 8,
+    "mean_sentence_words": 11.4,
+    "longest_sentence_words": 17,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "The function `processData` has six boolean parameters. This is a task, not an email or calendar item, so here is the review comment directly.\n\nSplit `processData` into smaller functions or replace the boolean parameters with an options object. Six boolean parameters cause two problems.\n\n- Callers cannot tell which value maps to which parameter at the call site.\n- The number of possible parameter combinations is large, so tests must cover many cases.\n\nRefactor to an options object or enum-based flags instead. This change will make each call site clear about its intent.",
+  "stderr_tail": ""
+}

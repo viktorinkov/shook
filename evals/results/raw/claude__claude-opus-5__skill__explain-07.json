@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "explain-07",
+  "cat": "explain",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 21.7,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.059714500000000004,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2741,
+    "cache_read_input_tokens": 4145,
+    "output_tokens": 1170,
+    "output_tokens_details": {
+      "thinking_tokens": 123
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2741,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1170,
+        "cache_read_input_tokens": 4145,
+        "cache_creation_input_tokens": 2741,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2741
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 562,
+    "sentences": 30,
+    "mean_sentence_words": 18.5,
+    "longest_sentence_words": 44,
+    "violations": {
+      "sentence_over_limit": 9,
+      "contraction": 9,
+      "banned_modal": 1,
+      "perfect_tense": 0,
+      "ing_clause": 1,
+      "semicolon": 2,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 23,
+    "violations_per_100w": 4.09
+  },
+  "text": "## The short version\n\nAn index is a second copy of part of your data, kept sorted, that the database maintains on every single write. You're trading write speed, storage, and operational risk for read speed on *specific* queries.\n\n## The analogy\n\nAn index is like the index at the back of a textbook. It makes \"where is X mentioned?\" fast. But someone has to build it, it adds pages to the book, and **every time you edit a page, someone has to go update the index too**. Add ten indexes and every edit means ten index updates.\n\n## The four real costs\n\n**1. Writes get slower \u2014 permanently.**\nEvery `INSERT`, `UPDATE`, and `DELETE` on that table now also updates the index. A table with 8 indexes does roughly 9 write operations per row change. On a hot write path (order creation, event logging, session updates) this is the cost that actually bites \u2014 and it's paid forever, on every write, not just at creation.\n\n**2. Storage and memory.**\nThe index is real bytes on disk \u2014 often 10\u201330% of the table size per index, sometimes more. Disk is cheap; the memory it displaces is not. Databases cache hot data in RAM, and indexes compete for that cache. A rarely-used index can evict data your fast queries depend on, making *unrelated* things slower in ways that are hard to trace back.\n\n**3. Creating it is a risky operation.**\nOn a large production table, building an index reads the entire table. Depending on the database and how it's done, that can lock writes for minutes or hours, or run in the background while consuming significant I/O and slowing everything else. This is the part that turns into an incident if done casually at peak traffic. It's a deploy with a blast radius, not a config change.\n\n**4. It might not even be used.**\nThe query planner decides whether to use an index. If the index doesn't match the query's shape \u2014 wrong column order, wrong filter, query returns too much of the table anyway \u2014 the planner ignores it. You then pay all the write and memory costs for zero read benefit. This is common; most mature databases have several indexes nobody uses.\n\n## Why it still feels free\n\nBecause the win is immediate and visible (a slow page gets fast today), and the costs are diffuse and delayed (writes get 5% slower, cache pressure rises, and six months later nobody connects the gradual write latency creep to the index added in Q1). Indexes are easy to add and socially hard to remove \u2014 nobody wants to be the one who dropped the index that turns out to matter.\n\n## What this means for planning\n\n- \"Add an index\" is usually a **hours-to-days** task with a monitored rollout, not a five-minute fix \u2014 though on a small table it genuinely is quick. Ask which case you're in.\n- The right question isn't \"can we index this?\" but \"**which queries** get faster, and what's the write volume on that table?\"\n- Indexes need periodic review the way dependencies do. Unused ones are pure cost.\n- If someone pushes back on an index request, they're usually protecting write throughput on a hot table \u2014 that's a real tradeoff worth hearing, not gatekeeping.\n\n## The one-line version for a roadmap conversation\n\n> Indexes make reads faster by making every write slower and using more memory. They're a targeted optimization with an ongoing tax, so we add them deliberately for known slow queries \u2014 not by default.",
+  "texts": [
+    "## The short version\n\nAn index is a second copy of part of your data, kept sorted, that the database maintains on every single write. You're trading write speed, storage, and operational risk for read speed on *specific* queries.\n\n## The analogy\n\nAn index is like the index at the back of a textbook. It makes \"where is X mentioned?\" fast. But someone has to build it, it adds pages to the book, and **every time you edit a page, someone has to go update the index too**. Add ten indexes and every edit means ten index updates.\n\n## The four real costs\n\n**1. Writes get slower \u2014 permanently.**\nEvery `INSERT`, `UPDATE`, and `DELETE` on that table now also updates the index. A table with 8 indexes does roughly 9 write operations per row change. On a hot write path (order creation, event logging, session updates) this is the cost that actually bites \u2014 and it's paid forever, on every write, not just at creation.\n\n**2. Storage and memory.**\nThe index is real bytes on disk \u2014 often 10\u201330% of the table size per index, sometimes more. Disk is cheap; the memory it displaces is not. Databases cache hot data in RAM, and indexes compete for that cache. A rarely-used index can evict data your fast queries depend on, making *unrelated* things slower in ways that are hard to trace back.\n\n**3. Creating it is a risky operation.**\nOn a large production table, building an index reads the entire table. Depending on the database and how it's done, that can lock writes for minutes or hours, or run in the background while consuming significant I/O and slowing everything else. This is the part that turns into an incident if done casually at peak traffic. It's a deploy with a blast radius, not a config change.\n\n**4. It might not even be used.**\nThe query planner decides whether to use an index. If the index doesn't match the query's shape \u2014 wrong column order, wrong filter, query returns too much of the table anyway \u2014 the planner ignores it. You then pay all the write and memory costs for zero read benefit. This is common; most mature databases have several indexes nobody uses.\n\n## Why it still feels free\n\nBecause the win is immediate and visible (a slow page gets fast today), and the costs are diffuse and delayed (writes get 5% slower, cache pressure rises, and six months later nobody connects the gradual write latency creep to the index added in Q1). Indexes are easy to add and socially hard to remove \u2014 nobody wants to be the one who dropped the index that turns out to matter.\n\n## What this means for planning\n\n- \"Add an index\" is usually a **hours-to-days** task with a monitored rollout, not a five-minute fix \u2014 though on a small table it genuinely is quick. Ask which case you're in.\n- The right question isn't \"can we index this?\" but \"**which queries** get faster, and what's the write volume on that table?\"\n- Indexes need periodic review the way dependencies do. Unused ones are pure cost.\n- If someone pushes back on an index request, they're usually protecting write throughput on a hot table \u2014 that's a real tradeoff worth hearing, not gatekeeping.\n\n## The one-line version for a roadmap conversation\n\n> Indexes make reads faster by making every write slower and using more memory. They're a targeted optimization with an ongoing tax, so we add them deliberately for known slow queries \u2014 not by default."
+  ],
+  "stderr_tail": ""
+}

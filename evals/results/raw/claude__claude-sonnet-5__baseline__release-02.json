@@ -1,0 +1,71 @@
+{
+  "harness": "claude",
+  "arm": "baseline",
+  "id": "release-02",
+  "cat": "release",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 7.0,
+  "skill_available": false,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.0179796,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2570,
+    "cache_read_input_tokens": 9578,
+    "output_tokens": 480,
+    "output_tokens_details": {
+      "thinking_tokens": 131
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2570,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 480,
+        "cache_read_input_tokens": 9578,
+        "cache_creation_input_tokens": 2570,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2570
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 132,
+    "sentences": 7,
+    "mean_sentence_words": 18.6,
+    "longest_sentence_words": 28,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 1,
+      "banned_modal": 0,
+      "perfect_tense": 1,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 1,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 5,
+    "violations_per_100w": 3.79
+  },
+  "text": "## Breaking Change: `--output` now defaults to JSON\n\n**What changed**\nThe `--output` flag's default value has changed from `text` to `json`. Commands run without an explicit `--output` flag will now emit JSON instead of plain text.\n\n**Why**\nJSON output is more reliable to parse in scripts and pipelines, and aligns with the format most other flags/commands already support.\n\n**Who is affected**\nAny script, CI pipeline, or automation that relies on the previous plain-text output format without explicitly passing `--output text`.\n\n**Migration**\n- To keep the old behavior, add `--output text` explicitly to your commands.\n- To adopt the new default, update any downstream parsing logic to handle JSON instead of plain text.\n\n**Example**\n\n```bash\n# Old behavior (plain text) \u2014 now requires explicit flag\nmytool run --output text\n\n# New default (JSON)\nmytool run\n```\n\n---\n\nLet me know the actual tool/CLI name, version number, and any relevant flag details (e.g., a pretty-print option) if you'd like me to tailor this further.",
+  "stderr_tail": ""
+}

@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "review-03",
+  "cat": "review",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 17.3,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.0670925,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3911,
+    "cache_read_input_tokens": 4145,
+    "output_tokens": 1036,
+    "output_tokens_details": {
+      "thinking_tokens": 622
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3911,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1036,
+        "cache_read_input_tokens": 4145,
+        "cache_creation_input_tokens": 3911,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3911
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 68,
+    "sentences": 7,
+    "mean_sentence_words": 9.4,
+    "longest_sentence_words": 19,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "I do not have the file contents, so this comment is generic. Fill in the bracketed parts with real function names.\n\n```markdown\n**Please add tests before merge**\n\nThis pull request adds about 400 lines of new utility code. The change contains no tests.\n\nUtility functions are the cheapest code to test. They have clear inputs, clear outputs, and few dependencies. Tests here protect every caller that comes later.\n\nPlease do these steps before merge:\n\n1. Add unit tests for each exported function.\n2. Test the error paths, not only the success paths.\n3. Cover the edge cases: empty input, missing values, and boundary values.\n4. Confirm that the new tests run in CI.\n\nStart with `[most complex function]` and `[function with the most branches]`. These two carry the most risk.\n\nIf a function is hard to test, tell me which one. Hard-to-test code often shows a design problem. We can fix that problem now, at a low cost.\n\nIf you plan the tests in a follow-up pull request, say so and link the issue. I can approve this pull request on that condition.\n```\n\nTwo notes on the draft:\n\n- The comment asks for tests but does not block the author. It gives a clear alternative path: a linked follow-up issue.\n- If you send me the actual file, I can replace the placeholders and add specific test cases per function.",
+  "texts": [
+    "I do not have the file contents, so this comment is generic. Fill in the bracketed parts with real function names.\n\n```markdown\n**Please add tests before merge**\n\nThis pull request adds about 400 lines of new utility code. The change contains no tests.\n\nUtility functions are the cheapest code to test. They have clear inputs, clear outputs, and few dependencies. Tests here protect every caller that comes later.\n\nPlease do these steps before merge:\n\n1. Add unit tests for each exported function.\n2. Test the error paths, not only the success paths.\n3. Cover the edge cases: empty input, missing values, and boundary values.\n4. Confirm that the new tests run in CI.\n\nStart with `[most complex function]` and `[function with the most branches]`. These two carry the most risk.\n\nIf a function is hard to test, tell me which one. Hard-to-test code often shows a design problem. We can fix that problem now, at a low cost.\n\nIf you plan the tests in a follow-up pull request, say so and link the issue. I can approve this pull request on that condition.\n```\n\nTwo notes on the draft:\n\n- The comment asks for tests but does not block the author. It gives a clear alternative path: a linked follow-up issue.\n- If you send me the actual file, I can replace the placeholders and add specific test cases per function."
+  ],
+  "stderr_tail": ""
+}

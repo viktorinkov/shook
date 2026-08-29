@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "readme-02",
+  "cat": "docs",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 24.0,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.1620535,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 11130,
+    "cache_read_input_tokens": 11063,
+    "output_tokens": 1768,
+    "output_tokens_details": {
+      "thinking_tokens": 1139
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 11130,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1243,
+        "cache_read_input_tokens": 6918,
+        "cache_creation_input_tokens": 8357,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8357
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 184,
+    "sentences": 16,
+    "mean_sentence_words": 11.5,
+    "longest_sentence_words": 33,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.54
+  },
+  "text": "## Getting started\n\n`quickcache` gives a small cache API on top of Redis. It needs Node 18 or later, and a Redis server at version 6 or later.\n\n### Install\n\n```bash\nnpm install quickcache\n```\n\n### Connect\n\nCreate a client with the URL of your Redis server. Then connect.\n\n```js\nimport { createClient } from 'quickcache';\n\nconst cache = createClient({ url: 'redis://localhost:6379' });\n\nawait cache.connect();\n```\n\nIf you do not give a URL, the client uses `redis://localhost:6379`.\n\n### Store and read a value\n\nStore a value with `set`. Read it again with `get`.\n\n```js\nawait cache.set('user:42', { name: 'Ada', role: 'admin' }, { ttl: 60 });\n\nconst user = await cache.get('user:42');\n\nconsole.log(user.name); // Ada\n```\n\n`set` converts the value to JSON, and `get` converts it back. The `ttl` option is the lifetime of the key in seconds. If you give no `ttl`, the key stays until you delete it.\n\n`get` returns `null` in two cases: the key does not exist, or the lifetime of the key ended.\n\n### Disconnect\n\nBefore the process stops, close the connection.\n\n```js\nawait cache.quit();\n```\n\n---\n\nOne note on scope: `quickcache` is not a library I can look up, so the API names above (`createClient`, `connect`, `set`, `get`, `quit`, the `ttl` option) are the shape I assumed. Tell me the real signatures, or point me at the source, and I will correct the code blocks \u2014 the prose structure stays the same.",
+  "texts": [
+    "## Getting started\n\n`quickcache` gives a small cache API on top of Redis. It needs Node 18 or later, and a Redis server at version 6 or later.\n\n### Install\n\n```bash\nnpm install quickcache\n```\n\n### Connect\n\nCreate a client with the URL of your Redis server. Then connect.\n\n```js\nimport { createClient } from 'quickcache';\n\nconst cache = createClient({ url: 'redis://localhost:6379' });\n\nawait cache.connect();\n```\n\nIf you do not give a URL, the client uses `redis://localhost:6379`.\n\n### Store and read a value\n\nStore a value with `set`. Read it again with `get`.\n\n```js\nawait cache.set('user:42', { name: 'Ada', role: 'admin' }, { ttl: 60 });\n\nconst user = await cache.get('user:42');\n\nconsole.log(user.name); // Ada\n```\n\n`set` converts the value to JSON, and `get` converts it back. The `ttl` option is the lifetime of the key in seconds. If you give no `ttl`, the key stays until you delete it.\n\n`get` returns `null` in two cases: the key does not exist, or the lifetime of the key ended.\n\n### Disconnect\n\nBefore the process stops, close the connection.\n\n```js\nawait cache.quit();\n```\n\n---\n\nOne note on scope: `quickcache` is not a library I can look up, so the API names above (`createClient`, `connect`, `set`, `get`, `quit`, the `ttl` option) are the shape I assumed. Tell me the real signatures, or point me at the source, and I will correct the code blocks \u2014 the prose structure stays the same."
+  ],
+  "stderr_tail": ""
+}

@@ -1,0 +1,71 @@
+{
+  "harness": "claude",
+  "arm": "baseline",
+  "id": "runbook-01",
+  "cat": "runbook",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 44.6,
+  "skill_available": false,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.05177060000000001,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2589,
+    "cache_read_input_tokens": 9578,
+    "output_tokens": 3850,
+    "output_tokens_details": {
+      "thinking_tokens": 1737
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2589,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3850,
+        "cache_read_input_tokens": 9578,
+        "cache_creation_input_tokens": 2589,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2589
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "procedural",
+    "words": 775,
+    "sentences": 27,
+    "mean_sentence_words": 27.4,
+    "longest_sentence_words": 115,
+    "violations": {
+      "sentence_over_limit": 12,
+      "contraction": 3,
+      "banned_modal": 1,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 3,
+      "latin_abbrev": 1,
+      "slop_word": 1,
+      "trailing_condition": 4,
+      "synonym_rotation": 2
+    },
+    "violations_total": 27,
+    "violations_per_100w": 3.48
+  },
+  "text": "# Runbook: Zero-Downtime Password Rotation for DB User `app`\n\n## Overview\n\nRotates the `app` database user's password with no service interruption, using the app's `SIGHUP` config-reload support. The core risk is the **cutover gap**: any window where the DB has the new password but the app is still configured with the old one (or vice versa) will cause new connection attempts to fail. This runbook minimizes and, where the DB engine allows, eliminates that gap using dual-credential support.\n\n**Estimated duration:** 10\u201315 min\n**Blast radius:** All app instances connecting as `app`\n**Rollback available:** Yes, until old password is revoked (Step 8)\n\n---\n\n## Prerequisites\n\n- Access to the database as an admin (able to `ALTER USER`)\n- Access to secrets manager / config store that provides `DB_PASSWORD` env var to the app\n- Ability to send `SIGHUP` to all app instances (or trigger via orchestrator/systemd)\n- Confirm DB engine's dual-password support:\n  - **MySQL 8.0.14+**: supports `RETAIN CURRENT PASSWORD` \u2014 use it (Path A)\n  - **PostgreSQL, older MySQL, others**: no dual-password \u2014 use fast-cutover fallback (Path B)\n\n---\n\n## 0. Pre-flight checks\n\n- [ ] Confirm which app instances/hosts hold an active connection as `app` (`SELECT * FROM pg_stat_activity` / `SHOW PROCESSLIST`)\n- [ ] Confirm app actually re-reads `DB_PASSWORD` on `SIGHUP` (check recent logs from a test reload, or code path) \u2014 do this *before* rotation day, not during\n- [ ] Confirm secrets manager write access and app config file/env source are in sync (no drift)\n- [ ] Announce maintenance window in the team channel (even if zero-downtime is expected, so on-call knows a rotation is in progress)\n\n---\n\n## Path A \u2014 DB supports dual passwords (preferred)\n\n1. **Generate new password**\n   Generate a strong random secret; store it in the secrets manager as `DB_PASSWORD_NEW` (don't overwrite the live one yet).\n\n2. **Add new password to DB, retain old one**\n   ```sql\n   ALTER USER 'app'@'%' IDENTIFIED BY 'NEW_PASSWORD' RETAIN CURRENT PASSWORD;\n   ```\n   Both old and new passwords are now valid simultaneously \u2014 no cutover gap.\n\n3. **Update app config with new password**\n   Write the new password into the secrets manager / env source that populates `DB_PASSWORD` for the app.\n\n4. **Reload app**\n   Send `SIGHUP` to all app instances (rolling, one host/pod at a time if you want extra caution):\n   ```\n   kill -HUP <pid>   # or via orchestrator: systemctl reload app / kubectl exec ... kill -HUP 1\n   ```\n\n5. **Verify**\n   - [ ] App logs show successful reload with no auth errors\n   - [ ] New DB connections are being established (check `pg_stat_activity`/`SHOW PROCESSLIST` for recent connection timestamps from app hosts)\n   - [ ] App health checks / error rate dashboards stay flat for 5\u201310 min\n\n6. **Discard old password**\n   Once all instances confirmed on the new password:\n   ```sql\n   ALTER USER 'app'@'%' DISCARD OLD PASSWORD;\n   ```\n\n7. **Clean up secrets manager**\n   Remove any temporary `DB_PASSWORD_NEW` entry; confirm only the current password is stored under `DB_PASSWORD`.\n\n---\n\n## Path B \u2014 No dual-password support (fallback, minimizes gap)\n\nSince only one password can be valid at a time, order the steps so that **existing connections are unaffected** (most DBs don't drop live sessions on password change) and the gap for *new* connection attempts is as small as possible.\n\n1. **Generate new password**, store as a staged secret.\n\n2. **Pause new-connection churn if possible**\n   If your pool supports it, temporarily disable connection recycling/scale-down for the app so it isn't opening new connections during the cutover window. Not required, but reduces risk further.\n\n3. **Change DB password**\n   ```sql\n   ALTER USER 'app' WITH PASSWORD 'NEW_PASSWORD';   -- Postgres\n   -- or\n   ALTER USER 'app'@'%' IDENTIFIED BY 'NEW_PASSWORD'; -- MySQL\n   ```\n   Existing sessions remain connected. Any *new* connection attempt from this point until step 5 completes will fail auth.\n\n4. **Immediately update app config secret** with `NEW_PASSWORD`.\n\n5. **Immediately send SIGHUP** to all app instances to reload config.\n   Steps 3\u20135 should be scripted back-to-back to keep the gap to seconds, not minutes.\n\n6. **Verify**\n   - [ ] No auth-failure spike in DB logs during the cutover window\n   - [ ] App error rate / connection pool metrics stayed flat\n   - [ ] Confirm all instances reloaded (log timestamp check per host)\n\n7. **If any instance failed to pick up new password:** re-send `SIGHUP` to that instance specifically; if it still fails, restart that instance (last resort, since a restart briefly drops its connections \u2014 acceptable for a single instance in a fleet).\n\n---\n\n## Rollback\n\n- **Path A, before step 6 (discard old password):** simply revert app config to the old password and `SIGHUP` again \u2014 old password is still valid on the DB.\n- **Path B, or Path A after discarding old password:** re-run the rotation procedure in reverse \u2014 set DB password back to the old value, update config, `SIGHUP`. Keep the old password available in secrets manager (marked \"previous\") for at least 24h after rotation specifically to support this.\n\n---\n\n## Post-rotation\n\n- [ ] Confirm no lingering references to the old password in config files, CI secrets, or other services using the same `app` credential\n- [ ] Update secrets manager rotation metadata / last-rotated timestamp\n- [ ] Remove the \"previous password\" backup after the agreed retention window (e.g., 24\u201348h) once confident no rollback is needed",
+  "stderr_tail": ""
+}

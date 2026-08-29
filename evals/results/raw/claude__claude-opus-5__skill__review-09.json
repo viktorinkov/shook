@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "review-09",
+  "cat": "review",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 13.8,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.0537645,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2769,
+    "cache_read_input_tokens": 4145,
+    "output_tokens": 920,
+    "output_tokens_details": {
+      "thinking_tokens": 287
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2769,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 920,
+        "cache_read_input_tokens": 4145,
+        "cache_creation_input_tokens": 2769,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2769
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 254,
+    "sentences": 13,
+    "mean_sentence_words": 19.5,
+    "longest_sentence_words": 42,
+    "violations": {
+      "sentence_over_limit": 3,
+      "contraction": 2,
+      "banned_modal": 1,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 1,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 3,
+      "synonym_rotation": 1
+    },
+    "violations_total": 11,
+    "violations_per_100w": 4.33
+  },
+  "text": "Here's a PR comment you can drop in:\n\n---\n\n**Two issues here, one of which depends on your Go version.**\n\n**1. Loop variable capture (only if `go.mod` declares < 1.22)**\n\nBefore Go 1.22, `item` is a single variable reused across iterations, so every goroutine reads whatever value it holds when the goroutine actually runs \u2014 typically the last element, and racily at that. Go 1.22 changed loop variables to be per-iteration, but that's gated on the `go` directive in `go.mod`, not the toolchain you build with. Worth confirming which applies here.\n\nIf you're on an older language version, pass it explicitly:\n\n```go\nfor _, item := range items {\n    go func(item Item) {\n        process(item)\n    }(item)\n}\n```\n\nEven on 1.22+, I'd suggest keeping the explicit parameter (or `item := item`) if this file is shared with older modules \u2014 it costs nothing and removes the reader's need to check `go.mod`.\n\n**2. Nothing waits for the goroutines (applies regardless of version)**\n\nThis is the bigger problem. The loop returns immediately with the work still in flight. If the caller is `main`, the process may exit before `process` runs at all; if the caller is a request handler, you get work escaping the request's lifetime with no way to observe failure or cancellation.\n\n```go\nvar wg sync.WaitGroup\nfor _, item := range items {\n    wg.Add(1)\n    go func(item Item) {\n        defer wg.Done()\n        process(item)\n    }(item)\n}\nwg.Wait()\n```\n\nIf `process` returns an error, `golang.org/x/sync/errgroup` is a better fit \u2014 it propagates the first error and gives you a `context` for cancelling the rest. `errgroup.SetLimit` also caps concurrency, which matters if `items` can be large: this spawns one goroutine per element with no bound, so a big input means unbounded parallel load on whatever `process` touches.",
+  "texts": [
+    "Here's a PR comment you can drop in:\n\n---\n\n**Two issues here, one of which depends on your Go version.**\n\n**1. Loop variable capture (only if `go.mod` declares < 1.22)**\n\nBefore Go 1.22, `item` is a single variable reused across iterations, so every goroutine reads whatever value it holds when the goroutine actually runs \u2014 typically the last element, and racily at that. Go 1.22 changed loop variables to be per-iteration, but that's gated on the `go` directive in `go.mod`, not the toolchain you build with. Worth confirming which applies here.\n\nIf you're on an older language version, pass it explicitly:\n\n```go\nfor _, item := range items {\n    go func(item Item) {\n        process(item)\n    }(item)\n}\n```\n\nEven on 1.22+, I'd suggest keeping the explicit parameter (or `item := item`) if this file is shared with older modules \u2014 it costs nothing and removes the reader's need to check `go.mod`.\n\n**2. Nothing waits for the goroutines (applies regardless of version)**\n\nThis is the bigger problem. The loop returns immediately with the work still in flight. If the caller is `main`, the process may exit before `process` runs at all; if the caller is a request handler, you get work escaping the request's lifetime with no way to observe failure or cancellation.\n\n```go\nvar wg sync.WaitGroup\nfor _, item := range items {\n    wg.Add(1)\n    go func(item Item) {\n        defer wg.Done()\n        process(item)\n    }(item)\n}\nwg.Wait()\n```\n\nIf `process` returns an error, `golang.org/x/sync/errgroup` is a better fit \u2014 it propagates the first error and gives you a `context` for cancelling the rest. `errgroup.SetLimit` also caps concurrency, which matters if `items` can be large: this spawns one goroutine per element with no bound, so a big input means unbounded parallel load on whatever `process` touches."
+  ],
+  "stderr_tail": ""
+}

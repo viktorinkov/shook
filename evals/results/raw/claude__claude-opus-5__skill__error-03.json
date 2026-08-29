@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "error-03",
+  "cat": "error",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 19.8,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.1460265,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 10892,
+    "cache_read_input_tokens": 11039,
+    "output_tokens": 1224,
+    "output_tokens_details": {
+      "thinking_tokens": 679
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10892,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 897,
+        "cache_read_input_tokens": 6894,
+        "cache_creation_input_tokens": 8143,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8143
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 144,
+    "sentences": 12,
+    "mean_sentence_words": 11.6,
+    "longest_sentence_words": 25,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "Pragmatic mode. Classified as procedural (the remedy steps), with a descriptive cause line.\n\n**One line (log or CLI):**\n\n```\nError: cannot connect to the database. The server rejected the password for user `app`.\n```\n\n**Full message with a remedy:**\n\n```\nError: cannot connect to the database.\nThe server rejected the password for user `app`.\n\nCause: the password in the configuration does not match the password on the\ndatabase server.\n\nDo these steps:\n1. Compare the password for user `app` in the configuration with the password\n   on the database server.\n2. If the password is correct, make sure that user `app` can connect from this\n   host.\n3. Correct the password in the configuration. Then start the service again.\n```\n\nNotes on the choices:\n\n- The message does not show the password, the connection string, or a password hint. An error message goes to logs, and logs get shared.\n- \"rejected the password\" names the cause exactly. Do not write \"authentication failure\" or \"invalid credentials\" \u2014 the reader cannot tell a wrong password from a wrong user name or a missing permission.\n- No article before `app` (Rule 4.5 exception: an identifier follows the noun).\n- Conditions come before commands (Rule 5.4), one instruction per sentence (Rule 5.2).\n- I did not invent an error code or a host name. If your system has them, add the code to the first line and the host and port to the cause line.",
+  "texts": [
+    "Pragmatic mode. Classified as procedural (the remedy steps), with a descriptive cause line.\n\n**One line (log or CLI):**\n\n```\nError: cannot connect to the database. The server rejected the password for user `app`.\n```\n\n**Full message with a remedy:**\n\n```\nError: cannot connect to the database.\nThe server rejected the password for user `app`.\n\nCause: the password in the configuration does not match the password on the\ndatabase server.\n\nDo these steps:\n1. Compare the password for user `app` in the configuration with the password\n   on the database server.\n2. If the password is correct, make sure that user `app` can connect from this\n   host.\n3. Correct the password in the configuration. Then start the service again.\n```\n\nNotes on the choices:\n\n- The message does not show the password, the connection string, or a password hint. An error message goes to logs, and logs get shared.\n- \"rejected the password\" names the cause exactly. Do not write \"authentication failure\" or \"invalid credentials\" \u2014 the reader cannot tell a wrong password from a wrong user name or a missing permission.\n- No article before `app` (Rule 4.5 exception: an identifier follows the noun).\n- Conditions come before commands (Rule 5.4), one instruction per sentence (Rule 5.2).\n- I did not invent an error code or a host name. If your system has them, add the code to the first line and the host and port to the cause line."
+  ],
+  "stderr_tail": ""
+}

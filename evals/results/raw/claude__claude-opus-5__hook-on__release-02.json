@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "release-02",
+  "cat": "release",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 25.2,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.16834949999999999,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 12050,
+    "cache_read_input_tokens": 12209,
+    "output_tokens": 1669,
+    "output_tokens_details": {
+      "thinking_tokens": 1033
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12050,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1361,
+        "cache_read_input_tokens": 8064,
+        "cache_creation_input_tokens": 8131,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8131
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 247,
+    "sentences": 21,
+    "mean_sentence_words": 11.2,
+    "longest_sentence_words": 29,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 2,
+    "violations_per_100w": 0.81
+  },
+  "text": "Here are the release notes. I used the placeholders `<tool>` and `<version>` because the prompt does not give the name or the release number.\n\n---\n\n## Breaking changes\n\n### `--output` now defaults to JSON\n\nThe `--output` flag defaults to `json`. In earlier releases, the default was `text`.\n\n`<tool>` writes JSON to standard output when you do not set `--output`. Text output is still available, but you must ask for it.\n\n**CAUTION: Upgrade to `<version>` only after you update your scripts. Any script that reads the plain text output breaks with this release.**\n\n#### Who this change affects\n\n- Scripts that parse the output with `grep`, `awk`, or `sed`.\n- CI jobs that compare the output against a saved text file.\n- Users who read the output in a terminal.\n\n#### How to keep the old output\n\n1. Find each call to `<tool>` that does not set `--output`.\n2. Add `--output text` to each of these calls.\n3. Run the command again and compare the output with the output from the earlier release.\n\n#### Example\n\nBefore:\n\n```\n<tool> status\n```\n\nAfter:\n\n```\n<tool> status --output text\n```\n\n#### Notes\n\nThe values of `--output` do not change. `--output json` and `--output text` work as before. Only the default value changes.\n\n---\n\nTwo things need your input:\n\n- **The reason for the change.** I left it out because I do not have it. Release notes are easier to accept with one sentence of cause, for example: \"Most callers of `<tool>` are scripts.\"\n- **Other ways to set the default.** If `<tool>` reads a configuration file or an environment variable, add that option to the migration steps. I did not invent one.",
+  "texts": [
+    "Here are the release notes. I used the placeholders `<tool>` and `<version>` because the prompt does not give the name or the release number.\n\n---\n\n## Breaking changes\n\n### `--output` now defaults to JSON\n\nThe `--output` flag defaults to `json`. In earlier releases, the default was `text`.\n\n`<tool>` writes JSON to standard output when you do not set `--output`. Text output is still available, but you must ask for it.\n\n**CAUTION: Upgrade to `<version>` only after you update your scripts. Any script that reads the plain text output breaks with this release.**\n\n#### Who this change affects\n\n- Scripts that parse the output with `grep`, `awk`, or `sed`.\n- CI jobs that compare the output against a saved text file.\n- Users who read the output in a terminal.\n\n#### How to keep the old output\n\n1. Find each call to `<tool>` that does not set `--output`.\n2. Add `--output text` to each of these calls.\n3. Run the command again and compare the output with the output from the earlier release.\n\n#### Example\n\nBefore:\n\n```\n<tool> status\n```\n\nAfter:\n\n```\n<tool> status --output text\n```\n\n#### Notes\n\nThe values of `--output` do not change. `--output json` and `--output text` work as before. Only the default value changes.\n\n---\n\nTwo things need your input:\n\n- **The reason for the change.** I left it out because I do not have it. Release notes are easier to accept with one sentence of cause, for example: \"Most callers of `<tool>` are scripts.\"\n- **Other ways to set the default.** If `<tool>` reads a configuration file or an environment variable, add that option to the migration steps. I did not invent one."
+  ],
+  "stderr_tail": ""
+}

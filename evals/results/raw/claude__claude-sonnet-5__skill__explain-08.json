@@ -1,0 +1,71 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "explain-08",
+  "cat": "explain",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 8.6,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.0262528,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2783,
+    "cache_read_input_tokens": 44254,
+    "output_tokens": 528,
+    "output_tokens_details": {
+      "thinking_tokens": 36
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2783,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 528,
+        "cache_read_input_tokens": 44254,
+        "cache_creation_input_tokens": 2783,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2783
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 158,
+    "sentences": 6,
+    "mean_sentence_words": 26.0,
+    "longest_sentence_words": 35,
+    "violations": {
+      "sentence_over_limit": 2,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 3,
+    "violations_per_100w": 1.9
+  },
+  "text": "## The N+1 query problem\n\nIt happens when you fetch a list of records, then loop over them and trigger a separate query for each related record \u2014 1 query for the list + N queries for the related data.\n\n**Example (using a typical ORM like Sequelize/Django/ActiveRecord style):**\n\n```python\nauthors = Author.objects.all()          # 1 query\n\nfor author in authors:\n    print(author.books.all())            # 1 query PER author (N queries)\n```\n\nIf there are 100 authors, that's 101 queries instead of 2.\n\n## The fix: eager loading\n\nTell the ORM upfront to fetch the related data in a single join or batched query instead of lazily loading it per-row.\n\n```python\n# Django example\nauthors = Author.objects.prefetch_related('books')  # 2 queries total\n\nfor author in authors:\n    print(author.books.all())   # no extra query \u2014 already loaded\n```\n\n- `prefetch_related` (Django) / `includes` (Rails) / `Include()` (EF Core) / `.with()` (Laravel) issue a second batched query (`WHERE author_id IN (...)`) instead of N separate ones.\n- For simple one-to-one or many-to-one relations, a SQL `JOIN` (`select_related` in Django, `.joins()` in Rails) can merge it into a single query.\n\n**General approach:** identify N+1s by watching query logs/counts in dev (most ORMs have debug toolbars or query-count assertions in tests), then replace per-row lazy access with an eager-load call before the loop.",
+  "stderr_tail": ""
+}

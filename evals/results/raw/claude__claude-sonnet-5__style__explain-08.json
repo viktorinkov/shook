@@ -1,0 +1,71 @@
+{
+  "harness": "claude",
+  "arm": "style",
+  "id": "explain-08",
+  "cat": "explain",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 10.9,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.0289408,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2783,
+    "cache_read_input_tokens": 45044,
+    "output_tokens": 781,
+    "output_tokens_details": {
+      "thinking_tokens": 331
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2783,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 781,
+        "cache_read_input_tokens": 45044,
+        "cache_creation_input_tokens": 2783,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2783
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 142,
+    "sentences": 11,
+    "mean_sentence_words": 12.5,
+    "longest_sentence_words": 28,
+    "violations": {
+      "sentence_over_limit": 2,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 3,
+    "violations_per_100w": 2.11
+  },
+  "text": "## The N+1 query problem\n\nThe N+1 query problem occurs when an ORM runs one query to fetch a list of records, then runs one more query per record to fetch related data. The total number of queries is N+1, where N is the number of records in the list.\n\n### Example\n\n```python\n# 1 query: fetch all authors\nauthors = Author.objects.all()\n\n# N queries: one query per author to fetch their books\nfor author in authors:\n    print(author.books.all())\n```\n\nIf there are 100 authors, this code runs 101 queries instead of 2.\n\n### The fix: eager loading\n\nLoad the related data in one extra query, not one query per record. Most ORMs provide a method for this.\n\n```python\n# 2 queries total: one for authors, one for all related books\nauthors = Author.objects.prefetch_related('books')\n\nfor author in authors:\n    print(author.books.all())\n```\n\nOther ORMs use similar methods:\n- Django: `select_related()` for foreign keys, `prefetch_related()` for many-to-many and reverse foreign keys\n- SQLAlchemy: `joinedload()` or `selectinload()`\n- Sequelize: `include`\n- Rails (ActiveRecord): `includes`\n\nTo find N+1 problems in an application, use the ORM's query logger or a tool such as Django Debug Toolbar, `django-silk`, or Rails' Bullet gem. These tools show the query count per request.",
+  "stderr_tail": ""
+}

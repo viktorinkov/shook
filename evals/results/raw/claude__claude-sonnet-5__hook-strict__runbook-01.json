@@ -1,0 +1,71 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "runbook-01",
+  "cat": "runbook",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 85.8,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.14546720000000002,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 11971,
+    "cache_read_input_tokens": 92576,
+    "output_tokens": 7906,
+    "output_tokens_details": {
+      "thinking_tokens": 7180
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 11971,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 7800,
+        "cache_read_input_tokens": 48322,
+        "cache_creation_input_tokens": 7903,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7903
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "procedural",
+    "words": 371,
+    "sentences": 31,
+    "mean_sentence_words": 11.3,
+    "longest_sentence_words": 17,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 3,
+      "synonym_rotation": 0
+    },
+    "violations_total": 3,
+    "violations_per_100w": 0.81
+  },
+  "text": "# Runbook: Rotate the Database Password for the `app` User (Zero Downtime)\n\n## Purpose\n\nThis procedure gives the steps to change the password for the database user `app`. The application reads this password from an environment variable. The application reloads its configuration when it receives a SIGHUP signal. This procedure uses that behavior to apply the new password with no downtime.\n\n## Prerequisites\n\nBefore you start, make sure that you have the following:\n\n- Administrator access to the database server.\n- Write access to the secret store or configuration file that holds the environment variable for the application.\n- Permission to send a SIGHUP signal to the application process.\n- A period of low traffic for the change, if possible.\n- A copy of the current password, for the rollback procedure.\n\n## Procedure\n\n1. Generate a new password with a password manager or a secure random generator.\n2. Connect to the database server with an administrator account.\n3. Change the password for the database user `app` to the new password.\n4. Update the environment variable for the application in the secret store or configuration file.\n5. Send a SIGHUP signal to the application process.\n6. If you run more than one instance of the application, repeat step 5 for each instance.\n7. Examine the application logs for authentication errors.\n8. If you find an authentication error, go to the Rollback procedure.\n9. Send a test request through the application. Make sure that the request reaches the database.\n10. Remove the old password from the secret store 24 hours after the application runs with no errors.\n\n## Note\n\nA short period exists between the change of the database password and the reload of the application. During this period, a new connection attempt from the application can fail. A period of low traffic for the change lowers this risk.\n\n## Rollback\n\nUse this procedure if a step in the main procedure fails.\n\n1. Set the environment variable for the application back to the old password.\n2. Send a SIGHUP signal to the application process.\n3. If you run more than one instance of the application, repeat step 2 for each instance.\n4. If the database no longer accepts the old password, restore it with an administrator account.\n5. Examine the application logs. Make sure that the application connects to the database with no errors.",
+  "stderr_tail": ""
+}

@@ -1,0 +1,71 @@
+{
+  "harness": "claude",
+  "arm": "style",
+  "id": "readme-02",
+  "cat": "docs",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 10.3,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.0691044,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 10669,
+    "cache_read_input_tokens": 92892,
+    "output_tokens": 684,
+    "output_tokens_details": {
+      "thinking_tokens": 194
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10669,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 611,
+        "cache_read_input_tokens": 47848,
+        "cache_creation_input_tokens": 7865,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7865
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 119,
+    "sentences": 13,
+    "mean_sentence_words": 8.9,
+    "longest_sentence_words": 14,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "# Getting Started with quickcache\n\n`quickcache` is a Node.js library that gives a simple interface for Redis. It handles the connection and gives you `get` and `set` methods for your cache.\n\n## Install\n\nInstall `quickcache` with `npm`.\n\n```bash\nnpm install quickcache\n```\n\n## Connect to Redis\n\n1. Import `quickcache` in your file.\n2. Create a client with the connection URL for your Redis server.\n3. Connect the client before you use it.\n\n```js\nconst { QuickCache } = require('quickcache');\n\nconst cache = new QuickCache({\n  url: 'redis://localhost:6379',\n});\n\nawait cache.connect();\n```\n\nIf the connection fails, `quickcache` throws a `ConnectionError`. Catch this error and log it.\n\n## Example: Get and Set\n\nUse `set` to store a value in the cache. Use `get` to read it back.\n\n```js\n// Store a value, with an expiration of 60 seconds\nawait cache.set('user:42', { name: 'Ada' }, { ttl: 60 });\n\n// Read the value\nconst user = await cache.get('user:42');\nconsole.log(user); // { name: 'Ada' }\n```\n\nThe `set` method accepts an optional `ttl` value, in seconds. When the `ttl` value is not present, the key does not expire.\n\nIf the key does not exist, `get` returns `null`.",
+  "stderr_tail": ""
+}

@@ -1,0 +1,71 @@
+{
+  "harness": "claude",
+  "arm": "style",
+  "id": "explain-03",
+  "cat": "explain",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 11.2,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.0521702,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 8956,
+    "cache_read_input_tokens": 38881,
+    "output_tokens": 758,
+    "output_tokens_details": {
+      "thinking_tokens": 434
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 8956,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 758,
+        "cache_read_input_tokens": 38881,
+        "cache_creation_input_tokens": 8956,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8956
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 169,
+    "sentences": 14,
+    "mean_sentence_words": 11.9,
+    "longest_sentence_words": 20,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.59
+  },
+  "text": "**git merge**\n\n`git merge` combines two branches and creates a new merge commit. The merge commit has two parents. This method keeps the full, exact history of both branches, including every commit.\n\n**git rebase**\n\n`git rebase` moves the commits from one branch onto the tip of another branch. It rewrites commit history and creates a linear sequence of commits. The result contains no merge commits.\n\n**Recommendation for a feature branch**\n\n1. Rebase your feature branch onto the latest main branch before you open a pull request. This step keeps history clean and makes the diff easy to review.\n2. Do not rebase a branch that other people already pulled. Rebase rewrites commit hashes, and this action breaks their local history.\n3. Use `git merge` to combine the finished feature branch into main. Most teams merge with a \"squash and merge\" or a merge commit at this final step, not a rebase.\n\n**Rule of thumb:** rebase your own branch to stay current with main. Merge when you combine work into a shared branch.",
+  "stderr_tail": ""
+}

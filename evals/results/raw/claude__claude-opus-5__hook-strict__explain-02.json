@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "explain-02",
+  "cat": "explain",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 37.9,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.1318855,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3989,
+    "cache_read_input_tokens": 38821,
+    "output_tokens": 2903,
+    "output_tokens_details": {
+      "thinking_tokens": 2186
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3989,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2903,
+        "cache_read_input_tokens": 38821,
+        "cache_creation_input_tokens": 3989,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3989
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 372,
+    "sentences": 40,
+    "mean_sentence_words": 9.1,
+    "longest_sentence_words": 18,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 0
+    },
+    "violations_total": 2,
+    "violations_per_100w": 0.54
+  },
+  "text": "## Race conditions and mutexes\n\n### What a race condition is\n\nA race condition occurs when two or more threads use the same data at the same time. The result then depends on the order of the operations.\n\nThat order changes between runs. The operating system decides when each thread runs. Your code cannot control that decision.\n\nLook at a counter that two threads increment:\n\n```\ncounter = counter + 1\n```\n\nThis line looks like one step. The processor does three steps:\n\n1. Read the value of `counter` from memory.\n2. Add 1 to the value.\n3. Write the new value back to memory.\n\nIf two threads run these steps at the same time, both threads can read the same old value. Both threads then write the same new value. The counter increases by 1, not by 2. One increment disappears.\n\nRace conditions are hard to find. The fault appears only for some thread orders. A test can pass 1000 times and fail on run 1001.\n\n### How a mutex prevents it\n\nA mutex (\"mutual exclusion\") controls access to shared data. Only one thread can hold a mutex at a time.\n\nA thread must lock the mutex before it touches the shared data. If a different thread holds the mutex, the new thread stops and waits. When the first thread unlocks the mutex, one of the threads that waits gets it and continues.\n\nThe code between the lock and the unlock is the critical section. Other threads cannot see a half-finished change in that section. The same counter with a mutex:\n\n```\nmutex.lock()\ncounter = counter + 1\nmutex.unlock()\n```\n\nThe three processor steps now run as one unit. The second thread reads the counter only after the first thread writes it. The counter increases by 2.\n\n### Rules for contributors\n\n- Lock the mutex before every read and every write of the shared data. A mutex on the writes only does not prevent the race.\n- Keep the critical section short. Other threads wait for the whole section.\n- Unlock the mutex on every exit path. Use the construct of your language that unlocks on scope exit. For example, use `defer` in Go, or `with` in Python.\n- Lock several mutexes in the same order everywhere. Two threads that lock two mutexes in opposite orders deadlock.\n- Do not call unknown code inside a critical section. That code can lock a second mutex and cause a deadlock.",
+  "texts": [
+    "## Race conditions and mutexes\n\n### What a race condition is\n\nA race condition occurs when two or more threads use the same data at the same time. The result then depends on the order of the operations.\n\nThat order changes between runs. The operating system decides when each thread runs. Your code cannot control that decision.\n\nLook at a counter that two threads increment:\n\n```\ncounter = counter + 1\n```\n\nThis line looks like one step. The processor does three steps:\n\n1. Read the value of `counter` from memory.\n2. Add 1 to the value.\n3. Write the new value back to memory.\n\nIf two threads run these steps at the same time, both threads can read the same old value. Both threads then write the same new value. The counter increases by 1, not by 2. One increment disappears.\n\nRace conditions are hard to find. The fault appears only for some thread orders. A test can pass 1000 times and fail on run 1001.\n\n### How a mutex prevents it\n\nA mutex (\"mutual exclusion\") controls access to shared data. Only one thread can hold a mutex at a time.\n\nA thread must lock the mutex before it touches the shared data. If a different thread holds the mutex, the new thread stops and waits. When the first thread unlocks the mutex, one of the threads that waits gets it and continues.\n\nThe code between the lock and the unlock is the critical section. Other threads cannot see a half-finished change in that section. The same counter with a mutex:\n\n```\nmutex.lock()\ncounter = counter + 1\nmutex.unlock()\n```\n\nThe three processor steps now run as one unit. The second thread reads the counter only after the first thread writes it. The counter increases by 2.\n\n### Rules for contributors\n\n- Lock the mutex before every read and every write of the shared data. A mutex on the writes only does not prevent the race.\n- Keep the critical section short. Other threads wait for the whole section.\n- Unlock the mutex on every exit path. Use the construct of your language that unlocks on scope exit. For example, use `defer` in Go, or `with` in Python.\n- Lock several mutexes in the same order everywhere. Two threads that lock two mutexes in opposite orders deadlock.\n- Do not call unknown code inside a critical section. That code can lock a second mutex and cause a deadlock."
+  ],
+  "stderr_tail": ""
+}

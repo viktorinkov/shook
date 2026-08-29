@@ -1,0 +1,71 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "explain-06",
+  "cat": "explain",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 12.0,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.0279918,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2800,
+    "cache_read_input_tokens": 44254,
+    "output_tokens": 694,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2800,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 694,
+        "cache_read_input_tokens": 44254,
+        "cache_creation_input_tokens": 2800,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2800
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 312,
+    "sentences": 10,
+    "mean_sentence_words": 30.2,
+    "longest_sentence_words": 84,
+    "violations": {
+      "sentence_over_limit": 5,
+      "contraction": 3,
+      "banned_modal": 4,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 1,
+      "latin_abbrev": 2,
+      "slop_word": 0,
+      "trailing_condition": 4,
+      "synonym_rotation": 0
+    },
+    "violations_total": 19,
+    "violations_per_100w": 6.09
+  },
+  "text": "This command finds and deletes old log files. Breaking it down:\n\n- `find .` \u2014 search the current directory tree recursively\n- `-name '*.log'` \u2014 match files ending in `.log`\n- `-mtime +7` \u2014 only files whose content was last modified more than 7 days ago\n- `-exec rm {} \\;` \u2014 run `rm` on each match, once per file\n\n**When it's dangerous:**\n\n1. **No `-type f`** \u2014 if a directory happens to be named something like `foo.log` (unusual but possible), `rm` will fail on it without `-r`, but if someone changes `rm` to `rm -r` later, it could delete entire directory trees, not just files.\n2. **Broad matching from the wrong directory** \u2014 if run from `/` or a high-level directory instead of the intended one, it will recurse through everything (including mounted filesystems) and delete any `*.log` file older than a week, which could include logs another service still needs (e.g., logs pending rotation/shipping to a log aggregator).\n3. **Symlink following** \u2014 `find` follows symlinks for the starting point argument by default in some cases; if a `.log` symlink points outside the intended tree, you could delete a file elsewhere.\n4. **No confirmation/dry-run** \u2014 there's no `-i` or preview step, so a wrong `-mtime` or `-name` value (e.g., typo, wrong sign) deletes files immediately and irreversibly with no trash/undo.\n5. **Race condition** \u2014 using `-exec rm {} \\;` spawns one `rm` process per file (slow, but also means between `find` locating the file and `rm` deleting it, the file could change \u2014 low risk for logs, but a TOCTOU issue in general).\n6. **Permissions cascade** \u2014 if run as root via cron/sudo, a mistake in the path affects the whole system rather than being contained by user permissions.\n\n**Safer version** for the same intent:\n\n```sh\nfind . -type f -name '*.log' -mtime +7 -print\n```\n\nReview the output first, then swap `-print` for `-delete` (faster than `-exec rm`, avoids spawning a subprocess per file) once you're confident it's scoped correctly.",
+  "stderr_tail": ""
+}

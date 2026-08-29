@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "review-04",
+  "cat": "review",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 12.9,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.05029050000000001,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2769,
+    "cache_read_input_tokens": 4145,
+    "output_tokens": 781,
+    "output_tokens_details": {
+      "thinking_tokens": 213
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2769,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 781,
+        "cache_read_input_tokens": 4145,
+        "cache_creation_input_tokens": 2769,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2769
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 208,
+    "sentences": 9,
+    "mean_sentence_words": 22.7,
+    "longest_sentence_words": 37,
+    "violations": {
+      "sentence_over_limit": 4,
+      "contraction": 2,
+      "banned_modal": 2,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 9,
+    "violations_per_100w": 4.33
+  },
+  "text": "Here's a PR comment you can drop in:\n\n---\n\n**Narrow this `except` and log the failure**\n\n```python\ntry:\n    data = json.loads(payload)\nexcept:\n    data = {}\n```\n\nA bare `except:` catches `BaseException`, which includes `KeyboardInterrupt`, `SystemExit`, and `MemoryError`. If this runs in a loop or a request handler, Ctrl-C and shutdown signals get swallowed and turned into an empty dict \u2014 the process keeps going as if nothing happened.\n\nIt also hides the distinction between the two failure modes we actually care about:\n- `json.JSONDecodeError` \u2014 the payload is malformed JSON (a real, expected input case)\n- `TypeError` \u2014 `payload` was `None` or a non-str/bytes value (usually a bug upstream, and one we'd want to see)\n\nSuggested:\n\n```python\ntry:\n    data = json.loads(payload)\nexcept json.JSONDecodeError:\n    logger.warning(\"Discarding malformed JSON payload\", exc_info=True)\n    data = {}\n```\n\nTwo follow-up questions on the fallback itself:\n\n1. **Is `{}` the right default?** Downstream code can't tell \"empty payload\" from \"unparseable payload.\" If a bad payload should be rejected rather than treated as empty, raising (or returning an explicit error) is safer than silently continuing.\n2. **Should the `TypeError` case be handled here at all?** If `payload` can legitimately be `None`, guard it explicitly (`if not payload:`) so a genuine type bug still surfaces as a traceback.\n\n`json.JSONDecodeError` subclasses `ValueError`, so `except ValueError:` works too if you prefer it \u2014 but the specific name documents intent better.",
+  "texts": [
+    "Here's a PR comment you can drop in:\n\n---\n\n**Narrow this `except` and log the failure**\n\n```python\ntry:\n    data = json.loads(payload)\nexcept:\n    data = {}\n```\n\nA bare `except:` catches `BaseException`, which includes `KeyboardInterrupt`, `SystemExit`, and `MemoryError`. If this runs in a loop or a request handler, Ctrl-C and shutdown signals get swallowed and turned into an empty dict \u2014 the process keeps going as if nothing happened.\n\nIt also hides the distinction between the two failure modes we actually care about:\n- `json.JSONDecodeError` \u2014 the payload is malformed JSON (a real, expected input case)\n- `TypeError` \u2014 `payload` was `None` or a non-str/bytes value (usually a bug upstream, and one we'd want to see)\n\nSuggested:\n\n```python\ntry:\n    data = json.loads(payload)\nexcept json.JSONDecodeError:\n    logger.warning(\"Discarding malformed JSON payload\", exc_info=True)\n    data = {}\n```\n\nTwo follow-up questions on the fallback itself:\n\n1. **Is `{}` the right default?** Downstream code can't tell \"empty payload\" from \"unparseable payload.\" If a bad payload should be rejected rather than treated as empty, raising (or returning an explicit error) is safer than silently continuing.\n2. **Should the `TypeError` case be handled here at all?** If `payload` can legitimately be `None`, guard it explicitly (`if not payload:`) so a genuine type bug still surfaces as a traceback.\n\n`json.JSONDecodeError` subclasses `ValueError`, so `except ValueError:` works too if you prefer it \u2014 but the specific name documents intent better."
+  ],
+  "stderr_tail": ""
+}

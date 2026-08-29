@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "review-02",
+  "cat": "review",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 31.5,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.0890795,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2827,
+    "cache_read_input_tokens": 4145,
+    "output_tokens": 2309,
+    "output_tokens_details": {
+      "thinking_tokens": 1037
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2827,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2309,
+        "cache_read_input_tokens": 4145,
+        "cache_creation_input_tokens": 2827,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2827
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 455,
+    "sentences": 23,
+    "mean_sentence_words": 19.4,
+    "longest_sentence_words": 39,
+    "violations": {
+      "sentence_over_limit": 6,
+      "contraction": 7,
+      "banned_modal": 1,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 1,
+      "latin_abbrev": 1,
+      "slop_word": 0,
+      "trailing_condition": 3,
+      "synonym_rotation": 0
+    },
+    "violations_total": 19,
+    "violations_per_100w": 4.18
+  },
+  "text": "Here's a review comment you can paste:\n\n---\n\n**Review: add `users.email` migration**\n\nThe intent is clear and step 1 is safe (a nullable column with no default is a metadata-only change). The backfill and the `NOT NULL` promotion are where I'd want changes before this runs against production.\n\n**Blocking**\n\n1. **The `NOT NULL` step will fail if any `username` is NULL or empty.** `username || '@example.com'` evaluates to NULL when `username` is NULL (Postgres concatenation propagates NULL), so those rows keep a NULL email and step 3 aborts the whole migration. Worth confirming `username` is `NOT NULL` in the current schema; if it isn't, add a `COALESCE` fallback or exclude those rows and decide what they should get.\n\n2. **Race with concurrent writes.** Rows inserted between the `UPDATE` and the `SET NOT NULL` have a NULL email, so the migration either fails or the app starts writing NULLs the moment it lands. Either add a `DEFAULT` at the same time as the constraint, or split this into deploys: add the column \u2192 ship app code that always writes `email` \u2192 backfill \u2192 add `NOT NULL`.\n\n3. **`SET NOT NULL` takes an `ACCESS EXCLUSIVE` lock and full-scans the table**, blocking all reads and writes for the duration. On PG 12+ you can avoid the blocking scan:\n\n   ```sql\n   ALTER TABLE users ADD CONSTRAINT users_email_not_null\n     CHECK (email IS NOT NULL) NOT VALID;\n   ALTER TABLE users VALIDATE CONSTRAINT users_email_not_null;  -- SHARE UPDATE EXCLUSIVE\n   ALTER TABLE users ALTER COLUMN email SET NOT NULL;           -- sees the validated constraint, skips the scan\n   ALTER TABLE users DROP CONSTRAINT users_email_not_null;\n   ```\n\n4. **The unqualified `UPDATE` rewrites every row in one transaction.** On a large `users` table that means a long-held lock, a large WAL burst, and significant table bloat. Batch it by primary key (a few thousand rows per commit) and add `WHERE email IS NULL` so it's resumable and idempotent.\n\n**Worth discussing**\n\n5. **Synthesizing `@example.com` addresses is lossy.** Once written, there's no way to tell a placeholder from a real address, and any later \"email everyone\" job has to special-case the domain. `example.com` is reserved by RFC 2606 so nothing will actually deliver, but I'd rather leave the column nullable until real addresses exist, or add an `email_source`/`email_verified` marker alongside it.\n\n6. **No uniqueness.** If email is going to be a login identifier, it needs a unique index (created `CONCURRENTLY`, outside a transaction). Note the backfill will produce duplicates if `username` isn't unique or differs only by case \u2014 consider `CITEXT` or a unique index on `lower(email)`.\n\n7. **`VARCHAR(255)` is arbitrary.** In Postgres there's no performance benefit over `TEXT`, and the practical max for an address is 254 (RFC 5321). `TEXT` with a length `CHECK` is easier to change later.\n\n8. **No down migration**, and I'd set `lock_timeout` (e.g. `SET lock_timeout = '3s'`) on the DDL statements so a blocked `ALTER` fails fast instead of queueing behind a long read and stalling every subsequent query.\n\n**Dialect note:** `ALTER COLUMN ... SET NOT NULL` is Postgres syntax \u2014 this won't run on MySQL, which needs `MODIFY COLUMN`. Flagging in case the target is ambiguous.",
+  "texts": [
+    "Here's a review comment you can paste:\n\n---\n\n**Review: add `users.email` migration**\n\nThe intent is clear and step 1 is safe (a nullable column with no default is a metadata-only change). The backfill and the `NOT NULL` promotion are where I'd want changes before this runs against production.\n\n**Blocking**\n\n1. **The `NOT NULL` step will fail if any `username` is NULL or empty.** `username || '@example.com'` evaluates to NULL when `username` is NULL (Postgres concatenation propagates NULL), so those rows keep a NULL email and step 3 aborts the whole migration. Worth confirming `username` is `NOT NULL` in the current schema; if it isn't, add a `COALESCE` fallback or exclude those rows and decide what they should get.\n\n2. **Race with concurrent writes.** Rows inserted between the `UPDATE` and the `SET NOT NULL` have a NULL email, so the migration either fails or the app starts writing NULLs the moment it lands. Either add a `DEFAULT` at the same time as the constraint, or split this into deploys: add the column \u2192 ship app code that always writes `email` \u2192 backfill \u2192 add `NOT NULL`.\n\n3. **`SET NOT NULL` takes an `ACCESS EXCLUSIVE` lock and full-scans the table**, blocking all reads and writes for the duration. On PG 12+ you can avoid the blocking scan:\n\n   ```sql\n   ALTER TABLE users ADD CONSTRAINT users_email_not_null\n     CHECK (email IS NOT NULL) NOT VALID;\n   ALTER TABLE users VALIDATE CONSTRAINT users_email_not_null;  -- SHARE UPDATE EXCLUSIVE\n   ALTER TABLE users ALTER COLUMN email SET NOT NULL;           -- sees the validated constraint, skips the scan\n   ALTER TABLE users DROP CONSTRAINT users_email_not_null;\n   ```\n\n4. **The unqualified `UPDATE` rewrites every row in one transaction.** On a large `users` table that means a long-held lock, a large WAL burst, and significant table bloat. Batch it by primary key (a few thousand rows per commit) and add `WHERE email IS NULL` so it's resumable and idempotent.\n\n**Worth discussing**\n\n5. **Synthesizing `@example.com` addresses is lossy.** Once written, there's no way to tell a placeholder from a real address, and any later \"email everyone\" job has to special-case the domain. `example.com` is reserved by RFC 2606 so nothing will actually deliver, but I'd rather leave the column nullable until real addresses exist, or add an `email_source`/`email_verified` marker alongside it.\n\n6. **No uniqueness.** If email is going to be a login identifier, it needs a unique index (created `CONCURRENTLY`, outside a transaction). Note the backfill will produce duplicates if `username` isn't unique or differs only by case \u2014 consider `CITEXT` or a unique index on `lower(email)`.\n\n7. **`VARCHAR(255)` is arbitrary.** In Postgres there's no performance benefit over `TEXT`, and the practical max for an address is 254 (RFC 5321). `TEXT` with a length `CHECK` is easier to change later.\n\n8. **No down migration**, and I'd set `lock_timeout` (e.g. `SET lock_timeout = '3s'`) on the DDL statements so a blocked `ALTER` fails fast instead of queueing behind a long read and stalling every subsequent query.\n\n**Dialect note:** `ALTER COLUMN ... SET NOT NULL` is Postgres syntax \u2014 this won't run on MySQL, which needs `MODIFY COLUMN`. Flagging in case the target is ambiguous."
+  ],
+  "stderr_tail": ""
+}

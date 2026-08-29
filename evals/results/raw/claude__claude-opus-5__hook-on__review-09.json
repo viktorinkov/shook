@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "review-09",
+  "cat": "review",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 18.6,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.0756075,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3930,
+    "cache_read_input_tokens": 4145,
+    "output_tokens": 1369,
+    "output_tokens_details": {
+      "thinking_tokens": 885
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3930,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1369,
+        "cache_read_input_tokens": 4145,
+        "cache_creation_input_tokens": 3930,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3930
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 196,
+    "sentences": 19,
+    "mean_sentence_words": 10.2,
+    "longest_sentence_words": 26,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.51
+  },
+  "text": "Here is a PR comment you can paste:\n\n---\n\n**Two problems, one optional note.**\n\n**1. The loop variable capture depends on the Go version.**\n\nIf the `go` directive in `go.mod` is `1.22` or later, each iteration makes a new `item`. The code is correct. If the directive is `1.21` or earlier, all goroutines share one variable. Most goroutines then process the last element, and the code skips other elements.\n\nPass the item as an argument. This form is correct on all versions:\n\n```go\ngo func(item Item) {\n    process(item)\n}(item)\n```\n\n**2. Nothing waits for the goroutines.**\n\nThe loop starts the goroutines and continues immediately. If the caller returns or the program exits, the work stops before it completes. Use a `sync.WaitGroup`:\n\n```go\nvar wg sync.WaitGroup\nfor _, item := range items {\n    wg.Add(1)\n    go func(item Item) {\n        defer wg.Done()\n        process(item)\n    }(item)\n}\nwg.Wait()\n```\n\n**3. The concurrency has no limit.**\n\nIf `items` is large, this code starts one goroutine for each element. To control the count, add a buffered channel as a semaphore or use a worker pool.\n\nOne question: does `process` return an error? If it does, the current code discards it. Collect the errors with a channel or `errgroup`.\n\n---\n\nPoint 1 needs the `go` line in your `go.mod` to confirm. The parameter form is safe either way, so I recommend it.",
+  "texts": [
+    "Here is a PR comment you can paste:\n\n---\n\n**Two problems, one optional note.**\n\n**1. The loop variable capture depends on the Go version.**\n\nIf the `go` directive in `go.mod` is `1.22` or later, each iteration makes a new `item`. The code is correct. If the directive is `1.21` or earlier, all goroutines share one variable. Most goroutines then process the last element, and the code skips other elements.\n\nPass the item as an argument. This form is correct on all versions:\n\n```go\ngo func(item Item) {\n    process(item)\n}(item)\n```\n\n**2. Nothing waits for the goroutines.**\n\nThe loop starts the goroutines and continues immediately. If the caller returns or the program exits, the work stops before it completes. Use a `sync.WaitGroup`:\n\n```go\nvar wg sync.WaitGroup\nfor _, item := range items {\n    wg.Add(1)\n    go func(item Item) {\n        defer wg.Done()\n        process(item)\n    }(item)\n}\nwg.Wait()\n```\n\n**3. The concurrency has no limit.**\n\nIf `items` is large, this code starts one goroutine for each element. To control the count, add a buffered channel as a semaphore or use a worker pool.\n\nOne question: does `process` return an error? If it does, the current code discards it. Collect the errors with a channel or `errgroup`.\n\n---\n\nPoint 1 needs the `go` line in your `go.mod` to confirm. The parameter form is safe either way, so I recommend it."
+  ],
+  "stderr_tail": ""
+}

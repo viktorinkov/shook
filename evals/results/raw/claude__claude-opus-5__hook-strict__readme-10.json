@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "readme-10",
+  "cat": "docs",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 20.5,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.0752925,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3986,
+    "cache_read_input_tokens": 4145,
+    "output_tokens": 1334,
+    "output_tokens_details": {
+      "thinking_tokens": 563
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3986,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1334,
+        "cache_read_input_tokens": 4145,
+        "cache_creation_input_tokens": 3986,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3986
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 60,
+    "sentences": 7,
+    "mean_sentence_words": 8.3,
+    "longest_sentence_words": 14,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 1.67
+  },
+  "text": "Here is the Security section. Replace the placeholder email address and the PGP key link with your own values.\n\n```markdown\n## Security\n\n### Report a vulnerability\n\nDo not report a vulnerability in a public issue. A public issue tells attackers\nabout the problem before a fix exists.\n\nTo report a vulnerability, do these steps:\n\n1. Send an email to `security@example.com`.\n2. Write `SECURITY` at the start of the subject line.\n3. Describe the vulnerability and the effect on users.\n4. List the steps to reproduce the problem.\n5. Give the version number and the platform of the affected software.\n6. Add a proof of concept, a log file, or a screenshot, if you have one.\n\nTo encrypt the email, use our PGP key at `https://example.com/pgp.txt`.\n\n### What happens next\n\nWe answer each report on this schedule:\n\n| Step | Time limit |\n| --- | --- |\n| We confirm that we received the report. | 3 business days |\n| We send you our first assessment. | 10 business days |\n| We send you a status update. | Every 14 days |\n\nThe assessment contains the severity, the affected versions, and a target date\nfor the fix.\n\n### Disclosure window of 90 days\n\nWe use a disclosure window of 90 days. The window starts on the date when we\nconfirm your report. We release a fix before day 90. After the release, we\npublish an advisory with the details of the vulnerability and your credit.\n\nIf day 90 arrives and no fix exists, we publish the advisory anyway. The\nadvisory then contains a workaround for users.\n\nIf we need more time, we send you a request for an extension before day 90. You\ndecide whether to accept the request.\n\nIf an attacker uses the vulnerability against users, we publish the advisory\nimmediately. In this case the window of 90 days does not apply.\n\nYou can publish your own report after the window ends. Please tell us the\npublication date first.\n\n### Scope\n\nThis policy covers the code in this repository. It does not cover our hosted\nservices or third-party dependencies. To report a problem in a dependency,\ncontact the maintainer of that dependency.\n\nWe do not offer a bug bounty. We give credit to each reporter in the advisory.\nTo stay anonymous, write this request in your email.\n```\n\nTwo points to adjust before you publish:\n\n- The response times are a common default. Change them to match the capacity of your team.\n- The section states that no bug bounty exists. Delete that sentence if you pay for reports.",
+  "texts": [
+    "Here is the Security section. Replace the placeholder email address and the PGP key link with your own values.\n\n```markdown\n## Security\n\n### Report a vulnerability\n\nDo not report a vulnerability in a public issue. A public issue tells attackers\nabout the problem before a fix exists.\n\nTo report a vulnerability, do these steps:\n\n1. Send an email to `security@example.com`.\n2. Write `SECURITY` at the start of the subject line.\n3. Describe the vulnerability and the effect on users.\n4. List the steps to reproduce the problem.\n5. Give the version number and the platform of the affected software.\n6. Add a proof of concept, a log file, or a screenshot, if you have one.\n\nTo encrypt the email, use our PGP key at `https://example.com/pgp.txt`.\n\n### What happens next\n\nWe answer each report on this schedule:\n\n| Step | Time limit |\n| --- | --- |\n| We confirm that we received the report. | 3 business days |\n| We send you our first assessment. | 10 business days |\n| We send you a status update. | Every 14 days |\n\nThe assessment contains the severity, the affected versions, and a target date\nfor the fix.\n\n### Disclosure window of 90 days\n\nWe use a disclosure window of 90 days. The window starts on the date when we\nconfirm your report. We release a fix before day 90. After the release, we\npublish an advisory with the details of the vulnerability and your credit.\n\nIf day 90 arrives and no fix exists, we publish the advisory anyway. The\nadvisory then contains a workaround for users.\n\nIf we need more time, we send you a request for an extension before day 90. You\ndecide whether to accept the request.\n\nIf an attacker uses the vulnerability against users, we publish the advisory\nimmediately. In this case the window of 90 days does not apply.\n\nYou can publish your own report after the window ends. Please tell us the\npublication date first.\n\n### Scope\n\nThis policy covers the code in this repository. It does not cover our hosted\nservices or third-party dependencies. To report a problem in a dependency,\ncontact the maintainer of that dependency.\n\nWe do not offer a bug bounty. We give credit to each reporter in the advisory.\nTo stay anonymous, write this request in your email.\n```\n\nTwo points to adjust before you publish:\n\n- The response times are a common default. Change them to match the capacity of your team.\n- The section states that no bug bounty exists. Delete that sentence if you pay for reports."
+  ],
+  "stderr_tail": ""
+}

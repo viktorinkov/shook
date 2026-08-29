@@ -1,0 +1,71 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "runbook-01",
+  "cat": "runbook",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 42.2,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.1043398,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 11900,
+    "cache_read_input_tokens": 92509,
+    "output_tokens": 3823,
+    "output_tokens_details": {
+      "thinking_tokens": 3084
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 11900,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3720,
+        "cache_read_input_tokens": 48255,
+        "cache_creation_input_tokens": 7899,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7899
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "procedural",
+    "words": 307,
+    "sentences": 31,
+    "mean_sentence_words": 9.3,
+    "longest_sentence_words": 14,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 1
+    },
+    "violations_total": 2,
+    "violations_per_100w": 0.65
+  },
+  "text": "# Runbook: Password Rotation for the Database User `app`\n\n## Purpose\n\nThis procedure rotates the password for the database user `app` without downtime. The application reads the password from an environment variable. The application reloads the password on receipt of a `SIGHUP` signal.\n\n## Prerequisites\n\nBefore you start, confirm the following:\n\n- You have administrator access to the database.\n- You have access to the environment variable store for the application.\n- You have permission to send a `SIGHUP` signal to each application process.\n- The rollback steps in this runbook are available to you.\n\n## Procedure\n\n1. Generate a new password with the standard password generator.\n2. Store the new password in a secure temporary location.\n3. Connect to the database with an administrator account.\n4. Run `ALTER USER app WITH PASSWORD 'NEW_PASSWORD';` on the database.\n5. Update the environment variable `APP_DB_PASSWORD` with the new value in the deployment environment.\n6. Send `SIGHUP` to each application process.\n7. Examine the application logs for a successful reconnect with the new password.\n8. Run a health check against the application.\n9. If the health check fails, go to the Rollback section.\n10. After confirmation of success, remove the old password from the secrets history.\n\n## Rollback\n\nIf the new password does not work, revert to the old password.\n\n1. Run `ALTER USER app WITH PASSWORD 'OLD_PASSWORD';` on the database.\n2. Restore the previous value of `APP_DB_PASSWORD` in the deployment environment.\n3. Send `SIGHUP` to each application process again.\n4. Examine the application logs for a successful reconnect.\n5. Report the failure to the on-call engineer.\n\n## Notes\n\nThe database does not close existing connections when the password changes. This gives a safe window for the rotation, because current sessions stay open.\n\nSend `SIGHUP` only after the environment variable update completes. This order prevents a reload with the old password.\n\nKeep the old password available until you confirm success. This supports a fast rollback.\n\nDelete the old password from the secrets store only after the confirmation period ends.",
+  "stderr_tail": ""
+}

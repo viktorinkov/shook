@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "runbook-02",
+  "cat": "runbook",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 43.9,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.194929,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 10889,
+    "cache_read_input_tokens": 11054,
+    "output_tokens": 3180,
+    "output_tokens_details": {
+      "thinking_tokens": 1097
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10889,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2887,
+        "cache_read_input_tokens": 6909,
+        "cache_creation_input_tokens": 8125,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8125
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "procedural",
+    "words": 908,
+    "sentences": 89,
+    "mean_sentence_words": 9.6,
+    "longest_sentence_words": 21,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 1,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 4,
+      "synonym_rotation": 0
+    },
+    "violations_total": 6,
+    "violations_per_100w": 0.66
+  },
+  "text": "Runbook written in Simplified Technical English (pragmatic mode). Placeholders are in angle brackets \u2014 replace them with your real commands before you publish this.\n\n---\n\n# Runbook: Restart the `worker` Service\n\n**Purpose:** This runbook tells you how to restart the `worker` service on one host. It also tells you how to make sure that the queue drains after the restart.\n\n**Assumptions:** The host uses `systemd`. The service unit has the name `worker`. Replace `<host>`, `<queue>`, and `<depth-command>` with the real values for your system.\n\n---\n\n## Before You Start\n\nGet these items before you start the procedure:\n\n1. Shell access to `<host>` with `sudo` rights.\n2. The command that shows the depth of the queue (`<depth-command>`).\n3. The name of the on-call engineer for this service.\n4. An open incident channel, if this restart is part of an incident.\n\n> **Note:** A restart of one host does not stop the other hosts. The other workers continue to take jobs from the queue.\n\n---\n\n## Part 1 \u2014 Record the State Before the Restart\n\n**CAUTION:** Do not restart the service before you record the queue depth. Without this number you cannot tell if the queue drains.\n\n1. Connect to the host with `ssh <host>`.\n2. Show the status of the service with `systemctl status worker`. Record the state and the process ID.\n3. Show the depth of the queue with `<depth-command>`. Record this number as the start depth.\n4. Record the time of this measurement.\n5. Show the recent log with `journalctl -u worker -n 200 --no-pager`. Record any error that repeats.\n\n---\n\n## Part 2 \u2014 Restart the Service\n\n**CAUTION:** A hard stop can lose the jobs that are in progress. Use the graceful restart first.\n\n1. Send the graceful restart with `sudo systemctl restart worker`.\n2. Wait 30 seconds.\n3. Show the status again with `systemctl status worker`.\n4. Make sure that the state is `active (running)`.\n5. Make sure that the process ID is different from the ID that you recorded in Part 1.\n6. If the state is not `active (running)`, go to Part 4.\n\n---\n\n## Part 3 \u2014 Make Sure That the Queue Drains\n\n1. Read the log with `journalctl -u worker -f`. Make sure that the service takes jobs from `<queue>`.\n2. Stop the log with `Ctrl-C` after you see the first job.\n3. Measure the queue depth with `<depth-command>`. Record the number and the time.\n4. Wait 5 minutes. Then measure the queue depth again.\n5. Do step 4 again two more times. You now have four measurements.\n6. Make sure that each measurement is less than the measurement before it.\n7. If the depth decreases at each measurement, the restart is successful. Close the procedure here.\n8. If the depth does not decrease after 15 minutes, go to Part 4.\n\n> **Note:** A short increase in depth is normal in the first minute. The workers release their unfinished jobs back to the queue at the stop.\n\n---\n\n## Part 4 \u2014 If the Queue Does Not Drain\n\nDo these checks in order. Stop when you find the cause.\n\n### Check 1: The service is not running\n\n1. Show the state with `systemctl status worker`.\n2. If the state is `failed`, read the reason with `journalctl -u worker -n 100 --no-pager`.\n3. If the service starts and stops again and again, the configuration is bad or a dependency is down. Go to Check 3.\n4. If the state is `active (running)`, go to Check 2.\n\n### Check 2: The service runs but takes no jobs\n\n1. Read the log with `journalctl -u worker -f` for 60 seconds.\n2. If the log shows no new lines, the service cannot connect to the queue. Go to Check 3.\n3. If the log shows an authentication error, the credentials expired. Escalate to the on-call engineer.\n4. If the log shows jobs that start but never finish, go to Check 4.\n\n### Check 3: The service cannot connect to the queue\n\n1. Test the connection to the queue host from `<host>`.\n2. If the connection fails, a firewall rule or a network fault blocks it. Escalate to the network on-call engineer.\n3. If the connection is good, compare the configuration on this host with the configuration on a healthy host.\n4. If the two configurations are different, correct the file on `<host>`. Then do Part 2 again.\n\n### Check 4: One job blocks the worker\n\n1. Find the job ID of the oldest job that is in progress in the log.\n2. Examine that job for a very large payload or an external call that does not return.\n3. If one job blocks the worker, move that job to the dead-letter queue.\n4. Then do Part 2 again.\n\n### Check 5: The queue gets more jobs than the workers can process\n\n1. Measure the rate of new jobs and the rate of completed jobs.\n2. If the rate of new jobs is higher, the restart cannot fix the problem.\n3. Add more worker hosts, or stop the producer that sends the jobs.\n4. Escalate to the service owner for this decision.\n\n---\n\n## Part 5 \u2014 Escalate\n\nEscalate when one of these conditions is true:\n\n1. The queue depth does not decrease 30 minutes after the restart.\n2. The service fails to start after two restarts.\n3. The cause is a network fault, expired credentials, or too many new jobs.\n\nGive this information to the on-call engineer:\n\n1. The start depth and all later measurements, with their times.\n2. The output of `systemctl status worker`.\n3. The last 200 lines of the log.\n4. The checks from Part 4 that you completed.\n\n---\n\n## Rollback\n\nA restart has no rollback. If the new state is worse than the old state, remove the host from the pool. Then escalate.\n\n---\n\nTwo things I could not fill in without your details: the command that reports queue depth, and the real drain-rate threshold in Part 3 (I used 15 minutes as a placeholder). Give me the queue technology and a normal drain rate, and I will replace both.",
+  "texts": [
+    "Runbook written in Simplified Technical English (pragmatic mode). Placeholders are in angle brackets \u2014 replace them with your real commands before you publish this.\n\n---\n\n# Runbook: Restart the `worker` Service\n\n**Purpose:** This runbook tells you how to restart the `worker` service on one host. It also tells you how to make sure that the queue drains after the restart.\n\n**Assumptions:** The host uses `systemd`. The service unit has the name `worker`. Replace `<host>`, `<queue>`, and `<depth-command>` with the real values for your system.\n\n---\n\n## Before You Start\n\nGet these items before you start the procedure:\n\n1. Shell access to `<host>` with `sudo` rights.\n2. The command that shows the depth of the queue (`<depth-command>`).\n3. The name of the on-call engineer for this service.\n4. An open incident channel, if this restart is part of an incident.\n\n> **Note:** A restart of one host does not stop the other hosts. The other workers continue to take jobs from the queue.\n\n---\n\n## Part 1 \u2014 Record the State Before the Restart\n\n**CAUTION:** Do not restart the service before you record the queue depth. Without this number you cannot tell if the queue drains.\n\n1. Connect to the host with `ssh <host>`.\n2. Show the status of the service with `systemctl status worker`. Record the state and the process ID.\n3. Show the depth of the queue with `<depth-command>`. Record this number as the start depth.\n4. Record the time of this measurement.\n5. Show the recent log with `journalctl -u worker -n 200 --no-pager`. Record any error that repeats.\n\n---\n\n## Part 2 \u2014 Restart the Service\n\n**CAUTION:** A hard stop can lose the jobs that are in progress. Use the graceful restart first.\n\n1. Send the graceful restart with `sudo systemctl restart worker`.\n2. Wait 30 seconds.\n3. Show the status again with `systemctl status worker`.\n4. Make sure that the state is `active (running)`.\n5. Make sure that the process ID is different from the ID that you recorded in Part 1.\n6. If the state is not `active (running)`, go to Part 4.\n\n---\n\n## Part 3 \u2014 Make Sure That the Queue Drains\n\n1. Read the log with `journalctl -u worker -f`. Make sure that the service takes jobs from `<queue>`.\n2. Stop the log with `Ctrl-C` after you see the first job.\n3. Measure the queue depth with `<depth-command>`. Record the number and the time.\n4. Wait 5 minutes. Then measure the queue depth again.\n5. Do step 4 again two more times. You now have four measurements.\n6. Make sure that each measurement is less than the measurement before it.\n7. If the depth decreases at each measurement, the restart is successful. Close the procedure here.\n8. If the depth does not decrease after 15 minutes, go to Part 4.\n\n> **Note:** A short increase in depth is normal in the first minute. The workers release their unfinished jobs back to the queue at the stop.\n\n---\n\n## Part 4 \u2014 If the Queue Does Not Drain\n\nDo these checks in order. Stop when you find the cause.\n\n### Check 1: The service is not running\n\n1. Show the state with `systemctl status worker`.\n2. If the state is `failed`, read the reason with `journalctl -u worker -n 100 --no-pager`.\n3. If the service starts and stops again and again, the configuration is bad or a dependency is down. Go to Check 3.\n4. If the state is `active (running)`, go to Check 2.\n\n### Check 2: The service runs but takes no jobs\n\n1. Read the log with `journalctl -u worker -f` for 60 seconds.\n2. If the log shows no new lines, the service cannot connect to the queue. Go to Check 3.\n3. If the log shows an authentication error, the credentials expired. Escalate to the on-call engineer.\n4. If the log shows jobs that start but never finish, go to Check 4.\n\n### Check 3: The service cannot connect to the queue\n\n1. Test the connection to the queue host from `<host>`.\n2. If the connection fails, a firewall rule or a network fault blocks it. Escalate to the network on-call engineer.\n3. If the connection is good, compare the configuration on this host with the configuration on a healthy host.\n4. If the two configurations are different, correct the file on `<host>`. Then do Part 2 again.\n\n### Check 4: One job blocks the worker\n\n1. Find the job ID of the oldest job that is in progress in the log.\n2. Examine that job for a very large payload or an external call that does not return.\n3. If one job blocks the worker, move that job to the dead-letter queue.\n4. Then do Part 2 again.\n\n### Check 5: The queue gets more jobs than the workers can process\n\n1. Measure the rate of new jobs and the rate of completed jobs.\n2. If the rate of new jobs is higher, the restart cannot fix the problem.\n3. Add more worker hosts, or stop the producer that sends the jobs.\n4. Escalate to the service owner for this decision.\n\n---\n\n## Part 5 \u2014 Escalate\n\nEscalate when one of these conditions is true:\n\n1. The queue depth does not decrease 30 minutes after the restart.\n2. The service fails to start after two restarts.\n3. The cause is a network fault, expired credentials, or too many new jobs.\n\nGive this information to the on-call engineer:\n\n1. The start depth and all later measurements, with their times.\n2. The output of `systemctl status worker`.\n3. The last 200 lines of the log.\n4. The checks from Part 4 that you completed.\n\n---\n\n## Rollback\n\nA restart has no rollback. If the new state is worse than the old state, remove the host from the pool. Then escalate.\n\n---\n\nTwo things I could not fill in without your details: the command that reports queue depth, and the real drain-rate threshold in Part 3 (I used 15 minutes as a placeholder). Give me the queue technology and a normal drain rate, and I will replace both."
+  ],
+  "stderr_tail": ""
+}

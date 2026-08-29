@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "review-02",
+  "cat": "review",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 45.5,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.1323125,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3988,
+    "cache_read_input_tokens": 4145,
+    "output_tokens": 3614,
+    "output_tokens_details": {
+      "thinking_tokens": 2383
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3988,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3614,
+        "cache_read_input_tokens": 4145,
+        "cache_creation_input_tokens": 3988,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3988
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 332,
+    "sentences": 32,
+    "mean_sentence_words": 10.1,
+    "longest_sentence_words": 21,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 2
+    },
+    "violations_total": 4,
+    "violations_per_100w": 1.2
+  },
+  "text": "## Migration review\n\nI read this migration as PostgreSQL. The `||` operator and `ALTER COLUMN ... SET NOT NULL` are Postgres syntax. If the target is MySQL, the migration breaks, because MySQL reads `||` as a logical OR.\n\n### Blocking\n\n**1. A NULL username breaks the third statement.**\n`NULL || '@example.com'` returns `NULL`. If one row holds a NULL username, `SET NOT NULL` fails. The column exists after the failure, so the database stays in a half-migrated state. Decide the fallback value first. For example, use `COALESCE(username, 'user-' || id)`.\n\n**2. Concurrent inserts race with the backfill.**\nAnother session can insert a row between the `UPDATE` and the `SET NOT NULL`. That row holds a NULL email, and `SET NOT NULL` fails. Two options exist:\n- Run all three statements in one transaction. This is safe only for a small table.\n- Make the application write `email` on every insert before the backfill starts.\n\n**3. The backfill writes placeholder data into production.**\n`example.com` is a reserved domain. Mail to these addresses never arrives. A later feature can treat this data as a real contact address. Confirm that this is the intent. If the real values come from another source, keep the column nullable for now.\n\n### Important\n\n**4. The `UPDATE` locks the whole table.**\nThe statement rewrites every row in one transaction. On a large table it blocks writes for a long time. Backfill in batches instead.\n\n**5. `SET NOT NULL` scans the whole table under an `ACCESS EXCLUSIVE` lock.**\nIn Postgres 12 and later, a validated `CHECK` constraint removes that scan. See the rewrite below.\n\n**6. No unique constraint exists on `email`.**\nTwo rows with the same username get the same address. Add a unique index if the application treats the email as an identity.\n\n**7. `VARCHAR(255)` is an arbitrary limit.**\nThe RFC 5321 limit is 254 characters. Prefer `text` with a check constraint. Postgres stores both the same way.\n\n**8. The migration has no down script.**\n\n### Suggested rewrite\n\n```sql\n-- 1. Add the column. This is fast and takes no long lock.\nALTER TABLE users ADD COLUMN email text;\n\n-- 2. Deploy the application change that sets email on every insert.\n\n-- 3. Backfill in batches. Repeat until zero rows update.\nUPDATE users\nSET email = COALESCE(username, 'user-' || id) || '@example.com'\nWHERE id IN (\n    SELECT id FROM users\n    WHERE email IS NULL\n    ORDER BY id\n    LIMIT 10000\n    FOR UPDATE SKIP LOCKED\n);\n\n-- 4. Promote to NOT NULL without a long lock.\nALTER TABLE users\n    ADD CONSTRAINT users_email_not_null CHECK (email IS NOT NULL) NOT VALID;\nALTER TABLE users VALIDATE CONSTRAINT users_email_not_null;\nALTER TABLE users ALTER COLUMN email SET NOT NULL;\nALTER TABLE users DROP CONSTRAINT users_email_not_null;\n\n-- 5. Optional. Add uniqueness without a write lock.\nCREATE UNIQUE INDEX CONCURRENTLY users_email_key ON users (lower(email));\n```\n\nNote: `CREATE INDEX CONCURRENTLY` and `VALIDATE CONSTRAINT` cannot run inside a transaction block. Split them into separate migration steps if the migration tool wraps each file in a transaction.",
+  "texts": [
+    "## Migration review\n\nI read this migration as PostgreSQL. The `||` operator and `ALTER COLUMN ... SET NOT NULL` are Postgres syntax. If the target is MySQL, the migration breaks, because MySQL reads `||` as a logical OR.\n\n### Blocking\n\n**1. A NULL username breaks the third statement.**\n`NULL || '@example.com'` returns `NULL`. If one row holds a NULL username, `SET NOT NULL` fails. The column exists after the failure, so the database stays in a half-migrated state. Decide the fallback value first. For example, use `COALESCE(username, 'user-' || id)`.\n\n**2. Concurrent inserts race with the backfill.**\nAnother session can insert a row between the `UPDATE` and the `SET NOT NULL`. That row holds a NULL email, and `SET NOT NULL` fails. Two options exist:\n- Run all three statements in one transaction. This is safe only for a small table.\n- Make the application write `email` on every insert before the backfill starts.\n\n**3. The backfill writes placeholder data into production.**\n`example.com` is a reserved domain. Mail to these addresses never arrives. A later feature can treat this data as a real contact address. Confirm that this is the intent. If the real values come from another source, keep the column nullable for now.\n\n### Important\n\n**4. The `UPDATE` locks the whole table.**\nThe statement rewrites every row in one transaction. On a large table it blocks writes for a long time. Backfill in batches instead.\n\n**5. `SET NOT NULL` scans the whole table under an `ACCESS EXCLUSIVE` lock.**\nIn Postgres 12 and later, a validated `CHECK` constraint removes that scan. See the rewrite below.\n\n**6. No unique constraint exists on `email`.**\nTwo rows with the same username get the same address. Add a unique index if the application treats the email as an identity.\n\n**7. `VARCHAR(255)` is an arbitrary limit.**\nThe RFC 5321 limit is 254 characters. Prefer `text` with a check constraint. Postgres stores both the same way.\n\n**8. The migration has no down script.**\n\n### Suggested rewrite\n\n```sql\n-- 1. Add the column. This is fast and takes no long lock.\nALTER TABLE users ADD COLUMN email text;\n\n-- 2. Deploy the application change that sets email on every insert.\n\n-- 3. Backfill in batches. Repeat until zero rows update.\nUPDATE users\nSET email = COALESCE(username, 'user-' || id) || '@example.com'\nWHERE id IN (\n    SELECT id FROM users\n    WHERE email IS NULL\n    ORDER BY id\n    LIMIT 10000\n    FOR UPDATE SKIP LOCKED\n);\n\n-- 4. Promote to NOT NULL without a long lock.\nALTER TABLE users\n    ADD CONSTRAINT users_email_not_null CHECK (email IS NOT NULL) NOT VALID;\nALTER TABLE users VALIDATE CONSTRAINT users_email_not_null;\nALTER TABLE users ALTER COLUMN email SET NOT NULL;\nALTER TABLE users DROP CONSTRAINT users_email_not_null;\n\n-- 5. Optional. Add uniqueness without a write lock.\nCREATE UNIQUE INDEX CONCURRENTLY users_email_key ON users (lower(email));\n```\n\nNote: `CREATE INDEX CONCURRENTLY` and `VALIDATE CONSTRAINT` cannot run inside a transaction block. Split them into separate migration steps if the migration tool wraps each file in a transaction."
+  ],
+  "stderr_tail": ""
+}

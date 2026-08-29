@@ -1,0 +1,71 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "readme-07",
+  "cat": "docs",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 10.2,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.029206799999999998,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4003,
+    "cache_read_input_tokens": 44254,
+    "output_tokens": 434,
+    "output_tokens_details": {
+      "thinking_tokens": 102
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4003,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 434,
+        "cache_read_input_tokens": 44254,
+        "cache_creation_input_tokens": 4003,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4003
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 161,
+    "sentences": 16,
+    "mean_sentence_words": 10.1,
+    "longest_sentence_words": 34,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 0
+    },
+    "violations_total": 3,
+    "violations_per_100w": 1.86
+  },
+  "text": "## Environment Variables\n\nThe service uses three environment variables.\n\n### `DATABASE_URL`\nThis variable is required. It contains the connection string for the database.\nThe service does not start if this variable is not set.\n\n### `REDIS_URL`\nThis variable is optional. It contains the connection string for the Redis instance.\nIf you set this variable, the service enables caching.\nIf you do not set this variable, the service runs without caching.\n\n### `LOG_JSON`\nThis variable is optional. It controls the log output format.\nThe default value is `false`.\nIf the value is `false`, the service writes logs in plain text.\nIf the value is `true`, the service writes logs in JSON format.\n\n| Variable | Required | Default | Purpose |\n|---|---|---|---|\n| `DATABASE_URL` | Yes | None | Connection string for the database |\n| `REDIS_URL` | No | None | Connection string for Redis. Enables caching when set |\n| `LOG_JSON` | No | `false` | Controls log format. Set to `true` for JSON output |",
+  "stderr_tail": ""
+}

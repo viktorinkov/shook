@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "explain-04",
+  "cat": "explain",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 31.2,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.10078950000000002,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2784,
+    "cache_read_input_tokens": 38821,
+    "output_tokens": 2101,
+    "output_tokens_details": {
+      "thinking_tokens": 752
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2784,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2101,
+        "cache_read_input_tokens": 38821,
+        "cache_creation_input_tokens": 2784,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2784
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 532,
+    "sentences": 27,
+    "mean_sentence_words": 19.6,
+    "longest_sentence_words": 39,
+    "violations": {
+      "sentence_over_limit": 8,
+      "contraction": 3,
+      "banned_modal": 2,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 2,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 4,
+      "synonym_rotation": 1
+    },
+    "violations_total": 20,
+    "violations_per_100w": 3.76
+  },
+  "text": "Assuming Postgres (the `INTERVAL '1 day'` literal syntax points there).\n\n## Why it's slow\n\n**1. No index on `created_at` \u2192 sequential scan.** The planner has no way to find recent rows except reading all 50M heap tuples and evaluating the predicate on each. At, say, 200 bytes/row that's ~10 GB of I/O to return maybe 50k rows. This is the dominant cause.\n\n**2. `SELECT *` forces heap access even with an index.** An index on `created_at` gets you the row locations, but every matching row still requires a heap fetch \u2014 no index-only scan is possible when you need all columns. If the rows you want are scattered across the table, that's one random read per row, and the planner may correctly decide a seq scan is *cheaper* and ignore your index.\n\n**3. Bad row estimates on the \"recent\" edge.** `NOW() - INTERVAL '1 day'` lands past the right edge of the column's statistics histogram unless `ANALYZE` has run very recently. Postgres extrapolates and often guesses a tiny row count (or, on a growing table, badly underestimates), which pushes it toward a nested loop or an index scan that then does far more work than planned. On high-insert tables this bites regularly.\n\n**4. Volume, not just access path.** One day out of 50M rows may still be hundreds of thousands of wide rows. Detoasting large text/jsonb columns and shipping them over the wire can dominate even a perfect plan.\n\nOne thing that is *not* the problem: `NOW()` is `STABLE`, not `VOLATILE`, so it's evaluated once per statement and the predicate is sargable. The classic mistake \u2014 `WHERE DATE(created_at) > ...` or `WHERE created_at::date > ...` \u2014 wraps the *column* in a function and does defeat a plain index. Your version is fine.\n\n## The index\n\n```sql\nCREATE INDEX CONCURRENTLY idx_orders_created_at ON orders (created_at DESC);\n```\n\nA B-tree on `created_at`. `CONCURRENTLY` avoids locking out writes on a table this size; it's slower and can leave an invalid index if it fails, so check `pg_index.indisvalid` afterward. `DESC` is optional for this predicate but helps if you also `ORDER BY created_at DESC LIMIT n`.\n\n**If the query has other filters,** put the equality column first and the range column second \u2014 a B-tree can only range-scan on the last column it uses:\n\n```sql\nCREATE INDEX ... ON orders (status, created_at);  -- for: WHERE status = 'paid' AND created_at > ...\n```\n\n**If `orders` is append-only** (rows inserted in roughly `created_at` order and rarely backdated), BRIN is worth a look:\n\n```sql\nCREATE INDEX ... ON orders USING brin (created_at) WITH (pages_per_range = 32);\n```\n\nIt's a few hundred KB instead of ~1 GB and stays cheap to maintain on insert, because it stores min/max per block range rather than an entry per row. It only works when physical order correlates with `created_at` \u2014 check `SELECT correlation FROM pg_stats WHERE tablename='orders' AND attname='created_at'`; you want something above ~0.9. If rows get backfilled or updated out of order, correlation degrades and BRIN scans balloon.\n\n## After creating it\n\nRun `ANALYZE orders;` and confirm with `EXPLAIN (ANALYZE, BUFFERS)` that you get a Bitmap Index Scan or Index Scan and that estimated vs. actual rows are in the same ballpark. If the planner still picks a seq scan, the honest answer is usually that one day genuinely is a large fraction of the table, or your `random_page_cost` (default 4.0) is miscalibrated for SSDs \u2014 1.1 is a common setting.\n\nFor a table that keeps growing, the durable fix is range partitioning on `created_at` (monthly or daily), so a one-day query touches one small partition and old data can be dropped by detaching partitions instead of `DELETE`.",
+  "texts": [
+    "Assuming Postgres (the `INTERVAL '1 day'` literal syntax points there).\n\n## Why it's slow\n\n**1. No index on `created_at` \u2192 sequential scan.** The planner has no way to find recent rows except reading all 50M heap tuples and evaluating the predicate on each. At, say, 200 bytes/row that's ~10 GB of I/O to return maybe 50k rows. This is the dominant cause.\n\n**2. `SELECT *` forces heap access even with an index.** An index on `created_at` gets you the row locations, but every matching row still requires a heap fetch \u2014 no index-only scan is possible when you need all columns. If the rows you want are scattered across the table, that's one random read per row, and the planner may correctly decide a seq scan is *cheaper* and ignore your index.\n\n**3. Bad row estimates on the \"recent\" edge.** `NOW() - INTERVAL '1 day'` lands past the right edge of the column's statistics histogram unless `ANALYZE` has run very recently. Postgres extrapolates and often guesses a tiny row count (or, on a growing table, badly underestimates), which pushes it toward a nested loop or an index scan that then does far more work than planned. On high-insert tables this bites regularly.\n\n**4. Volume, not just access path.** One day out of 50M rows may still be hundreds of thousands of wide rows. Detoasting large text/jsonb columns and shipping them over the wire can dominate even a perfect plan.\n\nOne thing that is *not* the problem: `NOW()` is `STABLE`, not `VOLATILE`, so it's evaluated once per statement and the predicate is sargable. The classic mistake \u2014 `WHERE DATE(created_at) > ...` or `WHERE created_at::date > ...` \u2014 wraps the *column* in a function and does defeat a plain index. Your version is fine.\n\n## The index\n\n```sql\nCREATE INDEX CONCURRENTLY idx_orders_created_at ON orders (created_at DESC);\n```\n\nA B-tree on `created_at`. `CONCURRENTLY` avoids locking out writes on a table this size; it's slower and can leave an invalid index if it fails, so check `pg_index.indisvalid` afterward. `DESC` is optional for this predicate but helps if you also `ORDER BY created_at DESC LIMIT n`.\n\n**If the query has other filters,** put the equality column first and the range column second \u2014 a B-tree can only range-scan on the last column it uses:\n\n```sql\nCREATE INDEX ... ON orders (status, created_at);  -- for: WHERE status = 'paid' AND created_at > ...\n```\n\n**If `orders` is append-only** (rows inserted in roughly `created_at` order and rarely backdated), BRIN is worth a look:\n\n```sql\nCREATE INDEX ... ON orders USING brin (created_at) WITH (pages_per_range = 32);\n```\n\nIt's a few hundred KB instead of ~1 GB and stays cheap to maintain on insert, because it stores min/max per block range rather than an entry per row. It only works when physical order correlates with `created_at` \u2014 check `SELECT correlation FROM pg_stats WHERE tablename='orders' AND attname='created_at'`; you want something above ~0.9. If rows get backfilled or updated out of order, correlation degrades and BRIN scans balloon.\n\n## After creating it\n\nRun `ANALYZE orders;` and confirm with `EXPLAIN (ANALYZE, BUFFERS)` that you get a Bitmap Index Scan or Index Scan and that estimated vs. actual rows are in the same ballpark. If the planner still picks a seq scan, the honest answer is usually that one day genuinely is a large fraction of the table, or your `random_page_cost` (default 4.0) is miscalibrated for SSDs \u2014 1.1 is a common setting.\n\nFor a table that keeps growing, the durable fix is range partitioning on `created_at` (monthly or daily), so a one-day query touches one small partition and old data can be dropped by detaching partitions instead of `DELETE`."
+  ],
+  "stderr_tail": ""
+}

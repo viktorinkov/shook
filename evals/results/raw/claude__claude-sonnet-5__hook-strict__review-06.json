@@ -1,0 +1,71 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "review-06",
+  "cat": "review",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 9.0,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.0228856,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4079,
+    "cache_read_input_tokens": 9578,
+    "output_tokens": 465,
+    "output_tokens_details": {
+      "thinking_tokens": 160
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4079,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 465,
+        "cache_read_input_tokens": 9578,
+        "cache_creation_input_tokens": 4079,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4079
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 132,
+    "sentences": 15,
+    "mean_sentence_words": 8.6,
+    "longest_sentence_words": 16,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "Here is the problem with that Dockerfile.\n\n**Problem**\n\nThe file runs `apt-get update` only in the first `RUN` line. The second `RUN git` line does not run `apt-get update` again. Docker caches each `RUN` line as a separate layer. If a build step above the `git` line changes, Docker can reuse the cached `apt-get update` layer. The package index can then become old. The `git` install can fail or can install an old version.\n\n**Recommendation**\n\nCombine both commands into one `RUN` line. Add a cleanup step for the package list. Use this pattern:\n\n```dockerfile\nRUN apt-get update && apt-get install -y curl git \\\n    && rm -rf /var/lib/apt/lists/*\n```\n\nThis method has three benefits.\n\n- It keeps the package index and the install in the same layer.\n- It stops Docker from installing `git` with an old package index.\n- It removes the package list file. This step makes the image smaller.",
+  "stderr_tail": ""
+}

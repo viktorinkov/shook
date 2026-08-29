@@ -1,0 +1,71 @@
+{
+  "harness": "claude",
+  "arm": "baseline",
+  "id": "explain-05",
+  "cat": "explain",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 9.4,
+  "skill_available": false,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.0264318,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2567,
+    "cache_read_input_tokens": 44254,
+    "output_tokens": 633,
+    "output_tokens_details": {
+      "thinking_tokens": 31
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2567,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 633,
+        "cache_read_input_tokens": 44254,
+        "cache_creation_input_tokens": 2567,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2567
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 246,
+    "sentences": 15,
+    "mean_sentence_words": 15.7,
+    "longest_sentence_words": 34,
+    "violations": {
+      "sentence_over_limit": 2,
+      "contraction": 2,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 2,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 1
+    },
+    "violations_total": 9,
+    "violations_per_100w": 3.66
+  },
+  "text": "## JWT Authentication (Browser \u2194 API)\n\n**Flow:**\n\n1. **Login** \u2014 The browser submits credentials to an auth endpoint (e.g. `POST /login`). The API verifies them and generates a JWT: a signed token containing claims (user ID, roles, expiry) in the format `header.payload.signature`.\n2. **Storage** \u2014 The browser stores the token, typically in an `httpOnly` cookie (safer, avoids JS access/XSS) or in memory/localStorage (simpler, but more exposed to XSS).\n3. **Authenticated requests** \u2014 On each subsequent API call, the browser sends the token, either automatically via cookie or manually via the `Authorization: Bearer <token>` header.\n4. **Verification** \u2014 The API validates the signature using its secret/public key, checks expiry (`exp`) and claims, and \u2014 if valid \u2014 trusts the payload without needing a database lookup or session store. This is what makes JWTs \"stateless.\"\n5. **Expiry & refresh** \u2014 Access tokens are usually short-lived (minutes). A longer-lived refresh token (often in an `httpOnly` cookie) is used to silently obtain a new access token when it expires, without forcing re-login.\n\n**Key properties:**\n- The signature guarantees integrity (payload wasn't tampered with) \u2014 it does **not** encrypt the payload, so never put secrets in the claims.\n- Because JWTs are stateless, the API can't easily invalidate a single token before it expires (no built-in \"logout\" on the server side) unless you add a blocklist or keep tokens short-lived.\n\n**Common pitfalls:**\n- Storing tokens in `localStorage` exposes them to XSS.\n- Missing/weak signature verification (e.g. accepting `alg: none`).\n- Overly long expiry without refresh/revocation strategy.",
+  "stderr_tail": ""
+}

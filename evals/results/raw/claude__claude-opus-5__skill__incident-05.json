@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "incident-05",
+  "cat": "incident",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 28.3,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.0737685,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2755,
+    "cache_read_input_tokens": 4145,
+    "output_tokens": 1725,
+    "output_tokens_details": {
+      "thinking_tokens": 301
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2755,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1725,
+        "cache_read_input_tokens": 4145,
+        "cache_creation_input_tokens": 2755,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2755
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 689,
+    "sentences": 30,
+    "mean_sentence_words": 22.8,
+    "longest_sentence_words": 53,
+    "violations": {
+      "sentence_over_limit": 12,
+      "contraction": 2,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 3,
+      "latin_abbrev": 1,
+      "slop_word": 0,
+      "trailing_condition": 3,
+      "synonym_rotation": 2
+    },
+    "violations_total": 23,
+    "violations_per_100w": 3.34
+  },
+  "text": "Since I don't have the specific incident details, I've written this against the common shape of this failure (log volume growth on a host filled the partition, the service failed writes and went down, disk was cleared manually to recover). Adjust hostnames, owners, and dates to match your incident.\n\n---\n\n## Action items\n\nOwners and ticket IDs are placeholders \u2014 assign before publishing. Dates assume an incident date of 2026-08-28.\n\n| # | Action | Type | Priority | Owner | Due | Ticket |\n|---|---|---|---|---|---|---|\n| 1 | Add a disk-usage alert on all production hosts: warn at 75%, page at 85%. Alert on the trend (projected full within 4 hours) as well as the threshold, so slow fills are caught before the cliff. | Detect | P0 | TBD | 2026-09-04 | OPS-XXXX |\n| 2 | Configure `logrotate` (or equivalent) on the affected service: rotate at size, keep N compressed generations, hard-cap the log directory. Verify the rotation actually runs by checking file state 24h after deploy, not just by reading the config. | Prevent | P0 | TBD | 2026-09-04 | OPS-XXXX |\n| 3 | Audit every production host class for the same gap: no rotation, no retention cap, or logs sharing a partition with data/state. Record results in a table and file a follow-up for each host class that fails. | Prevent | P0 | TBD | 2026-09-08 | OPS-XXXX |\n| 4 | Move service logs off the root/data partition onto a dedicated volume so a log fill degrades logging only, and does not take down writes. | Prevent | P1 | TBD | 2026-09-18 | OPS-XXXX |\n| 5 | Identify and fix the log source that drove the volume spike (e.g. a debug-level statement or error loop in a hot path). Downgrade or rate-limit it. | Prevent | P1 | TBD | 2026-09-18 | OPS-XXXX |\n| 6 | Ship logs to the central logging pipeline for this service, with short local retention, so local disk is a buffer rather than the system of record. | Prevent | P1 | TBD | 2026-09-25 | OPS-XXXX |\n| 7 | Write a runbook: \"Host disk full.\" Cover how to identify the largest consumers, what is safe to delete versus what must be preserved for the investigation, how to truncate a file held open by a running process, and how to confirm recovery. Link it from the disk-usage alert. | Respond | P1 | TBD | 2026-09-18 | OPS-XXXX |\n| 8 | Make the service fail gracefully when logging fails \u2014 drop log writes rather than blocking or crashing request handling. | Prevent | P1 | TBD | 2026-09-25 | OPS-XXXX |\n| 9 | Add disk headroom to the service's pre-production checklist and to the readiness review template, so new services are not deployed without rotation and alerting. | Process | P2 | TBD | 2026-10-16 | OPS-XXXX |\n| 10 | Review why the outage was detected by customer reports rather than monitoring, and close the specific gap that allowed it. (Delete this row if monitoring did detect it.) | Detect | P1 | TBD | 2026-09-18 | OPS-XXXX |\n\n### Notes on prioritization\n\n- **P0 items are the ones that stop a recurrence this week.** Items 1 and 2 together mean the same failure mode either does not happen or pages someone hours before it becomes an outage.\n- **Item 3 is the one most often skipped.** The host that filled up is rarely the only host configured that way; treating this as a single-host fix leaves the same outage available on every peer.\n- **Item 4 is the structural fix.** Items 1\u20133 make the failure less likely; item 4 makes it non-fatal when it happens anyway.\n\n### Explicitly not doing\n\n- **Increasing disk size as the primary fix.** More disk moves the date of the next outage without changing anything else. If the volume is genuinely undersized, size it as part of item 4, not instead of it.\n- **A one-off cron job to `rm` old logs.** This is an unmonitored script that silently stops working; item 2 covers the same ground with a tool that reports failures.",
+  "texts": [
+    "Since I don't have the specific incident details, I've written this against the common shape of this failure (log volume growth on a host filled the partition, the service failed writes and went down, disk was cleared manually to recover). Adjust hostnames, owners, and dates to match your incident.\n\n---\n\n## Action items\n\nOwners and ticket IDs are placeholders \u2014 assign before publishing. Dates assume an incident date of 2026-08-28.\n\n| # | Action | Type | Priority | Owner | Due | Ticket |\n|---|---|---|---|---|---|---|\n| 1 | Add a disk-usage alert on all production hosts: warn at 75%, page at 85%. Alert on the trend (projected full within 4 hours) as well as the threshold, so slow fills are caught before the cliff. | Detect | P0 | TBD | 2026-09-04 | OPS-XXXX |\n| 2 | Configure `logrotate` (or equivalent) on the affected service: rotate at size, keep N compressed generations, hard-cap the log directory. Verify the rotation actually runs by checking file state 24h after deploy, not just by reading the config. | Prevent | P0 | TBD | 2026-09-04 | OPS-XXXX |\n| 3 | Audit every production host class for the same gap: no rotation, no retention cap, or logs sharing a partition with data/state. Record results in a table and file a follow-up for each host class that fails. | Prevent | P0 | TBD | 2026-09-08 | OPS-XXXX |\n| 4 | Move service logs off the root/data partition onto a dedicated volume so a log fill degrades logging only, and does not take down writes. | Prevent | P1 | TBD | 2026-09-18 | OPS-XXXX |\n| 5 | Identify and fix the log source that drove the volume spike (e.g. a debug-level statement or error loop in a hot path). Downgrade or rate-limit it. | Prevent | P1 | TBD | 2026-09-18 | OPS-XXXX |\n| 6 | Ship logs to the central logging pipeline for this service, with short local retention, so local disk is a buffer rather than the system of record. | Prevent | P1 | TBD | 2026-09-25 | OPS-XXXX |\n| 7 | Write a runbook: \"Host disk full.\" Cover how to identify the largest consumers, what is safe to delete versus what must be preserved for the investigation, how to truncate a file held open by a running process, and how to confirm recovery. Link it from the disk-usage alert. | Respond | P1 | TBD | 2026-09-18 | OPS-XXXX |\n| 8 | Make the service fail gracefully when logging fails \u2014 drop log writes rather than blocking or crashing request handling. | Prevent | P1 | TBD | 2026-09-25 | OPS-XXXX |\n| 9 | Add disk headroom to the service's pre-production checklist and to the readiness review template, so new services are not deployed without rotation and alerting. | Process | P2 | TBD | 2026-10-16 | OPS-XXXX |\n| 10 | Review why the outage was detected by customer reports rather than monitoring, and close the specific gap that allowed it. (Delete this row if monitoring did detect it.) | Detect | P1 | TBD | 2026-09-18 | OPS-XXXX |\n\n### Notes on prioritization\n\n- **P0 items are the ones that stop a recurrence this week.** Items 1 and 2 together mean the same failure mode either does not happen or pages someone hours before it becomes an outage.\n- **Item 3 is the one most often skipped.** The host that filled up is rarely the only host configured that way; treating this as a single-host fix leaves the same outage available on every peer.\n- **Item 4 is the structural fix.** Items 1\u20133 make the failure less likely; item 4 makes it non-fatal when it happens anyway.\n\n### Explicitly not doing\n\n- **Increasing disk size as the primary fix.** More disk moves the date of the next outage without changing anything else. If the volume is genuinely undersized, size it as part of item 4, not instead of it.\n- **A one-off cron job to `rm` old logs.** This is an unmonitored script that silently stops working; item 2 covers the same ground with a tool that reports failures."
+  ],
+  "stderr_tail": ""
+}

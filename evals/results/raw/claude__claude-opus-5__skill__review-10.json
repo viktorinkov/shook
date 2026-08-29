@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "review-10",
+  "cat": "review",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 16.5,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.053844500000000003,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2751,
+    "cache_read_input_tokens": 4145,
+    "output_tokens": 930,
+    "output_tokens_details": {
+      "thinking_tokens": 218
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2751,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 930,
+        "cache_read_input_tokens": 4145,
+        "cache_creation_input_tokens": 2751,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2751
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 311,
+    "sentences": 17,
+    "mean_sentence_words": 17.9,
+    "longest_sentence_words": 44,
+    "violations": {
+      "sentence_over_limit": 4,
+      "contraction": 6,
+      "banned_modal": 1,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 3,
+      "synonym_rotation": 0
+    },
+    "violations_total": 14,
+    "violations_per_100w": 4.5
+  },
+  "text": "Here's a review comment you can drop on the diff:\n\n---\n\n**\ud83d\udd34 Blocking: hardcoded API key**\n\nThis commit checks a live API key into `config.py`. A couple of things need to happen before this can merge:\n\n**1. Rotate the key now.** Once a secret lands in a branch it should be treated as compromised, even if we never merge it \u2014 it's in the git history, in any fork or clone, and likely in CI logs and the GitHub API cache. Revoke it in the provider console and issue a new one before doing anything else.\n\n**2. Load it from the environment instead.**\n\n```python\nimport os\n\nAPI_KEY = os.environ[\"API_KEY\"]  # raises at startup if unset \u2014 fail fast\n```\n\nOr, if we want a friendlier error and optional local `.env` support:\n\n```python\nimport os\n\nAPI_KEY = os.environ.get(\"API_KEY\")\nif not API_KEY:\n    raise RuntimeError(\"API_KEY is not set. See README for local setup.\")\n```\n\n**3. Scrub the history.** Amending or force-pushing over the commit isn't enough on its own if it's already been pushed \u2014 but combined with rotation in step 1, rewriting the branch is the cleanest path. `git filter-repo` or a fresh branch off `main` with the clean version both work.\n\n**4. Add the guardrails** so this doesn't recur:\n- `.env` in `.gitignore`, with a committed `.env.example` documenting the required variable names (values blank).\n- A secret scanner in pre-commit or CI \u2014 `gitleaks` or `detect-secrets` are both a few lines of config.\n\nHappy to pair on the history rewrite if that's easier than doing it solo. Nothing wrong with the rest of the change \u2014 just need the secret out of the tree first.\n\n---\n\nTwo notes on adapting this: if the repo already has a config/secrets convention (Vault, AWS Secrets Manager, a `settings.py` with pydantic), swap step 2 to point at that instead of raw `os.environ`. And if the branch hasn't been pushed anywhere yet, you can soften step 3 to \"just amend the commit\" \u2014 though I'd still rotate, since local branches have a way of ending up in backups and editor telemetry.",
+  "texts": [
+    "Here's a review comment you can drop on the diff:\n\n---\n\n**\ud83d\udd34 Blocking: hardcoded API key**\n\nThis commit checks a live API key into `config.py`. A couple of things need to happen before this can merge:\n\n**1. Rotate the key now.** Once a secret lands in a branch it should be treated as compromised, even if we never merge it \u2014 it's in the git history, in any fork or clone, and likely in CI logs and the GitHub API cache. Revoke it in the provider console and issue a new one before doing anything else.\n\n**2. Load it from the environment instead.**\n\n```python\nimport os\n\nAPI_KEY = os.environ[\"API_KEY\"]  # raises at startup if unset \u2014 fail fast\n```\n\nOr, if we want a friendlier error and optional local `.env` support:\n\n```python\nimport os\n\nAPI_KEY = os.environ.get(\"API_KEY\")\nif not API_KEY:\n    raise RuntimeError(\"API_KEY is not set. See README for local setup.\")\n```\n\n**3. Scrub the history.** Amending or force-pushing over the commit isn't enough on its own if it's already been pushed \u2014 but combined with rotation in step 1, rewriting the branch is the cleanest path. `git filter-repo` or a fresh branch off `main` with the clean version both work.\n\n**4. Add the guardrails** so this doesn't recur:\n- `.env` in `.gitignore`, with a committed `.env.example` documenting the required variable names (values blank).\n- A secret scanner in pre-commit or CI \u2014 `gitleaks` or `detect-secrets` are both a few lines of config.\n\nHappy to pair on the history rewrite if that's easier than doing it solo. Nothing wrong with the rest of the change \u2014 just need the secret out of the tree first.\n\n---\n\nTwo notes on adapting this: if the repo already has a config/secrets convention (Vault, AWS Secrets Manager, a `settings.py` with pydantic), swap step 2 to point at that instead of raw `os.environ`. And if the branch hasn't been pushed anywhere yet, you can soften step 3 to \"just amend the commit\" \u2014 though I'd still rotate, since local branches have a way of ending up in backups and editor telemetry."
+  ],
+  "stderr_tail": ""
+}

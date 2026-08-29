@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "readme-09",
+  "cat": "docs",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 24.1,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.1694155,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 12068,
+    "cache_read_input_tokens": 12231,
+    "output_tokens": 1704,
+    "output_tokens_details": {
+      "thinking_tokens": 1166
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12068,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1416,
+        "cache_read_input_tokens": 8086,
+        "cache_creation_input_tokens": 8127,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8127
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 163,
+    "sentences": 18,
+    "mean_sentence_words": 8.7,
+    "longest_sentence_words": 24,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.61
+  },
+  "text": "## Upgrade from version 1 to version 2\n\nVersion 2 reads the configuration file from a new path:\n\n| Version | Path |\n|---|---|\n| 1 | `~/.tool.json` |\n| 2 | `~/.config/tool/config.json` |\n\nVersion 2 does not read the old path. Version 2 also does not move the file for you. If the file stays at the old path, the tool starts with the default values.\n\nThe contents of the file are the same in version 1 and version 2. You move the file. You do not edit it.\n\n### Steps\n\n1. Stop the tool.\n2. Create the new directory:\n   ```sh\n   mkdir -p ~/.config/tool\n   ```\n3. Move the configuration file:\n   ```sh\n   mv ~/.tool.json ~/.config/tool/config.json\n   ```\n4. Make sure that the file is at the new path:\n   ```sh\n   cat ~/.config/tool/config.json\n   ```\n5. Start the tool.\n\n### If you use more than one machine\n\nRepeat these steps on each machine. Each machine keeps its own configuration file.\n\n---\n\nTwo facts in this text are assumptions, because you did not give them. Correct them if they are wrong:\n\n- The file format is the same in both versions.\n- Version 2 does not migrate the file automatically.",
+  "texts": [
+    "## Upgrade from version 1 to version 2\n\nVersion 2 reads the configuration file from a new path:\n\n| Version | Path |\n|---|---|\n| 1 | `~/.tool.json` |\n| 2 | `~/.config/tool/config.json` |\n\nVersion 2 does not read the old path. Version 2 also does not move the file for you. If the file stays at the old path, the tool starts with the default values.\n\nThe contents of the file are the same in version 1 and version 2. You move the file. You do not edit it.\n\n### Steps\n\n1. Stop the tool.\n2. Create the new directory:\n   ```sh\n   mkdir -p ~/.config/tool\n   ```\n3. Move the configuration file:\n   ```sh\n   mv ~/.tool.json ~/.config/tool/config.json\n   ```\n4. Make sure that the file is at the new path:\n   ```sh\n   cat ~/.config/tool/config.json\n   ```\n5. Start the tool.\n\n### If you use more than one machine\n\nRepeat these steps on each machine. Each machine keeps its own configuration file.\n\n---\n\nTwo facts in this text are assumptions, because you did not give them. Correct them if they are wrong:\n\n- The file format is the same in both versions.\n- Version 2 does not migrate the file automatically."
+  ],
+  "stderr_tail": ""
+}

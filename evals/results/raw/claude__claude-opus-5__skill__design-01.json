@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "design-01",
+  "cat": "design",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 28.1,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.06958850000000001,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2764,
+    "cache_read_input_tokens": 4145,
+    "output_tokens": 1555,
+    "output_tokens_details": {
+      "thinking_tokens": 215
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2764,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1555,
+        "cache_read_input_tokens": 4145,
+        "cache_creation_input_tokens": 2764,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2764
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 611,
+    "sentences": 30,
+    "mean_sentence_words": 20.1,
+    "longest_sentence_words": 107,
+    "violations": {
+      "sentence_over_limit": 4,
+      "contraction": 3,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 12,
+      "latin_abbrev": 1,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 1
+    },
+    "violations_total": 23,
+    "violations_per_100w": 3.76
+  },
+  "text": "## The tradeoff in one line\n\nHTTP couples the *availability* of the two services; a queue couples only their *schema*. For order processing, availability coupling is the expensive kind.\n\n## Comparison\n\n| Dimension | Direct HTTP | Message queue |\n|---|---|---|\n| Failure of consumer | Producer's call fails; it must retry, buffer, or drop | Message sits in the queue; consumer catches up |\n| Backpressure | Consumer's slowness becomes producer latency (thread/conn exhaustion, cascading timeouts) | Queue absorbs the spike; depth is the signal to scale consumers |\n| Retries | Producer owns retry state \u2014 usually means an in-process loop that dies with the pod | Broker owns redelivery; DLQ captures poison messages |\n| Ordering | Natural (one call at a time) | Requires partitioning by key (e.g. `order_id`) \u2014 real work |\n| Latency | Single hop, ~ms | Extra hop + poll/dispatch; typically tens of ms |\n| Debuggability | One trace, one stack, obvious error | Async trace; you need correlation IDs and queue-depth dashboards |\n| Deploys | Consumer deploy = producer errors | Consumer deploy = queue depth blip |\n| Exactly-once | Neither gives it \u2014 HTTP retries duplicate too | Same problem, but explicit; you build idempotency deliberately |\n| Operational cost | Nothing new to run | A broker to run, monitor, patch, and capacity-plan |\n\nThe often-cited \"queues give you durability\" is the real point. With HTTP, an order accepted but not yet processed lives only in the producer's memory. If the producer restarts, the order is gone and the customer has a confirmation for something that never happened.\n\n## Recommendation: message queue\n\nFor an order-processing pipeline specifically, because:\n\n1. **Orders are money.** Accepting an order and losing it on a pod restart is a business incident, not a 500. A durable log makes acceptance and processing independently survivable.\n2. **Order volume is spiky.** Promotions, launches, Black Friday. A queue turns a traffic spike into a latency increase; HTTP turns it into a failure and a cascade.\n3. **The pipeline will grow consumers.** Fulfillment today; fraud scoring, tax, analytics, and notifications later. A queue lets you add those without touching the producer.\n4. **Processing is not user-blocking.** The customer needs \"we got your order\" synchronously. They don't need inventory reservation and payment capture to complete before the HTTP response returns.\n\n### Concrete shape\n\n- Kafka if you want a replayable log, per-key ordering, and multiple independent consumers. SQS/RabbitMQ if you mainly want a durable work queue and less operational weight \u2014 SQS FIFO if you need ordering and can live with its throughput limits.\n- Partition by `order_id` so events for one order stay ordered; different orders process in parallel.\n- Make the consumer idempotent keyed on `order_id` + step. Assume at-least-once delivery; every broker will redeliver eventually.\n- DLQ with an alert on depth > 0, plus a documented replay path. An unmonitored DLQ is the same as dropping messages.\n- Publish inside the same transaction that writes the order (transactional outbox), or you will eventually accept an order you never published.\n\n### Keep HTTP for\n\nSynchronous reads the caller must have before responding: inventory availability checks, pricing quotes, address validation, order status lookups. These are request/response by nature, and forcing them through a queue adds latency and complexity for nothing.\n\nThe practical answer is usually both: HTTP for queries, queue for state transitions in the pipeline.\n\n### When I'd reverse this\n\nIf it's genuinely two services, low volume, one team, and no near-term plan for more consumers, direct HTTP with a persisted order record and a retry worker is a legitimate design that skips a broker's operational cost. The moment you find yourself writing that retry worker with its own backlog table, you've built a worse queue \u2014 switch.",
+  "texts": [
+    "## The tradeoff in one line\n\nHTTP couples the *availability* of the two services; a queue couples only their *schema*. For order processing, availability coupling is the expensive kind.\n\n## Comparison\n\n| Dimension | Direct HTTP | Message queue |\n|---|---|---|\n| Failure of consumer | Producer's call fails; it must retry, buffer, or drop | Message sits in the queue; consumer catches up |\n| Backpressure | Consumer's slowness becomes producer latency (thread/conn exhaustion, cascading timeouts) | Queue absorbs the spike; depth is the signal to scale consumers |\n| Retries | Producer owns retry state \u2014 usually means an in-process loop that dies with the pod | Broker owns redelivery; DLQ captures poison messages |\n| Ordering | Natural (one call at a time) | Requires partitioning by key (e.g. `order_id`) \u2014 real work |\n| Latency | Single hop, ~ms | Extra hop + poll/dispatch; typically tens of ms |\n| Debuggability | One trace, one stack, obvious error | Async trace; you need correlation IDs and queue-depth dashboards |\n| Deploys | Consumer deploy = producer errors | Consumer deploy = queue depth blip |\n| Exactly-once | Neither gives it \u2014 HTTP retries duplicate too | Same problem, but explicit; you build idempotency deliberately |\n| Operational cost | Nothing new to run | A broker to run, monitor, patch, and capacity-plan |\n\nThe often-cited \"queues give you durability\" is the real point. With HTTP, an order accepted but not yet processed lives only in the producer's memory. If the producer restarts, the order is gone and the customer has a confirmation for something that never happened.\n\n## Recommendation: message queue\n\nFor an order-processing pipeline specifically, because:\n\n1. **Orders are money.** Accepting an order and losing it on a pod restart is a business incident, not a 500. A durable log makes acceptance and processing independently survivable.\n2. **Order volume is spiky.** Promotions, launches, Black Friday. A queue turns a traffic spike into a latency increase; HTTP turns it into a failure and a cascade.\n3. **The pipeline will grow consumers.** Fulfillment today; fraud scoring, tax, analytics, and notifications later. A queue lets you add those without touching the producer.\n4. **Processing is not user-blocking.** The customer needs \"we got your order\" synchronously. They don't need inventory reservation and payment capture to complete before the HTTP response returns.\n\n### Concrete shape\n\n- Kafka if you want a replayable log, per-key ordering, and multiple independent consumers. SQS/RabbitMQ if you mainly want a durable work queue and less operational weight \u2014 SQS FIFO if you need ordering and can live with its throughput limits.\n- Partition by `order_id` so events for one order stay ordered; different orders process in parallel.\n- Make the consumer idempotent keyed on `order_id` + step. Assume at-least-once delivery; every broker will redeliver eventually.\n- DLQ with an alert on depth > 0, plus a documented replay path. An unmonitored DLQ is the same as dropping messages.\n- Publish inside the same transaction that writes the order (transactional outbox), or you will eventually accept an order you never published.\n\n### Keep HTTP for\n\nSynchronous reads the caller must have before responding: inventory availability checks, pricing quotes, address validation, order status lookups. These are request/response by nature, and forcing them through a queue adds latency and complexity for nothing.\n\nThe practical answer is usually both: HTTP for queries, queue for state transitions in the pipeline.\n\n### When I'd reverse this\n\nIf it's genuinely two services, low volume, one team, and no near-term plan for more consumers, direct HTTP with a persisted order record and a retry worker is a legitimate design that skips a broker's operational cost. The moment you find yourself writing that retry worker with its own backlog table, you've built a worse queue \u2014 switch."
+  ],
+  "stderr_tail": ""
+}

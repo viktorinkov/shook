@@ -1,0 +1,71 @@
+{
+  "harness": "claude",
+  "arm": "style",
+  "id": "review-02",
+  "cat": "review",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 21.4,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.0372618,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2858,
+    "cache_read_input_tokens": 45044,
+    "output_tokens": 1581,
+    "output_tokens_details": {
+      "thinking_tokens": 933
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2858,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1581,
+        "cache_read_input_tokens": 45044,
+        "cache_creation_input_tokens": 2858,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2858
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 309,
+    "sentences": 19,
+    "mean_sentence_words": 15.9,
+    "longest_sentence_words": 26,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 2
+    },
+    "violations_total": 3,
+    "violations_per_100w": 0.97
+  },
+  "text": "## PR Comment: SQL Migration Review\n\nThis migration has several issues that can cause failures or downtime on large tables.\n\n**1. NULL usernames will break the migration.**\nIf any row has a NULL `username`, the concatenation `username || '@example.com'` produces a NULL `email`. The final `ALTER COLUMN email SET NOT NULL` statement will then fail. Add a check for NULL usernames before the update, or use `COALESCE`.\n\n**2. The placeholder emails are not valid addresses.**\nA `username` can contain spaces, uppercase letters, or symbols that are not valid in an email local part. Validate the format, or document that these are temporary placeholder values, not real emails.\n\n**3. `SET NOT NULL` locks the full table.**\nThis statement scans every row to confirm no NULLs exist. On a large table, this holds a lock for the duration of the scan and can block reads and writes. Split large backfills into batches, and run the `NOT NULL` check separately during low-traffic hours.\n\n**4. The bulk `UPDATE` has no batching.**\nAn `UPDATE` with no `WHERE` clause rewrites every row in one transaction. On a large table, this increases lock time and can bloat the table. Batch the update in smaller chunks (for example, by primary key range).\n\n**5. The email column has no uniqueness constraint or index.**\nIf the application expects one email per user, add a `UNIQUE` constraint. If the application queries by email, add an index. Add both in a separate migration step to avoid combining them with the backfill lock.\n\n**6. There is no rollback plan.**\nIf the migration fails partway, document how to revert the added column and data. Confirm that the migration runs inside a transaction where the database supports transactional DDL.\n\n**Suggested next step:** Split this into three migrations \u2014 add the nullable column, backfill in batches with validation, then add the `NOT NULL` constraint and any indexes. This reduces lock time and isolates failures to a single, retryable step.",
+  "stderr_tail": ""
+}

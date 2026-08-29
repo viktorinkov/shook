@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "readme-09",
+  "cat": "docs",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 31.6,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.193439,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 12617,
+    "cache_read_input_tokens": 12298,
+    "output_tokens": 2444,
+    "output_tokens_details": {
+      "thinking_tokens": 1737
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12617,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1676,
+        "cache_read_input_tokens": 8153,
+        "cache_creation_input_tokens": 8609,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8609
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 96,
+    "sentences": 12,
+    "mean_sentence_words": 7.6,
+    "longest_sentence_words": 17,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 1
+    },
+    "violations_total": 1,
+    "violations_per_100w": 1.04
+  },
+  "text": "Here is the section. Mode: strict (you named ASD-STE100 through the hook).\n\n```markdown\n## Upgrade from version 1 to version 2\n\nVersion 2 reads the configuration file from `~/.config/tool/config.json`.\nVersion 1 read the file from `~/.tool.json`. The format of the file is the\nsame in both versions.\n\nVersion 2 does not read `~/.tool.json`. If the file\n`~/.config/tool/config.json` is not on disk, version 2 uses the default\nvalues.\n\nTo upgrade, do these steps:\n\n1. Install version 2.\n2. Make the new directory: `mkdir -p ~/.config/tool`\n3. Copy the configuration file: `cp ~/.tool.json ~/.config/tool/config.json`\n4. Start the tool.\n5. Make sure that the tool uses your configuration.\n6. Erase the old file: `rm ~/.tool.json`\n\nCAUTION: Do not erase `~/.tool.json` before step 5. Version 1 needs this\nfile for a rollback.\n\n### Rollback to version 1\n\nTo go back to version 1, do these steps:\n\n1. Install version 1.\n2. If `~/.tool.json` is not on disk, copy the file back:\n   `cp ~/.config/tool/config.json ~/.tool.json`\n3. Start the tool.\n```\n\nNotes on the choices:\n\n- The passage has two parts. The first part is descriptive, with a limit of 25 words per sentence. The steps are procedural, with a limit of 20 words per sentence and one instruction per step.\n- The steps copy the file first and erase it last. This order keeps a rollback possible.\n- One noun for the file: \"configuration file\". The words \"settings\" and \"options\" do not appear.\n- The caution gives the command first and the risk second.",
+  "texts": [
+    "Here is the section. Mode: strict (you named ASD-STE100 through the hook).\n\n```markdown\n## Upgrade from version 1 to version 2\n\nVersion 2 reads the configuration file from `~/.config/tool/config.json`.\nVersion 1 read the file from `~/.tool.json`. The format of the file is the\nsame in both versions.\n\nVersion 2 does not read `~/.tool.json`. If the file\n`~/.config/tool/config.json` is not on disk, version 2 uses the default\nvalues.\n\nTo upgrade, do these steps:\n\n1. Install version 2.\n2. Make the new directory: `mkdir -p ~/.config/tool`\n3. Copy the configuration file: `cp ~/.tool.json ~/.config/tool/config.json`\n4. Start the tool.\n5. Make sure that the tool uses your configuration.\n6. Erase the old file: `rm ~/.tool.json`\n\nCAUTION: Do not erase `~/.tool.json` before step 5. Version 1 needs this\nfile for a rollback.\n\n### Rollback to version 1\n\nTo go back to version 1, do these steps:\n\n1. Install version 1.\n2. If `~/.tool.json` is not on disk, copy the file back:\n   `cp ~/.config/tool/config.json ~/.tool.json`\n3. Start the tool.\n```\n\nNotes on the choices:\n\n- The passage has two parts. The first part is descriptive, with a limit of 25 words per sentence. The steps are procedural, with a limit of 20 words per sentence and one instruction per step.\n- The steps copy the file first and erase it last. This order keeps a rollback possible.\n- One noun for the file: \"configuration file\". The words \"settings\" and \"options\" do not appear.\n- The caution gives the command first and the risk second."
+  ],
+  "stderr_tail": ""
+}

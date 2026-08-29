@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "runbook-02",
+  "cat": "runbook",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 102.7,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.35442100000000004,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 14601,
+    "cache_read_input_tokens": 12282,
+    "output_tokens": 8090,
+    "output_tokens_details": {
+      "thinking_tokens": 6331
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 14601,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 5308,
+        "cache_read_input_tokens": 8137,
+        "cache_creation_input_tokens": 10609,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 10609
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "procedural",
+    "words": 742,
+    "sentences": 76,
+    "mean_sentence_words": 9.1,
+    "longest_sentence_words": 21,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 2
+    },
+    "violations_total": 3,
+    "violations_per_100w": 0.4
+  },
+  "text": "Strict mode is active, so this draft uses `make sure that`, `examine`, and `measure` in place of check/verify/confirm. I assume a Linux host with `systemd`. Replace the placeholders `<pid>`, `<broker-host>`, and `<broker-port>` with your values.\n\n---\n\n# Runbook: Restart the `worker` Service\n\n## Purpose\n\nThis runbook gives the steps to restart the `worker` service on one host. It also gives the steps to make sure that the queue depth decreases after the restart. It gives the actions for a queue depth that stays constant.\n\n## Assumptions\n\nThe conditions that follow apply to this runbook:\n\n- The host uses `systemd`.\n- You have `sudo` rights on the host.\n- The queue system shows a queue depth value and a consumer count.\n- You have access to the on-call channel and to the ticket system.\n\n## 1. Before the restart\n\n1. Tell the on-call channel that a restart of `worker` starts.\n2. Write the current time in your notes.\n3. Measure the queue depth. Write this value in your notes as `D0`.\n4. Enter this command: `sudo systemctl status worker`.\n5. Write the output of this command in your notes.\n6. If a deployment of `worker` is in progress, stop this procedure. Wait for the end of the deployment.\n\n## 2. Restart the service\n\n1. Enter this command: `sudo systemctl stop worker`.\n2. Wait a maximum of 60 seconds.\n3. Enter this command: `sudo systemctl status worker`.\n4. Make sure that the state is `inactive (dead)`.\n5. If the state is not `inactive (dead)`, find the process with `pgrep -f worker`.\n6. If the process is active after 60 seconds, enter `sudo kill -TERM <pid>`.\n7. Wait 30 seconds.\n8. CAUTION: Use `sudo kill -KILL <pid>` only as the last action. This command can cause the loss of the messages in flight.\n9. Enter this command: `sudo systemctl start worker`.\n10. Enter this command: `sudo systemctl status worker`.\n11. Make sure that the state is `active (running)`.\n12. Examine the log with `sudo journalctl -u worker -n 100 --no-pager`.\n13. Make sure that the log shows no error lines.\n\n## 3. Make sure that the queue depth decreases\n\n1. Wait 1 minute after the start of the service.\n2. Measure the queue depth. Write this value in your notes as `D1`.\n3. Measure the queue depth again every 2 minutes for 10 minutes.\n4. Make sure that each value is less than the value before it.\n5. Measure the consumer count on the queue.\n6. Make sure that the consumer count is equal to the number of worker processes.\n7. If the queue depth decreases to the normal level, tell the on-call channel that the restart is complete.\n8. If the queue depth does not decrease in 10 minutes, go to section 4.\n\n## 4. If the queue depth does not decrease\n\nNote: A full disk, a poison message, or bad credentials for the broker are the usual causes of a constant queue depth.\n\nDo the steps that follow in sequence. Stop at the step that finds the cause.\n\n1. Enter this command: `sudo systemctl is-active worker`.\n2. If the state is not `active`, examine the log with `sudo journalctl -u worker -n 200 --no-pager`.\n3. Examine the log for a connection error to the queue broker.\n4. If the log shows an authentication error, make sure that the credentials for the broker are correct.\n5. Make sure that the host can connect to the broker. Enter `nc -zv <broker-host> <broker-port>`.\n6. Measure the consumer count on the broker.\n7. If the consumer count is 0, stop the service and start it again.\n8. Examine the log for one message ID that repeats. A repeated message ID shows a poison message.\n9. If one message ID repeats, move this message to the dead-letter queue.\n10. Measure the free disk space with `df -h`.\n11. If the disk is full, delete the old log files.\n12. Measure the CPU load and the memory use with `top`.\n13. If the producers send more messages than the workers process, add more worker hosts.\n14. If the queue depth increases for more than 15 minutes, go to section 5.\n\n## 5. If the problem continues\n\n1. Tell the owner of the `worker` service through the on-call system.\n2. Give the host name, the values `D0` and `D1`, and the time of the restart.\n3. Attach the output of `sudo systemctl status worker` to the ticket.\n4. Attach the last 200 log lines to the ticket.\n5. If the queue depth risks a breach of the SLA, stop the producers.\n6. If a new version of `worker` started before the problem, deploy the previous version.\n\n---\n\nTwo notes on this text. Full ASD-STE100 compliance needs the official dictionary, which is free at asd-ste100.org. No tool can guarantee compliance, so I make no compliance claim for this runbook.",
+  "texts": [
+    "Strict mode is active, so this draft uses `make sure that`, `examine`, and `measure` in place of check/verify/confirm. I assume a Linux host with `systemd`. Replace the placeholders `<pid>`, `<broker-host>`, and `<broker-port>` with your values.\n\n---\n\n# Runbook: Restart the `worker` Service\n\n## Purpose\n\nThis runbook gives the steps to restart the `worker` service on one host. It also gives the steps to make sure that the queue depth decreases after the restart. It gives the actions for a queue depth that stays constant.\n\n## Assumptions\n\nThe conditions that follow apply to this runbook:\n\n- The host uses `systemd`.\n- You have `sudo` rights on the host.\n- The queue system shows a queue depth value and a consumer count.\n- You have access to the on-call channel and to the ticket system.\n\n## 1. Before the restart\n\n1. Tell the on-call channel that a restart of `worker` starts.\n2. Write the current time in your notes.\n3. Measure the queue depth. Write this value in your notes as `D0`.\n4. Enter this command: `sudo systemctl status worker`.\n5. Write the output of this command in your notes.\n6. If a deployment of `worker` is in progress, stop this procedure. Wait for the end of the deployment.\n\n## 2. Restart the service\n\n1. Enter this command: `sudo systemctl stop worker`.\n2. Wait a maximum of 60 seconds.\n3. Enter this command: `sudo systemctl status worker`.\n4. Make sure that the state is `inactive (dead)`.\n5. If the state is not `inactive (dead)`, find the process with `pgrep -f worker`.\n6. If the process is active after 60 seconds, enter `sudo kill -TERM <pid>`.\n7. Wait 30 seconds.\n8. CAUTION: Use `sudo kill -KILL <pid>` only as the last action. This command can cause the loss of the messages in flight.\n9. Enter this command: `sudo systemctl start worker`.\n10. Enter this command: `sudo systemctl status worker`.\n11. Make sure that the state is `active (running)`.\n12. Examine the log with `sudo journalctl -u worker -n 100 --no-pager`.\n13. Make sure that the log shows no error lines.\n\n## 3. Make sure that the queue depth decreases\n\n1. Wait 1 minute after the start of the service.\n2. Measure the queue depth. Write this value in your notes as `D1`.\n3. Measure the queue depth again every 2 minutes for 10 minutes.\n4. Make sure that each value is less than the value before it.\n5. Measure the consumer count on the queue.\n6. Make sure that the consumer count is equal to the number of worker processes.\n7. If the queue depth decreases to the normal level, tell the on-call channel that the restart is complete.\n8. If the queue depth does not decrease in 10 minutes, go to section 4.\n\n## 4. If the queue depth does not decrease\n\nNote: A full disk, a poison message, or bad credentials for the broker are the usual causes of a constant queue depth.\n\nDo the steps that follow in sequence. Stop at the step that finds the cause.\n\n1. Enter this command: `sudo systemctl is-active worker`.\n2. If the state is not `active`, examine the log with `sudo journalctl -u worker -n 200 --no-pager`.\n3. Examine the log for a connection error to the queue broker.\n4. If the log shows an authentication error, make sure that the credentials for the broker are correct.\n5. Make sure that the host can connect to the broker. Enter `nc -zv <broker-host> <broker-port>`.\n6. Measure the consumer count on the broker.\n7. If the consumer count is 0, stop the service and start it again.\n8. Examine the log for one message ID that repeats. A repeated message ID shows a poison message.\n9. If one message ID repeats, move this message to the dead-letter queue.\n10. Measure the free disk space with `df -h`.\n11. If the disk is full, delete the old log files.\n12. Measure the CPU load and the memory use with `top`.\n13. If the producers send more messages than the workers process, add more worker hosts.\n14. If the queue depth increases for more than 15 minutes, go to section 5.\n\n## 5. If the problem continues\n\n1. Tell the owner of the `worker` service through the on-call system.\n2. Give the host name, the values `D0` and `D1`, and the time of the restart.\n3. Attach the output of `sudo systemctl status worker` to the ticket.\n4. Attach the last 200 log lines to the ticket.\n5. If the queue depth risks a breach of the SLA, stop the producers.\n6. If a new version of `worker` started before the problem, deploy the previous version.\n\n---\n\nTwo notes on this text. Full ASD-STE100 compliance needs the official dictionary, which is free at asd-ste100.org. No tool can guarantee compliance, so I make no compliance claim for this runbook."
+  ],
+  "stderr_tail": ""
+}

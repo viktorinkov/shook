@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "readme-10",
+  "cat": "docs",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 28.6,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.1727345,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 12026,
+    "cache_read_input_tokens": 12209,
+    "output_tokens": 1854,
+    "output_tokens_details": {
+      "thinking_tokens": 1134
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12026,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1566,
+        "cache_read_input_tokens": 8064,
+        "cache_creation_input_tokens": 8107,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8107
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 51,
+    "sentences": 4,
+    "mean_sentence_words": 12.8,
+    "longest_sentence_words": 20,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "## Security\n\n```markdown\n## Security\n\nDo not report a security vulnerability in a public issue, a pull request, or a public forum.\nA public report gives an attacker time to use the vulnerability before a fix exists.\n\n### How to report a vulnerability\n\nSend an email to security@example.com. Put this information in the email:\n\n- The affected version, commit hash, or URL.\n- The steps that reproduce the problem.\n- The result that you get, and the result that you expect.\n- The effect of the vulnerability, for example data disclosure or remote code execution.\n- The name that you want in the credit line, or a request to stay anonymous.\n\nWe answer your email in 3 business days. If you get no answer in 3 business days, send the\nemail again to maintainers@example.com.\n\n### The 90-day disclosure window\n\nWe use a disclosure window of 90 days. The window starts on the day that we get your report.\nIn this window, we do the work that follows:\n\n- We investigate the report and tell you the result.\n- We write a fix and test it.\n- We give you a status update every 14 days.\n- We prepare a public advisory with a credit line for you.\n\nOn day 90, we make the vulnerability public. This is also true if no fix is ready at that time.\n\nIf a fix is ready before day 90, we can publish the advisory earlier. If an attacker uses the\nvulnerability in public, we publish the advisory immediately.\n\nDo not make the vulnerability public before day 90. If you must publish earlier, tell us the\nnew date in advance.\n\n### Scope\n\nThis policy applies to the code in this repository. For a vulnerability in a dependency,\nreport it to the maintainer of that dependency.\n```\n\nReplace these placeholders with your own values: `security@example.com`, `maintainers@example.com`, the 3-day answer time, and the 14-day update interval. The 90-day window and the email report path match your request. If you use a PGP key or a bug bounty program, tell me and I add a line for each.",
+  "texts": [
+    "## Security\n\n```markdown\n## Security\n\nDo not report a security vulnerability in a public issue, a pull request, or a public forum.\nA public report gives an attacker time to use the vulnerability before a fix exists.\n\n### How to report a vulnerability\n\nSend an email to security@example.com. Put this information in the email:\n\n- The affected version, commit hash, or URL.\n- The steps that reproduce the problem.\n- The result that you get, and the result that you expect.\n- The effect of the vulnerability, for example data disclosure or remote code execution.\n- The name that you want in the credit line, or a request to stay anonymous.\n\nWe answer your email in 3 business days. If you get no answer in 3 business days, send the\nemail again to maintainers@example.com.\n\n### The 90-day disclosure window\n\nWe use a disclosure window of 90 days. The window starts on the day that we get your report.\nIn this window, we do the work that follows:\n\n- We investigate the report and tell you the result.\n- We write a fix and test it.\n- We give you a status update every 14 days.\n- We prepare a public advisory with a credit line for you.\n\nOn day 90, we make the vulnerability public. This is also true if no fix is ready at that time.\n\nIf a fix is ready before day 90, we can publish the advisory earlier. If an attacker uses the\nvulnerability in public, we publish the advisory immediately.\n\nDo not make the vulnerability public before day 90. If you must publish earlier, tell us the\nnew date in advance.\n\n### Scope\n\nThis policy applies to the code in this repository. For a vulnerability in a dependency,\nreport it to the maintainer of that dependency.\n```\n\nReplace these placeholders with your own values: `security@example.com`, `maintainers@example.com`, the 3-day answer time, and the 14-day update interval. The 90-day window and the email report path match your request. If you use a PGP key or a bug bounty program, tell me and I add a line for each."
+  ],
+  "stderr_tail": ""
+}
