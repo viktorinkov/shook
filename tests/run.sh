@@ -38,7 +38,7 @@ GOOD="Run the tests. Then commit the change. The build takes one minute. $(print
 hook() {
   local script="$1" json="$2"; shift 2
   printf '%s' "$json" | env -u STE_MODE -u CLAUDE_PROJECT_DIR -u PLUGIN_DATA -u COPILOT_PLUGIN_DATA \
-    -u ANTIGRAVITY_CONVERSATION_ID -u STE_HARNESS \
+    -u ANTIGRAVITY_CONVERSATION_ID -u STE_HARNESS -u CURSOR_VERSION -u CLAUDE_PLUGIN_ROOT \
     HOME="$T/home" CLAUDE_CONFIG_DIR="$T/claude" STE_PLUGIN_DIR="$PLUG" "$@" bash "$H/$script" 2>/dev/null
 }
 flag() { head -n1 "$1" 2>/dev/null; }
@@ -164,6 +164,101 @@ tuser 8 "/ste off"
 hook user-prompt-submit.sh "$IN"',"workspacePaths":[]}' "${AG[@]}" >/dev/null
 check "antigravity: /ste off removes the flag" test ! -e "$T/aghome/.gemini/config/.simple-english-active"
 
+# ---- Cursor -----------------------------------------------------------------
+# Cursor (https://cursor.com/docs/hooks) runs hooks/cursor.sh for four events.
+# The dispatcher reads hook_event_name from stdin and sets STE_HARNESS=cursor.
+# Cursor sets CLAUDE_PROJECT_DIR as an alias of CURSOR_PROJECT_DIR.
+CU=(CLAUDE_PROJECT_DIR="$PROJ")
+CFLAG="$T/home/.cursor/.simple-english-active"
+out="$(hook cursor.sh '{"hook_event_name":"beforeSubmitPrompt","conversation_id":"c1","cursor_version":"2.4.1","workspace_roots":["'"$PROJ"'"],"prompt":"/ste strict"}' "${CU[@]}")"
+check "cursor: /ste strict blocks the prompt" jqok "$out" '.continue == false'
+check "cursor: user_message confirms the mode" jqok "$out" '.user_message | test("STE MODE IS NOW: strict \\(source: global") and (test("Reply with") | not)'
+check "cursor: user_message says no rule file yet" jqok "$out" '.user_message | test("No rule file")'
+check "cursor: flag written under ~/.cursor" test "$(flag "$CFLAG")" = strict
+check "cursor: Claude flag untouched" test ! -e "$T/claude/.simple-english-active"
+out="$(hook cursor.sh '{"hook_event_name":"sessionStart","session_id":"s1","workspace_roots":["'"$PROJ"'"]}' "${CU[@]}")"
+check "cursor: session start is additional_context" jqok "$out" '(.additional_context | test("RULE TEXT MARKER") and test("Level: strict") and test("/ste off")) and (has("hookSpecificOutput") | not)'
+check "cursor: no badge mention" jqok "$out" '.additional_context | test("status line badge") | not'
+mkdir -p "$PROJ/.cursor/hooks"; printf '#!/bin/sh\n' > "$PROJ/.cursor/hooks/simple-english-hook.sh"
+RULE="$PROJ/.cursor/rules/simple-english.mdc"
+out="$(hook cursor.sh '{"hook_event_name":"beforeSubmitPrompt","prompt":"/ste strict"}' "${CU[@]}")"
+check "cursor: toggle writes the rule file in an installed project" jqok "$out" '.user_message | test("Rule file updated")'
+check "cursor: rule file starts with frontmatter" test "$(head -n1 "$RULE")" = "---"
+check "cursor: rule file is always-on" grep -q 'alwaysApply: true' "$RULE"
+check "cursor: rule file carries the marker" grep -q 'simple-english-hook:managed' "$RULE"
+check "cursor: rule file carries the rules" grep -q 'RULE TEXT MARKER' "$RULE"
+check "cursor: rule file carries the strict line" grep -q 'STRICT:' "$RULE"
+out="$(hook cursor.sh '{"hook_event_name":"sessionStart","workspace_roots":["'"$PROJ"'"]}' "${CU[@]}")"
+check "cursor: preloaded rules are not injected twice" jqok "$out" '.additional_context | test("RULE TEXT MARKER") | not'
+check "cursor: session start points at the rule file" jqok "$out" '.additional_context | test("simple-english.mdc")'
+out="$(hook cursor.sh '{"hook_event_name":"beforeSubmitPrompt","prompt":"hello"}' "${CU[@]}")"
+check "cursor: a normal prompt passes through" jqok "$out" '.continue == true and (has("user_message") | not)'
+hook cursor.sh '{"hook_event_name":"afterAgentResponse","conversation_id":"c1","text":"'"$BAD"'"}' "${CU[@]}" >/dev/null
+check "cursor: reply saved for the stop hook" test -s "$T/home/.cursor/simple-english-hook/reply-c1"
+out="$(hook cursor.sh '{"hook_event_name":"stop","conversation_id":"c1","status":"completed","loop_count":0}' "${CU[@]}")"
+check "cursor: stop emits a followup_message" jqok "$out" '.followup_message | test("STE LINT FAILED")'
+check "cursor: score written next to the flag" test -s "$T/home/.cursor/.simple-english-score"
+check "cursor: reply file consumed" test ! -e "$T/home/.cursor/simple-english-hook/reply-c1"
+hook cursor.sh '{"hook_event_name":"afterAgentResponse","conversation_id":"c1","text":"'"$BAD"'"}' "${CU[@]}" >/dev/null
+out="$(hook cursor.sh '{"hook_event_name":"stop","conversation_id":"c1","status":"completed","loop_count":1}' "${CU[@]}")"
+check "cursor: stop runs once per turn (loop_count)" test -z "$out"
+hook cursor.sh '{"hook_event_name":"afterAgentResponse","conversation_id":"c1","text":"'"$BAD"'"}' "${CU[@]}" >/dev/null
+out="$(hook cursor.sh '{"hook_event_name":"stop","conversation_id":"c1","status":"aborted","loop_count":0}' "${CU[@]}")"
+check "cursor: an aborted turn is not linted" test -z "$out"
+rm -rf "$T/home/.cursor/simple-english-hook"
+hook cursor.sh '{"hook_event_name":"afterAgentResponse","conversation_id":"c1","text":"'"$GOOD"'"}' "${CU[@]}" >/dev/null
+out="$(hook cursor.sh '{"hook_event_name":"stop","conversation_id":"c1","status":"completed","loop_count":0}' "${CU[@]}")"
+check "cursor: stop passes a good reply" test -z "$out"
+out="$(hook cursor.sh '{"hook_event_name":"beforeSubmitPrompt","prompt":"/ste off"}' "${CU[@]}")"
+check "cursor: /ste off confirms in the UI" jqok "$out" '(.continue == false) and (.user_message | test("STE MODE IS NOW: off"))'
+check "cursor: /ste off removes the flag" test ! -e "$CFLAG"
+check "cursor: /ste off removes the rule file" test ! -e "$RULE"
+rm -rf "$PROJ/.cursor"
+out="$(hook session-start.sh '{}' STE_MODE=on CURSOR_VERSION=2.4.1 CLAUDE_PROJECT_DIR="$PROJ")"
+check "cursor: detected from CURSOR_VERSION alone" jqok "$out" '.additional_context | test("Level: on")'
+out="$(hook session-start.sh '{}' STE_MODE=on CURSOR_VERSION=2.4.1 CLAUDE_PLUGIN_ROOT="$ROOT" CLAUDE_PROJECT_DIR="$PROJ")"
+check "cursor: a nested Claude Code session wins over CURSOR_VERSION" jqok "$out" '.hookSpecificOutput.hookEventName == "SessionStart"'
+
+# ---- cursor-install.sh ------------------------------------------------------
+cinst() {
+  env -u STE_MODE -u CLAUDE_PROJECT_DIR -u PLUGIN_DATA -u COPILOT_PLUGIN_DATA \
+    -u ANTIGRAVITY_CONVERSATION_ID -u STE_HARNESS -u CURSOR_VERSION -u CLAUDE_PLUGIN_ROOT \
+    HOME="$T/home" CLAUDE_CONFIG_DIR="$T/claude" STE_PLUGIN_DIR="$PLUG" \
+    bash "$ROOT/cursor-install.sh" "$@" >/dev/null 2>&1
+}
+P2="$T/proj2"; HJ2="$P2/.cursor/hooks.json"
+mkdir -p "$P2/.cursor"
+printf '{"version":1,"hooks":{"stop":[{"command":"./other-tool.sh"}]}}\n' > "$HJ2"
+cinst --project "$P2" strict
+check "install: rule file written" grep -q 'RULE TEXT MARKER' "$P2/.cursor/rules/simple-english.mdc"
+check "install: rule file is always-on" grep -q 'alwaysApply: true' "$P2/.cursor/rules/simple-english.mdc"
+check "install: hooks.json has the four events" jq -e '.version == 1 and (.hooks | keys | sort) == ["afterAgentResponse","beforeSubmitPrompt","sessionStart","stop"]' "$HJ2"
+check "install: stop keeps loop_limit 1" jq -e '[.hooks.stop[] | select(.command | test("simple-english-hook"))] | .[0].loop_limit == 1' "$HJ2"
+check "install: foreign stop entry survives the merge" jq -e '[.hooks.stop[] | .command] | index("./other-tool.sh") != null' "$HJ2"
+check "install: commands use the project-relative path" jq -e '[.hooks[][] | .command | select(test("simple-english-hook"))] | all(. == ".cursor/hooks/simple-english-hook.sh")' "$HJ2"
+check "install: wrapper is executable" test -x "$P2/.cursor/hooks/simple-english-hook.sh"
+check "install: wrapper calls hooks/cursor.sh" grep -q 'hooks/cursor.sh' "$P2/.cursor/hooks/simple-english-hook.sh"
+check "install: project mode file written" test "$(flag "$P2/.claude/ste-mode")" = strict
+out="$(printf '%s' '{"hook_event_name":"sessionStart"}' | env -u STE_MODE -u STE_HARNESS -u CURSOR_VERSION -u CLAUDE_PLUGIN_ROOT \
+  HOME="$T/home" CLAUDE_CONFIG_DIR="$T/claude" STE_PLUGIN_DIR="$PLUG" CLAUDE_PROJECT_DIR="$P2" \
+  bash "$P2/.cursor/hooks/simple-english-hook.sh" 2>/dev/null)"
+check "install: the generated wrapper runs end to end" jqok "$out" '.additional_context | test("Level: strict") and (test("RULE TEXT MARKER") | not)'
+cinst --project "$P2" off
+check "install: off removes the rule file" test ! -e "$P2/.cursor/rules/simple-english.mdc"
+check "install: off writes the project mode" test "$(flag "$P2/.claude/ste-mode")" = off
+check "install: off keeps the hook entries" grep -q simple-english-hook "$HJ2"
+cinst --project "$P2" uninstall
+check "uninstall: wrapper removed" test ! -e "$P2/.cursor/hooks/simple-english-hook.sh"
+check "uninstall: our entries removed" jq -e '[.hooks[][] | .command] | all(test("simple-english-hook") | not)' "$HJ2"
+check "uninstall: foreign entry survives" jq -e '.hooks.stop[0].command == "./other-tool.sh"' "$HJ2"
+cinst --user on
+check "install --user: hooks.json under ~/.cursor" jq -e '[.hooks[][] | .command] | all(. == "./hooks/simple-english-hook.sh")' "$T/home/.cursor/hooks.json"
+check "install --user: global flag on" test "$(flag "$CFLAG")" = on
+cinst --user uninstall
+check "uninstall --user: flag removed" test ! -e "$CFLAG"
+check "uninstall --user: hooks.json removed when only ours" test ! -e "$T/home/.cursor/hooks.json"
+check "uninstall --user: wrapper removed" test ! -e "$T/home/.cursor/hooks/simple-english-hook.sh"
+
 # ---- Overrides and missing plugin -------------------------------------------
 out="$(hook session-start.sh '{}' STE_MODE=on STE_HARNESS=codex CLAUDE_PROJECT_DIR="$PROJ")"
 check "STE_HARNESS override selects the Codex format" jqok "$out" '.systemMessage == "STE mode: on"'
@@ -171,7 +266,7 @@ out="$(hook session-start.sh '{}' STE_MODE=on STE_PLUGIN_DIR="$T/nowhere" CLAUDE
 check "missing plugin: note names STE_PLUGIN_DIR" jqok "$out" '.hookSpecificOutput.additionalContext | test("STE_PLUGIN_DIR")'
 
 # ---- Manifests --------------------------------------------------------------
-for f in hooks/hooks.json hooks/copilot-hooks.json hooks.json plugin.json .claude-plugin/plugin.json \
+for f in hooks/hooks.json hooks/copilot-hooks.json hooks/cursor-hooks.json hooks.json plugin.json .claude-plugin/plugin.json \
          .claude-plugin/marketplace.json .codex-plugin/plugin.json .agents/plugins/marketplace.json \
          .github/plugin/plugin.json .github/plugin/marketplace.json; do
   check "valid JSON: $f" jq -e . "$ROOT/$f"
@@ -183,6 +278,8 @@ check "copilot manifest points at copilot-hooks.json" jq -e '.hooks == "hooks/co
 check "antigravity hooks.json is one named hook with agy events" jq -e 'keys == ["simple-english-hook"] and (.["simple-english-hook"] | keys == ["PreInvocation","SessionStart","Stop"])' "$ROOT/hooks.json"
 check "antigravity hooks use relative paths and set the harness" jq -e '[.["simple-english-hook"][][] | .command] | length == 3 and all(test("^STE_HARNESS=antigravity bash hooks/[a-z-]+\\.sh$"))' "$ROOT/hooks.json"
 check "antigravity plugin.json has name and description only" jq -e '.name == "simple-english-hook" and keys == ["description","name"]' "$ROOT/plugin.json"
+check "cursor template has the four events" jq -e '.version == 1 and (.hooks | keys | sort) == ["afterAgentResponse","beforeSubmitPrompt","sessionStart","stop"]' "$ROOT/hooks/cursor-hooks.json"
+check "cursor template caps the stop loop and uses one command" jq -e '.hooks.stop[0].loop_limit == 1 and ([.hooks[][] | .command] | all(. == ".cursor/hooks/simple-english-hook.sh"))' "$ROOT/hooks/cursor-hooks.json"
 check "gemini directory removed" test ! -e "$ROOT/gemini"
 v="$(jq -r .version "$ROOT/.claude-plugin/plugin.json")"
 for f in .codex-plugin/plugin.json .github/plugin/plugin.json; do

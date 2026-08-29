@@ -1,6 +1,6 @@
 # Other harnesses
 
-The hook scripts in `hooks/` are plain bash. They run under four harnesses: Claude Code, OpenAI Codex CLI, GitHub Copilot CLI, and Antigravity CLI. `hooks/common.sh` detects the harness and prints the output format that the harness expects. Each harness has its own manifest in this repo.
+The hook scripts in `hooks/` are plain bash. They run under five harnesses: Claude Code, OpenAI Codex CLI, GitHub Copilot CLI, Antigravity CLI, and Cursor. `hooks/common.sh` detects the harness and prints the output format that the harness expects. Each harness has its own manifest in this repo.
 
 | Harness | Rules at session start | Reminder on each prompt | Strict (lint gate) | Toggle command | Skill | Badge |
 |---|---|---|---|---|---|---|
@@ -8,6 +8,7 @@ The hook scripts in `hooks/` are plain bash. They run under four harnesses: Clau
 | Codex CLI | yes | yes | yes | `$ste on` | `$ste` | system message |
 | Copilot CLI | yes | no | no | `/simple-english-hook:ste on` (next session) | `/simple-english-hook:ste` | no |
 | Antigravity CLI | yes | yes (each model call) | yes | `/ste on` | `/ste` | no |
+| Cursor | yes | yes (always-on rule file) | yes (docs only, not verified live) | `/ste on` | no | toggle popup |
 
 Requirements: bash, `jq`, and `python3` (strict mode only).
 
@@ -29,6 +30,7 @@ Put the `export` line in your shell profile. The hooks read `STE_PLUGIN_DIR` fir
 | Codex CLI | `PLUGIN_DATA` is set | `$PLUGIN_DATA/.simple-english-active` |
 | Copilot CLI | `COPILOT_PLUGIN_DATA` is set | `$COPILOT_PLUGIN_DATA/.simple-english-active` |
 | Antigravity CLI | `STE_HARNESS=antigravity` from the root `hooks.json`, or `ANTIGRAVITY_CONVERSATION_ID` is set | `~/.gemini/config/.simple-english-active` |
+| Cursor | `STE_HARNESS=cursor` from `hooks/cursor.sh`, or `CURSOR_VERSION` is set and `CLAUDE_PLUGIN_ROOT` is not | `~/.cursor/.simple-english-active` |
 | Claude Code | none of the above | `~/.claude/.simple-english-active` |
 
 Each harness keeps its own global flag. A toggle in Codex does not change the mode in Claude Code. The per-repo file `.claude/ste-mode` and the `STE_MODE` variable apply to all harnesses. The hooks read the project directory from the `cwd` field of the hook input. Antigravity sends `workspacePaths` instead. `STE_HARNESS=<name>` forces a harness. The tests use it.
@@ -168,6 +170,80 @@ The transcript is JSON lines with `step_index`, `source`, `type`, and `content`.
 
 Output: `SessionStart` and `PreInvocation` take `{"injectSteps": [...]}`. A step is `{"ephemeralMessage": "..."}` or `{"systemMessage": {"systemMessage": "..."}}`. `Stop` takes `{"decision": "continue", "reason": "..."}`. Any other decision lets the agent stop.
 
+## Cursor
+
+Cursor is an IDE with hooks and rule files. It loads no plugins, so `cursor-install.sh` writes the files that Cursor reads. Support has two parts. A project rule file makes the rules always on. Four hooks add the `/ste` toggle and strict mode. This section comes from the Cursor docs and from the simulated tests in `tests/run.sh`. No live Cursor session verified it. We cannot run the Cursor IDE headless.
+
+### Prerequisites
+
+- A Cursor version with hooks and `hooks.json` schema version 1. The hooks reference names no minimum version.
+- bash, `jq`, and `python3` (strict mode only).
+- The simple-english plugin files. Set `STE_PLUGIN_DIR` as shown above.
+- A clone of this repo. The hook scripts run from the clone.
+
+### Install
+
+```bash
+git clone https://github.com/viktorinkov/simple-english-hook ~/simple-english-hook
+cd <your-project>
+bash ~/simple-english-hook/cursor-install.sh strict
+```
+
+The script writes four files into the project:
+
+- `.cursor/rules/simple-english.mdc` — the reminder and the full rule set, with `alwaysApply: true`. Cursor attaches such a rule to every request.
+- `.cursor/hooks.json` — entries for `sessionStart`, `beforeSubmitPrompt`, `afterAgentResponse`, and `stop`. The script merges them into an existing file. Entries from other tools stay.
+- `.cursor/hooks/simple-english-hook.sh` — a wrapper that calls `hooks/cursor.sh` in the clone. The wrapper holds the absolute path, so `hooks.json` holds a short relative path.
+- `.claude/ste-mode` — the per-repo mode file, shared with the other harnesses.
+
+`--project DIR` targets another project. `--user` writes the hooks and the global flag into `~/.cursor/` instead. The user scope has no rule file. Cursor user rules are plain text in the settings, not files. With `--user`, the rules reach the model at session start only. Cursor watches `hooks.json` and reloads it on save. Restart Cursor if the hooks do not load.
+
+### Toggle
+
+Type `/ste on`, `/ste strict`, `/ste off`, or `/ste status` in the Agent chat. The `beforeSubmitPrompt` hook reads the prompt, updates the flag, and returns `{"continue": false}`. Cursor then drops the prompt and shows the `user_message` confirmation. The toggle costs no model turn. The hook also rewrites or removes the project rule file to match the new mode. It only touches rule files with its own `simple-english-hook:managed` marker. `bash cursor-install.sh on|strict|off|status` does the same from the shell.
+
+There is no `ste` skill for Cursor. Cursor 2.4 added skills: `.cursor/skills/<name>/SKILL.md`, invoked as `/name`. The skills docs do not say that arguments after `/name` reach the hooks as text. So the toggle stays a plain text prompt. If Cursor consumes `/ste` before the hook sees it, use the install script.
+
+### What works
+
+Per the docs. No live session verified it.
+
+- `on`: the rule file puts the reminder and the full rules into every request. This one file replaces the session-start injection and the per-prompt reminder. The `sessionStart` hook adds the mode header through `additional_context`. When the rule file exists, the hook skips the rule text to avoid duplication.
+- `strict`: `afterAgentResponse` delivers each reply as `{"text": ...}`, and `hooks/cursor.sh` saves the last one. The `stop` hook lints the saved text. On failure it returns `{"followup_message": ...}` with the lint report. Cursor submits that as the next user message, and the model rewrites the reply. `loop_count` and `"loop_limit": 1` cap it at one rewrite per turn.
+- The toggle. The confirmation shows in the Cursor UI as `user_message`.
+- The score file `~/.cursor/.simple-english-score`, next to the global flag.
+
+### What does not work
+
+- A reminder injected on each prompt. `beforeSubmitPrompt` output is `continue` and `user_message` only. The always-on rule file covers the reminder instead.
+- The status line badge. The toggle popup is the only UI surface.
+- An `ste` skill. See the Toggle section.
+- A hidden rewrite request. The `followup_message` appears in the chat as a user message.
+- Cloud agents. The docs list `sessionStart` and `beforeSubmitPrompt` as unsupported there. A forum report also shows `stop` and `afterAgentResponse` as not firing in cloud agents.
+
+### Uninstall
+
+```bash
+cd <your-project>
+bash ~/simple-english-hook/cursor-install.sh uninstall
+bash ~/simple-english-hook/cursor-install.sh --user uninstall
+```
+
+The project uninstall removes the rule file, the wrapper, and this plugin's entries in `.cursor/hooks.json`. It keeps `.claude/ste-mode`, because the other harnesses read it. Delete that file by hand if no harness needs it. The user uninstall also deletes the flag, the score file, and the saved replies.
+
+### Hook contract (docs)
+
+Config files: `~/.cursor/hooks.json` (user) and `<project>/.cursor/hooks.json` (project). The shape is `{"version": 1, "hooks": {"<event>": [{"command": ..., "timeout": ..., "loop_limit": ...}]}}`. A hook gets one JSON object on stdin and answers with one JSON object on stdout. Common input fields include `conversation_id`, `hook_event_name`, `workspace_roots`, and `cursor_version`. Hook processes get `CURSOR_PROJECT_DIR`, `CURSOR_VERSION`, and `CLAUDE_PROJECT_DIR` as an alias. Project hook commands run from the project root. The events this plugin uses:
+
+| Event | Input used | Output used |
+|---|---|---|
+| `sessionStart` | `session_id` | `{"additional_context": ...}` |
+| `beforeSubmitPrompt` | `prompt` | `{"continue": bool, "user_message": ...}` |
+| `afterAgentResponse` | `text`, `conversation_id` | none (the hook saves the text) |
+| `stop` | `status`, `loop_count`, `conversation_id` | `{"followup_message": ...}` |
+
+Sources: <https://cursor.com/docs/hooks> (events, stdin fields, output keys, config locations, environment variables), <https://cursor.com/docs/context/rules> (`.mdc` frontmatter, `alwaysApply`, user rules as plain text), <https://cursor.com/docs/skills> (skill files, `/name` invocation), <https://forum.cursor.com/t/cursor-cloud-agents-do-not-run-afteragentresponse-or-stop-hooks/159929> (cloud agents).
+
 ## Notes on the sources
 
 The hook contracts come from the official docs and from the CLI binaries. The tests in `tests/run.sh` simulate each harness. Run them with `bash tests/run.sh`.
@@ -177,6 +253,7 @@ Where the docs and the ponytail plugin differ, the hooks follow the docs:
 - Codex shows `systemMessage` as `<Event> (completed) says: ...` in the TUI. Ponytail sends it on every prompt. These hooks send it at session start and after a toggle only.
 - Copilot docs say `userPromptSubmitted` output is dropped. Ponytail prints `{}`. These hooks print nothing.
 - Ponytail ships no hooks for Antigravity. These hooks use the events from the hooks guide inside the `agy` binary, plus `SessionStart`. That event is not in the guide, but a live run confirmed it.
+- Ponytail ships a static `.cursor/rules/ponytail.mdc` and no Cursor hooks. This plugin generates the rule file instead, because the rule text lives in the simple-english plugin.
 
 Status of the open points in a live session:
 
@@ -184,3 +261,4 @@ Status of the open points in a live session:
 - Copilot: the `COPILOT_PLUGIN_DATA` variable at hook run time. The plugin reference documents it.
 - Antigravity: interactive sessions and `--continue`. All four live runs used print mode (`agy -p`).
 - Antigravity: `agy plugin install` from a GitHub URL. The local clone path is verified.
+- Cursor: everything. No live Cursor run happened. The contract comes from the sources in the Cursor section.

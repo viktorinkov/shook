@@ -14,11 +14,14 @@ STE_CLAUDE_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
 #                 hooks.json also sets STE_HARNESS=antigravity, so a nested Claude Code
 #                 session inside an agy terminal is not misdetected.
 # Override with STE_HARNESS=<name>. See docs/other-harnesses.md.
+#   cursor      - Cursor (the IDE). hooks/cursor.sh sets STE_HARNESS=cursor. Fallback: Cursor
+#                 gives hook processes CURSOR_VERSION, and it never sets CLAUDE_PLUGIN_ROOT.
 ste_harness() {
   if [ -n "${STE_HARNESS:-}" ]; then printf '%s' "$STE_HARNESS"
   elif [ -n "${COPILOT_PLUGIN_DATA:-}" ]; then printf 'copilot'
   elif [ -n "${PLUGIN_DATA:-}" ]; then printf 'codex'
   elif [ -n "${ANTIGRAVITY_CONVERSATION_ID:-}" ]; then printf 'antigravity'
+  elif [ -n "${CURSOR_VERSION:-}" ] && [ -z "${CLAUDE_PLUGIN_ROOT:-}" ]; then printf 'cursor'  # cursor block
   else printf 'claude'
   fi
 }
@@ -31,6 +34,7 @@ case "$STE_HARNESS_NAME" in
   codex)       STE_STATE_DIR="${PLUGIN_DATA:-$STE_CLAUDE_DIR}" ;;
   copilot)     STE_STATE_DIR="${COPILOT_PLUGIN_DATA:-$STE_CLAUDE_DIR}" ;;
   antigravity) STE_STATE_DIR="$HOME/.gemini/config" ;;
+  cursor)      STE_STATE_DIR="$HOME/.cursor" ;;  # cursor block
   *)           STE_STATE_DIR="$STE_CLAUDE_DIR" ;;
 esac
 STE_FLAG="$STE_STATE_DIR/.simple-english-active"
@@ -244,6 +248,12 @@ ste_lint_script() {
   ste_plugin_file evals/ste_lint.py
 }
 
+# ---- cursor block (shared default) ------------------------------------------
+# True when the harness already loads the rules from an always-on rule file, so
+# a hook does not have to inject them again. Overridden in the cursor block below.
+ste_rules_preloaded() { return 1; }
+# ---- cursor block end --------------------------------------------------------
+
 # True when the user's status line script contains the badge marker.
 ste_badge_installed() {
   local cmd f
@@ -251,3 +261,92 @@ ste_badge_installed() {
   f="$(printf '%s' "$cmd" | sed -E 's/^(bash|sh) +//; s/^"(.*)"$/\1/; s/^'"'"'(.*)'"'"'$/\1/')"
   [ -n "$f" ] && [ -f "$f" ] && grep -q "simple-english-hook" "$f"
 }
+
+# ==== cursor block start ======================================================
+# Cursor (the IDE) support. All Cursor-only code lives between these markers.
+# Contract, from https://cursor.com/docs/hooks :
+#   sessionStart        out: {"additional_context": "..."}
+#   beforeSubmitPrompt  in: {"prompt": ...}; out: {"continue": bool, "user_message": "..."}.
+#                       A blocked prompt never reaches the model. No context injection.
+#   afterAgentResponse  in: {"text": "..."}; no output. hooks/cursor.sh saves the text.
+#   stop                in: {"status", "loop_count"}; out: {"followup_message": "..."}.
+# The always-on path is a project rule file, from https://cursor.com/docs/context/rules :
+#   .cursor/rules/simple-english.mdc with "alwaysApply: true" applies to every request.
+# cursor-install.sh writes the rule file and the hook entries. See docs/other-harnesses.md.
+if [ "$STE_HARNESS_NAME" = "cursor" ]; then
+  STE_CURSOR_MARK="simple-english-hook:managed"
+
+  ste_cursor_rule_file() {
+    [ -n "$STE_PROJECT_DIR" ] || return 1
+    printf '%s' "$STE_PROJECT_DIR/.cursor/rules/simple-english.mdc"
+  }
+  ste_rules_preloaded() {
+    local f
+    f="$(ste_cursor_rule_file)" && [ -f "$f" ]
+  }
+
+  # ste_cursor_write_rule <file> <mode>: write the always-on rule file for a project.
+  ste_cursor_write_rule() {
+    mkdir -p "$(dirname "$1")"
+    {
+      printf -- '---\ndescription: Simple English (ASD-STE100) rules. Managed by simple-english-hook.\nglobs:\nalwaysApply: true\n---\n\n'
+      printf '<!-- %s level=%s. Generated. Do not edit. Run cursor-install.sh or type /ste to change it. -->\n\n' "$STE_CURSOR_MARK" "$2"
+      cat "$STE_DIR/rules/reminder.md"
+      [ "$2" = "strict" ] && printf 'STRICT: a linter reads your reply. Replies with violations are sent back for a rewrite.\n'
+      printf '\n'
+      ste_rules_text
+    } > "$1"
+  }
+  # Remove the rule file, but only one that this plugin wrote (marker check).
+  ste_cursor_remove_rule() {
+    [ -f "$1" ] && grep -q "$STE_CURSOR_MARK" "$1" && rm -f "$1"
+  }
+  # After a toggle: keep the project rule file in step with the mode. Touch only
+  # projects that hold this plugin's wrapper or rule file (cursor-install.sh ran there).
+  # Prints a one-line status for the toggle popup.
+  ste_cursor_sync_rule() {
+    local f mode
+    f="$(ste_cursor_rule_file)" || return 0
+    mode="$(ste_mode)"
+    if [ "$mode" = "off" ]; then
+      ste_cursor_remove_rule "$f" && printf 'Rule file removed: %s' "$f"
+      return 0
+    fi
+    if { [ -f "$f" ] && grep -q "$STE_CURSOR_MARK" "$f"; } || [ -e "$STE_PROJECT_DIR/.cursor/hooks/simple-english-hook.sh" ]; then
+      ste_cursor_write_rule "$f" "$mode" && printf 'Rule file updated: %s' "$f"
+    else
+      printf 'No rule file in this project. Run cursor-install.sh for always-on rules.'
+    fi
+  }
+
+  # Strict-mode plumbing: afterAgentResponse saves the reply, the stop hook lints it.
+  ste_cursor_reply_file() {
+    printf '%s/simple-english-hook/reply-%s' "$STE_STATE_DIR" \
+      "$(printf '%s' "$1" | jq -r '.conversation_id // "default"' 2>/dev/null)"
+  }
+  ste_cursor_save_reply() {
+    local f
+    f="$(ste_cursor_reply_file "$1")"
+    mkdir -p "$(dirname "$f")"
+    printf '%s' "$1" | jq -r '.text // ""' > "$f"
+  }
+
+  # Cursor output shapes. A toggle (third argument set) blocks the prompt and puts
+  # the confirmation in the UI popup. It also syncs the project rule file.
+  ste_emit() {
+    local event="$1" text="$2" sys="${3:-}" msg
+    if [ "$event" = "SessionStart" ]; then
+      printf '%s' "$text" | jq -Rs '{additional_context: .}'
+    elif [ -n "$sys" ]; then
+      msg="$({ printf '%s\n' "$text" | grep -E '^STE( MODE IS NOW)?:' | sed 's/\. Reply with one short line.*/./'
+               ste_cursor_sync_rule; })"
+      printf '%s' "$msg" | jq -Rs '{continue: false, user_message: .}'
+    else
+      jq -n '{continue: true}'  # beforeSubmitPrompt cannot inject context
+    fi
+  }
+  ste_emit_block() {
+    jq -n --arg r "$1" '{followup_message: $r}'
+  }
+fi
+# ==== cursor block end ========================================================

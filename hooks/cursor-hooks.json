@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      { "command": ".cursor/hooks/simple-english-hook.sh", "timeout": 15 }
+    ],
+    "beforeSubmitPrompt": [
+      { "command": ".cursor/hooks/simple-english-hook.sh", "timeout": 15 }
+    ],
+    "afterAgentResponse": [
+      { "command": ".cursor/hooks/simple-english-hook.sh", "timeout": 15 }
+    ],
+    "stop": [
+      { "command": ".cursor/hooks/simple-english-hook.sh", "timeout": 30, "loop_limit": 1 }
+    ]
+  }
+}

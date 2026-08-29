@@ -22,7 +22,13 @@ text="$(
     printf 'The [STE] status line badge is not installed. If the user asks for it, run: bash "%s/statusline-install.sh"\n' "$STE_DIR"
   fi
   printf '\n'
-  ste_rules_text
+  # ---- cursor block: the project rule file already carries the full rules ----
+  if ste_rules_preloaded; then
+    printf 'The full rule set is in .cursor/rules/simple-english.mdc. It applies to every request.\n'
+  else
+    ste_rules_text
+  fi
+  # ---- cursor block end ----
 )"
 ste_emit SessionStart "$text" "STE mode: $mode"
 exit 0

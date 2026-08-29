@@ -18,11 +18,23 @@ STE_BLOCK_MARK="STE LINT FAILED"
 # transcript shows the earlier block as a system message in the same turn.
 second_pass="$(printf '%s' "$input" | jq -r '.stop_hook_active // false')"
 [ "$STE_HARNESS_NAME" = "antigravity" ] && ste_transcript_has_block "$input" "$STE_BLOCK_MARK" && exit 0
+# ---- cursor block: the stop input has status and loop_count, no stop_hook_active
+if [ "$STE_HARNESS_NAME" = "cursor" ]; then
+  [ "$(printf '%s' "$input" | jq -r '.status // "completed"')" = "completed" ] || exit 0
+  [ "$(printf '%s' "$input" | jq -r '.loop_count // 0')" -gt 0 ] && second_pass="true"
+fi
+# ---- cursor block end ----
 
 # Claude Code and Codex send last_assistant_message. Antigravity sends no reply
 # text (finalModelOutput stays empty in 1.1.x), so read the transcript instead.
 message="$(printf '%s' "$input" | jq -r '.last_assistant_message // .finalModelOutput // ""')"
 [ -z "$message" ] && [ "$STE_HARNESS_NAME" = "antigravity" ] && message="$(ste_transcript_reply "$input")"
+# ---- cursor block: read the reply that the afterAgentResponse hook saved ----
+if [ -z "$message" ] && [ "$STE_HARNESS_NAME" = "cursor" ]; then
+  cursor_reply="$(ste_cursor_reply_file "$input")"
+  [ -f "$cursor_reply" ] && message="$(cat "$cursor_reply")" && rm -f "$cursor_reply"
+fi
+# ---- cursor block end ----
 [ -z "$message" ] && exit 0
 
 lint="$(ste_lint_script)" || exit 0
