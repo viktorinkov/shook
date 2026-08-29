@@ -12,7 +12,7 @@
 
 ## Origin
 
-This plugin is a companion to **[AminBlg/SimpleEnglish](https://github.com/AminBlg/SimpleEnglish)**, the simple-english plugin. That plugin brings ASD-STE100 Simplified Technical English to Claude Code and other agents. It is a prerequisite. The full rule set and the linter `ste_lint.py` come from it at run time. This plugin adds the hooks, the `/ste` command, the status line badge, and the benchmark.
+This plugin is a companion to **[AminBlg/SimpleEnglish](https://github.com/AminBlg/SimpleEnglish)**, the simple-english plugin. That plugin brings ASD-STE100 Simplified Technical English to Claude Code and other agents. It is a prerequisite. The full rule set and the linter `ste_lint.py` come from it at run time. This plugin adds the hooks, the `/ste` command, and the status line badge.
 
 ## 📦 Installation
 
