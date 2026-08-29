@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "error-05",
+  "cat": "error",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 39.2,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 2,
+  "strict_blocks": 1,
+  "num_turns": 2,
+  "cost_usd": 0.034341399999999994,
+  "usage": {
+    "input_tokens": 20,
+    "cache_creation_input_tokens": 6538,
+    "cache_read_input_tokens": 5654,
+    "output_tokens": 4136,
+    "output_tokens_details": {
+      "thinking_tokens": 3749
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6538,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 3419,
+        "cache_read_input_tokens": 5654,
+        "cache_creation_input_tokens": 884,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 884
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 96,
+    "sentences": 12,
+    "mean_sentence_words": 8.0,
+    "longest_sentence_words": 20,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "Here are error messages for an expired session, written in Simplified Technical English:\n\n**Short version:**\n```\nYour session expired. Log in again to continue.\n```\n\n**With more context:**\n```\nYour session expired. Log in again to access this resource.\n```\n\n**If you want to include a link or button label:**\n```\nYour session expired. Log in again to access your account.\n```\n\nThese messages follow ASD-STE100 rules. They use simple past tense and imperative mood. Each message contains one instruction per sentence. Sentences stay under 25 words. The text uses active voice. Filler words are deleted. Grammar is complete. No contractions appear in the messages.\n\nChoose the version that fits your interface. The first is most direct. The second version adds specificity about what the user can access after login.",
+  "texts": [
+    "Here are error messages for an expired session, written in Simplified Technical English:\n\n**Short version:**\n```\nYour session expired. Log in again to continue.\n```\n\n**With more context:**\n```\nYour session expired. Log in again to access this resource.\n```\n\n**If you want to include a link or button label:**\n```\nYour session expired. Log in again to access your account.\n```\n\n**Why these follow ASD-STE100:**\n- Simple past tense (\"expired,\" not \"has expired\")\n- Imperative mood for the required action\n- One instruction per sentence\n- Under 25 words total\n- Active voice\n- No filler words\n- Complete grammar (articles kept, no contractions)\n\nChoose the version that fits your interface. The first is most direct; the second adds specificity about what the user can access after login.",
+    "Here are error messages for an expired session, written in Simplified Technical English:\n\n**Short version:**\n```\nYour session expired. Log in again to continue.\n```\n\n**With more context:**\n```\nYour session expired. Log in again to access this resource.\n```\n\n**If you want to include a link or button label:**\n```\nYour session expired. Log in again to access your account.\n```\n\nThese messages follow ASD-STE100 rules. They use simple past tense and imperative mood. Each message contains one instruction per sentence. Sentences stay under 25 words. The text uses active voice. Filler words are deleted. Grammar is complete. No contractions appear in the messages.\n\nChoose the version that fits your interface. The first is most direct. The second version adds specificity about what the user can access after login."
+  ],
+  "stderr_tail": ""
+}

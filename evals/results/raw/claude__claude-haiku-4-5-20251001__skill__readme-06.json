@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "readme-06",
+  "cat": "docs",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 36.5,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.03971759999999999,
+  "usage": {
+    "input_tokens": 20,
+    "cache_creation_input_tokens": 10925,
+    "cache_read_input_tokens": 4796,
+    "output_tokens": 3275,
+    "output_tokens_details": {
+      "thinking_tokens": 3007
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10925,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 3011,
+        "cache_read_input_tokens": 4796,
+        "cache_creation_input_tokens": 6129,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6129
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 83,
+    "sentences": 8,
+    "mean_sentence_words": 10.4,
+    "longest_sentence_words": 19,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 1,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 1.2
+  },
+  "text": "## The intro paragraph\n\nsqlpipe copies Postgres tables to S3 as Parquet files on a schedule you define. The tool handles extraction, conversion, and upload automatically. This lets you build data pipelines without custom code. It works with any Postgres database and any S3 bucket.\n\n---\n\n## What changed\n\nEach sentence stays under 25 words (descriptive text limit). The text moves from *what the tool does* \u2192 *how it works* \u2192 *why you'd use it* \u2192 *compatibility*. No contractions, no complex verbs, no marketing fluff. The language survives one read.",
+  "texts": [
+    "## The intro paragraph\n\nsqlpipe copies Postgres tables to S3 as Parquet files on a schedule you define. The tool handles extraction, conversion, and upload automatically. This lets you build data pipelines without custom code. It works with any Postgres database and any S3 bucket.\n\n---\n\n## What changed\n\nEach sentence stays under 25 words (descriptive text limit). The text moves from *what the tool does* \u2192 *how it works* \u2192 *why you'd use it* \u2192 *compatibility*. No contractions, no complex verbs, no marketing fluff. The language survives one read."
+  ],
+  "stderr_tail": ""
+}

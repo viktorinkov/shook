@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "readme-07",
+  "cat": "docs",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 34.4,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.0393103,
+  "usage": {
+    "input_tokens": 20,
+    "cache_creation_input_tokens": 10920,
+    "cache_read_input_tokens": 4803,
+    "output_tokens": 3197,
+    "output_tokens_details": {
+      "thinking_tokens": 2782
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10920,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 2900,
+        "cache_read_input_tokens": 4803,
+        "cache_creation_input_tokens": 6117,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6117
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 184,
+    "sentences": 13,
+    "mean_sentence_words": 13.7,
+    "longest_sentence_words": 46,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 1,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 2,
+    "violations_per_100w": 1.09
+  },
+  "text": "I'll write clear documentation for these environment variables using STE rules. This is **descriptive text** (25-word sentence limit, explaining what the variables do).\n\n---\n\n## Environment variables\n\nThe service reads configuration from environment variables. You must set the required variables before you start the service.\n\n### DATABASE_URL (required)\n\nThis variable contains the connection string for the database. The service cannot start without this value.\n\n### REDIS_URL (optional)\n\nThis variable contains the connection string for the Redis server. When you set this variable, the service enables caching.\n\n### LOG_JSON (optional, default: false)\n\nThis variable controls the log output format. When you set this variable to true, the service outputs logs in JSON format.\n\n---\n\n**What this follows:**\n\n- \u2713 One topic per variable (Rule 6.5)\n- \u2713 All sentences under 25 words (Rule 6.3)\n- \u2713 Active voice throughout (Rule 3.6)\n- \u2713 Clear articles and complete grammar (Rule 4.2)\n- \u2713 Consistent verb \"set\" for configuration (Rules 1.11, 9.4)\n- \u2713 Conditions before results: \"When you set this variable \u2192 the service...\" (Rule 5.4 logic, adapted for descriptive text)\n\nThis reads fast and does not ambiguous for non-native readers. Each variable's purpose is clear on the first read.",
+  "texts": [
+    "I'll write clear documentation for these environment variables using STE rules. This is **descriptive text** (25-word sentence limit, explaining what the variables do).\n\n---\n\n## Environment variables\n\nThe service reads configuration from environment variables. You must set the required variables before you start the service.\n\n### DATABASE_URL (required)\n\nThis variable contains the connection string for the database. The service cannot start without this value.\n\n### REDIS_URL (optional)\n\nThis variable contains the connection string for the Redis server. When you set this variable, the service enables caching.\n\n### LOG_JSON (optional, default: false)\n\nThis variable controls the log output format. When you set this variable to true, the service outputs logs in JSON format.\n\n---\n\n**What this follows:**\n\n- \u2713 One topic per variable (Rule 6.5)\n- \u2713 All sentences under 25 words (Rule 6.3)\n- \u2713 Active voice throughout (Rule 3.6)\n- \u2713 Clear articles and complete grammar (Rule 4.2)\n- \u2713 Consistent verb \"set\" for configuration (Rules 1.11, 9.4)\n- \u2713 Conditions before results: \"When you set this variable \u2192 the service...\" (Rule 5.4 logic, adapted for descriptive text)\n\nThis reads fast and does not ambiguous for non-native readers. Each variable's purpose is clear on the first read."
+  ],
+  "stderr_tail": ""
+}

@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "commit-05",
+  "cat": "commit",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 6.9,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.013004,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 4789,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 482,
+    "output_tokens_details": {
+      "thinking_tokens": 212
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4789,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 482,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 4789,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4789
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 85,
+    "sentences": 4,
+    "mean_sentence_words": 20.8,
+    "longest_sentence_words": 51,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 2,
+      "banned_modal": 2,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 1,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 7,
+    "violations_per_100w": 8.24
+  },
+  "text": "Here's a clear, conventional commit message for that change:\n\n```\nchore(health): return 503 during cache warmup\n\nReturn 503 Service Unavailable from the health check endpoint while\nthe cache is warming up. This prevents load balancers from routing\ntraffic to the service until it is ready to handle requests.\n```\n\nOr, if this is a breaking change that alters the health check behavior significantly:\n\n```\nfeat(health): return 503 during cache warmup\n\nReturn 503 Service Unavailable from the health check endpoint while\nthe cache is warming up instead of returning 200. This prevents load\nbalancers from routing traffic to the service before cache population\nis complete, reducing errors for early requests.\n```\n\n**If you'd like it more concise:**\n\n```\nchore(health): return 503 until cache is ready\n```\n\nChoose based on:\n- **`chore`** \u2014 if this is a reliability fix that doesn't change public API semantics\n- **`feat`** \u2014 if this is a new behavior that consumers should know about (e.g., for release notes)\n\nWould you like me to adjust the tone or add more detail to the commit message?",
+  "texts": [
+    "Here's a clear, conventional commit message for that change:\n\n```\nchore(health): return 503 during cache warmup\n\nReturn 503 Service Unavailable from the health check endpoint while\nthe cache is warming up. This prevents load balancers from routing\ntraffic to the service until it is ready to handle requests.\n```\n\nOr, if this is a breaking change that alters the health check behavior significantly:\n\n```\nfeat(health): return 503 during cache warmup\n\nReturn 503 Service Unavailable from the health check endpoint while\nthe cache is warming up instead of returning 200. This prevents load\nbalancers from routing traffic to the service before cache population\nis complete, reducing errors for early requests.\n```\n\n**If you'd like it more concise:**\n\n```\nchore(health): return 503 until cache is ready\n```\n\nChoose based on:\n- **`chore`** \u2014 if this is a reliability fix that doesn't change public API semantics\n- **`feat`** \u2014 if this is a new behavior that consumers should know about (e.g., for release notes)\n\nWould you like me to adjust the tone or add more detail to the commit message?"
+  ],
+  "stderr_tail": ""
+}

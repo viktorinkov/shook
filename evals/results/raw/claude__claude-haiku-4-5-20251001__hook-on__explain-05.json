@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "explain-05",
+  "cat": "explain",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 16.5,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.018892,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 5611,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 1532,
+    "output_tokens_details": {
+      "thinking_tokens": 1251
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5611,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 1532,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 5611,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5611
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 223,
+    "sentences": 23,
+    "mean_sentence_words": 9.7,
+    "longest_sentence_words": 16,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "## JWT Authentication\n\nA JWT is a token that holds user identity information. The browser and API use JWTs to avoid sending passwords with each request.\n\nWhen the user logs in, they send their username and password to the API. The API verifies the password and creates a JWT. The API returns the JWT to the browser.\n\nThe browser stores the JWT. The browser sends it with each API request, often in an HTTP header called `Authorization`.\n\nThe API receives the request with the JWT. The API decodes the JWT without contacting a database. The API checks that the JWT has a valid signature. If the signature is valid, the API trusts the token data and processes the request.\n\nThe JWT contains three parts: a header, a payload, and a signature. The header identifies the token type. The payload holds user data and claims (such as user ID or role). The signature proves that the token came from the API and was not changed.\n\nJWTs are stateless. The API does not store tokens or sessions. This design scales well for many users and multiple API servers.\n\nJWTs can expire. The payload includes an expiration time. If the JWT expires, the browser must log in again to get a new token. Some systems use a refresh token to get a new JWT without requiring another login.",
+  "texts": [
+    "## JWT Authentication\n\nA JWT is a token that holds user identity information. The browser and API use JWTs to avoid sending passwords with each request.\n\nWhen the user logs in, they send their username and password to the API. The API verifies the password and creates a JWT. The API returns the JWT to the browser.\n\nThe browser stores the JWT. The browser sends it with each API request, often in an HTTP header called `Authorization`.\n\nThe API receives the request with the JWT. The API decodes the JWT without contacting a database. The API checks that the JWT has a valid signature. If the signature is valid, the API trusts the token data and processes the request.\n\nThe JWT contains three parts: a header, a payload, and a signature. The header identifies the token type. The payload holds user data and claims (such as user ID or role). The signature proves that the token came from the API and was not changed.\n\nJWTs are stateless. The API does not store tokens or sessions. This design scales well for many users and multiple API servers.\n\nJWTs can expire. The payload includes an expiration time. If the JWT expires, the browser must log in again to get a new token. Some systems use a refresh token to get a new JWT without requiring another login."
+  ],
+  "stderr_tail": ""
+}

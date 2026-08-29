@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "release-02",
+  "cat": "release",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 47.4,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.0454728,
+  "usage": {
+    "input_tokens": 20,
+    "cache_creation_input_tokens": 10857,
+    "cache_read_input_tokens": 4788,
+    "output_tokens": 4457,
+    "output_tokens_details": {
+      "thinking_tokens": 4110
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10857,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 4224,
+        "cache_read_input_tokens": 4788,
+        "cache_creation_input_tokens": 6069,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6069
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 142,
+    "sentences": 14,
+    "mean_sentence_words": 9.6,
+    "longest_sentence_words": 17,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 1,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 3,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 1
+    },
+    "violations_total": 5,
+    "violations_per_100w": 3.52
+  },
+  "text": "## Breaking Change: `--output` Flag Default\n\nThe `--output` flag now defaults to JSON instead of plain text.\n\n### What changed\n\nWhen you do not specify `--output`, the tool produces JSON output. Previously, the tool output plain text by default.\n\n### Impact\n\nIf your scripts depend on plain-text output, check them after you upgrade. They can produce unexpected results with JSON output.\n\n### What to do\n\nAdd the `--output text` flag to each command to restore the previous behavior.\n\nAlternatively, update your scripts to parse JSON output.\n\n---\n\n### Notes on this draft\n\n- Sentence limit: all descriptive sentences stay under 25 words; procedural instructions under 20.\n- Structure: summary \u2192 what changed \u2192 impact \u2192 migration steps, each one topic per section.\n- Vocabulary: \"output\" is consistent throughout; \"check\" (not \"verify\") for the inspection task; \"can produce\" (not \"may\") for possibility.\n- Conditions placed before commands: \"If your scripts depend on... check them.\"\n- No contractions, no complex tenses, active voice throughout.",
+  "texts": [
+    "## Breaking Change: `--output` Flag Default\n\nThe `--output` flag now defaults to JSON instead of plain text.\n\n### What changed\n\nWhen you do not specify `--output`, the tool produces JSON output. Previously, the tool output plain text by default.\n\n### Impact\n\nIf your scripts depend on plain-text output, check them after you upgrade. They can produce unexpected results with JSON output.\n\n### What to do\n\nAdd the `--output text` flag to each command to restore the previous behavior.\n\nAlternatively, update your scripts to parse JSON output.\n\n---\n\n### Notes on this draft\n\n- Sentence limit: all descriptive sentences stay under 25 words; procedural instructions under 20.\n- Structure: summary \u2192 what changed \u2192 impact \u2192 migration steps, each one topic per section.\n- Vocabulary: \"output\" is consistent throughout; \"check\" (not \"verify\") for the inspection task; \"can produce\" (not \"may\") for possibility.\n- Conditions placed before commands: \"If your scripts depend on... check them.\"\n- No contractions, no complex tenses, active voice throughout."
+  ],
+  "stderr_tail": ""
+}

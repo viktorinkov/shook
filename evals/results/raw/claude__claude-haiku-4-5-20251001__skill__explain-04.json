@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "explain-04",
+  "cat": "explain",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 10.7,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.014818,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 4807,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 838,
+    "output_tokens_details": {
+      "thinking_tokens": 316
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4807,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 838,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 4807,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4807
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 243,
+    "sentences": 16,
+    "mean_sentence_words": 14.6,
+    "longest_sentence_words": 36,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 2,
+      "banned_modal": 1,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 4,
+    "violations_per_100w": 1.65
+  },
+  "text": "## Why the Query is Slow\n\nOn 50 million rows without the right index, this query requires:\n\n1. **Full table scan**: Without an index on `created_at`, the database must read through all ~50M rows\n2. **Expression evaluation per row**: For each row, the database evaluates `NOW() - INTERVAL '1 day'` and compares it against `created_at`\n3. **Massive I/O**: Reading 50M rows from disk is expensive, especially since you're fetching all columns with `SELECT *`\n4. **No early termination**: The database can't know which rows to skip until it evaluates the condition\n\nOn a modern server, a full table scan of 50M rows might take 10\u201330+ seconds depending on row size, memory, and disk speed.\n\n## The Solution: Index on `created_at`\n\n**Create a B-tree index:**\n```sql\nCREATE INDEX idx_orders_created_at ON orders(created_at);\n```\n\n**Why this helps:**\n\n- **Range seek**: The index is sorted by `created_at`. The database can binary-search to find the first row where `created_at > NOW() - INTERVAL '1 day'` and then scan only *matching* rows\n- **Avoids full table scan**: Instead of reading all 50M rows, you read only rows from the last 24 hours (often a small fraction)\n- **Query pushdown**: The condition `created_at > NOW() - INTERVAL '1 day'` is evaluated *before* retrieving columns, not after\n\nWith this index, the same query typically runs in **milliseconds** (sub-second) instead of 10\u201330 seconds.\n\n## Additional Optimization (If `SELECT *` is Necessary)\n\nIf you must return all columns frequently, consider:\n- **Covering index** (if supported by your DB and query plan is fixed):\n  ```sql\n  CREATE INDEX idx_orders_created_at_covering ON orders(created_at) INCLUDE (col1, col2, col3);\n  ```\n  This avoids a second lookup to fetch other columns after the index points to matching rows.\n\n- **Partitioning** (for very large tables):\n  Partition by date so the planner only touches recent partitions.",
+  "texts": [
+    "## Why the Query is Slow\n\nOn 50 million rows without the right index, this query requires:\n\n1. **Full table scan**: Without an index on `created_at`, the database must read through all ~50M rows\n2. **Expression evaluation per row**: For each row, the database evaluates `NOW() - INTERVAL '1 day'` and compares it against `created_at`\n3. **Massive I/O**: Reading 50M rows from disk is expensive, especially since you're fetching all columns with `SELECT *`\n4. **No early termination**: The database can't know which rows to skip until it evaluates the condition\n\nOn a modern server, a full table scan of 50M rows might take 10\u201330+ seconds depending on row size, memory, and disk speed.\n\n## The Solution: Index on `created_at`\n\n**Create a B-tree index:**\n```sql\nCREATE INDEX idx_orders_created_at ON orders(created_at);\n```\n\n**Why this helps:**\n\n- **Range seek**: The index is sorted by `created_at`. The database can binary-search to find the first row where `created_at > NOW() - INTERVAL '1 day'` and then scan only *matching* rows\n- **Avoids full table scan**: Instead of reading all 50M rows, you read only rows from the last 24 hours (often a small fraction)\n- **Query pushdown**: The condition `created_at > NOW() - INTERVAL '1 day'` is evaluated *before* retrieving columns, not after\n\nWith this index, the same query typically runs in **milliseconds** (sub-second) instead of 10\u201330 seconds.\n\n## Additional Optimization (If `SELECT *` is Necessary)\n\nIf you must return all columns frequently, consider:\n- **Covering index** (if supported by your DB and query plan is fixed):\n  ```sql\n  CREATE INDEX idx_orders_created_at_covering ON orders(created_at) INCLUDE (col1, col2, col3);\n  ```\n  This avoids a second lookup to fetch other columns after the index points to matching rows.\n\n- **Partitioning** (for very large tables):\n  Partition by date so the planner only touches recent partitions."
+  ],
+  "stderr_tail": ""
+}

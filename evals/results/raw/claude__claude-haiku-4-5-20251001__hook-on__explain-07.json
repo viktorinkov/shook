@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "explain-07",
+  "cat": "explain",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 21.1,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.020582999999999997,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 5604,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 1873,
+    "output_tokens_details": {
+      "thinking_tokens": 1591
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5604,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 1873,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 5604,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5604
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 214,
+    "sentences": 20,
+    "mean_sentence_words": 10.7,
+    "longest_sentence_words": 21,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 1,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.47
+  },
+  "text": "An index is a separate data structure that the database maintains to speed up searches. The database copies data into the index and sorts it. This creates costs.\n\n**Storage cost.** The index uses disk space. A large index consumes significant storage, which increases infrastructure costs.\n\n**Write performance cost.** When you insert, update, or delete a row, the database must also update every index on that table. This slows down write operations. If you have five indexes on one table, write operations take longer than with one index.\n\n**Creation cost.** Building an initial index takes time. The database must read all rows and organize them. For very large tables, this can take hours or require downtime.\n\n**The tradeoff.** You gain read speed but lose write speed. For tables you search frequently but change rarely, an index is valuable. For tables you change constantly, an index hurts performance more than it helps.\n\n**What to do.** Before adding an index, measure the impact. Test write performance with and without the index. Confirm the read benefit outweighs the write cost. Do not add an index simply because a table is large.\n\nTell engineers to run a production workload test with the index and without it. The numbers will show whether the index solves more problems than it creates.",
+  "texts": [
+    "An index is a separate data structure that the database maintains to speed up searches. The database copies data into the index and sorts it. This creates costs.\n\n**Storage cost.** The index uses disk space. A large index consumes significant storage, which increases infrastructure costs.\n\n**Write performance cost.** When you insert, update, or delete a row, the database must also update every index on that table. This slows down write operations. If you have five indexes on one table, write operations take longer than with one index.\n\n**Creation cost.** Building an initial index takes time. The database must read all rows and organize them. For very large tables, this can take hours or require downtime.\n\n**The tradeoff.** You gain read speed but lose write speed. For tables you search frequently but change rarely, an index is valuable. For tables you change constantly, an index hurts performance more than it helps.\n\n**What to do.** Before adding an index, measure the impact. Test write performance with and without the index. Confirm the read benefit outweighs the write cost. Do not add an index simply because a table is large.\n\nTell engineers to run a production workload test with the index and without it. The numbers will show whether the index solves more problems than it creates."
+  ],
+  "stderr_tail": ""
+}

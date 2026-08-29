@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "commit-02",
+  "cat": "commit",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 9.3,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.01405,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 4786,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 698,
+    "output_tokens_details": {
+      "thinking_tokens": 422
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4786,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 698,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 4786,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4786
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 79,
+    "sentences": 7,
+    "mean_sentence_words": 10.6,
+    "longest_sentence_words": 33,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 1,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 1,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 3,
+    "violations_per_100w": 3.8
+  },
+  "text": "Here's a well-structured commit message for adding a `--dry-run` flag to the deploy command:\n\n```\nfeat(deploy): add --dry-run flag to preview changes\n\nAdd a --dry-run flag that allows users to see what would be deployed\nwithout actually applying the changes. This enables safe validation of\ndeployment configurations before execution.\n\nThe flag:\n- Shows all changes that would be applied\n- Performs no actual deployment operations\n- Exits with status 0 if validation succeeds\n- Helps prevent unintended deployments\n```\n\nOr, if you prefer a more concise version:\n\n```\nfeat(deploy): add --dry-run flag\n\nAllow users to preview deployment changes without applying them,\nenabling safe configuration validation before actual deployment.\n```\n\nThe key elements:\n- **Type**: `feat` (new feature)\n- **Scope**: `deploy` (the affected command)\n- **Subject**: clear, imperative mood, under 50 characters\n- **Body**: explains the *why* and *what* \u2014 useful for reviewers and future maintainers\n\nAdjust the details based on your actual implementation (e.g., exit codes, behavior with other flags, whether it logs what *would* happen).",
+  "texts": [
+    "Here's a well-structured commit message for adding a `--dry-run` flag to the deploy command:\n\n```\nfeat(deploy): add --dry-run flag to preview changes\n\nAdd a --dry-run flag that allows users to see what would be deployed\nwithout actually applying the changes. This enables safe validation of\ndeployment configurations before execution.\n\nThe flag:\n- Shows all changes that would be applied\n- Performs no actual deployment operations\n- Exits with status 0 if validation succeeds\n- Helps prevent unintended deployments\n```\n\nOr, if you prefer a more concise version:\n\n```\nfeat(deploy): add --dry-run flag\n\nAllow users to preview deployment changes without applying them,\nenabling safe configuration validation before actual deployment.\n```\n\nThe key elements:\n- **Type**: `feat` (new feature)\n- **Scope**: `deploy` (the affected command)\n- **Subject**: clear, imperative mood, under 50 characters\n- **Body**: explains the *why* and *what* \u2014 useful for reviewers and future maintainers\n\nAdjust the details based on your actual implementation (e.g., exit codes, behavior with other flags, whether it logs what *would* happen)."
+  ],
+  "stderr_tail": ""
+}

@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "review-01",
+  "cat": "review",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 9.8,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.01479,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 4821,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 826,
+    "output_tokens_details": {
+      "thinking_tokens": 376
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4821,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 826,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 4821,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4821
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 135,
+    "sentences": 8,
+    "mean_sentence_words": 15.8,
+    "longest_sentence_words": 31,
+    "violations": {
+      "sentence_over_limit": 2,
+      "contraction": 1,
+      "banned_modal": 1,
+      "perfect_tense": 0,
+      "ing_clause": 1,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 1
+    },
+    "violations_total": 7,
+    "violations_per_100w": 5.19
+  },
+  "text": "Here's a specific code review comment:\n\n---\n\n**Problem:** This function lacks error handling and has security/robustness issues:\n\n1. **No response validation** \u2014 if the API returns a 4xx/5xx error, the function still calls `.json()` without checking `res.ok`, leading to cryptic parsing errors or silent failures.\n2. **URL construction** \u2014 string concatenation doesn't properly encode `id`. If `id` contains `?`, `&`, or `/`, the URL breaks or becomes ambiguous.\n3. **No input validation** \u2014 `id` could be null, undefined, or an unexpected type.\n4. **No timeout** \u2014 fetch can hang indefinitely with no explicit timeout.\n\n**Fix:**\n\n```js\nasync function getUser(id) {\n  if (!id) {\n    throw new Error('User ID is required');\n  }\n\n  const url = new URL(`/api/users/${encodeURIComponent(id)}`, window.location.origin);\n  const controller = new AbortController();\n  const timeout = setTimeout(() => controller.abort(), 5000);\n\n  try {\n    const res = await fetch(url, { signal: controller.signal });\n    \n    if (!res.ok) {\n      throw new Error(`Failed to fetch user: ${res.status} ${res.statusText}`);\n    }\n    \n    return await res.json();\n  } catch (err) {\n    if (err.name === 'AbortError') {\n      throw new Error('User fetch timed out');\n    }\n    throw err;\n  } finally {\n    clearTimeout(timeout);\n  }\n}\n```\n\n**Key improvements:**\n- Validates `id` before use\n- Uses `URL()` constructor + `encodeURIComponent()` for safe URL building\n- Checks `res.ok` before parsing JSON\n- Adds a 5-second timeout\n- Distinguishes timeout errors from other failures",
+  "texts": [
+    "Here's a specific code review comment:\n\n---\n\n**Problem:** This function lacks error handling and has security/robustness issues:\n\n1. **No response validation** \u2014 if the API returns a 4xx/5xx error, the function still calls `.json()` without checking `res.ok`, leading to cryptic parsing errors or silent failures.\n2. **URL construction** \u2014 string concatenation doesn't properly encode `id`. If `id` contains `?`, `&`, or `/`, the URL breaks or becomes ambiguous.\n3. **No input validation** \u2014 `id` could be null, undefined, or an unexpected type.\n4. **No timeout** \u2014 fetch can hang indefinitely with no explicit timeout.\n\n**Fix:**\n\n```js\nasync function getUser(id) {\n  if (!id) {\n    throw new Error('User ID is required');\n  }\n\n  const url = new URL(`/api/users/${encodeURIComponent(id)}`, window.location.origin);\n  const controller = new AbortController();\n  const timeout = setTimeout(() => controller.abort(), 5000);\n\n  try {\n    const res = await fetch(url, { signal: controller.signal });\n    \n    if (!res.ok) {\n      throw new Error(`Failed to fetch user: ${res.status} ${res.statusText}`);\n    }\n    \n    return await res.json();\n  } catch (err) {\n    if (err.name === 'AbortError') {\n      throw new Error('User fetch timed out');\n    }\n    throw err;\n  } finally {\n    clearTimeout(timeout);\n  }\n}\n```\n\n**Key improvements:**\n- Validates `id` before use\n- Uses `URL()` constructor + `encodeURIComponent()` for safe URL building\n- Checks `res.ok` before parsing JSON\n- Adds a 5-second timeout\n- Distinguishes timeout errors from other failures"
+  ],
+  "stderr_tail": ""
+}

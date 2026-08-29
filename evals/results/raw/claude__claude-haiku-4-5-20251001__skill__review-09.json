@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "review-09",
+  "cat": "review",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 9.2,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.013982000000000001,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 4805,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 671,
+    "output_tokens_details": {
+      "thinking_tokens": 343
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4805,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 671,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 4805,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4805
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 105,
+    "sentences": 4,
+    "mean_sentence_words": 26.2,
+    "longest_sentence_words": 66,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 2,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 4,
+    "violations_per_100w": 3.81
+  },
+  "text": "This Go code has a **critical concurrency bug**: the closure captures `item` by reference, not by value. By the time each goroutine executes, the loop has likely progressed, so all goroutines may process the same (or final) item value.\n\n---\n\n### PR Comment\n\n```\n\u26a0\ufe0f **Concurrency Bug: Loop Variable Capture**\n\nThe goroutines capture `item` by reference. When they execute, the loop variable has already changed, leading to race conditions and unexpected behavior \u2014 often with all goroutines processing the last (or same) item.\n\n**Fix:** Pass `item` as a parameter to the goroutine:\n\n```go\nfor _, item := range items {\n    go func(i interface{}) {  // or the actual type of item\n        process(i)\n    }(item)\n}\n```\n\nAlternatively, create a local copy:\n```go\nfor _, item := range items {\n    item := item  // shadow the loop variable\n    go func() {\n        process(item)\n    }()\n}\n```\n\nThe parameter approach is more idiomatic and explicit about what's captured.\n\n**Consider also:** Do you need synchronization (e.g., `sync.WaitGroup`) to wait for all goroutines to complete before proceeding?\n```\n\n---\n\nWould you like me to run a full `/code-review` on a branch or PR if you have one in git?",
+  "texts": [
+    "This Go code has a **critical concurrency bug**: the closure captures `item` by reference, not by value. By the time each goroutine executes, the loop has likely progressed, so all goroutines may process the same (or final) item value.\n\n---\n\n### PR Comment\n\n```\n\u26a0\ufe0f **Concurrency Bug: Loop Variable Capture**\n\nThe goroutines capture `item` by reference. When they execute, the loop variable has already changed, leading to race conditions and unexpected behavior \u2014 often with all goroutines processing the last (or same) item.\n\n**Fix:** Pass `item` as a parameter to the goroutine:\n\n```go\nfor _, item := range items {\n    go func(i interface{}) {  // or the actual type of item\n        process(i)\n    }(item)\n}\n```\n\nAlternatively, create a local copy:\n```go\nfor _, item := range items {\n    item := item  // shadow the loop variable\n    go func() {\n        process(item)\n    }()\n}\n```\n\nThe parameter approach is more idiomatic and explicit about what's captured.\n\n**Consider also:** Do you need synchronization (e.g., `sync.WaitGroup`) to wait for all goroutines to complete before proceeding?\n```\n\n---\n\nWould you like me to run a full `/code-review` on a branch or PR if you have one in git?"
+  ],
+  "stderr_tail": ""
+}

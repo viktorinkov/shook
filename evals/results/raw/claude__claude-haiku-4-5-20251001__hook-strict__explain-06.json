@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "explain-06",
+  "cat": "explain",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 52.8,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 2,
+  "strict_blocks": 1,
+  "num_turns": 2,
+  "cost_usd": 0.042142200000000005,
+  "usage": {
+    "input_tokens": 20,
+    "cache_creation_input_tokens": 6605,
+    "cache_read_input_tokens": 5672,
+    "output_tokens": 5669,
+    "output_tokens_details": {
+      "thinking_tokens": 4913
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6605,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 4896,
+        "cache_read_input_tokens": 5672,
+        "cache_creation_input_tokens": 933,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 933
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 225,
+    "sentences": 20,
+    "mean_sentence_words": 11.1,
+    "longest_sentence_words": 40,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 2,
+    "violations_per_100w": 0.89
+  },
+  "text": "## What the command does\n\nThis command finds all `.log` files in the current directory and subdirectories. It deletes files modified more than 7 days ago.\n\nThe parts work as follows:\n- `find .` searches from the current directory down\n- `-name '*.log'` matches only files with the `.log` extension\n- `-mtime +7` selects files modified more than 7 days ago  \n- `-exec rm {} \\;` deletes each file\n\n## When it is dangerous\n\n**Permanent deletion without confirmation.** The `rm` command deletes files with no undo. You cannot recover deleted files.\n\n**Broad scope.** The search includes all subdirectories. One wrong directory deletes logs in your entire project tree.\n\n**Wrong target.** If you run this command in an unexpected directory, you delete critical log files. Production systems and backups contain such files.\n\n**Race condition.** Files can be created or modified between when `find` scans and when `rm` executes. Unexpected files can be deleted during this window.\n\n**Insufficient permissions.** If some directories lack write permission, the command fails silently for those logs.\n\n**Confusing time logic.** The `-mtime +7` flag deletes files modified more than 7 days ago. It does not delete files exactly 7 days old. Rounding affects logs you intend to keep.\n\n## Safer approach\n\nBefore you delete files, use `-mtime +7 -print` to preview which files match. Review the list carefully. Then add `-exec rm {} \\;` to the command.\n\nIf `trash` or `rm -i` is available on your system, use them instead. These tools require confirmation before they delete files.",
+  "texts": [
+    "## What the command does\n\nThis command finds all files that match the pattern `*.log` in the current directory and all subdirectories. It then deletes files that the system last modified more than 7 days ago.\n\nThe parts work as follows:\n- `find .` searches from the current directory down\n- `-name '*.log'` matches only files ending with `.log`\n- `-mtime +7` selects files modified more than 7 days ago\n- `-exec rm {} \\;` deletes each found file\n\n## When it is dangerous\n\n**Permanent deletion without confirmation.** The `rm` command deletes files with no undo option.\n\n**Broad scope.** The search includes all subdirectories. One wrong directory context deletes logs across your entire project tree.\n\n**Wrong target.** If you run this in an unexpected location, you delete critical log files from production systems or backups.\n\n**Race condition.** Files can be created or modified between when `find` scans and when `rm` executes.\n\n**Insufficient permissions.** Missing write access in some directories fails silently for those logs.\n\n**Confusing time logic.** The `-mtime +7` flag deletes files modified more than 7 days ago, not exactly 7 days. Rounding can catch logs you intended to keep.\n\n## Safer approach\n\nUse `-mtime +7 -print` first to preview which files match. Then review the list before you add `-exec rm {} \\;` to the command.\n\nAlternatively, use `trash` or `rm -i` if available on your system for confirmation before deletion.",
+    "## What the command does\n\nThis command finds all `.log` files in the current directory and subdirectories. It deletes files modified more than 7 days ago.\n\nThe parts work as follows:\n- `find .` searches from the current directory down\n- `-name '*.log'` matches only files with the `.log` extension\n- `-mtime +7` selects files modified more than 7 days ago  \n- `-exec rm {} \\;` deletes each file\n\n## When it is dangerous\n\n**Permanent deletion without confirmation.** The `rm` command deletes files with no undo. You cannot recover deleted files.\n\n**Broad scope.** The search includes all subdirectories. One wrong directory deletes logs in your entire project tree.\n\n**Wrong target.** If you run this command in an unexpected directory, you delete critical log files. Production systems and backups contain such files.\n\n**Race condition.** Files can be created or modified between when `find` scans and when `rm` executes. Unexpected files can be deleted during this window.\n\n**Insufficient permissions.** If some directories lack write permission, the command fails silently for those logs.\n\n**Confusing time logic.** The `-mtime +7` flag deletes files modified more than 7 days ago. It does not delete files exactly 7 days old. Rounding affects logs you intend to keep.\n\n## Safer approach\n\nBefore you delete files, use `-mtime +7 -print` to preview which files match. Review the list carefully. Then add `-exec rm {} \\;` to the command.\n\nIf `trash` or `rm -i` is available on your system, use them instead. These tools require confirmation before they delete files."
+  ],
+  "stderr_tail": ""
+}

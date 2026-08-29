@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "runbook-01",
+  "cat": "runbook",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 96.0,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.05967000000000001,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 5675,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 9662,
+    "output_tokens_details": {
+      "thinking_tokens": 9190
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5675,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 9662,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 5675,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5675
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "procedural",
+    "words": 238,
+    "sentences": 31,
+    "mean_sentence_words": 6.8,
+    "longest_sentence_words": 13,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.42
+  },
+  "text": "# Database Password Rotation Runbook (Zero Downtime)\n\n## Overview\n\nRotate the database password for the `app` user. The application reloads its configuration when it receives SIGHUP. This allows password rotation without any downtime.\n\n## Prerequisites\n\n- Database admin access.\n- SSH access to the application server.\n- The application process ID (PID).\n- A process manager that handles SIGHUP (systemd or supervisor).\n- Location of the environment file (typically `/etc/default/app`, `/etc/sysconfig/app`, or `.env`).\n\n## Procedure\n\n**Step 1: Create a new password**\n- Create a new password for the `app` user.\n- Save it in your password manager.\n\n**Step 2: Update the database password**\n- Log in to the database as an admin.\n- Execute: `ALTER USER app IDENTIFIED BY 'new_password';`\n- Wait 10 seconds for the change to replicate.\n\n**Step 3: Update the environment variable**\n- Open the environment file on the application server.\n- Change the `DB_PASSWORD` value to the new password.\n- Save the file.\n\n**Step 4: Reload the application**\n- Get the application PID: `systemctl show -p MainPID --value app`\n- Send SIGHUP to the process: `kill -HUP <PID>`\n\n## Verification\n\nVerify all of the following:\n- The application responds to requests with no errors.\n- Application logs show SIGHUP reload completion.\n- No connection errors appear in the database logs.\n\n## Rollback\n\nIf the application fails to connect after SIGHUP:\n\n1. Restore the old password in the database.\n   - Log in to the database as an admin.\n   - Execute: `ALTER USER app IDENTIFIED BY 'old_password';`\n2. Restore the old password in the environment file.\n3. Send SIGHUP again: `kill -HUP <PID>`\n4. Verify that connectivity is restored.",
+  "texts": [
+    "# Database Password Rotation Runbook (Zero Downtime)\n\n## Overview\n\nRotate the database password for the `app` user. The application reloads its configuration when it receives SIGHUP. This allows password rotation without any downtime.\n\n## Prerequisites\n\n- Database admin access.\n- SSH access to the application server.\n- The application process ID (PID).\n- A process manager that handles SIGHUP (systemd or supervisor).\n- Location of the environment file (typically `/etc/default/app`, `/etc/sysconfig/app`, or `.env`).\n\n## Procedure\n\n**Step 1: Create a new password**\n- Create a new password for the `app` user.\n- Save it in your password manager.\n\n**Step 2: Update the database password**\n- Log in to the database as an admin.\n- Execute: `ALTER USER app IDENTIFIED BY 'new_password';`\n- Wait 10 seconds for the change to replicate.\n\n**Step 3: Update the environment variable**\n- Open the environment file on the application server.\n- Change the `DB_PASSWORD` value to the new password.\n- Save the file.\n\n**Step 4: Reload the application**\n- Get the application PID: `systemctl show -p MainPID --value app`\n- Send SIGHUP to the process: `kill -HUP <PID>`\n\n## Verification\n\nVerify all of the following:\n- The application responds to requests with no errors.\n- Application logs show SIGHUP reload completion.\n- No connection errors appear in the database logs.\n\n## Rollback\n\nIf the application fails to connect after SIGHUP:\n\n1. Restore the old password in the database.\n   - Log in to the database as an admin.\n   - Execute: `ALTER USER app IDENTIFIED BY 'old_password';`\n2. Restore the old password in the environment file.\n3. Send SIGHUP again: `kill -HUP <PID>`\n4. Verify that connectivity is restored."
+  ],
+  "stderr_tail": ""
+}

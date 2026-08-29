@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "commit-04",
+  "cat": "commit",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 10.7,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.015681,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 5613,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 889,
+    "output_tokens_details": {
+      "thinking_tokens": 699
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5613,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 889,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 5613,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5613
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 67,
+    "sentences": 5,
+    "mean_sentence_words": 12.8,
+    "longest_sentence_words": 19,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "```\nAdd index on orders(customer_id, created_at)\n\nAdd a composite index to improve query performance. This index accelerates\nqueries that filter by customer_id and then sort or filter by\ncreated_at. Common use cases include fetching recent orders for a specific\ncustomer. The index reduces database scan time for these frequent queries.\n```\n\n**Explanation:**\n\n- **Subject line:** Names the change (7 words, imperative mood).\n- **Body:** Four short sentences describe the benefit. Each sentence states one fact and stays under the 25-word limit for descriptions.\n- **Why this wording:** Avoids jargon, explains the practical effect (faster queries), and omits filler words.\n\nIf you need to add more details (migration filename, branch, backwards compatibility notes), add them as separate paragraphs below.",
+  "texts": [
+    "```\nAdd index on orders(customer_id, created_at)\n\nAdd a composite index to improve query performance. This index accelerates\nqueries that filter by customer_id and then sort or filter by\ncreated_at. Common use cases include fetching recent orders for a specific\ncustomer. The index reduces database scan time for these frequent queries.\n```\n\n**Explanation:**\n\n- **Subject line:** Names the change (7 words, imperative mood).\n- **Body:** Four short sentences describe the benefit. Each sentence states one fact and stays under the 25-word limit for descriptions.\n- **Why this wording:** Avoids jargon, explains the practical effect (faster queries), and omits filler words.\n\nIf you need to add more details (migration filename, branch, backwards compatibility notes), add them as separate paragraphs below."
+  ],
+  "stderr_tail": ""
+}

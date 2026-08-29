@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "review-04",
+  "cat": "review",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 40.9,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 2,
+  "strict_blocks": 1,
+  "num_turns": 2,
+  "cost_usd": 0.0331643,
+  "usage": {
+    "input_tokens": 20,
+    "cache_creation_input_tokens": 6631,
+    "cache_read_input_tokens": 5673,
+    "output_tokens": 3863,
+    "output_tokens_details": {
+      "thinking_tokens": 3460
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6631,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 3057,
+        "cache_read_input_tokens": 5673,
+        "cache_creation_input_tokens": 958,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 958
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 89,
+    "sentences": 11,
+    "mean_sentence_words": 8.1,
+    "longest_sentence_words": 14,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "This except block has three problems.\n\n**First problem: Bare except is too broad.** It catches all exceptions, including `KeyboardInterrupt` and `SystemExit`. You must catch only `json.JSONDecodeError`.\n\n**Second problem: Errors go unrecorded.** When the parse fails, add logging. When `data` is an empty dict, debugging becomes impossible.\n\n**Third problem: No type guarantees.** Verify that an empty dict is correct for all callers. If `payload` must be a specific structure, this code silently produces the wrong type.\n\n**Fix:**\n\n```python\ntry:\n    data = json.loads(payload)\nexcept json.JSONDecodeError as e:\n    logging.warning(\"Failed to parse JSON payload: %s\", e)\n    data = {}\n```\n\nIf callers need to handle parse failures, raise the error instead.",
+  "texts": [
+    "This except block has three problems:\n\n1. **Bare except is too broad.** It catches all exceptions, including `KeyboardInterrupt` and `SystemExit`. Catch only `json.JSONDecodeError` instead.\n\n2. **Errors go unrecorded.** Add logging when the parse fails. This makes debugging impossible when `data` is an empty dict.\n\n3. **No type guarantees.** Verify that an empty dict is correct for all callers. If `payload` must be a specific structure, this silently produces the wrong type.\n\n**Fix:**\n\n```python\ntry:\n    data = json.loads(payload)\nexcept json.JSONDecodeError as e:\n    logging.warning(\"Failed to parse JSON payload: %s\", e)\n    data = {}\n```\n\nOr raise the error if callers need to handle parse failures.",
+    "This except block has three problems.\n\n**First problem: Bare except is too broad.** It catches all exceptions, including `KeyboardInterrupt` and `SystemExit`. You must catch only `json.JSONDecodeError`.\n\n**Second problem: Errors go unrecorded.** When the parse fails, add logging. When `data` is an empty dict, debugging becomes impossible.\n\n**Third problem: No type guarantees.** Verify that an empty dict is correct for all callers. If `payload` must be a specific structure, this code silently produces the wrong type.\n\n**Fix:**\n\n```python\ntry:\n    data = json.loads(payload)\nexcept json.JSONDecodeError as e:\n    logging.warning(\"Failed to parse JSON payload: %s\", e)\n    data = {}\n```\n\nIf callers need to handle parse failures, raise the error instead."
+  ],
+  "stderr_tail": ""
+}

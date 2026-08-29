@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "design-01",
+  "cat": "design",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 125.5,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 2,
+  "strict_blocks": 1,
+  "num_turns": 2,
+  "cost_usd": 0.08835609999999999,
+  "usage": {
+    "input_tokens": 20,
+    "cache_creation_input_tokens": 10260,
+    "cache_read_input_tokens": 5661,
+    "output_tokens": 13450,
+    "output_tokens_details": {
+      "thinking_tokens": 12245
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10260,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 9017,
+        "cache_read_input_tokens": 5661,
+        "cache_creation_input_tokens": 4599,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4599
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 418,
+    "sentences": 39,
+    "mean_sentence_words": 10.6,
+    "longest_sentence_words": 70,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 0
+    },
+    "violations_total": 3,
+    "violations_per_100w": 0.72
+  },
+  "text": "**Message Queues vs. Direct HTTP Calls for Order Processing**\n\nThis comparison addresses two patterns for inter-service communication.\n\nFor order processing, reliability and order preservation matter. Each pattern has different strengths.\n\n**Direct HTTP Calls**\n\nDirect HTTP calls send requests between services in real time. The calling service waits for the receiving service to respond before proceeding. This pattern is simple to build and debug. Failures are immediate and visible.\n\nDirect HTTP creates tight coupling between services. If the receiving service is slow or offline, the calling service blocks. Retry logic adds complexity. The calling service must decide whether to retry and how many times. If requests fail partway through a chain, order of operations can become unclear.\n\n**Message Queues**\n\nMessage queues store messages until the consuming service processes them. The producing service does not wait for the consuming service. The queue persists messages to disk. Messages survive service restarts.\n\nMessage queues decouple services. The producing service does not know or care when the consuming service runs. Failures do not cascade. A slow consuming service does not block the producing service. The queue preserves order for each producer-consumer pair.\n\nMessage queues add operational overhead. You must run and maintain a broker (RabbitMQ, Kafka, or AWS SQS). When messages flow through a queue, debugging becomes harder.\n\n**Comparison**\n\n| Factor | Direct HTTP | Message Queue |\n|--------|-------------|---------------|\n| Latency | Low | Higher (broker overhead) |\n| Coupling | Tight | Loose |\n| Failure isolation | Poor (cascades) | Good (isolated) |\n| Order guarantee | Unclear on failure | Preserved |\n| Operational complexity | Low | High |\n| Debugging | Easy | Harder |\n| Scalability | Limited | Good |\n\n**Recommendation: Use a message queue**\n\nOrder processing demands reliability and order preservation. These needs matter more than low latency. Even if services restart or fail, a message queue guarantees that orders process in sequence.\n\nA queue lets you scale consuming services independently. If order volume spikes, add more workers to consume from the queue. Direct HTTP requires load balancing and is more fragile.\n\nThe operational cost of running a message broker is worth the reliability gain. Order processing errors are expensive. A queue prevents cascading failures and creates a clear, auditable record for each order.\n\n**Implementation guidance**\n\n- Use a persistent broker (Kafka, RabbitMQ, or AWS SQS).\n- Design handlers to be idempotent (process the same message twice safely).\n- Add dead-letter queues for messages that fail repeatedly.\n- Monitor queue depth to detect processing bottlenecks.",
+  "texts": [
+    "**Message Queues vs. Direct HTTP Calls for Order Processing**\n\nThis comparison addresses two patterns for inter-service communication. Each pattern has different strengths for order processing, where reliability and order preservation matter.\n\n**Direct HTTP Calls**\n\nDirect HTTP calls send requests between services in real time. The calling service waits for the receiving service to respond before proceeding. This pattern is simple to build and debug. Failures are immediate and visible.\n\nDirect HTTP creates tight coupling between services. If the receiving service is slow or offline, the calling service blocks. Retry logic adds complexity. The calling service must decide whether to retry and how many times. Order of operations can become unclear if requests fail partway through a chain.\n\n**Message Queues**\n\nMessage queues store messages until the consuming service processes them. The producing service does not wait for the consuming service. The queue persists messages to disk. This means messages survive service restarts.\n\nMessage queues decouple services. The producing service does not know or care when the consuming service runs. Failures do not cascade. A slow consuming service does not block the producing service. The queue preserves order for each producer-consumer pair.\n\nMessage queues add operational overhead. You must run and maintain a broker (RabbitMQ, Kafka, or AWS SQS). Debugging becomes harder when messages flow through a queue.\n\n**Comparison**\n\n| Factor | Direct HTTP | Message Queue |\n|--------|-------------|---------------|\n| Latency | Low | Higher (broker overhead) |\n| Coupling | Tight | Loose |\n| Failure isolation | Poor (cascades) | Good (isolated) |\n| Order guarantee | Unclear on failure | Preserved |\n| Operational complexity | Low | High |\n| Debugging | Easy | Harder |\n| Scalability | Limited | Good |\n\n**Recommendation: Use a message queue**\n\nOrder processing demands reliability and order preservation. These needs matter more than low latency in this context. A message queue guarantees that orders process in sequence, even if services restart or fail.\n\nA queue also lets you scale consuming services independently. If order volume spikes, add more workers to consume from the queue. Direct HTTP would require load balancing and is more fragile.\n\nThe operational cost of running a message broker is worth the reliability gain. Order processing errors are expensive. A queue prevents cascading failures and creates a clear, auditable record for each order.\n\n**Implementation guidance**\n\n- Use a persistent broker (Kafka, RabbitMQ, or AWS SQS).\n- Design handlers to be idempotent (process the same message twice safely).\n- Add dead-letter queues for messages that fail repeatedly.\n- Monitor queue depth to detect processing bottlenecks.",
+    "**Message Queues vs. Direct HTTP Calls for Order Processing**\n\nThis comparison addresses two patterns for inter-service communication.\n\nFor order processing, reliability and order preservation matter. Each pattern has different strengths.\n\n**Direct HTTP Calls**\n\nDirect HTTP calls send requests between services in real time. The calling service waits for the receiving service to respond before proceeding. This pattern is simple to build and debug. Failures are immediate and visible.\n\nDirect HTTP creates tight coupling between services. If the receiving service is slow or offline, the calling service blocks. Retry logic adds complexity. The calling service must decide whether to retry and how many times. If requests fail partway through a chain, order of operations can become unclear.\n\n**Message Queues**\n\nMessage queues store messages until the consuming service processes them. The producing service does not wait for the consuming service. The queue persists messages to disk. Messages survive service restarts.\n\nMessage queues decouple services. The producing service does not know or care when the consuming service runs. Failures do not cascade. A slow consuming service does not block the producing service. The queue preserves order for each producer-consumer pair.\n\nMessage queues add operational overhead. You must run and maintain a broker (RabbitMQ, Kafka, or AWS SQS). When messages flow through a queue, debugging becomes harder.\n\n**Comparison**\n\n| Factor | Direct HTTP | Message Queue |\n|--------|-------------|---------------|\n| Latency | Low | Higher (broker overhead) |\n| Coupling | Tight | Loose |\n| Failure isolation | Poor (cascades) | Good (isolated) |\n| Order guarantee | Unclear on failure | Preserved |\n| Operational complexity | Low | High |\n| Debugging | Easy | Harder |\n| Scalability | Limited | Good |\n\n**Recommendation: Use a message queue**\n\nOrder processing demands reliability and order preservation. These needs matter more than low latency. Even if services restart or fail, a message queue guarantees that orders process in sequence.\n\nA queue lets you scale consuming services independently. If order volume spikes, add more workers to consume from the queue. Direct HTTP requires load balancing and is more fragile.\n\nThe operational cost of running a message broker is worth the reliability gain. Order processing errors are expensive. A queue prevents cascading failures and creates a clear, auditable record for each order.\n\n**Implementation guidance**\n\n- Use a persistent broker (Kafka, RabbitMQ, or AWS SQS).\n- Design handlers to be idempotent (process the same message twice safely).\n- Add dead-letter queues for messages that fail repeatedly.\n- Monitor queue depth to detect processing bottlenecks."
+  ],
+  "stderr_tail": ""
+}

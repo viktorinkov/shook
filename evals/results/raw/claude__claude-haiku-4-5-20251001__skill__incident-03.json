@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "incident-03",
+  "cat": "incident",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 11.7,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.014424,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 4794,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 767,
+    "output_tokens_details": {
+      "thinking_tokens": 485
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4794,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 767,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 4794,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4794
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 192,
+    "sentences": 10,
+    "mean_sentence_words": 18.9,
+    "longest_sentence_words": 29,
+    "violations": {
+      "sentence_over_limit": 3,
+      "contraction": 0,
+      "banned_modal": 1,
+      "perfect_tense": 0,
+      "ing_clause": 1,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 5,
+    "violations_per_100w": 2.6
+  },
+  "text": "# What went wrong\n\nDuring the failover event at 2026-08-27 14:32 UTC, the scheduler cluster entered a split-brain state where two instances became active simultaneously. When traffic failed over from the primary data center, both the existing secondary scheduler instance and a newly spawned instance in the secondary region started their initialization routines. Both instances proceeded to acquire the same cron job lease (scheduled to run at 14:35 UTC), as the distributed lock mechanism did not account for concurrent initialization during failover.\n\nAt 14:35 UTC, the cron job `process_daily_transactions` executed on both instances, resulting in duplicate transaction processing. This was not caught by existing safeguards because:\n\n1. The lease acquisition system relied on timestamp-based conflict resolution, not mutual exclusion.\n2. The secondary instance was not yet registered in the service discovery system at the moment the lock was acquired.\n3. No deduplication logic existed in the job payload processing.\n\nThe duplicate execution resulted in 42 transactions being processed twice, affecting customer billing records and creating reconciliation work.\n\n---\n\nWould you like me to refine this further, or run it through the **Simplified Technical English** skill to make it even clearer and more accessible to non-technical stakeholders?",
+  "texts": [
+    "# What went wrong\n\nDuring the failover event at 2026-08-27 14:32 UTC, the scheduler cluster entered a split-brain state where two instances became active simultaneously. When traffic failed over from the primary data center, both the existing secondary scheduler instance and a newly spawned instance in the secondary region started their initialization routines. Both instances proceeded to acquire the same cron job lease (scheduled to run at 14:35 UTC), as the distributed lock mechanism did not account for concurrent initialization during failover.\n\nAt 14:35 UTC, the cron job `process_daily_transactions` executed on both instances, resulting in duplicate transaction processing. This was not caught by existing safeguards because:\n\n1. The lease acquisition system relied on timestamp-based conflict resolution, not mutual exclusion.\n2. The secondary instance was not yet registered in the service discovery system at the moment the lock was acquired.\n3. No deduplication logic existed in the job payload processing.\n\nThe duplicate execution resulted in 42 transactions being processed twice, affecting customer billing records and creating reconciliation work.\n\n---\n\nWould you like me to refine this further, or run it through the **Simplified Technical English** skill to make it even clearer and more accessible to non-technical stakeholders?"
+  ],
+  "stderr_tail": ""
+}

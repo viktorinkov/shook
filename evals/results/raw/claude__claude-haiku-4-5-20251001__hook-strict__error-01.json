@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "error-01",
+  "cat": "error",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 13.9,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.018231,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 5658,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 1381,
+    "output_tokens_details": {
+      "thinking_tokens": 1356
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5658,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 1381,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 5658,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5658
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 14,
+    "sentences": 2,
+    "mean_sentence_words": 7.0,
+    "longest_sentence_words": 7,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "File size exceeds the 25 MB limit. Choose a smaller file and try again.",
+  "texts": [
+    "File size exceeds the 25 MB limit. Choose a smaller file and try again."
+  ],
+  "stderr_tail": ""
+}

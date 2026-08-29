@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "explain-01",
+  "cat": "explain",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 8.6,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.013969,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 4844,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 644,
+    "output_tokens_details": {
+      "thinking_tokens": 312
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4844,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 644,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 4844,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4844
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 122,
+    "sentences": 7,
+    "mean_sentence_words": 16.9,
+    "longest_sentence_words": 27,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 2,
+    "violations_per_100w": 1.64
+  },
+  "text": "The test fails because **the mock returns `None`, but the code expects an object with a `.status` attribute**.\n\nHere's what happens:\n\n1. `client.upload()` is set to return `None`\n2. `service.sync()` calls `client.upload()` and gets `None`\n3. Inside `service.sync()`, the code tries to read `.status` from the result: `response.status` (or similar)\n4. Since `None` has no `.status` attribute, you get an **`AttributeError`**\n\n**The fix:** Make the mock return an object with a `.status` attribute:\n\n```python\ndef test_upload():\n    client = Mock()\n    response = Mock()\n    response.status = 200  # or whatever status indicates success\n    client.upload.return_value = response\n    result = service.sync(client)\n    assert result.ok\n```\n\nOr, if `service.sync()` accesses `.ok` directly on the upload response:\n\n```python\ndef test_upload():\n    client = Mock()\n    response = Mock()\n    response.ok = True\n    client.upload.return_value = response\n    result = service.sync(client)\n    assert result.ok\n```\n\n**Key lesson for mocking:** When you mock a method, think about what attributes or behavior the real code will use on the return value. Your mock's return value needs to support all of those interactions.",
+  "texts": [
+    "The test fails because **the mock returns `None`, but the code expects an object with a `.status` attribute**.\n\nHere's what happens:\n\n1. `client.upload()` is set to return `None`\n2. `service.sync()` calls `client.upload()` and gets `None`\n3. Inside `service.sync()`, the code tries to read `.status` from the result: `response.status` (or similar)\n4. Since `None` has no `.status` attribute, you get an **`AttributeError`**\n\n**The fix:** Make the mock return an object with a `.status` attribute:\n\n```python\ndef test_upload():\n    client = Mock()\n    response = Mock()\n    response.status = 200  # or whatever status indicates success\n    client.upload.return_value = response\n    result = service.sync(client)\n    assert result.ok\n```\n\nOr, if `service.sync()` accesses `.ok` directly on the upload response:\n\n```python\ndef test_upload():\n    client = Mock()\n    response = Mock()\n    response.ok = True\n    client.upload.return_value = response\n    result = service.sync(client)\n    assert result.ok\n```\n\n**Key lesson for mocking:** When you mock a method, think about what attributes or behavior the real code will use on the return value. Your mock's return value needs to support all of those interactions."
+  ],
+  "stderr_tail": ""
+}

@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "review-02",
+  "cat": "review",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 14.0,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.016427999999999998,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 5644,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 1026,
+    "output_tokens_details": {
+      "thinking_tokens": 625
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5644,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 1026,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 5644,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5644
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 238,
+    "sentences": 19,
+    "mean_sentence_words": 11.4,
+    "longest_sentence_words": 22,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 5,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 6,
+    "violations_per_100w": 2.52
+  },
+  "text": "I can provide feedback on this migration. Here is a PR comment:\n\n---\n\n### Migration Review \u2013 Data Quality and Constraints\n\n**Critical Issues:**\n\n1. **Fake email data**\n   - The migration generates fake email addresses by concatenating usernames with `@example.com`.\n   - Real user emails are not preserved.\n   - Email-based features may malfunction or fail to notify users.\n   - Clarify: Is this a temporary placeholder, or are real emails missing from the source data?\n\n2. **Missing uniqueness constraint**\n   - Email addresses should have a `UNIQUE` constraint, but none is added.\n   - Multiple users could end up with identical emails, breaking authentication and lookups.\n   - Add: `ALTER TABLE users ADD CONSTRAINT email_unique UNIQUE(email);`\n\n3. **Risky NULL-to-NOT-NULL transition**\n   - If the `UPDATE` statement fails partway, the `ALTER COLUMN SET NOT NULL` step will fail, leaving the table in an inconsistent state.\n   - Recommendation: Test the `UPDATE` statement separately first. Run it in a transaction and verify row counts before applying the constraint.\n\n4. **No rollback path**\n   - Once fake emails populate the table, reversing this migration is difficult without the original data.\n   - Consider: Can you restore user emails from another system or log?\n\n**Other observations:**\n\n- `VARCHAR(255)` is acceptable for email storage.\n- For large tables, the `UPDATE` operation may lock the table. Test duration on a staging environment.\n- Add comments to the migration file to explain the email data strategy.\n\n**Recommendation:** Request clarification on the email data source before merging.\n\n---\n\nWould you like me to adjust the tone or expand on any of these points?",
+  "texts": [
+    "I can provide feedback on this migration. Here is a PR comment:\n\n---\n\n### Migration Review \u2013 Data Quality and Constraints\n\n**Critical Issues:**\n\n1. **Fake email data**\n   - The migration generates fake email addresses by concatenating usernames with `@example.com`.\n   - Real user emails are not preserved.\n   - Email-based features may malfunction or fail to notify users.\n   - Clarify: Is this a temporary placeholder, or are real emails missing from the source data?\n\n2. **Missing uniqueness constraint**\n   - Email addresses should have a `UNIQUE` constraint, but none is added.\n   - Multiple users could end up with identical emails, breaking authentication and lookups.\n   - Add: `ALTER TABLE users ADD CONSTRAINT email_unique UNIQUE(email);`\n\n3. **Risky NULL-to-NOT-NULL transition**\n   - If the `UPDATE` statement fails partway, the `ALTER COLUMN SET NOT NULL` step will fail, leaving the table in an inconsistent state.\n   - Recommendation: Test the `UPDATE` statement separately first. Run it in a transaction and verify row counts before applying the constraint.\n\n4. **No rollback path**\n   - Once fake emails populate the table, reversing this migration is difficult without the original data.\n   - Consider: Can you restore user emails from another system or log?\n\n**Other observations:**\n\n- `VARCHAR(255)` is acceptable for email storage.\n- For large tables, the `UPDATE` operation may lock the table. Test duration on a staging environment.\n- Add comments to the migration file to explain the email data strategy.\n\n**Recommendation:** Request clarification on the email data source before merging.\n\n---\n\nWould you like me to adjust the tone or expand on any of these points?"
+  ],
+  "stderr_tail": ""
+}

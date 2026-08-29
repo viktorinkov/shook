@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "review-07",
+  "cat": "review",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 8.8,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.013671000000000003,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 4793,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 615,
+    "output_tokens_details": {
+      "thinking_tokens": 246
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4793,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 615,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 4793,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4793
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 156,
+    "sentences": 12,
+    "mean_sentence_words": 12.0,
+    "longest_sentence_words": 20,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 1,
+      "perfect_tense": 0,
+      "ing_clause": 1,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 3,
+    "violations_per_100w": 1.92
+  },
+  "text": "# PR Review Summary: HTTP Client Retry Logic\n\n## Issue: Incorrect Retry Behavior on Client Errors\n\n**Severity:** High\n\n### Problem\nThe retry logic retries on all HTTP status codes, including 4xx client errors (specifically 400 Bad Request). This is incorrect and problematic.\n\n### Why This Is a Problem\n- **400 Bad Request** indicates a malformed request. Retrying the identical request will always fail\u2014the client code has a bug, not a transient network issue.\n- Retrying on 4xx errors wastes resources (network calls, latency, compute) without any benefit.\n- It masks underlying client-side bugs, making them harder to diagnose.\n- Can cause cascading failures or rate limiting if the server counts retry attempts.\n\n### What Should Be Retried\nRetry logic should only target **transient failures**, such as:\n- `408 Request Timeout`\n- `429 Too Many Requests`\n- `5xx Server Errors` (transient issues)\n- Network timeouts and connection resets\n\n### What Should NOT Be Retried\nClient errors that indicate the request is fundamentally wrong:\n- `400 Bad Request`\n- `401 Unauthorized`\n- `403 Forbidden`\n- `404 Not Found`\n\n### Recommendation\nUpdate the retry condition to explicitly check the status code and only retry on transient errors. Example pattern:\n```python\nif status_code in [408, 429] or 500 <= status_code < 600:\n    retry()\n```\n\n---\n\n**Action:** Request changes to the retry logic before merge.",
+  "texts": [
+    "# PR Review Summary: HTTP Client Retry Logic\n\n## Issue: Incorrect Retry Behavior on Client Errors\n\n**Severity:** High\n\n### Problem\nThe retry logic retries on all HTTP status codes, including 4xx client errors (specifically 400 Bad Request). This is incorrect and problematic.\n\n### Why This Is a Problem\n- **400 Bad Request** indicates a malformed request. Retrying the identical request will always fail\u2014the client code has a bug, not a transient network issue.\n- Retrying on 4xx errors wastes resources (network calls, latency, compute) without any benefit.\n- It masks underlying client-side bugs, making them harder to diagnose.\n- Can cause cascading failures or rate limiting if the server counts retry attempts.\n\n### What Should Be Retried\nRetry logic should only target **transient failures**, such as:\n- `408 Request Timeout`\n- `429 Too Many Requests`\n- `5xx Server Errors` (transient issues)\n- Network timeouts and connection resets\n\n### What Should NOT Be Retried\nClient errors that indicate the request is fundamentally wrong:\n- `400 Bad Request`\n- `401 Unauthorized`\n- `403 Forbidden`\n- `404 Not Found`\n\n### Recommendation\nUpdate the retry condition to explicitly check the status code and only retry on transient errors. Example pattern:\n```python\nif status_code in [408, 429] or 500 <= status_code < 600:\n    retry()\n```\n\n---\n\n**Action:** Request changes to the retry logic before merge."
+  ],
+  "stderr_tail": ""
+}

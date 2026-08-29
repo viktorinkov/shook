@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "readme-10",
+  "cat": "docs",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 24.9,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.035279,
+  "usage": {
+    "input_tokens": 20,
+    "cache_creation_input_tokens": 10884,
+    "cache_read_input_tokens": 4790,
+    "output_tokens": 2407,
+    "output_tokens_details": {
+      "thinking_tokens": 2036
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10884,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 2166,
+        "cache_read_input_tokens": 4790,
+        "cache_creation_input_tokens": 6094,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6094
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 173,
+    "sentences": 13,
+    "mean_sentence_words": 12.7,
+    "longest_sentence_words": 57,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 1,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 3,
+    "violations_per_100w": 1.73
+  },
+  "text": "## Security\n\n### Reporting a vulnerability\n\nDo not open a public issue for a security vulnerability. Report it privately to the team instead.\n\nSend an email to `security@example.com` with:\n\n- A description of the vulnerability\n- Steps to reproduce it\n- The affected version or versions\n- Any additional information.\n\nInclude your contact information so we can send you updates.\n\n### Disclosure window\n\nWe will review your report within 5 business days. You will receive an acknowledgment.\n\nWe will work to fix the vulnerability. You must wait 90 days before you disclose the vulnerability publicly. This 90-day period gives users time to install the patch.\n\nAfter 90 days, you can disclose the vulnerability publicly. We will also publish a security advisory.\n\n---\n\n**Notes for your README:**\n\n- Replace `security@example.com` with your actual contact email\n- Adjust the review timeline (5 business days) if needed\n- Add a link to your security advisory page or past advisories if you have one\n- Keep the email address private and do not publish it on GitHub; add it only to your security.txt file and README",
+  "texts": [
+    "## Security\n\n### Reporting a vulnerability\n\nDo not open a public issue for a security vulnerability. Report it privately to the team instead.\n\nSend an email to `security@example.com` with:\n\n- A description of the vulnerability\n- Steps to reproduce it\n- The affected version or versions\n- Any additional information.\n\nInclude your contact information so we can send you updates.\n\n### Disclosure window\n\nWe will review your report within 5 business days. You will receive an acknowledgment.\n\nWe will work to fix the vulnerability. You must wait 90 days before you disclose the vulnerability publicly. This 90-day period gives users time to install the patch.\n\nAfter 90 days, you can disclose the vulnerability publicly. We will also publish a security advisory.\n\n---\n\n**Notes for your README:**\n\n- Replace `security@example.com` with your actual contact email\n- Adjust the review timeline (5 business days) if needed\n- Add a link to your security advisory page or past advisories if you have one\n- Keep the email address private and do not publish it on GitHub; add it only to your security.txt file and README"
+  ],
+  "stderr_tail": ""
+}

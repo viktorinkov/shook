@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "explain-03",
+  "cat": "explain",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 41.9,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 2,
+  "strict_blocks": 1,
+  "num_turns": 2,
+  "cost_usd": 0.034693600000000005,
+  "usage": {
+    "input_tokens": 20,
+    "cache_creation_input_tokens": 6551,
+    "cache_read_input_tokens": 5666,
+    "output_tokens": 4201,
+    "output_tokens_details": {
+      "thinking_tokens": 3618
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6551,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 3468,
+        "cache_read_input_tokens": 5666,
+        "cache_creation_input_tokens": 885,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 885
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 193,
+    "sentences": 22,
+    "mean_sentence_words": 8.6,
+    "longest_sentence_words": 14,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "## Git Merge\n\nGit merge combines your feature branch with the main branch. A new commit connects both branches together. The history keeps both paths visible.\n\nWhen multiple people work on different branches, use merge. Merge is safe for shared code.\n\n## Git Rebase\n\nGit rebase moves your feature branch commits on top of the main branch. This rewrites the history to make a straight line of commits. The final history looks clean and linear.\n\nWhen you work alone on a feature branch, use rebase. If other people fetched the commits from a shared remote, do not rebase.\n\n## Which One to Use\n\nMerge is the default choice. It is safe and preserves all history. When the branch is public or shared, use merge.\n\nRebase creates a cleaner history. Before you merge a personal feature branch into main, use rebase. Rebase on top of main, then merge with the merge option.\n\nExample workflow:\n\n1. Check out your feature branch.\n2. Run `git rebase main` to move your commits on top of the latest main branch.\n3. Run `git checkout main` to switch to the main branch.\n4. Run `git merge your-feature-branch` to merge the rebased commits.\n\nThis approach gives you the clean history of rebase with the safety of merge.",
+  "texts": [
+    "## Git Merge\n\nGit merge combines your feature branch with the main branch. A new commit connects both branches together. The history keeps both paths visible.\n\nUse merge when multiple people work on different branches. Merge is safe for shared code.\n\n## Git Rebase\n\nGit rebase moves your feature branch commits on top of the main branch. This rewrites the history to make a straight line of commits. The final history looks clean and linear.\n\nUse rebase when you work alone on a feature branch. Do not rebase commits that other people have already fetched from a shared remote.\n\n## Which One to Use\n\n**Merge** is the default choice. It is safe and preserves all history. Use it when the branch is public or shared.\n\n**Rebase** creates a cleaner history. Use it before you merge a personal feature branch into main. Rebase on top of main, then merge with the merge option.\n\nExample workflow:\n\n1. Check out your feature branch.\n2. Run `git rebase main` to move your commits on top of the latest main branch.\n3. Run `git checkout main` to switch to the main branch.\n4. Run `git merge your-feature-branch` to merge the rebased commits.\n\nThis approach gives you the clean history of rebase with the safety of merge.",
+    "## Git Merge\n\nGit merge combines your feature branch with the main branch. A new commit connects both branches together. The history keeps both paths visible.\n\nWhen multiple people work on different branches, use merge. Merge is safe for shared code.\n\n## Git Rebase\n\nGit rebase moves your feature branch commits on top of the main branch. This rewrites the history to make a straight line of commits. The final history looks clean and linear.\n\nWhen you work alone on a feature branch, use rebase. If other people fetched the commits from a shared remote, do not rebase.\n\n## Which One to Use\n\nMerge is the default choice. It is safe and preserves all history. When the branch is public or shared, use merge.\n\nRebase creates a cleaner history. Before you merge a personal feature branch into main, use rebase. Rebase on top of main, then merge with the merge option.\n\nExample workflow:\n\n1. Check out your feature branch.\n2. Run `git rebase main` to move your commits on top of the latest main branch.\n3. Run `git checkout main` to switch to the main branch.\n4. Run `git merge your-feature-branch` to merge the rebased commits.\n\nThis approach gives you the clean history of rebase with the safety of merge."
+  ],
+  "stderr_tail": ""
+}

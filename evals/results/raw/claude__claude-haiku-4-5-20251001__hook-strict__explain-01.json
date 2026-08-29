@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "explain-01",
+  "cat": "explain",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 9.3,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.015196999999999999,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 5716,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 751,
+    "output_tokens_details": {
+      "thinking_tokens": 483
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5716,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 751,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 5716,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5716
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 137,
+    "sentences": 11,
+    "mean_sentence_words": 12.5,
+    "longest_sentence_words": 23,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "The test fails because the mock is not set up correctly.\n\nYour code calls `client.upload()` and then reads `.status` from the result. The test mocks `client.upload` to return `None`. When your code tries to access `.status` on `None`, Python raises an `AttributeError` \u2014 you cannot read an attribute from `None`.\n\n**How to fix it:**\n\nThe mock must return an object that has a `.status` attribute. Create a mock response object:\n\n```python\ndef test_upload():\n    client = Mock()\n    response = Mock()\n    response.status = \"success\"  # or the actual status value\n    client.upload.return_value = response\n    result = service.sync(client)\n    assert result.ok\n```\n\nNow `client.upload()` returns a mock object with a `.status` attribute. Your code can read that attribute without error.\n\n**Why this matters:**\n\nMocks must match the shape of the real object they replace. If the real `upload()` method returns an object with a `.status` attribute, your mock must do the same. Otherwise, your test passes in an unrealistic scenario that does not match production code.",
+  "texts": [
+    "The test fails because the mock is not set up correctly.\n\nYour code calls `client.upload()` and then reads `.status` from the result. The test mocks `client.upload` to return `None`. When your code tries to access `.status` on `None`, Python raises an `AttributeError` \u2014 you cannot read an attribute from `None`.\n\n**How to fix it:**\n\nThe mock must return an object that has a `.status` attribute. Create a mock response object:\n\n```python\ndef test_upload():\n    client = Mock()\n    response = Mock()\n    response.status = \"success\"  # or the actual status value\n    client.upload.return_value = response\n    result = service.sync(client)\n    assert result.ok\n```\n\nNow `client.upload()` returns a mock object with a `.status` attribute. Your code can read that attribute without error.\n\n**Why this matters:**\n\nMocks must match the shape of the real object they replace. If the real `upload()` method returns an object with a `.status` attribute, your mock must do the same. Otherwise, your test passes in an unrealistic scenario that does not match production code."
+  ],
+  "stderr_tail": ""
+}

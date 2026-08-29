@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "review-09",
+  "cat": "review",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 10.7,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.014983,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 5629,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 743,
+    "output_tokens_details": {
+      "thinking_tokens": 466
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5629,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 743,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 5629,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5629
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 108,
+    "sentences": 11,
+    "mean_sentence_words": 9.6,
+    "longest_sentence_words": 20,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 1,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 2,
+    "violations_per_100w": 1.85
+  },
+  "text": "## Bug: Loop Variable Captured by Reference\n\nThis code has a classic Go concurrency bug. All goroutines capture the same `item` variable by reference. By the time each goroutine runs, the loop has moved on, so all goroutines process the final value.\n\n**Fix 1: Pass item as a parameter**\n\n```go\nfor _, item := range items {\n    go func(i interface{}) {\n        process(i)\n    }(item)\n}\n```\n\n**Fix 2: Create a local copy**\n\n```go\nfor _, item := range items {\n    item := item  // Shadow the loop variable\n    go func() {\n        process(item)\n    }()\n}\n```\n\n**Why this matters:** If you run this code with multiple items, you will see unexpected behavior. Each goroutine prints the same `item` value, not its own. Fix 1 is simpler and more common.\n\n**In a PR comment:**\n\n> Line [N]: All goroutines capture `item` by reference. Pass `item` as a function parameter to the goroutine to fix this. See: https://golang.org/doc/faq#closures_and_goroutines",
+  "texts": [
+    "## Bug: Loop Variable Captured by Reference\n\nThis code has a classic Go concurrency bug. All goroutines capture the same `item` variable by reference. By the time each goroutine runs, the loop has moved on, so all goroutines process the final value.\n\n**Fix 1: Pass item as a parameter**\n\n```go\nfor _, item := range items {\n    go func(i interface{}) {\n        process(i)\n    }(item)\n}\n```\n\n**Fix 2: Create a local copy**\n\n```go\nfor _, item := range items {\n    item := item  // Shadow the loop variable\n    go func() {\n        process(item)\n    }()\n}\n```\n\n**Why this matters:** If you run this code with multiple items, you will see unexpected behavior. Each goroutine prints the same `item` value, not its own. Fix 1 is simpler and more common.\n\n**In a PR comment:**\n\n> Line [N]: All goroutines capture `item` by reference. Pass `item` as a function parameter to the goroutine to fix this. See: https://golang.org/doc/faq#closures_and_goroutines"
+  ],
+  "stderr_tail": ""
+}

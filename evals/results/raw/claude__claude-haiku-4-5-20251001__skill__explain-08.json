@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "explain-08",
+  "cat": "explain",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 7.7,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.013569000000000001,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 4789,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 599,
+    "output_tokens_details": {
+      "thinking_tokens": 130
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4789,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 599,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 4789,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4789
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 116,
+    "sentences": 10,
+    "mean_sentence_words": 10.9,
+    "longest_sentence_words": 34,
+    "violations": {
+      "sentence_over_limit": 2,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 1,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 4,
+    "violations_per_100w": 3.45
+  },
+  "text": "# The N+1 Query Problem\n\nThe N+1 problem occurs when code fetches a collection of records, then performs an additional query **for each record** in a loop, resulting in 1 + N database queries instead of 1 or 2.\n\n## Example: The Problem\n\n```javascript\n// Fetch 100 posts\nconst posts = await Post.findAll();\n\n// This runs 100 MORE queries (N+1 total)\nfor (const post of posts) {\n  post.author = await User.findByPk(post.authorId);\n}\n```\n\n**Queries executed:**\n- 1 query: `SELECT * FROM posts`\n- 100 queries: `SELECT * FROM users WHERE id = ?` (one per post)\n- **Total: 101 queries** \u274c\n\n## The Fix: Eager Loading\n\nLoad the related data in a **single query** using joins:\n\n```javascript\n// Fetch posts WITH their authors in one query\nconst posts = await Post.findAll({\n  include: [{\n    model: User,\n    as: 'author'\n  }]\n});\n\n// No extra queries needed\nfor (const post of posts) {\n  console.log(post.author.name);\n}\n```\n\n**Queries executed:**\n- 1 query: `SELECT posts.*, users.* FROM posts LEFT JOIN users ON ...`\n- **Total: 1 query** \u2705\n\n## Other Approaches\n\n- **Batch loading**: Fetch all related IDs at once, then query once\n  ```javascript\n  const userIds = posts.map(p => p.authorId);\n  const users = await User.findAll({ where: { id: userIds } });\n  ```\n\n- **Lazy loading with caching**: Cache results to avoid re-fetching\n\nMost ORMs offer eager loading methods (`.include()` in Sequelize, `.prefetch_related()` in Django, `.joinedload()` in SQLAlchemy) specifically to prevent this problem.",
+  "texts": [
+    "# The N+1 Query Problem\n\nThe N+1 problem occurs when code fetches a collection of records, then performs an additional query **for each record** in a loop, resulting in 1 + N database queries instead of 1 or 2.\n\n## Example: The Problem\n\n```javascript\n// Fetch 100 posts\nconst posts = await Post.findAll();\n\n// This runs 100 MORE queries (N+1 total)\nfor (const post of posts) {\n  post.author = await User.findByPk(post.authorId);\n}\n```\n\n**Queries executed:**\n- 1 query: `SELECT * FROM posts`\n- 100 queries: `SELECT * FROM users WHERE id = ?` (one per post)\n- **Total: 101 queries** \u274c\n\n## The Fix: Eager Loading\n\nLoad the related data in a **single query** using joins:\n\n```javascript\n// Fetch posts WITH their authors in one query\nconst posts = await Post.findAll({\n  include: [{\n    model: User,\n    as: 'author'\n  }]\n});\n\n// No extra queries needed\nfor (const post of posts) {\n  console.log(post.author.name);\n}\n```\n\n**Queries executed:**\n- 1 query: `SELECT posts.*, users.* FROM posts LEFT JOIN users ON ...`\n- **Total: 1 query** \u2705\n\n## Other Approaches\n\n- **Batch loading**: Fetch all related IDs at once, then query once\n  ```javascript\n  const userIds = posts.map(p => p.authorId);\n  const users = await User.findAll({ where: { id: userIds } });\n  ```\n\n- **Lazy loading with caching**: Cache results to avoid re-fetching\n\nMost ORMs offer eager loading methods (`.include()` in Sequelize, `.prefetch_related()` in Django, `.joinedload()` in SQLAlchemy) specifically to prevent this problem."
+  ],
+  "stderr_tail": ""
+}

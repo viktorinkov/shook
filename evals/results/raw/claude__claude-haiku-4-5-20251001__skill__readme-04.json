@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "readme-04",
+  "cat": "docs",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 58.0,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.05304,
+  "usage": {
+    "input_tokens": 20,
+    "cache_creation_input_tokens": 11122,
+    "cache_read_input_tokens": 4790,
+    "output_tokens": 5856,
+    "output_tokens_details": {
+      "thinking_tokens": 4969
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 11122,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 5441,
+        "cache_read_input_tokens": 4790,
+        "cache_creation_input_tokens": 6332,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6332
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 417,
+    "sentences": 49,
+    "mean_sentence_words": 7.9,
+    "longest_sentence_words": 25,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 1,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 0
+    },
+    "violations_total": 3,
+    "violations_per_100w": 0.72
+  },
+  "text": "# Troubleshooting\n\n### The app fails to start with \"EADDRINUSE\"\n\nThe error `EADDRINUSE` means another process is using the port that the app needs. Each application that listens for connections uses a specific port number, similar to a mailbox address. When the app starts, it cannot bind to that port because another program is already using it.\n\nThis error happens when:\n\n- The app is already running in another window or from a session that did not close fully.\n- Another application on your computer uses the same port as the app.\n- The previous session of the app did not close properly.\n\n### How to fix this\n\n**Step 1: Find what process uses the port**\n\nThe app uses port 3000 by default. Find what process uses this port.\n\n**On macOS and Linux:**\n\n1. Open a terminal.\n2. Run this command: `lsof -i :3000`\n3. Read the output. The process name and ID (PID) are shown.\n\n**On Windows:**\n\n1. Open Command Prompt or PowerShell.\n2. Run this command: `netstat -ano | find \":3000\"`\n3. The process ID (PID) is in the last column.\n\n**Step 2: Close the process**\n\n**On macOS and Linux:**\n\n1. Replace `PID` with the ID number from step 1.\n2. Run this command: `kill PID`\n3. If that does not work, run: `kill -9 PID`\n4. Try to start the app again.\n\n**On Windows:**\n\n1. Open Task Manager. Press Ctrl+Shift+Esc.\n2. Find the process with the PID from step 1 in the Processes tab.\n3. Right-click the process. Select \"End Task\".\n4. Try to start the app again.\n\n**Step 3: Change the port (if another application uses port 3000)**\n\nYou can change the port that the app uses.\n\n1. Find the configuration file in your application data folder.\n2. Open the configuration file with a text editor.\n3. Find the line that starts with `port`. Change the number.\n4. For example, change `port: 3000` to `port: 3001`.\n5. Save the configuration file.\n6. Start the app again.\n\n**Step 4: Restart your computer**\n\nIf none of the steps above work, restart your computer.\n\n1. Restart your computer.\n2. Start the app again.\n\n### If you still need help\n\nProvide this information if the error persists:\n\n- The complete error message from the app.\n- The output from the command in step 1.\n- The name of any other application that might use the same port.\n\n---\n\n**What changed:** The text uses short sentences (max 20 words procedural, 25 descriptive), active voice, conditions before commands, and complete grammar with no contractions. Technical nouns are consistent throughout (port, process, configuration file). Code blocks stay exact. Platform-specific steps are clearly separated so readers follow only what they need.",
+  "texts": [
+    "# Troubleshooting\n\n### The app fails to start with \"EADDRINUSE\"\n\nThe error `EADDRINUSE` means another process is using the port that the app needs. Each application that listens for connections uses a specific port number, similar to a mailbox address. When the app starts, it cannot bind to that port because another program is already using it.\n\nThis error happens when:\n\n- The app is already running in another window or from a session that did not close fully.\n- Another application on your computer uses the same port as the app.\n- The previous session of the app did not close properly.\n\n### How to fix this\n\n**Step 1: Find what process uses the port**\n\nThe app uses port 3000 by default. Find what process uses this port.\n\n**On macOS and Linux:**\n\n1. Open a terminal.\n2. Run this command: `lsof -i :3000`\n3. Read the output. The process name and ID (PID) are shown.\n\n**On Windows:**\n\n1. Open Command Prompt or PowerShell.\n2. Run this command: `netstat -ano | find \":3000\"`\n3. The process ID (PID) is in the last column.\n\n**Step 2: Close the process**\n\n**On macOS and Linux:**\n\n1. Replace `PID` with the ID number from step 1.\n2. Run this command: `kill PID`\n3. If that does not work, run: `kill -9 PID`\n4. Try to start the app again.\n\n**On Windows:**\n\n1. Open Task Manager. Press Ctrl+Shift+Esc.\n2. Find the process with the PID from step 1 in the Processes tab.\n3. Right-click the process. Select \"End Task\".\n4. Try to start the app again.\n\n**Step 3: Change the port (if another application uses port 3000)**\n\nYou can change the port that the app uses.\n\n1. Find the configuration file in your application data folder.\n2. Open the configuration file with a text editor.\n3. Find the line that starts with `port`. Change the number.\n4. For example, change `port: 3000` to `port: 3001`.\n5. Save the configuration file.\n6. Start the app again.\n\n**Step 4: Restart your computer**\n\nIf none of the steps above work, restart your computer.\n\n1. Restart your computer.\n2. Start the app again.\n\n### If you still need help\n\nProvide this information if the error persists:\n\n- The complete error message from the app.\n- The output from the command in step 1.\n- The name of any other application that might use the same port.\n\n---\n\n**What changed:** The text uses short sentences (max 20 words procedural, 25 descriptive), active voice, conditions before commands, and complete grammar with no contractions. Technical nouns are consistent throughout (port, process, configuration file). Code blocks stay exact. Platform-specific steps are clearly separated so readers follow only what they need."
+  ],
+  "stderr_tail": ""
+}

@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "readme-07",
+  "cat": "docs",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 7.7,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.013809,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 5627,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 509,
+    "output_tokens_details": {
+      "thinking_tokens": 249
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5627,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 509,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 5627,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5627
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 106,
+    "sentences": 11,
+    "mean_sentence_words": 9.6,
+    "longest_sentence_words": 22,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "# Environment Variables\n\nThe service accepts the following environment variables:\n\n| Variable | Required | Default | Description |\n|----------|----------|---------|-------------|\n| `DATABASE_URL` | Yes | \u2014 | Connection string for the database. |\n| `REDIS_URL` | No | Not set | Connection string for Redis. When set, the service enables caching. |\n| `LOG_JSON` | No | `false` | Set to `true` to output logs in JSON format. |\n\n## Usage\n\nSet these variables before you start the service:\n\n```bash\nexport DATABASE_URL=\"postgresql://user:pass@localhost:5432/mydb\"\nexport REDIS_URL=\"redis://localhost:6379\"\nexport LOG_JSON=\"true\"\n```\n\nOr pass them as arguments to your start command:\n\n```bash\nDATABASE_URL=\"...\" REDIS_URL=\"...\" LOG_JSON=\"true\" ./start-service\n```\n\n## Required vs Optional\n\n`DATABASE_URL` is required. The service does not start without it.\n\n`REDIS_URL` and `LOG_JSON` are optional. The service runs without them using built-in defaults.",
+  "texts": [
+    "# Environment Variables\n\nThe service accepts the following environment variables:\n\n| Variable | Required | Default | Description |\n|----------|----------|---------|-------------|\n| `DATABASE_URL` | Yes | \u2014 | Connection string for the database. |\n| `REDIS_URL` | No | Not set | Connection string for Redis. When set, the service enables caching. |\n| `LOG_JSON` | No | `false` | Set to `true` to output logs in JSON format. |\n\n## Usage\n\nSet these variables before you start the service:\n\n```bash\nexport DATABASE_URL=\"postgresql://user:pass@localhost:5432/mydb\"\nexport REDIS_URL=\"redis://localhost:6379\"\nexport LOG_JSON=\"true\"\n```\n\nOr pass them as arguments to your start command:\n\n```bash\nDATABASE_URL=\"...\" REDIS_URL=\"...\" LOG_JSON=\"true\" ./start-service\n```\n\n## Required vs Optional\n\n`DATABASE_URL` is required. The service does not start without it.\n\n`REDIS_URL` and `LOG_JSON` are optional. The service runs without them using built-in defaults."
+  ],
+  "stderr_tail": ""
+}

@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "review-07",
+  "cat": "review",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 14.1,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.01774,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 5665,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 1280,
+    "output_tokens_details": {
+      "thinking_tokens": 1054
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5665,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 1280,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 5665,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5665
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 146,
+    "sentences": 15,
+    "mean_sentence_words": 9.5,
+    "longest_sentence_words": 22,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.68
+  },
+  "text": "**PR Review Summary: HTTP Client Retry Logic**\n\n**Issue Found: Retries on All Status Codes**\n\nThe change adds retry logic to the HTTP client. However, it retries on every status code, including 400 (Bad Request). This is incorrect.\n\nStatus code 400 means the client sent a malformed request. The server will reject it again if you retry. Retrying wastes resources and delays error detection.\n\n**Recommended Fix**\n\nModify the retry logic to only retry on transient errors:\n\n- 5xx server errors (500, 502, 503, 504)\n- 429 (Too Many Requests)\n- Network timeouts\n- Connection failures\n\nDo not retry on 4xx client errors. These errors indicate a problem with the request itself. The request will fail again on retry.\n\n**Test Coverage**\n\nAdd a test that confirms the client does not retry on 400. Add another test that confirms the client does retry on 503. These tests prevent regression.",
+  "texts": [
+    "**PR Review Summary: HTTP Client Retry Logic**\n\n**Issue Found: Retries on All Status Codes**\n\nThe change adds retry logic to the HTTP client. However, it retries on every status code, including 400 (Bad Request). This is incorrect.\n\nStatus code 400 means the client sent a malformed request. The server will reject it again if you retry. Retrying wastes resources and delays error detection.\n\n**Recommended Fix**\n\nModify the retry logic to only retry on transient errors:\n\n- 5xx server errors (500, 502, 503, 504)\n- 429 (Too Many Requests)\n- Network timeouts\n- Connection failures\n\nDo not retry on 4xx client errors. These errors indicate a problem with the request itself. The request will fail again on retry.\n\n**Test Coverage**\n\nAdd a test that confirms the client does not retry on 400. Add another test that confirms the client does retry on 503. These tests prevent regression."
+  ],
+  "stderr_tail": ""
+}

@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "error-05",
+  "cat": "error",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 26.0,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.0334732,
+  "usage": {
+    "input_tokens": 20,
+    "cache_creation_input_tokens": 10948,
+    "cache_read_input_tokens": 4782,
+    "output_tokens": 2022,
+    "output_tokens_details": {
+      "thinking_tokens": 1557
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10948,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 1709,
+        "cache_read_input_tokens": 4782,
+        "cache_creation_input_tokens": 6166,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6166
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 184,
+    "sentences": 19,
+    "mean_sentence_words": 9.4,
+    "longest_sentence_words": 24,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 4,
+      "ing_clause": 0,
+      "semicolon": 1,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 0
+    },
+    "violations_total": 7,
+    "violations_per_100w": 3.8
+  },
+  "text": "## Error Text for Expired Session\n\n**Message:**\n\n\"Your session has expired. Log in again.\"\n\n---\n\n## Explanation\n\nThis follows ASD-STE100 for error messaging:\n\n- **Rule 5.1 (procedural limit):** Both sentences stay under 20 words. Sentence 1 is 4 words; Sentence 2 is 3 words.\n- **Rule 3.6 (active voice):** \"Your session has expired\" uses the agent implicitly (the system ended it) \u2014 acceptable when the agent is not actionable. The second sentence is imperative: \"Log in again.\"\n- **Rule 4.5 (articles):** \"Your\" provides the necessary context without articles.\n- **Rule 1.12 (technical verb):** \"Log in\" is a legal technical verb in software contexts.\n- **Rule 5.2 (one instruction per sentence):** The second sentence gives one action.\n- **Rule 4.2 (no shortcuts):** Full grammar \u2014 not \"Session expired. Sign in.\" (telegraphic).\n\n---\n\n## Variations by Context\n\n| Context | Message |\n|---|---|\n| **Minimal UI** | Your session has expired. Log in again. |\n| **With link** | Your session has expired. [Log in again](link). |\n| **Timeout reason** | Your session expired because of inactivity. Log in again. |\n\nThe first is clearest for general audiences. Add detail only if the user needs to know why.",
+  "texts": [
+    "## Error Text for Expired Session\n\n**Message:**\n\n\"Your session has expired. Log in again.\"\n\n---\n\n## Explanation\n\nThis follows ASD-STE100 for error messaging:\n\n- **Rule 5.1 (procedural limit):** Both sentences stay under 20 words. Sentence 1 is 4 words; Sentence 2 is 3 words.\n- **Rule 3.6 (active voice):** \"Your session has expired\" uses the agent implicitly (the system ended it) \u2014 acceptable when the agent is not actionable. The second sentence is imperative: \"Log in again.\"\n- **Rule 4.5 (articles):** \"Your\" provides the necessary context without articles.\n- **Rule 1.12 (technical verb):** \"Log in\" is a legal technical verb in software contexts.\n- **Rule 5.2 (one instruction per sentence):** The second sentence gives one action.\n- **Rule 4.2 (no shortcuts):** Full grammar \u2014 not \"Session expired. Sign in.\" (telegraphic).\n\n---\n\n## Variations by Context\n\n| Context | Message |\n|---|---|\n| **Minimal UI** | Your session has expired. Log in again. |\n| **With link** | Your session has expired. [Log in again](link). |\n| **Timeout reason** | Your session expired because of inactivity. Log in again. |\n\nThe first is clearest for general audiences. Add detail only if the user needs to know why."
+  ],
+  "stderr_tail": ""
+}

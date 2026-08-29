@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "incident-04",
+  "cat": "incident",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 23.6,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.0336822,
+  "usage": {
+    "input_tokens": 20,
+    "cache_creation_input_tokens": 10887,
+    "cache_read_input_tokens": 4792,
+    "output_tokens": 2085,
+    "output_tokens_details": {
+      "thinking_tokens": 1765
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10887,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 1830,
+        "cache_read_input_tokens": 4792,
+        "cache_creation_input_tokens": 6095,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6095
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 124,
+    "sentences": 12,
+    "mean_sentence_words": 10.0,
+    "longest_sentence_words": 17,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 1,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.81
+  },
+  "text": "## Status Page Update\n\n**Search results are delayed by up to 10 minutes while we reindex. We do not lose data.**\n\n---\n\n### What changed:\n\n- **Passive \u2192 active voice** (Rule 3.6): \"No data is lost\" \u2192 \"We do not lose data\" makes it clear that data is safe.\n- **\"any\" removed** (Rule GR-6): Not required for clarity; the negation is clear without it.\n- **Split the thought into two short sentences** (Rule 6.1): One fact per sentence for a tired reader \u2014 the delay reason first, then the reassurance.\n- **Word count**: 12 words (sentence 1), 5 words (sentence 2) \u2014 both under the 25-word descriptive limit.\n\nThis update is immediate, factual, and leaves no room for misunderstanding. A user scanning quickly sees: *delayed* \u2192 *why* \u2192 *data is safe*.",
+  "texts": [
+    "## Status Page Update\n\n**Search results are delayed by up to 10 minutes while we reindex. We do not lose data.**\n\n---\n\n### What changed:\n\n- **Passive \u2192 active voice** (Rule 3.6): \"No data is lost\" \u2192 \"We do not lose data\" makes it clear that data is safe.\n- **\"any\" removed** (Rule GR-6): Not required for clarity; the negation is clear without it.\n- **Split the thought into two short sentences** (Rule 6.1): One fact per sentence for a tired reader \u2014 the delay reason first, then the reassurance.\n- **Word count**: 12 words (sentence 1), 5 words (sentence 2) \u2014 both under the 25-word descriptive limit.\n\nThis update is immediate, factual, and leaves no room for misunderstanding. A user scanning quickly sees: *delayed* \u2192 *why* \u2192 *data is safe*."
+  ],
+  "stderr_tail": ""
+}

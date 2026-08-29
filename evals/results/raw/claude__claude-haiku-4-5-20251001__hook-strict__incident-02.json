@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "incident-02",
+  "cat": "incident",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 44.3,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 2,
+  "strict_blocks": 1,
+  "num_turns": 2,
+  "cost_usd": 0.0363606,
+  "usage": {
+    "input_tokens": 20,
+    "cache_creation_input_tokens": 6602,
+    "cache_read_input_tokens": 5666,
+    "output_tokens": 4514,
+    "output_tokens_details": {
+      "thinking_tokens": 4153
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6602,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 3745,
+        "cache_read_input_tokens": 5666,
+        "cache_creation_input_tokens": 936,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 936
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 108,
+    "sentences": 13,
+    "mean_sentence_words": 8.3,
+    "longest_sentence_words": 15,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "**Login Service Incident Summary**\n\n**Timeline**\n\nOur login service was unavailable for 18 minutes on 2026-08-28. Users were unable to log in during this period.\n\n**Cause**\n\nAn authentication certificate expired. This failure blocked all login attempts.\n\n**Resolution**\n\nOur team identified the expired certificate, renewed it, and restored the login service.\n\n**Prevention**\n\nWe automated certificate renewal. Certificate expiration will no longer cause service outages.\n\n**Next Steps**\n\nWe reviewed our certificate management processes. We will add monitoring alerts for certificate expiration dates.\n\nWe apologize for the disruption. Your account data remained secure throughout this event.\n\n---\n\nIf you need specific timing or other details, tell me. I will update the summary.",
+  "texts": [
+    "**Login Service Incident Summary**\n\n**Timeline**\n\nOur login service was unavailable for 18 minutes on 2026-08-28. Users could not access their accounts during this period.\n\n**Cause**\n\nAn authentication certificate expired. This failure blocked all login attempts.\n\n**Resolution**\n\nOur team identified the expired certificate, renewed it, and restored the login service.\n\n**Prevention**\n\nWe have implemented automatic certificate renewal. Certificate expiration will no longer cause service outages.\n\n**Next Steps**\n\nWe have reviewed our certificate management processes. We will also add monitoring alerts for certificate expiration dates.\n\nWe apologize for the disruption. Your account data remained secure throughout this event.\n\n---\n\nIf you need to add specific timing (the exact start/end time), affected user count, or other details, let me know and I will update the summary.",
+    "**Login Service Incident Summary**\n\n**Timeline**\n\nOur login service was unavailable for 18 minutes on 2026-08-28. Users were unable to log in during this period.\n\n**Cause**\n\nAn authentication certificate expired. This failure blocked all login attempts.\n\n**Resolution**\n\nOur team identified the expired certificate, renewed it, and restored the login service.\n\n**Prevention**\n\nWe automated certificate renewal. Certificate expiration will no longer cause service outages.\n\n**Next Steps**\n\nWe reviewed our certificate management processes. We will add monitoring alerts for certificate expiration dates.\n\nWe apologize for the disruption. Your account data remained secure throughout this event.\n\n---\n\nIf you need specific timing or other details, tell me. I will update the summary."
+  ],
+  "stderr_tail": ""
+}

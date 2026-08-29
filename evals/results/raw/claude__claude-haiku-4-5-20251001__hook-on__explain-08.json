@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "explain-08",
+  "cat": "explain",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 17.4,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.019516,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 5613,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 1656,
+    "output_tokens_details": {
+      "thinking_tokens": 1358
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5613,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 1656,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 5613,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5613
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 140,
+    "sentences": 15,
+    "mean_sentence_words": 9.3,
+    "longest_sentence_words": 28,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 2,
+    "violations_per_100w": 1.43
+  },
+  "text": "**The N+1 Query Problem**\n\nThe N+1 query problem occurs when code runs one query to fetch a set of records, then runs one additional query for each record. This creates N+1 total queries instead of one or two.\n\n**Example**\n\nYou load 100 users, then loop through them to load each user's posts. The first query loads 100 users. Then the loop runs 100 more queries\u2014one for each user. The total is 101 queries.\n\nHere is Django ORM code that causes this problem:\n\n```python\nusers = User.objects.all()\nfor user in users:\n    posts = user.posts.all()  # Runs one query per user\n```\n\n**The Fix**\n\nUse eager loading. The `select_related()` method joins tables. The `prefetch_related()` method loads related records in a separate query. Both methods fetch all data upfront.\n\nHere is the corrected code:\n\n```python\nusers = User.objects.select_related('profile').prefetch_related('posts').all()\nfor user in users:\n    posts = user.posts.all()  # No new queries\n```\n\nNow the code runs only two queries: one to load users and their profiles, and one to load all posts. The loop does not run additional queries.",
+  "texts": [
+    "**The N+1 Query Problem**\n\nThe N+1 query problem occurs when code runs one query to fetch a set of records, then runs one additional query for each record. This creates N+1 total queries instead of one or two.\n\n**Example**\n\nYou load 100 users, then loop through them to load each user's posts. The first query loads 100 users. Then the loop runs 100 more queries\u2014one for each user. The total is 101 queries.\n\nHere is Django ORM code that causes this problem:\n\n```python\nusers = User.objects.all()\nfor user in users:\n    posts = user.posts.all()  # Runs one query per user\n```\n\n**The Fix**\n\nUse eager loading. The `select_related()` method joins tables. The `prefetch_related()` method loads related records in a separate query. Both methods fetch all data upfront.\n\nHere is the corrected code:\n\n```python\nusers = User.objects.select_related('profile').prefetch_related('posts').all()\nfor user in users:\n    posts = user.posts.all()  # No new queries\n```\n\nNow the code runs only two queries: one to load users and their profiles, and one to load all posts. The loop does not run additional queries."
+  ],
+  "stderr_tail": ""
+}

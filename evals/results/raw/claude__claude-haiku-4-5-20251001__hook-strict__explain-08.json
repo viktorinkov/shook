@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "explain-08",
+  "cat": "explain",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 48.9,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.036912,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 5661,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 5116,
+    "output_tokens_details": {
+      "thinking_tokens": 4877
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5661,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 5116,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 5661,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5661
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 75,
+    "sentences": 7,
+    "mean_sentence_words": 10.7,
+    "longest_sentence_words": 24,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 1.33
+  },
+  "text": "The N+1 query problem occurs when code runs one query to fetch a list of items, then runs one additional query for each item. This creates N+1 total queries.\n\n**Example (SQLAlchemy)**\n\n```python\n# The problem\nusers = session.query(User).all()  # Query 1: fetches all users\nfor user in users:\n    print(user.posts)  # Queries 2-101: fetches posts for each user\n```\n\nThe code runs 101 queries: the first fetches all 100 users, and the loop executes 100 additional queries.\n\n**The fix: eager loading**\n\n```python\n# The solution\nusers = session.query(User).options(\n    joinedload(User.posts)\n).all()  # One query with a join\nfor user in users:\n    print(user.posts)  # No additional queries\n```\n\nEager loading tells the ORM to fetch related data in the initial query using a join. This reduces 101 queries to one.",
+  "texts": [
+    "The N+1 query problem occurs when code runs one query to fetch a list of items, then runs one additional query for each item. This creates N+1 total queries.\n\n**Example (SQLAlchemy)**\n\n```python\n# The problem\nusers = session.query(User).all()  # Query 1: fetches all users\nfor user in users:\n    print(user.posts)  # Queries 2-101: fetches posts for each user\n```\n\nThe code runs 101 queries: the first fetches all 100 users, and the loop executes 100 additional queries.\n\n**The fix: eager loading**\n\n```python\n# The solution\nusers = session.query(User).options(\n    joinedload(User.posts)\n).all()  # One query with a join\nfor user in users:\n    print(user.posts)  # No additional queries\n```\n\nEager loading tells the ORM to fetch related data in the initial query using a join. This reduces 101 queries to one."
+  ],
+  "stderr_tail": ""
+}

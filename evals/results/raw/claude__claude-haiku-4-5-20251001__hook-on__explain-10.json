@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "explain-10",
+  "cat": "explain",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 15.8,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.019265,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 5615,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 1605,
+    "output_tokens_details": {
+      "thinking_tokens": 1217
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5615,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 1605,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 5615,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5615
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 226,
+    "sentences": 28,
+    "mean_sentence_words": 7.9,
+    "longest_sentence_words": 13,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 2,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 1
+    },
+    "violations_total": 3,
+    "violations_per_100w": 1.33
+  },
+  "text": "## What is a `.gitignore` file?\n\nA `.gitignore` file tells Git which files and folders to ignore. Git does not track files that match patterns in this file. You commit the `.gitignore` file itself to your repository. This way, all team members ignore the same files automatically.\n\n## Why use a `.gitignore` file?\n\nWithout one, you might commit files that belong only on your machine. For example, you might commit API keys or temporary build files. A `.gitignore` file prevents these mistakes.\n\n## What belongs in a `.gitignore` file?\n\nAdd any file or folder that fits one of these categories:\n\n- **Dependencies and packages**: Folders like `node_modules/`, `vendor/`, or `__pycache__/`. Your build system regenerates these from configuration files like `package.json` or `requirements.txt`.\n- **Build outputs**: Folders like `dist/` or `build/`, and files like `*.o`. Your build process creates these files from source code.\n- **Environment files**: Files like `.env` or `.env.local`. These files store secrets and settings that change per machine or user.\n- **IDE and editor files**: Folders like `.vscode/` or `.idea/`, and files like `*.swp`. These are specific to each developer's setup.\n- **Operating system files**: Files like `.DS_Store` on macOS or `Thumbs.db` on Windows. Your operating system creates these.\n- **Logs and temporary files**: Files like `*.log` or folders like `/tmp/`. Your application creates these during operation.\n\nEach line in `.gitignore` is a pattern. Git ignores any file that matches that pattern.",
+  "texts": [
+    "## What is a `.gitignore` file?\n\nA `.gitignore` file tells Git which files and folders to ignore. Git does not track files that match patterns in this file. You commit the `.gitignore` file itself to your repository. This way, all team members ignore the same files automatically.\n\n## Why use a `.gitignore` file?\n\nWithout one, you might commit files that belong only on your machine. For example, you might commit API keys or temporary build files. A `.gitignore` file prevents these mistakes.\n\n## What belongs in a `.gitignore` file?\n\nAdd any file or folder that fits one of these categories:\n\n- **Dependencies and packages**: Folders like `node_modules/`, `vendor/`, or `__pycache__/`. Your build system regenerates these from configuration files like `package.json` or `requirements.txt`.\n- **Build outputs**: Folders like `dist/` or `build/`, and files like `*.o`. Your build process creates these files from source code.\n- **Environment files**: Files like `.env` or `.env.local`. These files store secrets and settings that change per machine or user.\n- **IDE and editor files**: Folders like `.vscode/` or `.idea/`, and files like `*.swp`. These are specific to each developer's setup.\n- **Operating system files**: Files like `.DS_Store` on macOS or `Thumbs.db` on Windows. Your operating system creates these.\n- **Logs and temporary files**: Files like `*.log` or folders like `/tmp/`. Your application creates these during operation.\n\nEach line in `.gitignore` is a pattern. Git ignores any file that matches that pattern."
+  ],
+  "stderr_tail": ""
+}

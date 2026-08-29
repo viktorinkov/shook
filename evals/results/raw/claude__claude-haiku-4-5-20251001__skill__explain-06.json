@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "explain-06",
+  "cat": "explain",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 11.5,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.015061999999999997,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 4800,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 891,
+    "output_tokens_details": {
+      "thinking_tokens": 443
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4800,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 891,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 4800,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4800
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 216,
+    "sentences": 10,
+    "mean_sentence_words": 20.6,
+    "longest_sentence_words": 48,
+    "violations": {
+      "sentence_over_limit": 2,
+      "contraction": 5,
+      "banned_modal": 3,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 1,
+      "slop_word": 0,
+      "trailing_condition": 3,
+      "synonym_rotation": 0
+    },
+    "violations_total": 14,
+    "violations_per_100w": 6.48
+  },
+  "text": "This command **finds and deletes log files older than 7 days**:\n\n- `find .` \u2014 Search from the current directory downward\n- `-name '*.log'` \u2014 Match files ending in `.log`\n- `-mtime +7` \u2014 Select files **modified more than 7 days ago**\n- `-exec rm {} \\;` \u2014 Delete each matched file (no confirmation)\n\n## When it's dangerous:\n\n1. **No dry-run or confirmation** \u2014 It deletes immediately without listing what it will remove first. You can't review the list before committing.\n\n2. **Broad pattern matching** \u2014 `.log` might match files you didn't intend to delete (config files, archives, generated data) if they happen to have that extension.\n\n3. **mtime is \"last modified,\" not \"created\"** \u2014 A log file that's being actively written to won't be deleted, but a log that was created 8 days ago but last touched 3 days ago will survive. This can catch you off guard.\n\n4. **Runs everywhere recursively** \u2014 If you run this from an unexpected directory, it could delete logs in unrelated subdirectories (e.g., vendor folders, dependencies, mounted directories).\n\n5. **Permissions issues** \u2014 It silently fails on files it can't delete, so you won't know deletion was incomplete.\n\n6. **In production scripts** \u2014 If a backup or archive process depends on those logs, deleting them could break auditing or recovery.\n\n## Safer alternatives:\n\n```bash\n# Preview first (no deletion)\nfind . -name '*.log' -mtime +7\n\n# Then delete interactively\nfind . -name '*.log' -mtime +7 -delete\n\n# Or with older GNU find versions\nfind . -name '*.log' -mtime +7 | xargs rm -i  # -i prompts for each file\n```\n\nThe `-delete` flag is safer than `-exec rm` on modern systems.",
+  "texts": [
+    "This command **finds and deletes log files older than 7 days**:\n\n- `find .` \u2014 Search from the current directory downward\n- `-name '*.log'` \u2014 Match files ending in `.log`\n- `-mtime +7` \u2014 Select files **modified more than 7 days ago**\n- `-exec rm {} \\;` \u2014 Delete each matched file (no confirmation)\n\n## When it's dangerous:\n\n1. **No dry-run or confirmation** \u2014 It deletes immediately without listing what it will remove first. You can't review the list before committing.\n\n2. **Broad pattern matching** \u2014 `.log` might match files you didn't intend to delete (config files, archives, generated data) if they happen to have that extension.\n\n3. **mtime is \"last modified,\" not \"created\"** \u2014 A log file that's being actively written to won't be deleted, but a log that was created 8 days ago but last touched 3 days ago will survive. This can catch you off guard.\n\n4. **Runs everywhere recursively** \u2014 If you run this from an unexpected directory, it could delete logs in unrelated subdirectories (e.g., vendor folders, dependencies, mounted directories).\n\n5. **Permissions issues** \u2014 It silently fails on files it can't delete, so you won't know deletion was incomplete.\n\n6. **In production scripts** \u2014 If a backup or archive process depends on those logs, deleting them could break auditing or recovery.\n\n## Safer alternatives:\n\n```bash\n# Preview first (no deletion)\nfind . -name '*.log' -mtime +7\n\n# Then delete interactively\nfind . -name '*.log' -mtime +7 -delete\n\n# Or with older GNU find versions\nfind . -name '*.log' -mtime +7 | xargs rm -i  # -i prompts for each file\n```\n\nThe `-delete` flag is safer than `-exec rm` on modern systems."
+  ],
+  "stderr_tail": ""
+}

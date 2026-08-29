@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "readme-04",
+  "cat": "docs",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 56.0,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.039848999999999996,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 5662,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 5703,
+    "output_tokens_details": {
+      "thinking_tokens": 5339
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5662,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 5703,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 5662,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5662
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 179,
+    "sentences": 25,
+    "mean_sentence_words": 7.0,
+    "longest_sentence_words": 17,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "## Troubleshooting: EADDRINUSE Error\n\n**What is this error?**\n\nThe app fails to start and shows \"EADDRINUSE\" or \"Address already in use\".\n\n**Why does this happen?**\n\nAnother process uses the port that the app needs. The app cannot start until that process stops.\n\n**How to fix it**\n\n**Option 1: Close and restart the app**\n\n1. Close all instances of the app.\n2. Wait 10 seconds.\n3. Open the app.\n\nIf the error appears again, go to Option 2.\n\n**Option 2: Find and stop the blocking process**\n\nThe app uses port 8080 by default.\n\nOpen a terminal or command prompt.\n\nOn macOS or Linux, run:\n\n```\nlsof -i :8080\n```\n\nOn Windows, run:\n\n```\nnetstat -ano | findstr :8080\n```\n\nIf your app uses a different port, replace 8080 in the commands above.\n\nFind the process ID (PID) in the output. Remember this number.\n\nOn macOS and Linux, run:\n\n```\nkill <PID>\n```\n\nOn Windows, run:\n\n```\ntaskkill /PID <PID> /F\n```\n\nReplace `<PID>` with the number from the previous step.\n\nWait 5 seconds. Then open the app.\n\n**Option 3: Restart your computer**\n\nIf Options 1 and 2 do not work, restart your computer.\n\nThis clears all port locks held by stopped processes.\n\nThen open the app.",
+  "texts": [
+    "## Troubleshooting: EADDRINUSE Error\n\n**What is this error?**\n\nThe app fails to start and shows \"EADDRINUSE\" or \"Address already in use\".\n\n**Why does this happen?**\n\nAnother process uses the port that the app needs. The app cannot start until that process stops.\n\n**How to fix it**\n\n**Option 1: Close and restart the app**\n\n1. Close all instances of the app.\n2. Wait 10 seconds.\n3. Open the app.\n\nIf the error appears again, go to Option 2.\n\n**Option 2: Find and stop the blocking process**\n\nThe app uses port 8080 by default.\n\nOpen a terminal or command prompt.\n\nOn macOS or Linux, run:\n\n```\nlsof -i :8080\n```\n\nOn Windows, run:\n\n```\nnetstat -ano | findstr :8080\n```\n\nIf your app uses a different port, replace 8080 in the commands above.\n\nFind the process ID (PID) in the output. Remember this number.\n\nOn macOS and Linux, run:\n\n```\nkill <PID>\n```\n\nOn Windows, run:\n\n```\ntaskkill /PID <PID> /F\n```\n\nReplace `<PID>` with the number from the previous step.\n\nWait 5 seconds. Then open the app.\n\n**Option 3: Restart your computer**\n\nIf Options 1 and 2 do not work, restart your computer.\n\nThis clears all port locks held by stopped processes.\n\nThen open the app."
+  ],
+  "stderr_tail": ""
+}

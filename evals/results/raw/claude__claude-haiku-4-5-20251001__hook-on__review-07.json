@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "review-07",
+  "cat": "review",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 8.7,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.014313999999999999,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 5617,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 614,
+    "output_tokens_details": {
+      "thinking_tokens": 338
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5617,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 614,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 5617,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5617
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 129,
+    "sentences": 16,
+    "mean_sentence_words": 7.9,
+    "longest_sentence_words": 15,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.78
+  },
+  "text": "# PR Review Summary: HTTP Client Retry Logic\n\n## Issue Found\n\nThe retry logic retries on all HTTP status codes. This includes 400 Bad Request.\n\nDo not retry on 400. A 400 status means the client sent a malformed request. Retrying the same request will fail again.\n\n## Status Codes to Retry\n\nOnly retry on these codes:\n\n- 408 (Request Timeout)\n- 429 (Too Many Requests)\n- 5xx (Server errors: 500, 502, 503, 504)\n\nDo not retry on client errors (4xx) except 408 and 429.\n\n## Why This Matters\n\nRetrying on 400 wastes resources. The server rejects the request for the same reason each time. This increases latency for users and slows the application.\n\n## Fix Required\n\nUpdate the retry condition to check the status code. Only retry if the status is in the allowed list above.\n\nExample pseudocode:\n\n```\nif status in (408, 429, 500, 502, 503, 504):\n    retry()\n```\n\n## Recommendation\n\nAdd a test case. Test that requests with 400 status do not retry.",
+  "texts": [
+    "# PR Review Summary: HTTP Client Retry Logic\n\n## Issue Found\n\nThe retry logic retries on all HTTP status codes. This includes 400 Bad Request.\n\nDo not retry on 400. A 400 status means the client sent a malformed request. Retrying the same request will fail again.\n\n## Status Codes to Retry\n\nOnly retry on these codes:\n\n- 408 (Request Timeout)\n- 429 (Too Many Requests)\n- 5xx (Server errors: 500, 502, 503, 504)\n\nDo not retry on client errors (4xx) except 408 and 429.\n\n## Why This Matters\n\nRetrying on 400 wastes resources. The server rejects the request for the same reason each time. This increases latency for users and slows the application.\n\n## Fix Required\n\nUpdate the retry condition to check the status code. Only retry if the status is in the allowed list above.\n\nExample pseudocode:\n\n```\nif status in (408, 429, 500, 502, 503, 504):\n    retry()\n```\n\n## Recommendation\n\nAdd a test case. Test that requests with 400 status do not retry."
+  ],
+  "stderr_tail": ""
+}

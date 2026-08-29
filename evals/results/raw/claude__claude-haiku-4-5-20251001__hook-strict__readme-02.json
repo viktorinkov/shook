@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "readme-02",
+  "cat": "docs",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 49.3,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 2,
+  "strict_blocks": 1,
+  "num_turns": 2,
+  "cost_usd": 0.0396702,
+  "usage": {
+    "input_tokens": 20,
+    "cache_creation_input_tokens": 6519,
+    "cache_read_input_tokens": 5672,
+    "output_tokens": 5209,
+    "output_tokens_details": {
+      "thinking_tokens": 4413
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6519,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 4527,
+        "cache_read_input_tokens": 5672,
+        "cache_creation_input_tokens": 847,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 847
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 69,
+    "sentences": 8,
+    "mean_sentence_words": 8.6,
+    "longest_sentence_words": 20,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 10,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 10,
+    "violations_per_100w": 14.49
+  },
+  "text": "```markdown\n## Getting Started\n\n### Installation\n\nInstall `quickcache` and its peer dependency with npm.\n\n```bash\nnpm install quickcache redis\n```\n\nAlternatively, use yarn.\n\n```bash\nyarn add quickcache redis\n```\n\n### Connect to Redis\n\nImport the library and create a client.\n\n```javascript\nconst quickcache = require('quickcache');\n\nconst cache = quickcache.createClient({\n  host: 'localhost',\n  port: 6379,\n});\n\ncache.connect();\n```\n\nWait for the connection to open before you use the cache.\n\n```javascript\ncache.on('connect', () => {\n  console.log('Connected to Redis');\n});\n```\n\n### Store and Retrieve Data\n\nUse the `set` method to store a value.\n\n```javascript\nawait cache.set('user:123', { name: 'Alice', age: 30 });\n```\n\nUse the `get` method to retrieve a value.\n\n```javascript\nconst user = await cache.get('user:123');\nconsole.log(user); // { name: 'Alice', age: 30 }\n```\n\nValues expire after 1 hour by default. Specify a custom time-to-live with the `ttl` option.\n\n```javascript\nawait cache.set('temp:data', 'expires fast', { ttl: 60 });\n```\n\nClose the connection when finished.\n\n```javascript\nawait cache.disconnect();\n```\n```",
+  "texts": [
+    "I'll write a Getting Started section following STE rules for clarity and consistency.\n\n```markdown\n## Getting Started\n\n### Installation\n\nInstall `quickcache` and its peer dependency with npm:\n\n```bash\nnpm install quickcache redis\n```\n\nOr use yarn:\n\n```bash\nyarn add quickcache redis\n```\n\n### Connect to Redis\n\nImport the library and create a client:\n\n```javascript\nconst quickcache = require('quickcache');\n\nconst cache = quickcache.createClient({\n  host: 'localhost',\n  port: 6379,\n});\n\ncache.connect();\n```\n\nWait for the connection to open before you use the cache:\n\n```javascript\ncache.on('connect', () => {\n  console.log('Connected to Redis');\n});\n```\n\n### Store and Retrieve Data\n\nUse the `set` method to store a value:\n\n```javascript\nawait cache.set('user:123', { name: 'Alice', age: 30 });\n```\n\nUse the `get` method to retrieve a value:\n\n```javascript\nconst user = await cache.get('user:123');\nconsole.log(user); // { name: 'Alice', age: 30 }\n```\n\nValues expire after 1 hour by default. Specify a custom time-to-live with the `ttl` option:\n\n```javascript\nawait cache.set('temp:data', 'expires fast', { ttl: 60 });\n```\n\nClose the connection when finished:\n\n```javascript\nawait cache.disconnect();\n```\n```\n\n---\n\n**Key STE features used:**\n- Imperative verbs (Install, Import, Use, Wait, Close)\n- Max 20 words per instruction sentence\n- Conditions before commands (\"Wait for the connection to open before you use the cache\")\n- Complete sentences with articles and \"that\"\n- Simple tenses (present imperative, simple present)\n- One instruction per sentence\n- Vertical lists for related items\n- No contractions or filler words",
+    "```markdown\n## Getting Started\n\n### Installation\n\nInstall `quickcache` and its peer dependency with npm.\n\n```bash\nnpm install quickcache redis\n```\n\nAlternatively, use yarn.\n\n```bash\nyarn add quickcache redis\n```\n\n### Connect to Redis\n\nImport the library and create a client.\n\n```javascript\nconst quickcache = require('quickcache');\n\nconst cache = quickcache.createClient({\n  host: 'localhost',\n  port: 6379,\n});\n\ncache.connect();\n```\n\nWait for the connection to open before you use the cache.\n\n```javascript\ncache.on('connect', () => {\n  console.log('Connected to Redis');\n});\n```\n\n### Store and Retrieve Data\n\nUse the `set` method to store a value.\n\n```javascript\nawait cache.set('user:123', { name: 'Alice', age: 30 });\n```\n\nUse the `get` method to retrieve a value.\n\n```javascript\nconst user = await cache.get('user:123');\nconsole.log(user); // { name: 'Alice', age: 30 }\n```\n\nValues expire after 1 hour by default. Specify a custom time-to-live with the `ttl` option.\n\n```javascript\nawait cache.set('temp:data', 'expires fast', { ttl: 60 });\n```\n\nClose the connection when finished.\n\n```javascript\nawait cache.disconnect();\n```\n```"
+  ],
+  "stderr_tail": ""
+}
