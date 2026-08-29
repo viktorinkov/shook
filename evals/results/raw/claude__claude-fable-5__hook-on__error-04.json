@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "error-04",
+  "cat": "error",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 12.3,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.286186,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 12052,
+    "cache_read_input_tokens": 12756,
+    "output_tokens": 647,
+    "output_tokens_details": {
+      "thinking_tokens": 203
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12052,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 321,
+        "cache_read_input_tokens": 8333,
+        "cache_creation_input_tokens": 8142,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8142
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 145,
+    "sentences": 22,
+    "mean_sentence_words": 6.5,
+    "longest_sentence_words": 13,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 1,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.69
+  },
+  "text": "Here is the message. The first line gives the fact. The lines that follow tell the user what to do.\n\n**Title:** Cannot delete project\n\n**Body:**\n\n> This project has 3 active deployments. You cannot delete a project with active deployments.\n>\n> To delete this project:\n>\n> 1. Open the **Deployments** tab.\n> 2. Stop each active deployment.\n> 3. Delete the project again.\n\n**Compact version for a CLI or API response:**\n\n```\nError: cannot delete project \"my-app\". The project has 3 active deployments.\nStop all deployments, then delete the project again.\n```\n\nNotes on the choices:\n\n- The count and the project name are placeholders. Insert the real values from the request.\n- The first sentence gives the cause. The second sentence gives the limit. The steps give the fix. This order obeys STE rule 7.2 (condition or command first, then the effect).\n- No sentence has more than 20 words. Each step has one instruction. The message does not use \"should\" or contractions.",
+  "texts": [
+    "I will write the message with the Simple English rules. I will load the skill first.",
+    "Here is the message. The first line gives the fact. The lines that follow tell the user what to do.\n\n**Title:** Cannot delete project\n\n**Body:**\n\n> This project has 3 active deployments. You cannot delete a project with active deployments.\n>\n> To delete this project:\n>\n> 1. Open the **Deployments** tab.\n> 2. Stop each active deployment.\n> 3. Delete the project again.\n\n**Compact version for a CLI or API response:**\n\n```\nError: cannot delete project \"my-app\". The project has 3 active deployments.\nStop all deployments, then delete the project again.\n```\n\nNotes on the choices:\n\n- The count and the project name are placeholders. Insert the real values from the request.\n- The first sentence gives the cause. The second sentence gives the limit. The steps give the fix. This order obeys STE rule 7.2 (condition or command first, then the effect).\n- No sentence has more than 20 words. Each step has one instruction. The message does not use \"should\" or contractions."
+  ],
+  "stderr_tail": ""
+}

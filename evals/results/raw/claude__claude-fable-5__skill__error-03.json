@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "error-03",
+  "cat": "error",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 11.0,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.253523,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 10710,
+    "cache_read_input_tokens": 11596,
+    "output_tokens": 534,
+    "output_tokens_details": {
+      "thinking_tokens": 31
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10710,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 382,
+        "cache_read_input_tokens": 7173,
+        "cache_creation_input_tokens": 7960,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7960
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 150,
+    "sentences": 14,
+    "mean_sentence_words": 10.4,
+    "longest_sentence_words": 25,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 1,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.67
+  },
+  "text": "**Error message (STE, pragmatic mode):**\n\n```\nCannot connect to the database. The database rejected the password for user `app`.\n\nMake sure that the password for user `app` is correct. Then connect again.\n```\n\n**Why this form:**\n\n- First sentence: what failed (the connection). Second sentence: why (the password). One fact per sentence (Rule 6.1).\n- Third and fourth sentences: what to do, in the imperative, one instruction each (Rules 5.2, 5.3).\n- No article before `app` because an identifier follows the noun (Rule 4.5).\n- Longest sentence is 11 words. No contractions, no passive voice, no \"please\".\n\n**Shorter variant for a single log line:**\n\n```\nCannot connect to the database: the password for user `app` was rejected.\n```\n\nThis variant uses the passive because the log line does not name the server. If your code knows the server, use \"the database rejected\" as in the first version.\n\n**Recap:** I wrote a two-part error message \u2014 cause first, then the corrective action \u2014 plus a one-line log variant. Drop the fenced text straight into your code; the backticks around `app` are for markdown and can be quotes or nothing in the actual string.",
+  "texts": [
+    "I'll load the Simplified Technical English skill since it covers error messages, then write the message.",
+    "**Error message (STE, pragmatic mode):**\n\n```\nCannot connect to the database. The database rejected the password for user `app`.\n\nMake sure that the password for user `app` is correct. Then connect again.\n```\n\n**Why this form:**\n\n- First sentence: what failed (the connection). Second sentence: why (the password). One fact per sentence (Rule 6.1).\n- Third and fourth sentences: what to do, in the imperative, one instruction each (Rules 5.2, 5.3).\n- No article before `app` because an identifier follows the noun (Rule 4.5).\n- Longest sentence is 11 words. No contractions, no passive voice, no \"please\".\n\n**Shorter variant for a single log line:**\n\n```\nCannot connect to the database: the password for user `app` was rejected.\n```\n\nThis variant uses the passive because the log line does not name the server. If your code knows the server, use \"the database rejected\" as in the first version.\n\n**Recap:** I wrote a two-part error message \u2014 cause first, then the corrective action \u2014 plus a one-line log variant. Drop the fenced text straight into your code; the backticks around `app` are for markdown and can be quotes or nothing in the actual string."
+  ],
+  "stderr_tail": ""
+}

@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "explain-09",
+  "cat": "explain",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 24.0,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.15005,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2758,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 1789,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2758,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1789,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 2758,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2758
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 617,
+    "sentences": 43,
+    "mean_sentence_words": 13.9,
+    "longest_sentence_words": 35,
+    "violations": {
+      "sentence_over_limit": 7,
+      "contraction": 8,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 7,
+      "latin_abbrev": 1,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 24,
+    "violations_per_100w": 3.89
+  },
+  "text": "I'll answer directly \u2014 no tools needed for this.\n\n## Why `0.1 + 0.2 != 0.3`\n\nIEEE 754 doubles store numbers in **binary**, as a 53-bit significand times a power of two. That means a double can exactly represent only fractions whose denominator is a power of two (\u00bd, \u00bc, \u215c, ...). `0.1` is 1/10, and 10 = 2\u00b75 \u2014 the factor of 5 makes it a repeating fraction in binary, just like 1/3 is repeating in decimal:\n\n```\n0.1 (decimal) = 0.0001100110011001100110011... (binary, repeats forever)\n```\n\nSo the machine stores the nearest representable double, which is slightly off:\n\n```\n0.1 \u2192 0.1000000000000000055511151231257827021181583404541015625\n0.2 \u2192 0.200000000000000011102230246251565404236316680908203125\n0.3 \u2192 0.299999999999999988897769753748434595763683319091796875\n```\n\nNow add. `0.1 + 0.2` in exact arithmetic on those stored values is `0.3000000000000000166533453693773481063544750213623046875`, which then has to be rounded back to a double. The nearest double is `0.30000000000000004440892098500626...` \u2014 and that's a *different* double than the one `0.3` rounds to (`0.29999999999999998889...`). Two different bit patterns, so `==` is false:\n\n```python\n>>> 0.1 + 0.2\n0.30000000000000004\n>>> 0.1 + 0.2 == 0.3\nFalse\n```\n\nThree separate rounding errors (on 0.1, on 0.2, and on the sum) happened to land on the \"up\" side, while `0.3` alone rounded \"down\". Sometimes the errors cancel (`0.1 + 0.3 == 0.4` is true); sometimes they don't. It's not a bug in any language \u2014 it's inherent to binary floating point, and every language using hardware doubles (JS, Python, Java, C, Go, Rust...) gives the identical result.\n\nThe practical consequences:\n- Never compare floats with `==`; compare `abs(a - b) < epsilon` (with an epsilon scaled to the magnitude of the values).\n- Error accumulates: summing `0.1` ten times gives `0.9999999999999999`, not `1.0`.\n- Ordering matters: `(a + b) + c` can differ from `a + (b + c)`.\n\n## What to use for money\n\nMoney is decimal by nature (cents, pence, hundredths), and financial rules require exact decimal results \u2014 `$0.10 + $0.20` must be exactly `$0.30`, and sums must reconcile to the cent. Floats can't give you that. Two standard approaches:\n\n**1. Integers in the smallest unit (cents / minor units).** Store `$12.34` as the integer `1234`. Addition, subtraction, and comparison are exact; integer overflow isn't a practical concern with 64-bit ints (~92 quadrillion dollars). This is what Stripe's API does (`amount: 1234`), and it's the simplest, fastest, most portable choice. Be careful with:\n- Currencies with different minor units (JPY has 0 decimals, BHD has 3) \u2014 carry the currency alongside the amount.\n- Multiplication/division (tax, interest, splitting a bill): you must decide the rounding rule explicitly (e.g. banker's rounding, or \"remainder cents go to the last line item\").\n\n**2. Arbitrary-precision decimal types.** These do base-10 arithmetic exactly and let you control precision and rounding mode:\n- Python: `decimal.Decimal('0.1') + Decimal('0.2') == Decimal('0.3')` \u2192 `True`. (Construct from **strings**, not floats \u2014 `Decimal(0.1)` faithfully captures the float error.)\n- Java/Kotlin: `BigDecimal` (again, use `new BigDecimal(\"0.1\")` or `BigDecimal.valueOf`, not the `double` constructor).\n- C#: the built-in `decimal` type (128-bit, base-10).\n- JavaScript: no built-in; use `decimal.js`, `big.js`, or `dinero.js`; `BigInt` works for the integer-cents approach.\n- Go: `shopspring/decimal`. Rust: `rust_decimal`.\n- Databases: `DECIMAL(19,4)` / `NUMERIC`, never `FLOAT`/`REAL`/`DOUBLE`.\n\nDecimal types are better when you need fractional cents during intermediate calculations (interest accrual, exchange rates, per-unit prices like $0.0035/kWh) before rounding to a final amount.\n\n**Rule of thumb:** integer minor units for storing and moving money; a decimal type for computing with it; floats never. And in either case, pick a rounding mode deliberately (`ROUND_HALF_EVEN` is the usual financial default) and apply it at well-defined points rather than letting it happen implicitly.\n\n**Recap:** `0.1` and `0.2` can't be represented exactly in binary, so their stored values and their rounded sum land on a different double than `0.3` does \u2014 a property of IEEE 754, not the language. For money, store amounts as integers in the smallest currency unit or use a decimal type (`Decimal`, `BigDecimal`, C# `decimal`, SQL `NUMERIC`), and choose your rounding rule explicitly.",
+  "texts": [
+    "I'll answer directly \u2014 no tools needed for this.\n\n## Why `0.1 + 0.2 != 0.3`\n\nIEEE 754 doubles store numbers in **binary**, as a 53-bit significand times a power of two. That means a double can exactly represent only fractions whose denominator is a power of two (\u00bd, \u00bc, \u215c, ...). `0.1` is 1/10, and 10 = 2\u00b75 \u2014 the factor of 5 makes it a repeating fraction in binary, just like 1/3 is repeating in decimal:\n\n```\n0.1 (decimal) = 0.0001100110011001100110011... (binary, repeats forever)\n```\n\nSo the machine stores the nearest representable double, which is slightly off:\n\n```\n0.1 \u2192 0.1000000000000000055511151231257827021181583404541015625\n0.2 \u2192 0.200000000000000011102230246251565404236316680908203125\n0.3 \u2192 0.299999999999999988897769753748434595763683319091796875\n```\n\nNow add. `0.1 + 0.2` in exact arithmetic on those stored values is `0.3000000000000000166533453693773481063544750213623046875`, which then has to be rounded back to a double. The nearest double is `0.30000000000000004440892098500626...` \u2014 and that's a *different* double than the one `0.3` rounds to (`0.29999999999999998889...`). Two different bit patterns, so `==` is false:\n\n```python\n>>> 0.1 + 0.2\n0.30000000000000004\n>>> 0.1 + 0.2 == 0.3\nFalse\n```\n\nThree separate rounding errors (on 0.1, on 0.2, and on the sum) happened to land on the \"up\" side, while `0.3` alone rounded \"down\". Sometimes the errors cancel (`0.1 + 0.3 == 0.4` is true); sometimes they don't. It's not a bug in any language \u2014 it's inherent to binary floating point, and every language using hardware doubles (JS, Python, Java, C, Go, Rust...) gives the identical result.\n\nThe practical consequences:\n- Never compare floats with `==`; compare `abs(a - b) < epsilon` (with an epsilon scaled to the magnitude of the values).\n- Error accumulates: summing `0.1` ten times gives `0.9999999999999999`, not `1.0`.\n- Ordering matters: `(a + b) + c` can differ from `a + (b + c)`.\n\n## What to use for money\n\nMoney is decimal by nature (cents, pence, hundredths), and financial rules require exact decimal results \u2014 `$0.10 + $0.20` must be exactly `$0.30`, and sums must reconcile to the cent. Floats can't give you that. Two standard approaches:\n\n**1. Integers in the smallest unit (cents / minor units).** Store `$12.34` as the integer `1234`. Addition, subtraction, and comparison are exact; integer overflow isn't a practical concern with 64-bit ints (~92 quadrillion dollars). This is what Stripe's API does (`amount: 1234`), and it's the simplest, fastest, most portable choice. Be careful with:\n- Currencies with different minor units (JPY has 0 decimals, BHD has 3) \u2014 carry the currency alongside the amount.\n- Multiplication/division (tax, interest, splitting a bill): you must decide the rounding rule explicitly (e.g. banker's rounding, or \"remainder cents go to the last line item\").\n\n**2. Arbitrary-precision decimal types.** These do base-10 arithmetic exactly and let you control precision and rounding mode:\n- Python: `decimal.Decimal('0.1') + Decimal('0.2') == Decimal('0.3')` \u2192 `True`. (Construct from **strings**, not floats \u2014 `Decimal(0.1)` faithfully captures the float error.)\n- Java/Kotlin: `BigDecimal` (again, use `new BigDecimal(\"0.1\")` or `BigDecimal.valueOf`, not the `double` constructor).\n- C#: the built-in `decimal` type (128-bit, base-10).\n- JavaScript: no built-in; use `decimal.js`, `big.js`, or `dinero.js`; `BigInt` works for the integer-cents approach.\n- Go: `shopspring/decimal`. Rust: `rust_decimal`.\n- Databases: `DECIMAL(19,4)` / `NUMERIC`, never `FLOAT`/`REAL`/`DOUBLE`.\n\nDecimal types are better when you need fractional cents during intermediate calculations (interest accrual, exchange rates, per-unit prices like $0.0035/kWh) before rounding to a final amount.\n\n**Rule of thumb:** integer minor units for storing and moving money; a decimal type for computing with it; floats never. And in either case, pick a rounding mode deliberately (`ROUND_HALF_EVEN` is the usual financial default) and apply it at well-defined points rather than letting it happen implicitly.\n\n**Recap:** `0.1` and `0.2` can't be represented exactly in binary, so their stored values and their rounded sum land on a different double than `0.3` does \u2014 a property of IEEE 754, not the language. For money, store amounts as integers in the smallest currency unit or use a decimal type (`Decimal`, `BigDecimal`, C# `decimal`, SQL `NUMERIC`), and choose your rounding rule explicitly."
+  ],
+  "stderr_tail": ""
+}

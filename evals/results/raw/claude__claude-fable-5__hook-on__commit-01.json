@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "commit-01",
+  "cat": "commit",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 5.7,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.093883,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3927,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 218,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3927,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 218,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 3927,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3927
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 57,
+    "sentences": 6,
+    "mean_sentence_words": 9.3,
+    "longest_sentence_words": 16,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "I will write a commit message that follows Simplified Technical English rules.\n\n```\nFix retry loop that ignored max_attempts and retried forever\n\nThe retry loop did not compare the attempt count to the max_attempts\nsetting. If an operation continued to fail, the loop retried without\na limit.\n\nThe loop now stops after max_attempts attempts. If the last attempt\nfails, the loop raises the last error.\n```\n\nRecap: The subject line states the fix in the imperative mood. The body has two paragraphs. The first paragraph describes the bug. The second paragraph describes the new behavior. If your project uses an issue tracker, add a line such as `Fixes #123` at the end.",
+  "texts": [
+    "I will write a commit message that follows Simplified Technical English rules.\n\n```\nFix retry loop that ignored max_attempts and retried forever\n\nThe retry loop did not compare the attempt count to the max_attempts\nsetting. If an operation continued to fail, the loop retried without\na limit.\n\nThe loop now stops after max_attempts attempts. If the last attempt\nfails, the loop raises the last error.\n```\n\nRecap: The subject line states the fix in the imperative mood. The body has two paragraphs. The first paragraph describes the bug. The second paragraph describes the new behavior. If your project uses an issue tracker, add a line such as `Fixes #123` at the end."
+  ],
+  "stderr_tail": ""
+}

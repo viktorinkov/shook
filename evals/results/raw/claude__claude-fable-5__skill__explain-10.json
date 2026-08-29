@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "explain-10",
+  "cat": "explain",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 21.7,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.29513500000000004,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 10773,
+    "cache_read_input_tokens": 11607,
+    "output_tokens": 1341,
+    "output_tokens_details": {
+      "thinking_tokens": 141
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10773,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1111,
+        "cache_read_input_tokens": 7184,
+        "cache_creation_input_tokens": 8012,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8012
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 490,
+    "sentences": 43,
+    "mean_sentence_words": 11.0,
+    "longest_sentence_words": 31,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 2,
+    "violations_per_100w": 0.41
+  },
+  "text": "Here is the section, written in pragmatic mode (short sentences, active voice, one fact per sentence). It is descriptive text with a short procedure at the end.\n\n---\n\n## The `.gitignore` file\n\n### What it does\n\nA `.gitignore` file tells Git which files and directories to ignore. Git does not track the ignored files. They do not appear in `git status`, and `git add .` does not stage them. The file lives in the root of the repository. You commit it, so every person who clones the repository gets the same rules.\n\nEach line in the file is a pattern. Git compares each pattern with the paths in the repository. A `#` at the start of a line marks a comment. A `/` at the end of a pattern matches only directories. A `!` at the start of a pattern makes an exception to an earlier pattern.\n\nNote: `.gitignore` does not affect files that Git already tracks. If you add a pattern for a tracked file, Git continues to track that file.\n\n### What belongs in it\n\nIgnore files that other people cannot use, or that the project can create again from the source. The usual groups are:\n\n- **Dependencies.** Package managers download these from a lock file. Examples: `node_modules/`, `vendor/`, `.venv/`.\n- **Build output.** The build creates these again each time. Examples: `dist/`, `build/`, `target/`, `*.o`, `*.pyc`, `__pycache__/`.\n- **Secrets and local configuration.** These contain passwords, tokens, or paths that apply to one machine only. Examples: `.env`, `*.pem`, `config.local.json`.\n- **Editor and IDE files.** These belong to one person, not to the project. Examples: `.idea/`, `.vscode/`, `*.swp`.\n- **Operating system files.** The OS creates these without your action. Examples: `.DS_Store`, `Thumbs.db`.\n- **Logs and temporary files.** Examples: `*.log`, `tmp/`, `coverage/`.\n\nDo not ignore the source code, the lock file, or the `.gitignore` file itself. The lock file makes sure that each person installs the same dependency versions.\n\nCAUTION: Add secrets to `.gitignore` before the first commit. If you commit a secret, it stays in the history of the repository after you delete the file.\n\n### Example\n\nA minimal `.gitignore` for a Node.js project:\n\n```gitignore\n# Dependencies\nnode_modules/\n\n# Build output\ndist/\n\n# Secrets and local configuration\n.env\n.env.*\n\n# Editor files\n.idea/\n.vscode/\n\n# OS files\n.DS_Store\n\n# Logs\n*.log\n```\n\n### How to create one\n\n1. Create a file with the name `.gitignore` in the root of the repository.\n2. Add one pattern per line.\n3. If you need a starting point, get a template from [github.com/github/gitignore](https://github.com/github/gitignore).\n4. Commit the file with the rest of the project.\n\nIf Git already tracks a file that you want to ignore, remove it from the index with `git rm --cached <path>`. Then commit the change. The file stays on your disk.\n\n---\n\nRecap: the section explains what `.gitignore` does, how patterns work, what to ignore (dependencies, build output, secrets, editor files, OS files, logs), what not to ignore, and how to create the file. It also warns that a committed secret stays in the history. Tell me the language or stack of the project if you want the example tuned to it.",
+  "texts": [
+    "I'll load the Simplified Technical English skill first, since this is documentation text, then write the explanation.",
+    "Here is the section, written in pragmatic mode (short sentences, active voice, one fact per sentence). It is descriptive text with a short procedure at the end.\n\n---\n\n## The `.gitignore` file\n\n### What it does\n\nA `.gitignore` file tells Git which files and directories to ignore. Git does not track the ignored files. They do not appear in `git status`, and `git add .` does not stage them. The file lives in the root of the repository. You commit it, so every person who clones the repository gets the same rules.\n\nEach line in the file is a pattern. Git compares each pattern with the paths in the repository. A `#` at the start of a line marks a comment. A `/` at the end of a pattern matches only directories. A `!` at the start of a pattern makes an exception to an earlier pattern.\n\nNote: `.gitignore` does not affect files that Git already tracks. If you add a pattern for a tracked file, Git continues to track that file.\n\n### What belongs in it\n\nIgnore files that other people cannot use, or that the project can create again from the source. The usual groups are:\n\n- **Dependencies.** Package managers download these from a lock file. Examples: `node_modules/`, `vendor/`, `.venv/`.\n- **Build output.** The build creates these again each time. Examples: `dist/`, `build/`, `target/`, `*.o`, `*.pyc`, `__pycache__/`.\n- **Secrets and local configuration.** These contain passwords, tokens, or paths that apply to one machine only. Examples: `.env`, `*.pem`, `config.local.json`.\n- **Editor and IDE files.** These belong to one person, not to the project. Examples: `.idea/`, `.vscode/`, `*.swp`.\n- **Operating system files.** The OS creates these without your action. Examples: `.DS_Store`, `Thumbs.db`.\n- **Logs and temporary files.** Examples: `*.log`, `tmp/`, `coverage/`.\n\nDo not ignore the source code, the lock file, or the `.gitignore` file itself. The lock file makes sure that each person installs the same dependency versions.\n\nCAUTION: Add secrets to `.gitignore` before the first commit. If you commit a secret, it stays in the history of the repository after you delete the file.\n\n### Example\n\nA minimal `.gitignore` for a Node.js project:\n\n```gitignore\n# Dependencies\nnode_modules/\n\n# Build output\ndist/\n\n# Secrets and local configuration\n.env\n.env.*\n\n# Editor files\n.idea/\n.vscode/\n\n# OS files\n.DS_Store\n\n# Logs\n*.log\n```\n\n### How to create one\n\n1. Create a file with the name `.gitignore` in the root of the repository.\n2. Add one pattern per line.\n3. If you need a starting point, get a template from [github.com/github/gitignore](https://github.com/github/gitignore).\n4. Commit the file with the rest of the project.\n\nIf Git already tracks a file that you want to ignore, remove it from the index with `git rm --cached <path>`. Then commit the change. The file stays on your disk.\n\n---\n\nRecap: the section explains what `.gitignore` does, how patterns work, what to ignore (dependencies, build output, secrets, editor files, OS files, logs), what not to ignore, and how to create the file. It also warns that a committed secret stays in the history. Tell me the language or stack of the project if you want the example tuned to it."
+  ],
+  "stderr_tail": ""
+}

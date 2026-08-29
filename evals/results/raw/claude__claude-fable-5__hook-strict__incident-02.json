@@ -1,0 +1,76 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "incident-02",
+  "cat": "incident",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 21.1,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 3,
+  "strict_blocks": 1,
+  "num_turns": 4,
+  "cost_usd": 0.348874,
+  "usage": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 12834,
+    "cache_read_input_tokens": 29414,
+    "output_tokens": 1254,
+    "output_tokens_details": {
+      "thinking_tokens": 328
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12834,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 4,
+        "output_tokens": 446,
+        "cache_read_input_tokens": 16572,
+        "cache_creation_input_tokens": 685,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 685
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 187,
+    "sentences": 21,
+    "mean_sentence_words": 8.9,
+    "longest_sentence_words": 24,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "Here is the incident summary. I did not invent a date or time. Replace the placeholders in square brackets before you publish.\n\n---\n\n## Incident summary: login service outage\n\n**Date:** [date]\n**Duration:** 18 minutes, from [start time] to [end time] [time zone]\n**Status:** Resolved\n\n### What happened\n\nThe login service was unavailable for 18 minutes. During this time, sign-in did not work for users. Users with an active session were not affected.\n\n### Cause\n\nA TLS certificate for the login service expired. Browsers and clients rejected connections to the service after the certificate expired. As a result, all login requests failed.\n\n### Resolution\n\nWe installed a new certificate and restored the service. Sessions that were active before the incident stayed valid. No user data was lost or exposed.\n\n### Prevention\n\nWe automated the certificate renewal for the login service. A monitor also warns our team 30 days before a certificate expires. This change removes the manual step that caused the incident.\n\n### What you must do\n\nNo action is necessary. If sign-in still fails, contact support at [support address].\n\nWe apologize for the interruption.\n\n---\n\nOne note: the 30-day warning in the Prevention section is an assumption. If you do not have a monitor, delete that sentence.",
+  "texts": [
+    "I will write the incident summary in Simplified Technical English. First, I will load the skill rules.",
+    "Here is the incident summary. I did not invent a date or time. Replace the placeholders in square brackets before you publish.\n\n---\n\n## Incident summary: login service outage\n\n**Date:** [date]\n**Duration:** 18 minutes, from [start time] to [end time] [time zone]\n**Status:** Resolved\n\n### What happened\n\nThe login service was unavailable for 18 minutes. During this time, users could not sign in to their accounts. Users with an active session were not affected.\n\n### Cause\n\nA TLS certificate for the login service expired. Browsers and clients rejected connections to the service after the certificate expired. As a result, all login requests failed.\n\n### Resolution\n\nWe installed a new certificate and restored the service. Sessions that were active before the incident stayed valid. No user data was lost or exposed.\n\n### Prevention\n\nWe automated the certificate renewal for the login service. A monitor also warns our team 30 days before a certificate expires. This change removes the manual step that caused the incident.\n\n### What you must do\n\nNo action is necessary. If you still cannot sign in, contact support at [support address].\n\nWe apologize for the interruption.\n\n---\n\nOne note: the 30-day warning in the Prevention section is an assumption. Delete that sentence if you do not have a monitor.",
+    "Here is the incident summary. I did not invent a date or time. Replace the placeholders in square brackets before you publish.\n\n---\n\n## Incident summary: login service outage\n\n**Date:** [date]\n**Duration:** 18 minutes, from [start time] to [end time] [time zone]\n**Status:** Resolved\n\n### What happened\n\nThe login service was unavailable for 18 minutes. During this time, sign-in did not work for users. Users with an active session were not affected.\n\n### Cause\n\nA TLS certificate for the login service expired. Browsers and clients rejected connections to the service after the certificate expired. As a result, all login requests failed.\n\n### Resolution\n\nWe installed a new certificate and restored the service. Sessions that were active before the incident stayed valid. No user data was lost or exposed.\n\n### Prevention\n\nWe automated the certificate renewal for the login service. A monitor also warns our team 30 days before a certificate expires. This change removes the manual step that caused the incident.\n\n### What you must do\n\nNo action is necessary. If sign-in still fails, contact support at [support address].\n\nWe apologize for the interruption.\n\n---\n\nOne note: the 30-day warning in the Prevention section is an assumption. If you do not have a monitor, delete that sentence."
+  ],
+  "stderr_tail": ""
+}

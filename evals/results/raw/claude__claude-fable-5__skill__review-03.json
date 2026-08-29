@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "review-03",
+  "cat": "review",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 13.9,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.09464499999999999,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2751,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 684,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2751,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 684,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 2751,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2751
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 362,
+    "sentences": 21,
+    "mean_sentence_words": 17.0,
+    "longest_sentence_words": 46,
+    "violations": {
+      "sentence_over_limit": 3,
+      "contraction": 8,
+      "banned_modal": 1,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 1,
+      "latin_abbrev": 1,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 15,
+    "violations_per_100w": 4.14
+  },
+  "text": "Here's a review comment you can drop on the PR:\n\n---\n\n**Request changes \u2014 tests needed before merge**\n\nThanks for pulling this into a shared utility; consolidating this logic is the right call. Before this lands, though, I'd like to see test coverage for it.\n\nA few reasons this matters here specifically:\n\n1. **Size and surface area.** At ~400 lines this file exposes a meaningful chunk of behavior that other code will start depending on. Without tests, we have no record of what the intended behavior actually is beyond \"whatever it does today,\" which makes future refactors risky.\n2. **Utilities get reused in ways the author didn't anticipate.** Edge cases (empty input, `null`/`undefined`, unicode, very large inputs, error paths) tend to surface only once a second caller shows up. Tests are the cheapest place to pin those down now.\n3. **Reviewability.** I can read the code, but I can't easily verify it's correct without either writing the tests myself or tracing every branch by hand. Tests would let me review *intent* rather than reverse-engineer it.\n\nWhat I'd suggest as a minimum:\n\n- A test file alongside the utility covering each exported function.\n- For each function: the happy path, at least one boundary case, and any error/throw behavior.\n- If any of these functions were extracted from existing code, a test that reproduces the original call site's expectations so we know nothing regressed.\n\nIf some parts are genuinely hard to unit test (e.g., they wrap I/O or time), it's worth calling that out in the PR description and either isolating the testable core or adding a short note on how it was verified manually.\n\nHappy to pair on the test scaffolding if that'd speed things up. Once tests are in, I'll do a proper pass on the implementation itself.\n\n---\n\nRecap: this is a \"request changes\" comment that explains *why* tests matter for a large new utility, states a concrete minimum bar (per-function happy path + boundary + error cases), gives an out for hard-to-test pieces, and offers help so it reads as collaborative rather than blocking. Adjust the tone or the minimum bar to match your team's norms.",
+  "texts": [
+    "Here's a review comment you can drop on the PR:\n\n---\n\n**Request changes \u2014 tests needed before merge**\n\nThanks for pulling this into a shared utility; consolidating this logic is the right call. Before this lands, though, I'd like to see test coverage for it.\n\nA few reasons this matters here specifically:\n\n1. **Size and surface area.** At ~400 lines this file exposes a meaningful chunk of behavior that other code will start depending on. Without tests, we have no record of what the intended behavior actually is beyond \"whatever it does today,\" which makes future refactors risky.\n2. **Utilities get reused in ways the author didn't anticipate.** Edge cases (empty input, `null`/`undefined`, unicode, very large inputs, error paths) tend to surface only once a second caller shows up. Tests are the cheapest place to pin those down now.\n3. **Reviewability.** I can read the code, but I can't easily verify it's correct without either writing the tests myself or tracing every branch by hand. Tests would let me review *intent* rather than reverse-engineer it.\n\nWhat I'd suggest as a minimum:\n\n- A test file alongside the utility covering each exported function.\n- For each function: the happy path, at least one boundary case, and any error/throw behavior.\n- If any of these functions were extracted from existing code, a test that reproduces the original call site's expectations so we know nothing regressed.\n\nIf some parts are genuinely hard to unit test (e.g., they wrap I/O or time), it's worth calling that out in the PR description and either isolating the testable core or adding a short note on how it was verified manually.\n\nHappy to pair on the test scaffolding if that'd speed things up. Once tests are in, I'll do a proper pass on the implementation itself.\n\n---\n\nRecap: this is a \"request changes\" comment that explains *why* tests matter for a large new utility, states a concrete minimum bar (per-function happy path + boundary + error cases), gives an out for hard-to-test pieces, and offers help so it reads as collaborative rather than blocking. Adjust the tone or the minimum bar to match your team's norms."
+  ],
+  "stderr_tail": ""
+}

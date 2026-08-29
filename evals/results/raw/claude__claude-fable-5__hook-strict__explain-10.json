@@ -1,0 +1,76 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "explain-10",
+  "cat": "explain",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 31.8,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 3,
+  "strict_blocks": 1,
+  "num_turns": 4,
+  "cost_usd": 0.420983,
+  "usage": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 13305,
+    "cache_read_input_tokens": 29303,
+    "output_tokens": 2510,
+    "output_tokens_details": {
+      "thinking_tokens": 312
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 13305,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 4,
+        "output_tokens": 1188,
+        "cache_read_input_tokens": 16468,
+        "cache_creation_input_tokens": 1260,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1260
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 488,
+    "sentences": 43,
+    "mean_sentence_words": 11.1,
+    "longest_sentence_words": 68,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 0
+    },
+    "violations_total": 3,
+    "violations_per_100w": 0.61
+  },
+  "text": "Here is a section for a getting-started guide. The text is in Simplified Technical English. The first part is descriptive. The second part is procedural.\n\n---\n\n## The `.gitignore` file\n\nA `.gitignore` file tells Git which files it must not track. Git reads this file when you run `git status` or `git add`. Files that match a pattern in the file do not appear as untracked files. As a result, you do not commit these files by accident.\n\nThe file is a plain text file. Each line holds one pattern. A pattern can name a file, a directory, or a group of files with a wildcard. A `#` at the start of a line marks a comment. You commit the `.gitignore` file itself. Then all members of the team get the same rules.\n\n### What belongs in the file\n\nThe file must list all files that do not belong in the repository. These files fall into four groups:\n\n- **Build output.** The build tool makes these files from the source code. Examples are `dist/`, `build/`, `target/`, and `*.o`.\n- **Dependencies.** A package manager downloads these files. Examples are `node_modules/`, `vendor/`, and `.venv/`.\n- **Local settings and secrets.** These files hold data for one machine or one person. Examples are `.env`, `*.pem`, and `.vscode/`.\n- **Temporary files.** The operating system or an editor makes these files. Examples are `.DS_Store`, `Thumbs.db`, `*.log`, and `*.swp`.\n\n### What does not belong in the file\n\nDo not put these files in `.gitignore`:\n\n- Source code.\n- Lock files for dependencies, for example `package-lock.json` or `Cargo.lock`.\n- Files that the team needs to build or run the project.\n\n### Pattern syntax\n\nThe table that follows shows the most common patterns.\n\n| Pattern | Meaning |\n|---|---|\n| `*.log` | All files with the `.log` extension, in all directories |\n| `build/` | The directory `build` and all files in it |\n| `/config.local` | Only the file `config.local` in the root of the repository |\n| `!important.log` | If an earlier pattern matches this file, Git ignores that pattern for this file |\n| `# comment` | A comment. Git does not read this line |\n\n### Procedure: add a `.gitignore` file to a new project\n\n1. Make a file with the name `.gitignore` in the root of the repository.\n2. Add one pattern per line.\n3. Commit the file with `git add .gitignore` and `git commit`.\n4. Run `git status` to make sure that the ignored files do not appear.\n\nCAUTION: If you add a pattern for a file after a commit, Git does not remove that file from the repository. If you already committed a file, run `git rm --cached <file>`. Then Git stops tracking that file.\n\n### Example\n\n```gitignore\n# Dependencies\nnode_modules/\n\n# Build output\ndist/\n\n# Local settings and secrets\n.env\n*.pem\n\n# Temporary files\n.DS_Store\n*.log\n```\n\n---\n\n**Recap.** The section is ready for a getting-started guide. It explains what `.gitignore` does. It lists the four groups of files that belong in it. It shows the pattern syntax. It gives a short procedure with a caution about files that Git already tracks. Adjust the examples to match the language and tools of your project.",
+  "texts": [
+    "I will write this section for a getting-started guide in Simplified Technical English. First, I will load the writing rules.",
+    "Here is a section for a getting-started guide. The text is in Simplified Technical English. The first part is descriptive. The second part is procedural.\n\n---\n\n## The `.gitignore` file\n\nA `.gitignore` file tells Git which files it must not track. Git reads this file when you run `git status` or `git add`. Files that match a pattern in the file do not appear as untracked files. As a result, you do not commit these files by accident.\n\nThe file is a plain text file. Each line holds one pattern. A pattern can name a file, a directory, or a group of files with a wildcard. A `#` at the start of a line marks a comment. You commit the `.gitignore` file itself, so that all members of the team get the same rules.\n\n### What belongs in the file\n\nThe file must list all files that do not belong in the repository. These files fall into four groups:\n\n- **Build output.** The build tool makes these files from the source code. Examples are `dist/`, `build/`, `target/`, and `*.o`.\n- **Dependencies.** A package manager downloads these files. Examples are `node_modules/`, `vendor/`, and `.venv/`.\n- **Local settings and secrets.** These files hold data for one machine or one person. Examples are `.env`, `*.pem`, and `.vscode/`.\n- **Temporary files.** The operating system or an editor makes these files. Examples are `.DS_Store`, `Thumbs.db`, `*.log`, and `*.swp`.\n\n### What does not belong in the file\n\nDo not put these files in `.gitignore`:\n\n- Source code.\n- Lock files for dependencies, for example `package-lock.json` or `Cargo.lock`.\n- Files that the team needs to build or run the project.\n\n### Pattern syntax\n\nThe table that follows shows the most common patterns.\n\n| Pattern | Meaning |\n|---|---|\n| `*.log` | All files with the `.log` extension, in all directories |\n| `build/` | The directory `build` and all files in it |\n| `/config.local` | Only the file `config.local` in the root of the repository |\n| `!important.log` | Do not ignore this file, even if an earlier pattern matches it |\n| `# comment` | A comment. Git does not read this line |\n\n### Procedure: add a `.gitignore` file to a new project\n\n1. Make a file with the name `.gitignore` in the root of the repository.\n2. Add one pattern per line.\n3. Commit the file with `git add .gitignore` and `git commit`.\n4. Run `git status` to make sure that the ignored files do not appear.\n\nCAUTION: Git does not remove a file from the repository when you add its pattern after a commit. If you already committed a file, run `git rm --cached <file>` to stop tracking it.\n\n### Example\n\n```gitignore\n# Dependencies\nnode_modules/\n\n# Build output\ndist/\n\n# Local settings and secrets\n.env\n*.pem\n\n# Temporary files\n.DS_Store\n*.log\n```\n\n---\n\n**Recap.** The section above is ready to paste into a getting-started guide. It explains what `.gitignore` does, lists the four groups of files that belong in it, shows the pattern syntax, and gives a short procedure with a caution about files that Git already tracks. Adjust the examples to match the language and tools of your project.",
+    "Here is a section for a getting-started guide. The text is in Simplified Technical English. The first part is descriptive. The second part is procedural.\n\n---\n\n## The `.gitignore` file\n\nA `.gitignore` file tells Git which files it must not track. Git reads this file when you run `git status` or `git add`. Files that match a pattern in the file do not appear as untracked files. As a result, you do not commit these files by accident.\n\nThe file is a plain text file. Each line holds one pattern. A pattern can name a file, a directory, or a group of files with a wildcard. A `#` at the start of a line marks a comment. You commit the `.gitignore` file itself. Then all members of the team get the same rules.\n\n### What belongs in the file\n\nThe file must list all files that do not belong in the repository. These files fall into four groups:\n\n- **Build output.** The build tool makes these files from the source code. Examples are `dist/`, `build/`, `target/`, and `*.o`.\n- **Dependencies.** A package manager downloads these files. Examples are `node_modules/`, `vendor/`, and `.venv/`.\n- **Local settings and secrets.** These files hold data for one machine or one person. Examples are `.env`, `*.pem`, and `.vscode/`.\n- **Temporary files.** The operating system or an editor makes these files. Examples are `.DS_Store`, `Thumbs.db`, `*.log`, and `*.swp`.\n\n### What does not belong in the file\n\nDo not put these files in `.gitignore`:\n\n- Source code.\n- Lock files for dependencies, for example `package-lock.json` or `Cargo.lock`.\n- Files that the team needs to build or run the project.\n\n### Pattern syntax\n\nThe table that follows shows the most common patterns.\n\n| Pattern | Meaning |\n|---|---|\n| `*.log` | All files with the `.log` extension, in all directories |\n| `build/` | The directory `build` and all files in it |\n| `/config.local` | Only the file `config.local` in the root of the repository |\n| `!important.log` | If an earlier pattern matches this file, Git ignores that pattern for this file |\n| `# comment` | A comment. Git does not read this line |\n\n### Procedure: add a `.gitignore` file to a new project\n\n1. Make a file with the name `.gitignore` in the root of the repository.\n2. Add one pattern per line.\n3. Commit the file with `git add .gitignore` and `git commit`.\n4. Run `git status` to make sure that the ignored files do not appear.\n\nCAUTION: If you add a pattern for a file after a commit, Git does not remove that file from the repository. If you already committed a file, run `git rm --cached <file>`. Then Git stops tracking that file.\n\n### Example\n\n```gitignore\n# Dependencies\nnode_modules/\n\n# Build output\ndist/\n\n# Local settings and secrets\n.env\n*.pem\n\n# Temporary files\n.DS_Store\n*.log\n```\n\n---\n\n**Recap.** The section is ready for a getting-started guide. It explains what `.gitignore` does. It lists the four groups of files that belong in it. It shows the pattern syntax. It gives a short procedure with a caution about files that Git already tracks. Adjust the examples to match the language and tools of your project."
+  ],
+  "stderr_tail": ""
+}

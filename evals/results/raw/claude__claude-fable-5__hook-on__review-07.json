@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "review-07",
+  "cat": "review",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 15.9,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.131163,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3921,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 966,
+    "output_tokens_details": {
+      "thinking_tokens": 128
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3921,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 966,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 3921,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3921
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 423,
+    "sentences": 41,
+    "mean_sentence_words": 10.0,
+    "longest_sentence_words": 19,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 0
+    },
+    "violations_total": 2,
+    "violations_per_100w": 0.47
+  },
+  "text": "I will write the review summary now, in Simplified Technical English.\n\n## PR review summary: Add retries to the HTTP client\n\n**Verdict:** Request changes.\n\n### Summary of the change\n\nThe change adds a retry loop to the HTTP client. The client now retries a request when the response status is not `200`. It waits between attempts. The maximum number of attempts is configurable.\n\n### Blocking issue: the client retries on every status code\n\nThe retry loop does not check the class of the status code. The client retries on `400`, `401`, `403`, `404`, and `422`. These codes tell the client that the request is not valid. The server returns the same result on each attempt. The retries add latency and load, and they do not change the outcome.\n\nThe retry on `4xx` responses also causes these problems:\n\n- A request with `400 Bad Request` runs N times before the caller sees the error.\n- A request with `401 Unauthorized` runs N times with the same bad credentials. Some servers lock the account after repeated failures.\n- A request with `429 Too Many Requests` runs again before the rate limit resets. This makes the rate limit worse.\n- A `POST` request that is not idempotent runs many times. This can create duplicate records.\n\n### Required changes\n\n1. Retry only on transient failures. Use this list: connection errors, timeouts, `408`, `429`, `500`, `502`, `503`, and `504`.\n2. Do not retry on any other `4xx` status. Return the response to the caller on the first attempt.\n3. If the response is `429` or `503` and has a `Retry-After` header, use that value for the wait time.\n4. Retry non-idempotent methods only if the caller opts in. Add a parameter for this, for example `retry_unsafe_methods=False`.\n5. Use exponential backoff with jitter. A fixed wait time causes many clients to retry at the same moment.\n\n### Tests to add\n\n- A test that shows that a `400` response returns after one attempt.\n- A test that shows that a `503` response retries up to the maximum.\n- A test that shows that a connection timeout retries.\n- A test that shows that a `POST` request does not retry by default.\n\n### Minor comments\n\n- The log line for each retry does not include the attempt number. Add it.\n- The default maximum of 10 attempts is high. Use 3 as the default.\n\n### Recap\n\nThe change adds a retry mechanism, but the mechanism retries on client errors such as `400`. This adds latency, adds load, and can create duplicate writes. The author must limit retries to transient failures, honor `Retry-After`, and add tests for each status class. After these changes, I will review the PR again.",
+  "texts": [
+    "I will write the review summary now, in Simplified Technical English.\n\n## PR review summary: Add retries to the HTTP client\n\n**Verdict:** Request changes.\n\n### Summary of the change\n\nThe change adds a retry loop to the HTTP client. The client now retries a request when the response status is not `200`. It waits between attempts. The maximum number of attempts is configurable.\n\n### Blocking issue: the client retries on every status code\n\nThe retry loop does not check the class of the status code. The client retries on `400`, `401`, `403`, `404`, and `422`. These codes tell the client that the request is not valid. The server returns the same result on each attempt. The retries add latency and load, and they do not change the outcome.\n\nThe retry on `4xx` responses also causes these problems:\n\n- A request with `400 Bad Request` runs N times before the caller sees the error.\n- A request with `401 Unauthorized` runs N times with the same bad credentials. Some servers lock the account after repeated failures.\n- A request with `429 Too Many Requests` runs again before the rate limit resets. This makes the rate limit worse.\n- A `POST` request that is not idempotent runs many times. This can create duplicate records.\n\n### Required changes\n\n1. Retry only on transient failures. Use this list: connection errors, timeouts, `408`, `429`, `500`, `502`, `503`, and `504`.\n2. Do not retry on any other `4xx` status. Return the response to the caller on the first attempt.\n3. If the response is `429` or `503` and has a `Retry-After` header, use that value for the wait time.\n4. Retry non-idempotent methods only if the caller opts in. Add a parameter for this, for example `retry_unsafe_methods=False`.\n5. Use exponential backoff with jitter. A fixed wait time causes many clients to retry at the same moment.\n\n### Tests to add\n\n- A test that shows that a `400` response returns after one attempt.\n- A test that shows that a `503` response retries up to the maximum.\n- A test that shows that a connection timeout retries.\n- A test that shows that a `POST` request does not retry by default.\n\n### Minor comments\n\n- The log line for each retry does not include the attempt number. Add it.\n- The default maximum of 10 attempts is high. Use 3 as the default.\n\n### Recap\n\nThe change adds a retry mechanism, but the mechanism retries on client errors such as `400`. This adds latency, adds load, and can create duplicate writes. The author must limit retries to transient failures, honor `Retry-After`, and add tests for each status class. After these changes, I will review the PR again."
+  ],
+  "stderr_tail": ""
+}

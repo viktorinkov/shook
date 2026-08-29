@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "error-01",
+  "cat": "error",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 10.3,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.27426100000000003,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 11953,
+    "cache_read_input_tokens": 12761,
+    "output_tokens": 448,
+    "output_tokens_details": {
+      "thinking_tokens": 112
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 11953,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 222,
+        "cache_read_input_tokens": 8338,
+        "cache_creation_input_tokens": 8038,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8038
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 121,
+    "sentences": 13,
+    "mean_sentence_words": 9.1,
+    "longest_sentence_words": 17,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "Here is the error message:\n\n> **File too large**\n>\n> The file is larger than the maximum size of 25 MB. Select a smaller file, or compress this file and upload it again.\n\nNotes on the message:\n\n- The first sentence states the fact. The second sentence gives the instruction.\n- Both sentences are under the 20-word limit.\n- The message does not use contractions, passive voice, or banned modals.\n\nIf the application knows the size of the rejected file, this variant gives more information:\n\n> **File too large**\n>\n> The file is 31.2 MB. The maximum size is 25 MB. Select a smaller file, or compress this file and upload it again.\n\nReplace `31.2 MB` with the actual size.",
+  "texts": [
+    "I will load the Simple English skill, then write the error message.",
+    "Here is the error message:\n\n> **File too large**\n>\n> The file is larger than the maximum size of 25 MB. Select a smaller file, or compress this file and upload it again.\n\nNotes on the message:\n\n- The first sentence states the fact. The second sentence gives the instruction.\n- Both sentences are under the 20-word limit.\n- The message does not use contractions, passive voice, or banned modals.\n\nIf the application knows the size of the rejected file, this variant gives more information:\n\n> **File too large**\n>\n> The file is 31.2 MB. The maximum size is 25 MB. Select a smaller file, or compress this file and upload it again.\n\nReplace `31.2 MB` with the actual size."
+  ],
+  "stderr_tail": ""
+}

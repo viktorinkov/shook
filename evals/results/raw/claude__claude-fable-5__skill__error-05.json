@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "error-05",
+  "cat": "error",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 10.0,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.246875,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 10641,
+    "cache_read_input_tokens": 11591,
+    "output_tokens": 429,
+    "output_tokens_details": {
+      "thinking_tokens": 30
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10641,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 315,
+        "cache_read_input_tokens": 7168,
+        "cache_creation_input_tokens": 7896,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7896
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 163,
+    "sentences": 13,
+    "mean_sentence_words": 12.5,
+    "longest_sentence_words": 28,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.61
+  },
+  "text": "Here is the error text, written in pragmatic-mode STE (short sentences, condition before command, no contractions):\n\n**Title:** Session expired\n\n**Body:**\n\n> Your session expired. Log in again to continue.\n\nIf you want a version with a cause and a next step for the user:\n\n> Your session expired because it was not used for too long. Your work in this browser tab is not saved. Log in again to continue.\n\nSelf-check applied: longest sentence is 12 words (limit 20), no contractions or banned modals, every sentence gives one fact or one instruction, and the instruction (\"Log in again\") is imperative. Note that \"log in\" is a two-word computer verb that the standard accepts (Rule 1.12).\n\n**Recap:** I wrote a two-sentence expired-session error (\"Your session expired. Log in again to continue.\") plus an optional longer variant that states the cause and warns that unsaved work is lost. Use the short form for a toast or banner and the long form for a full-page interstitial.",
+  "texts": [
+    "I'll load the Simplified Technical English skill since this is an error message, then write the text.",
+    "Here is the error text, written in pragmatic-mode STE (short sentences, condition before command, no contractions):\n\n**Title:** Session expired\n\n**Body:**\n\n> Your session expired. Log in again to continue.\n\nIf you want a version with a cause and a next step for the user:\n\n> Your session expired because it was not used for too long. Your work in this browser tab is not saved. Log in again to continue.\n\nSelf-check applied: longest sentence is 12 words (limit 20), no contractions or banned modals, every sentence gives one fact or one instruction, and the instruction (\"Log in again\") is imperative. Note that \"log in\" is a two-word computer verb that the standard accepts (Rule 1.12).\n\n**Recap:** I wrote a two-sentence expired-session error (\"Your session expired. Log in again to continue.\") plus an optional longer variant that states the cause and warns that unsaved work is lost. Use the short form for a toast or banner and the long form for a full-page interstitial."
+  ],
+  "stderr_tail": ""
+}

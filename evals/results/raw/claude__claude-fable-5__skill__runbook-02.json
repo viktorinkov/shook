@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "runbook-02",
+  "cat": "runbook",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 32.2,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.345133,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 10772,
+    "cache_read_input_tokens": 11611,
+    "output_tokens": 2341,
+    "output_tokens_details": {
+      "thinking_tokens": 208
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10772,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2161,
+        "cache_read_input_tokens": 7188,
+        "cache_creation_input_tokens": 8007,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8007
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "procedural",
+    "words": 919,
+    "sentences": 88,
+    "mean_sentence_words": 10.0,
+    "longest_sentence_words": 57,
+    "violations": {
+      "sentence_over_limit": 4,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 5,
+    "violations_per_100w": 0.54
+  },
+  "text": "Here is the runbook. I wrote it in Simplified Technical English (pragmatic mode): imperative steps, one action per step, conditions before commands, sentences under 20 words.\n\nAssumptions (replace with your real values): the service runs under systemd, the queue depth comes from a metrics or CLI command, and `queue_depth` is the metric name. I marked every placeholder with `<angle brackets>`.\n\n---\n\n# Runbook: Restart the `worker` service and make sure that the queue drains\n\n**Scope:** One host. If you must restart `worker` on many hosts, do this procedure on one host at a time.\n\n**Vocabulary used in this runbook:**\n- *Queue depth* \u2014 the number of messages that wait for a worker.\n- *Drain* \u2014 the queue depth decreases to less than `<drain-threshold>` and stays there.\n\n## Before you start\n\n1. Make sure that you have SSH access to the host.\n2. Make sure that you can read the queue depth. Use `<queue-depth-command>` or the `queue_depth` panel in `<dashboard-url>`.\n3. Record the current queue depth. Write it in the incident channel.\n4. If the queue depth increases at this time, record the rate of increase.\n5. Make sure that at least one other `worker` host is healthy. This host takes the load during the restart.\n\nCAUTION: Do not restart `worker` on all hosts at the same time. The queue then has no consumers, and the queue depth increases until the restarts are completed.\n\n## Restart the service\n\n6. Connect to the host: `ssh <host>`.\n7. Record the process ID and the start time of the current process: `systemctl status worker`.\n8. Restart the service: `sudo systemctl restart worker`.\n9. Make sure that the service is active: `systemctl is-active worker`. The output must be `active`.\n10. If the output is not `active`, go to *Recovery A*.\n11. Make sure that the process ID changed: `systemctl status worker`. A new process ID shows that the restart occurred.\n12. Examine the log for errors from the last 2 minutes: `journalctl -u worker --since \"2 min ago\"`.\n13. If the log shows a connection error or a crash loop, go to *Recovery A*.\n\n## Make sure that the queue drains\n\n14. Wait 1 minute. The worker needs this time to connect to the queue and to get the first batch.\n15. Read the queue depth: `<queue-depth-command>`.\n16. Read the queue depth again after 1 minute.\n17. If the second value is less than the first value, the queue drains. Continue at step 18.\n18. Read the queue depth each minute until the value is less than `<drain-threshold>`.\n19. If the queue depth is less than `<drain-threshold>` after `<max-drain-time>` minutes, the procedure is completed. Go to *Close out*.\n20. If the queue depth does not decrease after 3 readings, go to *Recovery B*.\n21. If the queue depth increases after 3 readings, go to *Recovery B*.\n\n## Recovery A \u2014 the service does not start\n\nA1. Examine the full log from the restart: `journalctl -u worker --since \"10 min ago\"`.\nA2. If the log shows a configuration error, correct the configuration file at `<config-path>`. Then do step 8 again.\nA3. If the log shows that the queue or the database is not reachable, make sure that the host can connect to `<queue-host>:<queue-port>`.\nA4. If the host cannot connect, the problem is in the network or in the queue service, not in `worker`. Escalate to `<on-call-team>`.\nA5. If the service starts and then stops again in less than 30 seconds, the service is in a crash loop. Stop the service: `sudo systemctl stop worker`. Then escalate to `<on-call-team>` with the log.\n\n## Recovery B \u2014 the service runs, but the queue does not drain\n\nB1. Make sure that the worker consumes messages. Examine the log for lines that show a processed message: `journalctl -u worker -f`.\nB2. If the log shows no processed messages, the worker does not receive work. Make sure that the worker is subscribed to the correct queue name in `<config-path>`.\nB3. If the log shows processed messages, but the queue depth does not decrease, the producers send messages faster than the workers process them. Continue at B4.\nB4. Read the queue depth on the other `worker` hosts. If all hosts show the same problem, the cause is not on this host. Escalate to `<on-call-team>`.\nB5. If only this host shows the problem, examine the CPU and the memory of the host: `top`.\nB6. If the CPU or the memory is at the limit, stop the service: `sudo systemctl stop worker`. Then move the load to the other hosts and escalate.\nB7. If the log shows the same message again and again, a message is poisoned. The worker cannot process it. Move that message to the dead-letter queue with `<dlq-command>`. Then do step 15 again.\nB8. If none of B1 to B7 corrects the problem, stop the service and escalate to `<on-call-team>`. Give the log, the queue depth readings, and the time of the restart.\n\n## Close out\n\n22. Record the final queue depth and the time in the incident channel.\n23. Record the cause, if you found it.\n24. If you changed the configuration, open a change request so that the change is tracked.\n\n---\n\n**Recap:** The runbook has five parts: pre-checks that capture the queue depth before you touch anything, the restart with a process-ID check so you know it really restarted, a drain check that uses three readings a minute apart to decide, and two recovery paths \u2014 one for a service that does not start, one for a service that runs but does not consume. Every branch ends in either \"completed\" or \"stop and escalate.\" To use it, fill in the seven placeholders: `<host>`, `<queue-depth-command>`, `<drain-threshold>`, `<max-drain-time>`, `<config-path>`, `<dlq-command>`, and `<on-call-team>`. If your service is not under systemd (Kubernetes, supervisord, and so on), tell me and I will swap the commands.",
+  "texts": [
+    "I'll load the Simplified Technical English skill, since it covers runbooks, then write the step list.",
+    "Here is the runbook. I wrote it in Simplified Technical English (pragmatic mode): imperative steps, one action per step, conditions before commands, sentences under 20 words.\n\nAssumptions (replace with your real values): the service runs under systemd, the queue depth comes from a metrics or CLI command, and `queue_depth` is the metric name. I marked every placeholder with `<angle brackets>`.\n\n---\n\n# Runbook: Restart the `worker` service and make sure that the queue drains\n\n**Scope:** One host. If you must restart `worker` on many hosts, do this procedure on one host at a time.\n\n**Vocabulary used in this runbook:**\n- *Queue depth* \u2014 the number of messages that wait for a worker.\n- *Drain* \u2014 the queue depth decreases to less than `<drain-threshold>` and stays there.\n\n## Before you start\n\n1. Make sure that you have SSH access to the host.\n2. Make sure that you can read the queue depth. Use `<queue-depth-command>` or the `queue_depth` panel in `<dashboard-url>`.\n3. Record the current queue depth. Write it in the incident channel.\n4. If the queue depth increases at this time, record the rate of increase.\n5. Make sure that at least one other `worker` host is healthy. This host takes the load during the restart.\n\nCAUTION: Do not restart `worker` on all hosts at the same time. The queue then has no consumers, and the queue depth increases until the restarts are completed.\n\n## Restart the service\n\n6. Connect to the host: `ssh <host>`.\n7. Record the process ID and the start time of the current process: `systemctl status worker`.\n8. Restart the service: `sudo systemctl restart worker`.\n9. Make sure that the service is active: `systemctl is-active worker`. The output must be `active`.\n10. If the output is not `active`, go to *Recovery A*.\n11. Make sure that the process ID changed: `systemctl status worker`. A new process ID shows that the restart occurred.\n12. Examine the log for errors from the last 2 minutes: `journalctl -u worker --since \"2 min ago\"`.\n13. If the log shows a connection error or a crash loop, go to *Recovery A*.\n\n## Make sure that the queue drains\n\n14. Wait 1 minute. The worker needs this time to connect to the queue and to get the first batch.\n15. Read the queue depth: `<queue-depth-command>`.\n16. Read the queue depth again after 1 minute.\n17. If the second value is less than the first value, the queue drains. Continue at step 18.\n18. Read the queue depth each minute until the value is less than `<drain-threshold>`.\n19. If the queue depth is less than `<drain-threshold>` after `<max-drain-time>` minutes, the procedure is completed. Go to *Close out*.\n20. If the queue depth does not decrease after 3 readings, go to *Recovery B*.\n21. If the queue depth increases after 3 readings, go to *Recovery B*.\n\n## Recovery A \u2014 the service does not start\n\nA1. Examine the full log from the restart: `journalctl -u worker --since \"10 min ago\"`.\nA2. If the log shows a configuration error, correct the configuration file at `<config-path>`. Then do step 8 again.\nA3. If the log shows that the queue or the database is not reachable, make sure that the host can connect to `<queue-host>:<queue-port>`.\nA4. If the host cannot connect, the problem is in the network or in the queue service, not in `worker`. Escalate to `<on-call-team>`.\nA5. If the service starts and then stops again in less than 30 seconds, the service is in a crash loop. Stop the service: `sudo systemctl stop worker`. Then escalate to `<on-call-team>` with the log.\n\n## Recovery B \u2014 the service runs, but the queue does not drain\n\nB1. Make sure that the worker consumes messages. Examine the log for lines that show a processed message: `journalctl -u worker -f`.\nB2. If the log shows no processed messages, the worker does not receive work. Make sure that the worker is subscribed to the correct queue name in `<config-path>`.\nB3. If the log shows processed messages, but the queue depth does not decrease, the producers send messages faster than the workers process them. Continue at B4.\nB4. Read the queue depth on the other `worker` hosts. If all hosts show the same problem, the cause is not on this host. Escalate to `<on-call-team>`.\nB5. If only this host shows the problem, examine the CPU and the memory of the host: `top`.\nB6. If the CPU or the memory is at the limit, stop the service: `sudo systemctl stop worker`. Then move the load to the other hosts and escalate.\nB7. If the log shows the same message again and again, a message is poisoned. The worker cannot process it. Move that message to the dead-letter queue with `<dlq-command>`. Then do step 15 again.\nB8. If none of B1 to B7 corrects the problem, stop the service and escalate to `<on-call-team>`. Give the log, the queue depth readings, and the time of the restart.\n\n## Close out\n\n22. Record the final queue depth and the time in the incident channel.\n23. Record the cause, if you found it.\n24. If you changed the configuration, open a change request so that the change is tracked.\n\n---\n\n**Recap:** The runbook has five parts: pre-checks that capture the queue depth before you touch anything, the restart with a process-ID check so you know it really restarted, a drain check that uses three readings a minute apart to decide, and two recovery paths \u2014 one for a service that does not start, one for a service that runs but does not consume. Every branch ends in either \"completed\" or \"stop and escalate.\" To use it, fill in the seven placeholders: `<host>`, `<queue-depth-command>`, `<drain-threshold>`, `<max-drain-time>`, `<config-path>`, `<dlq-command>`, and `<on-call-team>`. If your service is not under systemd (Kubernetes, supervisord, and so on), tell me and I will swap the commands."
+  ],
+  "stderr_tail": ""
+}

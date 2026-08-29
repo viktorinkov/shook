@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "readme-03",
+  "cat": "docs",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 10.0,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.25208800000000003,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 10684,
+    "cache_read_input_tokens": 11625,
+    "output_tokens": 515,
+    "output_tokens_details": {
+      "thinking_tokens": 41
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10684,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 392,
+        "cache_read_input_tokens": 7202,
+        "cache_creation_input_tokens": 7905,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7905
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 208,
+    "sentences": 18,
+    "mean_sentence_words": 11.5,
+    "longest_sentence_words": 30,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 0
+    },
+    "violations_total": 3,
+    "violations_per_100w": 1.44
+  },
+  "text": "Pragmatic mode, chosen noun: \"configuration\". Here is the section.\n\n## Configuration\n\nThe tool reads its configuration from `config.toml`. This file is optional. If the file does not exist, the tool uses the default value for each key.\n\n| Key | Default | Description |\n|---|---|---|\n| `port` | `8080` | The TCP port that the tool listens on. |\n| `log_level` | `\"info\"` | The minimum level of the log messages that the tool writes. |\n| `workers` | `4` | The number of worker processes that the tool starts. |\n\nEach key is optional. If you omit a key, the tool uses its default value.\n\n### Example\n\nThis file changes the port and the number of workers. The log level keeps its default value:\n\n```toml\nport = 9000\nworkers = 8\n```\n\n### Apply a change\n\nIf you change `config.toml`, restart the tool. The tool reads the file only at startup.\n\n---\n\nAssumptions I made, since the request did not state them: `config.toml` lives in the working directory, the file and each key are optional, and a restart is required after a change. Edit those lines if the tool behaves differently. I did not list the permitted `log_level` values because you did not give them \u2014 add them to the table if you want the reader to have the full set.",
+  "texts": [
+    "I'll load the Simplified Technical English skill first, since this is README documentation.",
+    "Pragmatic mode, chosen noun: \"configuration\". Here is the section.\n\n## Configuration\n\nThe tool reads its configuration from `config.toml`. This file is optional. If the file does not exist, the tool uses the default value for each key.\n\n| Key | Default | Description |\n|---|---|---|\n| `port` | `8080` | The TCP port that the tool listens on. |\n| `log_level` | `\"info\"` | The minimum level of the log messages that the tool writes. |\n| `workers` | `4` | The number of worker processes that the tool starts. |\n\nEach key is optional. If you omit a key, the tool uses its default value.\n\n### Example\n\nThis file changes the port and the number of workers. The log level keeps its default value:\n\n```toml\nport = 9000\nworkers = 8\n```\n\n### Apply a change\n\nIf you change `config.toml`, restart the tool. The tool reads the file only at startup.\n\n---\n\nAssumptions I made, since the request did not state them: `config.toml` lives in the working directory, the file and each key are optional, and a restart is required after a change. Edit those lines if the tool behaves differently. I did not list the permitted `log_level` values because you did not give them \u2014 add them to the table if you want the reader to have the full set."
+  ],
+  "stderr_tail": ""
+}

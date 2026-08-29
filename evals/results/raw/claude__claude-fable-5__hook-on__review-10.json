@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "review-10",
+  "cat": "review",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 10.1,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.11050299999999999,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3913,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 556,
+    "output_tokens_details": {
+      "thinking_tokens": 92
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3913,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 556,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 3913,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3913
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 228,
+    "sentences": 23,
+    "mean_sentence_words": 9.6,
+    "longest_sentence_words": 25,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "I will write the PR comment in Simplified Technical English.\n\n**PR comment for `config.py`:**\n\n---\n\n**Blocking: this commit adds a hardcoded API key to `config.py`.**\n\nThe key is now part of the git history. Anyone with read access to the repository can see the key. This includes forks, clones, and CI logs.\n\nDo these steps before merge:\n\n1. Revoke the key in the provider dashboard now. Treat the key as compromised.\n2. Create a new key.\n3. Remove the key from `config.py`.\n4. Read the key from an environment variable. For example:\n\n   ```python\n   import os\n   API_KEY = os.environ[\"API_KEY\"]\n   ```\n\n5. Add `API_KEY` to the `.env.example` file with an empty value.\n6. Make sure that `.env` is in `.gitignore`.\n7. Add the new key to the secrets store for CI and for each deployment environment.\n\nNote: a new commit that removes the key does not remove the key from history. If you must remove the key from history, use `git filter-repo` and force-push. Talk to the team before a force-push. The rewrite changes commit hashes for all clones.\n\nPlease push the fix and request a new review.\n\n---\n\n**Recap:** The comment blocks the merge, explains the risk, and gives seven steps to rotate the key and move it to an environment variable. It also warns that removal from history requires a rewrite and a force-push. You can paste it directly into the PR.",
+  "texts": [
+    "I will write the PR comment in Simplified Technical English.\n\n**PR comment for `config.py`:**\n\n---\n\n**Blocking: this commit adds a hardcoded API key to `config.py`.**\n\nThe key is now part of the git history. Anyone with read access to the repository can see the key. This includes forks, clones, and CI logs.\n\nDo these steps before merge:\n\n1. Revoke the key in the provider dashboard now. Treat the key as compromised.\n2. Create a new key.\n3. Remove the key from `config.py`.\n4. Read the key from an environment variable. For example:\n\n   ```python\n   import os\n   API_KEY = os.environ[\"API_KEY\"]\n   ```\n\n5. Add `API_KEY` to the `.env.example` file with an empty value.\n6. Make sure that `.env` is in `.gitignore`.\n7. Add the new key to the secrets store for CI and for each deployment environment.\n\nNote: a new commit that removes the key does not remove the key from history. If you must remove the key from history, use `git filter-repo` and force-push. Talk to the team before a force-push. The rewrite changes commit hashes for all clones.\n\nPlease push the fix and request a new review.\n\n---\n\n**Recap:** The comment blocks the merge, explains the risk, and gives seven steps to rotate the key and move it to an environment variable. It also warns that removal from history requires a rewrite and a force-push. You can paste it directly into the PR."
+  ],
+  "stderr_tail": ""
+}

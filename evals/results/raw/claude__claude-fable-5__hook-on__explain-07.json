@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "explain-07",
+  "cat": "explain",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 15.0,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.120573,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3904,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 761,
+    "output_tokens_details": {
+      "thinking_tokens": 144
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3904,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 761,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 3904,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3904
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 371,
+    "sentences": 32,
+    "mean_sentence_words": 11.5,
+    "longest_sentence_words": 19,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 0
+    },
+    "violations_total": 2,
+    "violations_per_100w": 0.54
+  },
+  "text": "An index makes some reads faster. It does this with a separate data structure that the database must build, store, and keep correct. Each of those parts has a cost. This note describes the four main costs.\n\n## 1. Every write becomes slower\n\nAn index is a sorted copy of one or more columns. When a row is inserted, updated, or deleted, the database must also change each index on that table. A table with eight indexes does nine writes for each insert. On a table with heavy write traffic, this can reduce write speed by a large amount.\n\n## 2. The index uses disk and memory\n\nEach index is a separate file on disk. A wide index on a large table can use as much space as the table itself. The database also keeps the most used parts of each index in memory. If the indexes do not fit in memory, the database reads from disk more often. Then all queries become slower, not only the query that the index was built for.\n\n## 3. The build itself has a cost\n\nThe database must read the full table to build a new index. On a large table, this can take minutes or hours. In some databases, the build locks the table. Writes to that table wait until the build is complete. Even with an online build, the extra disk and CPU load can slow the application during the build.\n\n## 4. The index can make the query planner make bad choices\n\nThe database chooses a plan for each query. More indexes give the planner more options. A wrong option can make a query slower than it was before. Old indexes that no query uses still cost writes, disk, and memory every day.\n\n## What this means for a decision\n\nAn index is a trade. One read pattern becomes faster. All writes, all storage, and one build window become more expensive. The trade is good when the read is frequent and the table has more reads than writes. The trade is bad when the write load is high or when the index is for one rare report.\n\nBefore you approve an index, ask the engineer for three facts:\n\n- How many times per day does the slow query run?\n- How many rows per day are written to the table?\n- How large will the index be on disk?\n\nIf the engineer cannot answer these, the index is not ready to add.",
+  "texts": [
+    "An index makes some reads faster. It does this with a separate data structure that the database must build, store, and keep correct. Each of those parts has a cost. This note describes the four main costs.\n\n## 1. Every write becomes slower\n\nAn index is a sorted copy of one or more columns. When a row is inserted, updated, or deleted, the database must also change each index on that table. A table with eight indexes does nine writes for each insert. On a table with heavy write traffic, this can reduce write speed by a large amount.\n\n## 2. The index uses disk and memory\n\nEach index is a separate file on disk. A wide index on a large table can use as much space as the table itself. The database also keeps the most used parts of each index in memory. If the indexes do not fit in memory, the database reads from disk more often. Then all queries become slower, not only the query that the index was built for.\n\n## 3. The build itself has a cost\n\nThe database must read the full table to build a new index. On a large table, this can take minutes or hours. In some databases, the build locks the table. Writes to that table wait until the build is complete. Even with an online build, the extra disk and CPU load can slow the application during the build.\n\n## 4. The index can make the query planner make bad choices\n\nThe database chooses a plan for each query. More indexes give the planner more options. A wrong option can make a query slower than it was before. Old indexes that no query uses still cost writes, disk, and memory every day.\n\n## What this means for a decision\n\nAn index is a trade. One read pattern becomes faster. All writes, all storage, and one build window become more expensive. The trade is good when the read is frequent and the table has more reads than writes. The trade is bad when the write load is high or when the index is for one rare report.\n\nBefore you approve an index, ask the engineer for three facts:\n\n- How many times per day does the slow query run?\n- How many rows per day are written to the table?\n- How large will the index be on disk?\n\nIf the engineer cannot answer these, the index is not ready to add."
+  ],
+  "stderr_tail": ""
+}

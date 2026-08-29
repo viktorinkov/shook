@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "release-01",
+  "cat": "release",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 9.8,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.272374,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 11858,
+    "cache_read_input_tokens": 12774,
+    "output_tokens": 448,
+    "output_tokens_details": {
+      "thinking_tokens": 73
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 11858,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 300,
+        "cache_read_input_tokens": 8351,
+        "cache_creation_input_tokens": 7930,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7930
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 49,
+    "sentences": 6,
+    "mean_sentence_words": 7.8,
+    "longest_sentence_words": 14,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 2.04
+  },
+  "text": "Here are the release notes for version 2.4.0.\n\n```markdown\n# Release notes: version 2.4.0\n\n## New features\n\n- **Dark mode.** The application now has a dark color theme. You can select the theme in the settings.\n\n## Bug fixes\n\n- **Crash on empty search.** The application crashed when a user submitted an empty search. This release fixes the crash. An empty search now returns no results.\n\n## Breaking changes\n\n- **Node 16 is no longer supported.** This release removes support for Node 16. Node 18 or later is necessary.\n\n## Upgrade steps\n\n1. Make sure that Node 18 or later is installed.\n2. Update the package to version 2.4.0.\n3. Restart the application.\n```\n\nNotes on the content:\n\n- The location of the theme setting and the minimum Node version (18) are assumptions. Change them if your project differs.\n- The upgrade steps are a template. Add the exact update command for your package manager.",
+  "texts": [
+    "I will load the Simple English skill, then write the release notes.",
+    "Here are the release notes for version 2.4.0.\n\n```markdown\n# Release notes: version 2.4.0\n\n## New features\n\n- **Dark mode.** The application now has a dark color theme. You can select the theme in the settings.\n\n## Bug fixes\n\n- **Crash on empty search.** The application crashed when a user submitted an empty search. This release fixes the crash. An empty search now returns no results.\n\n## Breaking changes\n\n- **Node 16 is no longer supported.** This release removes support for Node 16. Node 18 or later is necessary.\n\n## Upgrade steps\n\n1. Make sure that Node 18 or later is installed.\n2. Update the package to version 2.4.0.\n3. Restart the application.\n```\n\nNotes on the content:\n\n- The location of the theme setting and the minimum Node version (18) are assumptions. Change them if your project differs.\n- The upgrade steps are a template. Add the exact update command for your package manager."
+  ],
+  "stderr_tail": ""
+}

@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "explain-01",
+  "cat": "explain",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 14.0,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.21577000000000002,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 8440,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 939,
+    "output_tokens_details": {
+      "thinking_tokens": 299
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 8440,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 939,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 8440,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8440
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 270,
+    "sentences": 26,
+    "mean_sentence_words": 10.2,
+    "longest_sentence_words": 20,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.37
+  },
+  "text": "The test fails because `client.upload()` returns `None`, and `service.sync` then reads `.status` from `None`.\n\n**What happens, step by step**\n\n1. `client = Mock()` creates a fake client. Each attribute of a `Mock` is a new `Mock` by default.\n2. `client.upload.return_value = None` tells the fake `upload` method to return `None` when the code calls it.\n3. `service.sync(client)` calls `client.upload()` and gets `None`.\n4. `service.sync` then reads `.status` from that value. `None` has no attribute `status`.\n5. Python raises `AttributeError: 'NoneType' object has no attribute 'status'`.\n\nThe exception occurs inside `service.sync`. The test stops there. The line `assert result.ok` never runs. The report shows an error, not an assertion failure.\n\n**Why this is easy to miss**\n\nWithout the line `client.upload.return_value = None`, `client.upload()` returns a `Mock`. A `Mock` accepts any attribute, so `.status` returns another `Mock`. The code does not crash. The test author set the return value to `None` to make the fake \"do nothing\". But `None` is not a safe empty value here. The code under test expects an object with a `status` attribute.\n\n**How to fix the test**\n\nGive `upload` a return value that looks like a real response. For example:\n\n```python\ndef test_upload():\n    client = Mock()\n    client.upload.return_value = Mock(status=200)\n    result = service.sync(client)\n    assert result.ok\n```\n\nUse the `status` value that `service.sync` treats as success. Read `service.sync` to find that value. If `sync` compares `status` to `\"ok\"`, use `Mock(status=\"ok\")`.\n\n**The general rule**\n\nA mock must return the same shape of data as the real object. If the real `upload()` returns a response object, the fake `upload()` must also return an object with the same attributes. If you set the return value to `None`, only do that when the real method also returns `None`.",
+  "texts": [
+    "The test fails because `client.upload()` returns `None`, and `service.sync` then reads `.status` from `None`.\n\n**What happens, step by step**\n\n1. `client = Mock()` creates a fake client. Each attribute of a `Mock` is a new `Mock` by default.\n2. `client.upload.return_value = None` tells the fake `upload` method to return `None` when the code calls it.\n3. `service.sync(client)` calls `client.upload()` and gets `None`.\n4. `service.sync` then reads `.status` from that value. `None` has no attribute `status`.\n5. Python raises `AttributeError: 'NoneType' object has no attribute 'status'`.\n\nThe exception occurs inside `service.sync`. The test stops there. The line `assert result.ok` never runs. The report shows an error, not an assertion failure.\n\n**Why this is easy to miss**\n\nWithout the line `client.upload.return_value = None`, `client.upload()` returns a `Mock`. A `Mock` accepts any attribute, so `.status` returns another `Mock`. The code does not crash. The test author set the return value to `None` to make the fake \"do nothing\". But `None` is not a safe empty value here. The code under test expects an object with a `status` attribute.\n\n**How to fix the test**\n\nGive `upload` a return value that looks like a real response. For example:\n\n```python\ndef test_upload():\n    client = Mock()\n    client.upload.return_value = Mock(status=200)\n    result = service.sync(client)\n    assert result.ok\n```\n\nUse the `status` value that `service.sync` treats as success. Read `service.sync` to find that value. If `sync` compares `status` to `\"ok\"`, use `Mock(status=\"ok\")`.\n\n**The general rule**\n\nA mock must return the same shape of data as the real object. If the real `upload()` returns a response object, the fake `upload()` must also return an object with the same attributes. If you set the return value to `None`, only do that when the real method also returns `None`."
+  ],
+  "stderr_tail": ""
+}

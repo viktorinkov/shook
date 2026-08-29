@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "explain-03",
+  "cat": "explain",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 10.1,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.114623,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3924,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 634,
+    "output_tokens_details": {
+      "thinking_tokens": 54
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3924,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 634,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 3924,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3924
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 270,
+    "sentences": 31,
+    "mean_sentence_words": 8.4,
+    "longest_sentence_words": 16,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "I will write a short explanation in plain language that you can send to your teammate.\n\n## `git merge` and `git rebase`\n\nBoth commands bring the changes from `main` into your feature branch. The difference is the shape of the history.\n\n### What `git merge` does\n\n`git merge` creates a new commit on your branch. This commit has two parents: your last commit and the last commit on `main`. Your old commits stay in place. The history shows the true order of events, with a merge commit at each sync point.\n\n### What `git rebase` does\n\n`git rebase` moves your commits to the top of `main`. Git creates a new copy of each commit with a new hash. The old commits are removed from the branch. The history becomes one straight line without merge commits.\n\n### Which one to use\n\nThe correct choice depends on the state of the branch.\n\n- If the branch is local and not pushed, use `git rebase`. The history stays clean.\n- If other people work on the same branch, use `git merge`. A rebase changes commit hashes, and your teammates get conflicts.\n- If the branch is pushed but only you work on it, `git rebase` is safe. Push with `git push --force-with-lease`.\n\n### Procedure for a local feature branch\n\n1. Run `git fetch origin`.\n2. Run `git rebase origin/main`.\n3. If a conflict occurs, fix the files.\n4. Run `git add <file>` for each fixed file.\n5. Run `git rebase --continue`.\n6. Run the tests.\n\n### Warning\n\nDo not run `git rebase` on a shared branch. The command rewrites history, and other people lose their work.\n\n**Recap:** `git merge` keeps the true history and adds a merge commit. `git rebase` rewrites your commits to make a straight line. For a private feature branch, use `git rebase`. For a shared branch, use `git merge`.",
+  "texts": [
+    "I will write a short explanation in plain language that you can send to your teammate.\n\n## `git merge` and `git rebase`\n\nBoth commands bring the changes from `main` into your feature branch. The difference is the shape of the history.\n\n### What `git merge` does\n\n`git merge` creates a new commit on your branch. This commit has two parents: your last commit and the last commit on `main`. Your old commits stay in place. The history shows the true order of events, with a merge commit at each sync point.\n\n### What `git rebase` does\n\n`git rebase` moves your commits to the top of `main`. Git creates a new copy of each commit with a new hash. The old commits are removed from the branch. The history becomes one straight line without merge commits.\n\n### Which one to use\n\nThe correct choice depends on the state of the branch.\n\n- If the branch is local and not pushed, use `git rebase`. The history stays clean.\n- If other people work on the same branch, use `git merge`. A rebase changes commit hashes, and your teammates get conflicts.\n- If the branch is pushed but only you work on it, `git rebase` is safe. Push with `git push --force-with-lease`.\n\n### Procedure for a local feature branch\n\n1. Run `git fetch origin`.\n2. Run `git rebase origin/main`.\n3. If a conflict occurs, fix the files.\n4. Run `git add <file>` for each fixed file.\n5. Run `git rebase --continue`.\n6. Run the tests.\n\n### Warning\n\nDo not run `git rebase` on a shared branch. The command rewrites history, and other people lose their work.\n\n**Recap:** `git merge` keeps the true history and adds a merge commit. `git rebase` rewrites your commits to make a straight line. For a private feature branch, use `git rebase`. For a shared branch, use `git merge`."
+  ],
+  "stderr_tail": ""
+}

@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "design-01",
+  "cat": "design",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 23.9,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.161563,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3926,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 1572,
+    "output_tokens_details": {
+      "thinking_tokens": 228
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3926,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1572,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 3926,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3926
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 694,
+    "sentences": 59,
+    "mean_sentence_words": 11.4,
+    "longest_sentence_words": 96,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 3,
+      "synonym_rotation": 1
+    },
+    "violations_total": 5,
+    "violations_per_100w": 0.72
+  },
+  "text": "I will compare the two options and then give a recommendation for the order pipeline.\n\n## Direct HTTP calls\n\nThe caller sends a request and waits for a response. This gives these properties:\n\n- **Simple to build.** Most teams already have HTTP clients, load balancers, and tracing.\n- **Immediate results.** The caller knows at once if the request succeeded or failed.\n- **Tight coupling.** If the callee is down, the caller fails. The caller must implement retries, timeouts, and circuit breakers.\n- **No buffer.** A traffic spike hits the callee at full speed. The callee must scale at the same rate as the caller.\n- **Lost work on failure.** If the caller crashes after it sends the request, no record of the request exists outside the callee.\n\n## Message queue\n\nThe producer writes a message to a broker. The consumer reads it later. This gives these properties:\n\n- **Loose coupling.** The producer does not know if the consumer is up. The producer only needs the broker.\n- **Buffer under load.** The queue absorbs spikes. The consumer processes messages at its own rate.\n- **Durability.** The broker stores the message until a consumer acknowledges it. A consumer crash does not lose the work.\n- **Retries are built in.** Most brokers redeliver a message after a failure. A dead-letter queue holds messages that fail too many times.\n- **Asynchronous only.** The producer does not get a result. If the caller needs an answer now, a queue does not fit.\n- **More operational cost.** The team must run the broker, monitor queue depth, and handle duplicate deliveries.\n- **Ordering is not free.** Ordering across all messages limits throughput. Ordering per key, for example per order ID, is the usual compromise.\n\n## Comparison\n\n| Property | Direct HTTP | Message queue |\n|---|---|---|\n| Caller gets a result at once | Yes | No |\n| Callee down blocks caller | Yes | No |\n| Work survives a crash | No | Yes |\n| Traffic spikes | Callee must absorb | Queue absorbs |\n| Retries | Caller writes them | Broker provides them |\n| Duplicate handling | Rare | Consumer must be idempotent |\n| Infrastructure | Load balancer only | Broker plus monitoring |\n\n## Recommendation for the order pipeline\n\nUse a message queue for the steps after order acceptance.\n\nAn order pipeline has three properties that favor a queue:\n\n1. Orders must not disappear. If the payment or fulfillment service crashes, the order must wait in the queue, not vanish.\n2. Order volume spikes. Sales and marketing events cause bursts. The queue lets the downstream services drain the backlog at a steady rate.\n3. The customer does not need the full pipeline result at once. The customer needs an order ID and a confirmation. The rest can complete later.\n\nKeep one direct HTTP call at the front: the API that accepts the order. That call must validate the input, write the order to the database, and return the order ID. After that, publish an `OrderAccepted` message. Each downstream service consumes from the queue.\n\nApply these constraints:\n\n- Make every consumer idempotent. Use the order ID as the deduplication key. Brokers deliver a message at least once.\n- Partition by order ID. This keeps the events for one order in sequence.\n- Configure a dead-letter queue. Add an alert on its depth.\n- Use the outbox pattern in the accept API. Write the order row and the outbound message in one database transaction. This prevents a state where the database has the order but the queue does not.\n- Add an alert on consumer lag. A slow consumer is the most common failure in this design.\n\nIf the team has no broker today and the order volume is low, a direct HTTP call with retries is a valid first version. Move to a queue when lost orders or spikes become a problem.\n\n**Recap.** Direct HTTP is simpler and gives an immediate result, but it couples the services and loses work on a crash. A message queue adds a broker to operate, but it keeps orders durable and absorbs spikes. For an order pipeline, use HTTP for the accept step and a message queue for all steps after it.",
+  "texts": [
+    "I will compare the two options and then give a recommendation for the order pipeline.\n\n## Direct HTTP calls\n\nThe caller sends a request and waits for a response. This gives these properties:\n\n- **Simple to build.** Most teams already have HTTP clients, load balancers, and tracing.\n- **Immediate results.** The caller knows at once if the request succeeded or failed.\n- **Tight coupling.** If the callee is down, the caller fails. The caller must implement retries, timeouts, and circuit breakers.\n- **No buffer.** A traffic spike hits the callee at full speed. The callee must scale at the same rate as the caller.\n- **Lost work on failure.** If the caller crashes after it sends the request, no record of the request exists outside the callee.\n\n## Message queue\n\nThe producer writes a message to a broker. The consumer reads it later. This gives these properties:\n\n- **Loose coupling.** The producer does not know if the consumer is up. The producer only needs the broker.\n- **Buffer under load.** The queue absorbs spikes. The consumer processes messages at its own rate.\n- **Durability.** The broker stores the message until a consumer acknowledges it. A consumer crash does not lose the work.\n- **Retries are built in.** Most brokers redeliver a message after a failure. A dead-letter queue holds messages that fail too many times.\n- **Asynchronous only.** The producer does not get a result. If the caller needs an answer now, a queue does not fit.\n- **More operational cost.** The team must run the broker, monitor queue depth, and handle duplicate deliveries.\n- **Ordering is not free.** Ordering across all messages limits throughput. Ordering per key, for example per order ID, is the usual compromise.\n\n## Comparison\n\n| Property | Direct HTTP | Message queue |\n|---|---|---|\n| Caller gets a result at once | Yes | No |\n| Callee down blocks caller | Yes | No |\n| Work survives a crash | No | Yes |\n| Traffic spikes | Callee must absorb | Queue absorbs |\n| Retries | Caller writes them | Broker provides them |\n| Duplicate handling | Rare | Consumer must be idempotent |\n| Infrastructure | Load balancer only | Broker plus monitoring |\n\n## Recommendation for the order pipeline\n\nUse a message queue for the steps after order acceptance.\n\nAn order pipeline has three properties that favor a queue:\n\n1. Orders must not disappear. If the payment or fulfillment service crashes, the order must wait in the queue, not vanish.\n2. Order volume spikes. Sales and marketing events cause bursts. The queue lets the downstream services drain the backlog at a steady rate.\n3. The customer does not need the full pipeline result at once. The customer needs an order ID and a confirmation. The rest can complete later.\n\nKeep one direct HTTP call at the front: the API that accepts the order. That call must validate the input, write the order to the database, and return the order ID. After that, publish an `OrderAccepted` message. Each downstream service consumes from the queue.\n\nApply these constraints:\n\n- Make every consumer idempotent. Use the order ID as the deduplication key. Brokers deliver a message at least once.\n- Partition by order ID. This keeps the events for one order in sequence.\n- Configure a dead-letter queue. Add an alert on its depth.\n- Use the outbox pattern in the accept API. Write the order row and the outbound message in one database transaction. This prevents a state where the database has the order but the queue does not.\n- Add an alert on consumer lag. A slow consumer is the most common failure in this design.\n\nIf the team has no broker today and the order volume is low, a direct HTTP call with retries is a valid first version. Move to a queue when lost orders or spikes become a problem.\n\n**Recap.** Direct HTTP is simpler and gives an immediate result, but it couples the services and loses work on a crash. A message queue adds a broker to operate, but it keeps orders durable and absorbs spikes. For an order pipeline, use HTTP for the accept step and a message queue for all steps after it."
+  ],
+  "stderr_tail": ""
+}

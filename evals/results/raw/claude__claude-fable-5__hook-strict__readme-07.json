@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "readme-07",
+  "cat": "docs",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 15.9,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.30249400000000004,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 12090,
+    "cache_read_input_tokens": 12854,
+    "output_tokens": 956,
+    "output_tokens_details": {
+      "thinking_tokens": 215
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12090,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 656,
+        "cache_read_input_tokens": 8431,
+        "cache_creation_input_tokens": 8082,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8082
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 277,
+    "sentences": 26,
+    "mean_sentence_words": 10.5,
+    "longest_sentence_words": 23,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "Here is the documentation. The text is descriptive, with one short procedure at the end.\n\n## Environment variables\n\nThe service reads three environment variables at startup. The table that follows gives a summary of each variable.\n\n| Variable | Required | Default | Purpose |\n|---|---|---|---|\n| `DATABASE_URL` | Yes | None | The connection string for the database. |\n| `REDIS_URL` | No | None | The connection string for Redis. This variable enables the cache. |\n| `LOG_JSON` | No | `false` | The output format for the log. |\n\n### `DATABASE_URL`\n\n`DATABASE_URL` is required. The service uses this variable to connect to the database. If this variable is not set, the service stops at startup with an error.\n\n### `REDIS_URL`\n\n`REDIS_URL` is optional. If this variable is set, the service connects to Redis and enables the cache. If this variable is not set, the service operates without a cache.\n\n### `LOG_JSON`\n\n`LOG_JSON` is optional. The default value is `false`. If the value is `true`, the service writes each log line as a JSON object. If the value is `false`, the service writes each log line as plain text.\n\n### Set the variables\n\n1. Set `DATABASE_URL` to the connection string for the database.\n2. If you want the cache, set `REDIS_URL` to the connection string for Redis.\n3. If you want JSON logs, set `LOG_JSON` to `true`.\n4. Start the service.\n\nExample:\n\n```sh\nexport DATABASE_URL=\"postgres://user:password@db.example.com:5432/app\"\nexport REDIS_URL=\"redis://cache.example.com:6379/0\"\nexport LOG_JSON=true\n```\n\n---\n\nRecap: I wrote a reference section with a summary table, one description per variable, and a four-step procedure with an example. I stated the startup behavior for a missing `DATABASE_URL` and the accepted values for `LOG_JSON` as assumptions. If the service behaves differently, tell me and I will correct those sentences.",
+  "texts": [
+    "I will write the environment variable documentation in Simplified Technical English. First I load the skill.",
+    "Here is the documentation. The text is descriptive, with one short procedure at the end.\n\n## Environment variables\n\nThe service reads three environment variables at startup. The table that follows gives a summary of each variable.\n\n| Variable | Required | Default | Purpose |\n|---|---|---|---|\n| `DATABASE_URL` | Yes | None | The connection string for the database. |\n| `REDIS_URL` | No | None | The connection string for Redis. This variable enables the cache. |\n| `LOG_JSON` | No | `false` | The output format for the log. |\n\n### `DATABASE_URL`\n\n`DATABASE_URL` is required. The service uses this variable to connect to the database. If this variable is not set, the service stops at startup with an error.\n\n### `REDIS_URL`\n\n`REDIS_URL` is optional. If this variable is set, the service connects to Redis and enables the cache. If this variable is not set, the service operates without a cache.\n\n### `LOG_JSON`\n\n`LOG_JSON` is optional. The default value is `false`. If the value is `true`, the service writes each log line as a JSON object. If the value is `false`, the service writes each log line as plain text.\n\n### Set the variables\n\n1. Set `DATABASE_URL` to the connection string for the database.\n2. If you want the cache, set `REDIS_URL` to the connection string for Redis.\n3. If you want JSON logs, set `LOG_JSON` to `true`.\n4. Start the service.\n\nExample:\n\n```sh\nexport DATABASE_URL=\"postgres://user:password@db.example.com:5432/app\"\nexport REDIS_URL=\"redis://cache.example.com:6379/0\"\nexport LOG_JSON=true\n```\n\n---\n\nRecap: I wrote a reference section with a summary table, one description per variable, and a four-step procedure with an example. I stated the startup behavior for a missing `DATABASE_URL` and the accepted values for `LOG_JSON` as assumptions. If the service behaves differently, tell me and I will correct those sentences."
+  ],
+  "stderr_tail": ""
+}

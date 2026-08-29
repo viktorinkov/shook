@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "error-03",
+  "cat": "error",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 9.3,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.27499399999999996,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 11944,
+    "cache_read_input_tokens": 12824,
+    "output_tokens": 465,
+    "output_tokens_details": {
+      "thinking_tokens": 48
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 11944,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 307,
+        "cache_read_input_tokens": 8401,
+        "cache_creation_input_tokens": 7966,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7966
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 98,
+    "sentences": 13,
+    "mean_sentence_words": 7.2,
+    "longest_sentence_words": 16,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "Here is the error message. It uses the pattern for error messages: the fact, the cause, then the action.\n\n```\nCannot connect to the database. The database rejected the password for user `app`.\n\nDo these steps:\n1. Make sure that the password in `DATABASE_URL` matches the password for user `app`.\n2. Make sure that user `app` exists on the database server.\n3. If you rotated the password, update `DATABASE_URL`. Then restart the service.\n```\n\nNotes on the structure:\n\n- The first line gives the fact (no connection). The second line gives the cause (rejected password). These lines are descriptive.\n- The numbered items are procedural. Each item has one instruction.\n- Item 3 puts the condition before the command, with a comma.\n- Identifiers such as `app` and `DATABASE_URL` stay exact. Each identifier counts as one word.\n\nIf your service uses a different name for the connection string, replace `DATABASE_URL` with that name.",
+  "texts": [
+    "I will load the Simple English skill, then write the error message.",
+    "Here is the error message. It uses the pattern for error messages: the fact, the cause, then the action.\n\n```\nCannot connect to the database. The database rejected the password for user `app`.\n\nDo these steps:\n1. Make sure that the password in `DATABASE_URL` matches the password for user `app`.\n2. Make sure that user `app` exists on the database server.\n3. If you rotated the password, update `DATABASE_URL`. Then restart the service.\n```\n\nNotes on the structure:\n\n- The first line gives the fact (no connection). The second line gives the cause (rejected password). These lines are descriptive.\n- The numbered items are procedural. Each item has one instruction.\n- Item 3 puts the condition before the command, with a comma.\n- Identifiers such as `app` and `DATABASE_URL` stay exact. Each identifier counts as one word.\n\nIf your service uses a different name for the connection string, replace `DATABASE_URL` with that name."
+  ],
+  "stderr_tail": ""
+}

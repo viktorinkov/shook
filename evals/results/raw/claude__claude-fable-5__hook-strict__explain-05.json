@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "explain-05",
+  "cat": "explain",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 32.2,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.38185,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 12054,
+    "cache_read_input_tokens": 12830,
+    "output_tokens": 2558,
+    "output_tokens_details": {
+      "thinking_tokens": 1528
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12054,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2307,
+        "cache_read_input_tokens": 8407,
+        "cache_creation_input_tokens": 8070,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8070
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 461,
+    "sentences": 52,
+    "mean_sentence_words": 8.5,
+    "longest_sentence_words": 18,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 0
+    },
+    "violations_total": 2,
+    "violations_per_100w": 0.43
+  },
+  "text": "## JWT authentication between the browser and the API\n\nA JSON Web Token (JWT) is a signed string that identifies a user. The API issues the token after a successful login. The browser sends the token with each later request. The API validates the token on each request. The API does not store a session in a database.\n\n### Structure of a token\n\nA JWT has three parts, divided by periods:\n\n- The header. This part names the signature algorithm, for example `HS256` or `RS256`.\n- The payload. This part contains claims, for example the user ID, the roles, and the expiry time (`exp`).\n- The signature. The API creates this part with a secret key or a private key.\n\nThe token encodes the header and the payload in Base64URL. It does not encrypt them. A person with the token can read the claims.\n\nCAUTION: Do not put passwords or other secrets in the payload. The payload is readable.\n\n### Login flow\n\n1. The browser sends the username and the password to the login endpoint, for example `POST /auth/login`.\n2. The API validates the credentials.\n3. If the credentials are correct, the API creates a JWT and signs it with its key.\n4. The API returns the token to the browser.\n5. The browser stores the token.\n\n### Request flow\n\n1. The browser puts the token in the `Authorization` header: `Authorization: Bearer <token>`.\n2. The API reads the token from the header.\n3. The API validates the signature with its key.\n4. The API makes sure that the `exp` claim is in the future.\n5. The API reads the user ID and the roles from the payload.\n6. If the token is not valid, the API returns `401 Unauthorized`.\n\n### Token storage in the browser\n\nThe browser can store the token in one of three places:\n\n- Application memory. The token disappears when the user closes the tab. This is our default.\n- An HTTP-only cookie. JavaScript cannot read the cookie. The browser sends it with each request. This option needs CSRF protection.\n- `localStorage`. Each script on the page can read the token. We do not use this option.\n\n### Expiry and refresh\n\nAn access token has a short lifetime, for example 15 minutes. A refresh token has a long lifetime, for example 7 days. If the access token expires, the browser sends the refresh token to `POST /auth/refresh`. The API returns a new access token. The API cannot cancel an access token before it expires. Thus a short lifetime limits the damage from a stolen token.\n\n---\n\nRecap: the section above is ready for the wiki. It follows the ASD-STE100 structure rules (short sentences, simple tenses, active voice, one term per concept). Full compliance needs the official STE dictionary, which is free at asd-ste100.org. The storage defaults (\"application memory\", \"we do not use `localStorage`\") are assumptions. Change them if your team uses a different policy.",
+  "texts": [
+    "I will write a short wiki section on JWT authentication. First I will load the Simple English skill, because this is documentation.",
+    "## JWT authentication between the browser and the API\n\nA JSON Web Token (JWT) is a signed string that identifies a user. The API issues the token after a successful login. The browser sends the token with each later request. The API validates the token on each request. The API does not store a session in a database.\n\n### Structure of a token\n\nA JWT has three parts, divided by periods:\n\n- The header. This part names the signature algorithm, for example `HS256` or `RS256`.\n- The payload. This part contains claims, for example the user ID, the roles, and the expiry time (`exp`).\n- The signature. The API creates this part with a secret key or a private key.\n\nThe token encodes the header and the payload in Base64URL. It does not encrypt them. A person with the token can read the claims.\n\nCAUTION: Do not put passwords or other secrets in the payload. The payload is readable.\n\n### Login flow\n\n1. The browser sends the username and the password to the login endpoint, for example `POST /auth/login`.\n2. The API validates the credentials.\n3. If the credentials are correct, the API creates a JWT and signs it with its key.\n4. The API returns the token to the browser.\n5. The browser stores the token.\n\n### Request flow\n\n1. The browser puts the token in the `Authorization` header: `Authorization: Bearer <token>`.\n2. The API reads the token from the header.\n3. The API validates the signature with its key.\n4. The API makes sure that the `exp` claim is in the future.\n5. The API reads the user ID and the roles from the payload.\n6. If the token is not valid, the API returns `401 Unauthorized`.\n\n### Token storage in the browser\n\nThe browser can store the token in one of three places:\n\n- Application memory. The token disappears when the user closes the tab. This is our default.\n- An HTTP-only cookie. JavaScript cannot read the cookie. The browser sends it with each request. This option needs CSRF protection.\n- `localStorage`. Each script on the page can read the token. We do not use this option.\n\n### Expiry and refresh\n\nAn access token has a short lifetime, for example 15 minutes. A refresh token has a long lifetime, for example 7 days. If the access token expires, the browser sends the refresh token to `POST /auth/refresh`. The API returns a new access token. The API cannot cancel an access token before it expires. Thus a short lifetime limits the damage from a stolen token.\n\n---\n\nRecap: the section above is ready for the wiki. It follows the ASD-STE100 structure rules (short sentences, simple tenses, active voice, one term per concept). Full compliance needs the official STE dictionary, which is free at asd-ste100.org. The storage defaults (\"application memory\", \"we do not use `localStorage`\") are assumptions. Change them if your team uses a different policy."
+  ],
+  "stderr_tail": ""
+}

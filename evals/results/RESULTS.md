@@ -1,17 +1,28 @@
 # Results
 
 Scorer: the simple-english plugin's `ste_lint.py`. It is a regex pass. It undercounts, and the numbers compare arms only.
-Prompts: 50. Models: `claude-haiku-4-5-20251001` (claude), `claude-opus-5` (claude), `claude-sonnet-5` (claude).
+Prompts: 50. Models: `claude-fable-5` (claude), `claude-haiku-4-5-20251001` (claude), `claude-opus-5` (claude), `claude-sonnet-5` (claude).
 
 ## Cross-model summary
 
 | Model | n prompts | skill alone (v/100w) | hook on (v/100w) | hook strict (v/100w) | reduction (strict vs skill) |
 |---|---:|---:|---:|---:|---:|
+| `claude-fable-5` (claude) | 50 | 2.41 | 0.51 | 0.22 | 91% |
 | `claude-haiku-4-5-20251001` (claude) | 50 | 2.74 | 0.97 | 0.71 | 74% |
 | `claude-opus-5` (claude) | 50 | 2.68 | 0.41 | 0.45 | 83% |
 | `claude-sonnet-5` (claude) | 50 | 2.38 | 0.47 | 0.32 | 87% |
 
 ## Per model
+
+### `claude-fable-5` (claude)
+
+| Arm | Skill fired | Violations / 100 words | Replies with 0 violations | Output tokens per reply |
+|---|---:|---:|---:|---:|
+| skill | 27/50 | 2.41 | 10% | 1224 |
+| hook-on | 19/50 | 0.51 | 38% | 1020 |
+| hook-strict | 20/50 | 0.22 | 60% | 1361 |
+
+Reduction vs the skill alone: hook-on −79%, hook-strict −91%.
 
 ### `claude-haiku-4-5-20251001` (claude)
 
@@ -61,4 +72,4 @@ This table stays as the receipt for the reference arms. `baseline` has no plugin
 
 Each prompt ran once per arm with `claude -p --setting-sources project --tools Skill`, so no user settings, hooks, or other plugins were loaded. `skill` and `style` load the simple-english plugin with `--plugin-dir`. `style` appends the plugin's output style text as system prompt. `hook-on` and `hook-strict` also load this plugin with `--plugin-dir` and set `STE_MODE`. `Skill fired` counts replies where Claude invoked the simple-english skill. `Strict blocks` counts replies the Stop hook sent back for a rewrite. Raw runs: `results/raw/`.
 
-Models: `claude-haiku-4-5-20251001` (claude), `claude-opus-5` (claude), `claude-sonnet-5` (claude). The `skill` arm against the two hook arms is the comparison that matters. The only thing this plugin changes is how often the rules apply. The `baseline` and `style` arms are a reference and ran for `claude-sonnet-5` (claude) only. `Output tokens per reply` is the mean of `output_tokens` from the CLI usage report. In `hook-strict` it includes the rewrite. Raw record names follow `<harness>__<model>__<arm>__<id>.json`. A `codex` harness writes the same schema from Codex CLI with `evals/codex_bench.py`.
+Models: `claude-fable-5` (claude), `claude-haiku-4-5-20251001` (claude), `claude-opus-5` (claude), `claude-sonnet-5` (claude). The `skill` arm against the two hook arms is the comparison that matters. The only thing this plugin changes is how often the rules apply. The `baseline` and `style` arms are a reference and ran for `claude-sonnet-5` (claude) only. `Output tokens per reply` is the mean of `output_tokens` from the CLI usage report. In `hook-strict` it includes the rewrite. Raw record names follow `<harness>__<model>__<arm>__<id>.json`. A `codex` harness writes the same schema from Codex CLI with `evals/codex_bench.py`.

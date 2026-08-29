@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "readme-09",
+  "cat": "docs",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 19.1,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.297594,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 10825,
+    "cache_read_input_tokens": 11627,
+    "output_tokens": 1368,
+    "output_tokens_details": {
+      "thinking_tokens": 692
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10825,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1169,
+        "cache_read_input_tokens": 7204,
+        "cache_creation_input_tokens": 8044,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8044
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 116,
+    "sentences": 7,
+    "mean_sentence_words": 16.6,
+    "longest_sentence_words": 27,
+    "violations": {
+      "sentence_over_limit": 2,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 1
+    },
+    "violations_total": 3,
+    "violations_per_100w": 2.59
+  },
+  "text": "Here is the section. I wrote it in pragmatic Simplified Technical English: short imperative steps, one instruction per step, conditions before commands, and one term (\"configuration file\") throughout. I did not invent details that you did not give me (no migration command, no format change, no `XDG_CONFIG_HOME` support), so it only covers the path move.\n\n```markdown\n## Upgrade from version 1 to version 2\n\nVersion 2 reads the configuration file from a new location.\nVersion 1 read `~/.tool.json`. Version 2 reads `~/.config/tool/config.json`.\nVersion 2 does not read the old location.\n\n### Move the configuration file\n\nIf `~/.tool.json` does not exist, skip steps 1 and 2.\n\n1. Create the new directory:\n\n   ```sh\n   mkdir -p ~/.config/tool\n   ```\n\n2. Move the configuration file to the new location:\n\n   ```sh\n   mv ~/.tool.json ~/.config/tool/config.json\n   ```\n\n3. Install version 2.\n\n4. Start the tool. Make sure that the tool uses the values from the new configuration file.\n\n### Troubleshooting\n\nIf version 2 starts with default values, the configuration file is not in the new location.\nMake sure that the file is at `~/.config/tool/config.json`.\n```\n\nRecap: the section states the path change as three short facts, gives a four-step move procedure with the skip condition up front, and ends with one troubleshooting case. If version 2 also changed the file format, or if it reads `$XDG_CONFIG_HOME`, tell me and I will add those to the same section.",
+  "texts": [
+    "I'll load the Simplified Technical English skill first, since this is README documentation, then write the section.",
+    "Here is the section. I wrote it in pragmatic Simplified Technical English: short imperative steps, one instruction per step, conditions before commands, and one term (\"configuration file\") throughout. I did not invent details that you did not give me (no migration command, no format change, no `XDG_CONFIG_HOME` support), so it only covers the path move.\n\n```markdown\n## Upgrade from version 1 to version 2\n\nVersion 2 reads the configuration file from a new location.\nVersion 1 read `~/.tool.json`. Version 2 reads `~/.config/tool/config.json`.\nVersion 2 does not read the old location.\n\n### Move the configuration file\n\nIf `~/.tool.json` does not exist, skip steps 1 and 2.\n\n1. Create the new directory:\n\n   ```sh\n   mkdir -p ~/.config/tool\n   ```\n\n2. Move the configuration file to the new location:\n\n   ```sh\n   mv ~/.tool.json ~/.config/tool/config.json\n   ```\n\n3. Install version 2.\n\n4. Start the tool. Make sure that the tool uses the values from the new configuration file.\n\n### Troubleshooting\n\nIf version 2 starts with default values, the configuration file is not in the new location.\nMake sure that the file is at `~/.config/tool/config.json`.\n```\n\nRecap: the section states the path change as three short facts, gives a four-step move procedure with the skip condition up front, and ends with one troubleshooting case. If version 2 also changed the file format, or if it reads `$XDG_CONFIG_HOME`, tell me and I will add those to the same section."
+  ],
+  "stderr_tail": ""
+}

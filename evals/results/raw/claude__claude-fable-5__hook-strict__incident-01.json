@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "incident-01",
+  "cat": "incident",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 22.8,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.17561300000000002,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4026,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 1813,
+    "output_tokens_details": {
+      "thinking_tokens": 1184
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4026,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1813,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 4026,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4026
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 259,
+    "sentences": 24,
+    "mean_sentence_words": 10.6,
+    "longest_sentence_words": 24,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "I will write the incident report below.\n\n# Incident Report: API HTTP 500 errors\n\n**Date:** 2026-08-28\n**Duration:** 14:02 to 14:31 UTC (29 minutes)\n**Severity:** Partial outage\n\n## Summary\n\nBetween 14:02 and 14:31 UTC, 12% of API requests returned HTTP 500. A deploy at 14:00 UTC removed the cache warmup step. A revert at 14:27 UTC fixed the problem.\n\n## Impact\n\n- 12% of API requests returned HTTP 500 for 29 minutes.\n- Users of the affected requests received errors and no data.\n\n## Timeline (UTC)\n\n| Time | Event |\n|---|---|\n| 14:00 | The deploy went live. The deploy removed the cache warmup step. |\n| 14:02 | The rate of HTTP 500 errors increased to 12%. |\n| 14:27 | The team reverted the deploy. |\n| 14:31 | The error rate returned to normal. |\n\n## Root cause\n\nThe deploy at 14:00 UTC removed the cache warmup step. Without the warmup step, the cache was cold after the deploy. Requests that needed cached data failed and returned HTTP 500.\n\n## Fix\n\nThe team reverted the deploy at 14:27 UTC. The revert restored the cache warmup step. The error rate returned to normal at 14:31 UTC.\n\n## Proposed follow-up actions\n\n- Add a check to the deploy pipeline. If the cache warmup step is not present, the check must stop the deploy.\n- Add an alert for the HTTP 500 rate. If the rate is above 1% for two minutes, the alert must notify the on-call engineer.\n\n---\n\nThe report above contains a summary, impact, timeline, root cause, fix, and proposed follow-up actions. The follow-up actions are my suggestions, not facts from the incident. Delete or change them as necessary.",
+  "texts": [
+    "I will write the incident report below.\n\n# Incident Report: API HTTP 500 errors\n\n**Date:** 2026-08-28\n**Duration:** 14:02 to 14:31 UTC (29 minutes)\n**Severity:** Partial outage\n\n## Summary\n\nBetween 14:02 and 14:31 UTC, 12% of API requests returned HTTP 500. A deploy at 14:00 UTC removed the cache warmup step. A revert at 14:27 UTC fixed the problem.\n\n## Impact\n\n- 12% of API requests returned HTTP 500 for 29 minutes.\n- Users of the affected requests received errors and no data.\n\n## Timeline (UTC)\n\n| Time | Event |\n|---|---|\n| 14:00 | The deploy went live. The deploy removed the cache warmup step. |\n| 14:02 | The rate of HTTP 500 errors increased to 12%. |\n| 14:27 | The team reverted the deploy. |\n| 14:31 | The error rate returned to normal. |\n\n## Root cause\n\nThe deploy at 14:00 UTC removed the cache warmup step. Without the warmup step, the cache was cold after the deploy. Requests that needed cached data failed and returned HTTP 500.\n\n## Fix\n\nThe team reverted the deploy at 14:27 UTC. The revert restored the cache warmup step. The error rate returned to normal at 14:31 UTC.\n\n## Proposed follow-up actions\n\n- Add a check to the deploy pipeline. If the cache warmup step is not present, the check must stop the deploy.\n- Add an alert for the HTTP 500 rate. If the rate is above 1% for two minutes, the alert must notify the on-call engineer.\n\n---\n\nThe report above contains a summary, impact, timeline, root cause, fix, and proposed follow-up actions. The follow-up actions are my suggestions, not facts from the incident. Delete or change them as necessary."
+  ],
+  "stderr_tail": ""
+}

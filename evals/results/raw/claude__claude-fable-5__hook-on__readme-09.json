@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "readme-09",
+  "cat": "docs",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 20.1,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.312458,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 11954,
+    "cache_read_input_tokens": 12788,
+    "output_tokens": 1211,
+    "output_tokens_details": {
+      "thinking_tokens": 692
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 11954,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 981,
+        "cache_read_input_tokens": 8365,
+        "cache_creation_input_tokens": 8012,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8012
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 78,
+    "sentences": 7,
+    "mean_sentence_words": 11.1,
+    "longest_sentence_words": 19,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "Here is the section.\n\n```markdown\n## Upgrade from version 1 to version 2\n\nVersion 2 reads the config file from a new location. Version 1 read the config file from `~/.tool.json`. Version 2 reads the config file from `~/.config/tool/config.json`. Version 2 does not read `~/.tool.json`.\n\n### Move the config file\n\n1. Stop the tool.\n2. Create the new directory:\n\n   ```sh\n   mkdir -p ~/.config/tool\n   ```\n\n3. Move the config file to the new location:\n\n   ```sh\n   mv ~/.tool.json ~/.config/tool/config.json\n   ```\n\n4. Install version 2.\n5. Start the tool.\n6. Make sure that the tool applies the values from the config file.\n\nCAUTION: Do not delete `~/.tool.json` before you move it. The file holds your only copy of the config values.\n\nIf you use the tool on more than one machine, do this procedure on each machine.\n```\n\nRecap: The section has one descriptive paragraph that explains the change, then a numbered procedure with one instruction per step. It uses one noun (\"config file\") and one verify verb (\"make sure that\") for the whole section. I made one assumption: version 2 does not fall back to `~/.tool.json`. If version 2 does read the old path, delete the last sentence of the first paragraph.",
+  "texts": [
+    "I will write the Upgrade section in Simplified Technical English. First I load the STE skill.",
+    "Here is the section.\n\n```markdown\n## Upgrade from version 1 to version 2\n\nVersion 2 reads the config file from a new location. Version 1 read the config file from `~/.tool.json`. Version 2 reads the config file from `~/.config/tool/config.json`. Version 2 does not read `~/.tool.json`.\n\n### Move the config file\n\n1. Stop the tool.\n2. Create the new directory:\n\n   ```sh\n   mkdir -p ~/.config/tool\n   ```\n\n3. Move the config file to the new location:\n\n   ```sh\n   mv ~/.tool.json ~/.config/tool/config.json\n   ```\n\n4. Install version 2.\n5. Start the tool.\n6. Make sure that the tool applies the values from the config file.\n\nCAUTION: Do not delete `~/.tool.json` before you move it. The file holds your only copy of the config values.\n\nIf you use the tool on more than one machine, do this procedure on each machine.\n```\n\nRecap: The section has one descriptive paragraph that explains the change, then a numbered procedure with one instruction per step. It uses one noun (\"config file\") and one verify verb (\"make sure that\") for the whole section. I made one assumption: version 2 does not fall back to `~/.tool.json`. If version 2 does read the old path, delete the last sentence of the first paragraph."
+  ],
+  "stderr_tail": ""
+}

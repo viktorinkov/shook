@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "commit-04",
+  "cat": "commit",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 8.5,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.101733,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3917,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 379,
+    "output_tokens_details": {
+      "thinking_tokens": 48
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3917,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 379,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 3917,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3917
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 71,
+    "sentences": 6,
+    "mean_sentence_words": 11.7,
+    "longest_sentence_words": 24,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "Here is a commit message for the migration. It follows the Simplified Technical English rules.\n\n```\nAdd index on orders(customer_id, created_at)\n\nQueries that list the orders of one customer filter on customer_id and\nsort on created_at. Without an index, the database scans the full\norders table for each query. This scan is slow on large tables.\n\nThis migration adds a composite index on orders(customer_id, created_at).\nThe database can now use the index for the filter and the sort in one\nstep.\n\nThe migration does not change any data. It does not change the schema\nof the orders table.\n\nIf you run this migration on a large table, expect a lock during the\nbuild. Run it in a maintenance window.\n```\n\nRecap: The subject line names the change in fewer than 50 characters. The body gives the reason, the change, and the risk. It uses simple tenses, active voice, and no filler words. If your migration tool supports a concurrent build, for example `CREATE INDEX CONCURRENTLY` in PostgreSQL, add that to the last paragraph and remove the lock warning.",
+  "texts": [
+    "Here is a commit message for the migration. It follows the Simplified Technical English rules.\n\n```\nAdd index on orders(customer_id, created_at)\n\nQueries that list the orders of one customer filter on customer_id and\nsort on created_at. Without an index, the database scans the full\norders table for each query. This scan is slow on large tables.\n\nThis migration adds a composite index on orders(customer_id, created_at).\nThe database can now use the index for the filter and the sort in one\nstep.\n\nThe migration does not change any data. It does not change the schema\nof the orders table.\n\nIf you run this migration on a large table, expect a lock during the\nbuild. Run it in a maintenance window.\n```\n\nRecap: The subject line names the change in fewer than 50 characters. The body gives the reason, the change, and the risk. It uses simple tenses, active voice, and no filler words. If your migration tool supports a concurrent build, for example `CREATE INDEX CONCURRENTLY` in PostgreSQL, add that to the last paragraph and remove the lock warning."
+  ],
+  "stderr_tail": ""
+}

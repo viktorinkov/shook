@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "explain-05",
+  "cat": "explain",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 18.3,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.313123,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 11906,
+    "cache_read_input_tokens": 12763,
+    "output_tokens": 1244,
+    "output_tokens_details": {
+      "thinking_tokens": 131
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 11906,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1037,
+        "cache_read_input_tokens": 8340,
+        "cache_creation_input_tokens": 7989,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7989
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 535,
+    "sentences": 47,
+    "mean_sentence_words": 11.1,
+    "longest_sentence_words": 26,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 2,
+    "violations_per_100w": 0.37
+  },
+  "text": "Here is the wiki section. It is descriptive text, so it uses simple present tense and sentences of 25 words or fewer.\n\n---\n\n## JWT authentication between the browser and the API\n\nA JSON Web Token (JWT) is a signed string that carries claims about a user. The API signs the token with a secret key or a private key. The browser sends the token with each request. The API checks the signature and reads the claims. The API does not store a session for the user.\n\n### Structure of a token\n\nA JWT has three parts, divided by dots: `header.payload.signature`. The header names the signature algorithm, for example `HS256` or `RS256`. The payload holds the claims, for example the user ID (`sub`), the expiry time (`exp`), and the roles. The signature protects the header and the payload against changes. The header and the payload are Base64URL text, not encrypted text. Anyone with the token can read the claims.\n\n### The login flow\n\n1. The browser sends the username and the password to `POST /login`.\n2. The API checks the credentials against the user database.\n3. If the credentials are correct, the API creates a JWT and signs it.\n4. The API returns the token to the browser.\n5. The browser stores the token for later requests.\n\n### The request flow\n\n1. The browser sends a request to a protected endpoint.\n2. The browser puts the token in the `Authorization` header: `Authorization: Bearer <token>`.\n3. The API reads the token from the header.\n4. The API checks the signature with the key.\n5. The API checks that the `exp` claim is in the future.\n6. If the signature or the expiry check fails, the API returns `401 Unauthorized`.\n7. If the checks pass, the API reads the user ID from the claims and processes the request.\n\n### Token storage in the browser\n\nThe browser can store the token in memory, in `localStorage`, or in a cookie. Memory is the safest option, but the token is lost on a page reload. `localStorage` keeps the token across reloads, but JavaScript from an XSS attack can read it. A cookie with the `HttpOnly`, `Secure`, and `SameSite` attributes hides the token from JavaScript. In this case, the browser sends the cookie automatically, and the API reads the token from the cookie. Our applications use the cookie option.\n\n### Expiry and refresh\n\nAccess tokens have a short lifetime, usually 15 minutes. A refresh token has a longer lifetime, usually days. When the access token expires, the browser sends the refresh token to `POST /refresh`. The API checks the refresh token and returns a new access token. The API stores refresh tokens in the database, so it can revoke them.\n\n### Limits\n\nCAUTION: Do not put passwords, secrets, or personal data in the payload. The payload is readable by anyone with the token.\n\nThe API cannot revoke an access token before it expires. If a token leaks, the attacker can use it until the `exp` time. For this reason, keep the access token lifetime short.\n\n---\n\nRecap: I wrote a descriptive wiki section that covers the token structure, the login flow, the request flow, the token storage options, refresh tokens, and the limits. One statement is an assumption: \"Our applications use the cookie option.\" Change or delete that sentence if your applications use a different storage option.",
+  "texts": [
+    "I will load the Simple English skill, then write the wiki section.",
+    "Here is the wiki section. It is descriptive text, so it uses simple present tense and sentences of 25 words or fewer.\n\n---\n\n## JWT authentication between the browser and the API\n\nA JSON Web Token (JWT) is a signed string that carries claims about a user. The API signs the token with a secret key or a private key. The browser sends the token with each request. The API checks the signature and reads the claims. The API does not store a session for the user.\n\n### Structure of a token\n\nA JWT has three parts, divided by dots: `header.payload.signature`. The header names the signature algorithm, for example `HS256` or `RS256`. The payload holds the claims, for example the user ID (`sub`), the expiry time (`exp`), and the roles. The signature protects the header and the payload against changes. The header and the payload are Base64URL text, not encrypted text. Anyone with the token can read the claims.\n\n### The login flow\n\n1. The browser sends the username and the password to `POST /login`.\n2. The API checks the credentials against the user database.\n3. If the credentials are correct, the API creates a JWT and signs it.\n4. The API returns the token to the browser.\n5. The browser stores the token for later requests.\n\n### The request flow\n\n1. The browser sends a request to a protected endpoint.\n2. The browser puts the token in the `Authorization` header: `Authorization: Bearer <token>`.\n3. The API reads the token from the header.\n4. The API checks the signature with the key.\n5. The API checks that the `exp` claim is in the future.\n6. If the signature or the expiry check fails, the API returns `401 Unauthorized`.\n7. If the checks pass, the API reads the user ID from the claims and processes the request.\n\n### Token storage in the browser\n\nThe browser can store the token in memory, in `localStorage`, or in a cookie. Memory is the safest option, but the token is lost on a page reload. `localStorage` keeps the token across reloads, but JavaScript from an XSS attack can read it. A cookie with the `HttpOnly`, `Secure`, and `SameSite` attributes hides the token from JavaScript. In this case, the browser sends the cookie automatically, and the API reads the token from the cookie. Our applications use the cookie option.\n\n### Expiry and refresh\n\nAccess tokens have a short lifetime, usually 15 minutes. A refresh token has a longer lifetime, usually days. When the access token expires, the browser sends the refresh token to `POST /refresh`. The API checks the refresh token and returns a new access token. The API stores refresh tokens in the database, so it can revoke them.\n\n### Limits\n\nCAUTION: Do not put passwords, secrets, or personal data in the payload. The payload is readable by anyone with the token.\n\nThe API cannot revoke an access token before it expires. If a token leaks, the attacker can use it until the `exp` time. For this reason, keep the access token lifetime short.\n\n---\n\nRecap: I wrote a descriptive wiki section that covers the token structure, the login flow, the request flow, the token storage options, refresh tokens, and the limits. One statement is an assumption: \"Our applications use the cookie option.\" Change or delete that sentence if your applications use a different storage option."
+  ],
+  "stderr_tail": ""
+}

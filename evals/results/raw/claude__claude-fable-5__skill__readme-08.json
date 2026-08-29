@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "readme-08",
+  "cat": "docs",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 20.7,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.307893,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 10810,
+    "cache_read_input_tokens": 11631,
+    "output_tokens": 1580,
+    "output_tokens_details": {
+      "thinking_tokens": 778
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10810,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1393,
+        "cache_read_input_tokens": 7208,
+        "cache_creation_input_tokens": 8025,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8025
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 258,
+    "sentences": 20,
+    "mean_sentence_words": 12.7,
+    "longest_sentence_words": 26,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 0
+    },
+    "violations_total": 3,
+    "violations_per_100w": 1.16
+  },
+  "text": "Here is the section, written in pragmatic Simplified Technical English (short sentences, active voice, one instruction per step, conditions before commands).\n\n---\n\n## Create an invoice\n\n`POST /v1/invoices`\n\nThis endpoint creates an invoice for one customer. The response contains the id of the new invoice.\n\n### Request body\n\nSend a JSON object with these fields:\n\n| Field | Type | Required | Description |\n|---|---|---|---|\n| `customer_id` | string | Yes | The id of the customer who receives the invoice. |\n| `amount_cents` | integer | Yes | The invoice amount in cents. For example, `1050` is 10.50. |\n| `due_date` | string | No | The date when payment is due, in `YYYY-MM-DD` format. |\n\n### Procedure\n\n1. Get the id of the customer.\n2. Send a `POST` request to `/v1/invoices` with `customer_id` and `amount_cents` in the body.\n3. If the invoice has a due date, add `due_date` to the body.\n4. Save the `id` from the response. Use this id in later requests for this invoice.\n\n### Example request\n\n```http\nPOST /v1/invoices\nContent-Type: application/json\n\n{\n  \"customer_id\": \"cus_123\",\n  \"amount_cents\": 1050,\n  \"due_date\": \"2026-09-30\"\n}\n```\n\n### Response\n\nIf the request succeeds, the API returns status `201 Created`. The response body contains the id of the new invoice.\n\n```json\n{\n  \"id\": \"inv_456\"\n}\n```\n\n---\n\n**Recap.** The section covers the endpoint, the three fields, a four-step procedure, an example request, and the 201 response. Two details are assumptions because the request did not give them: `due_date` uses `YYYY-MM-DD` format, and the example ids (`cus_123`, `inv_456`) are placeholders. I did not add error responses, authentication, or the behavior when `due_date` is omitted, because those facts were not given. Tell me those details and I can add them in the same style.",
+  "texts": [
+    "I'll load the Simplified Technical English skill first, since it covers API guides, then write the section.",
+    "Here is the section, written in pragmatic Simplified Technical English (short sentences, active voice, one instruction per step, conditions before commands).\n\n---\n\n## Create an invoice\n\n`POST /v1/invoices`\n\nThis endpoint creates an invoice for one customer. The response contains the id of the new invoice.\n\n### Request body\n\nSend a JSON object with these fields:\n\n| Field | Type | Required | Description |\n|---|---|---|---|\n| `customer_id` | string | Yes | The id of the customer who receives the invoice. |\n| `amount_cents` | integer | Yes | The invoice amount in cents. For example, `1050` is 10.50. |\n| `due_date` | string | No | The date when payment is due, in `YYYY-MM-DD` format. |\n\n### Procedure\n\n1. Get the id of the customer.\n2. Send a `POST` request to `/v1/invoices` with `customer_id` and `amount_cents` in the body.\n3. If the invoice has a due date, add `due_date` to the body.\n4. Save the `id` from the response. Use this id in later requests for this invoice.\n\n### Example request\n\n```http\nPOST /v1/invoices\nContent-Type: application/json\n\n{\n  \"customer_id\": \"cus_123\",\n  \"amount_cents\": 1050,\n  \"due_date\": \"2026-09-30\"\n}\n```\n\n### Response\n\nIf the request succeeds, the API returns status `201 Created`. The response body contains the id of the new invoice.\n\n```json\n{\n  \"id\": \"inv_456\"\n}\n```\n\n---\n\n**Recap.** The section covers the endpoint, the three fields, a four-step procedure, an example request, and the 201 response. Two details are assumptions because the request did not give them: `due_date` uses `YYYY-MM-DD` format, and the example ids (`cus_123`, `inv_456`) are placeholders. I did not add error responses, authentication, or the behavior when `due_date` is omitted, because those facts were not given. Tell me those details and I can add them in the same style."
+  ],
+  "stderr_tail": ""
+}

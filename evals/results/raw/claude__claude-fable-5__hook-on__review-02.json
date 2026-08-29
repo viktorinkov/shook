@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "review-02",
+  "cat": "review",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 26.5,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.177323,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3989,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 1862,
+    "output_tokens_details": {
+      "thinking_tokens": 613
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3989,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1862,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 3989,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3989
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 509,
+    "sentences": 48,
+    "mean_sentence_words": 10.2,
+    "longest_sentence_words": 20,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 1
+    },
+    "violations_total": 3,
+    "violations_per_100w": 0.59
+  },
+  "text": "Here is the PR comment. I did not run tools. The migration is self-contained, so I reviewed the three statements directly.\n\n---\n\n**Review: add `email` column to `users`**\n\nI do not recommend a merge in the current form. The migration has one data problem and several operational risks.\n\n**1. The backfill writes fake email addresses (blocker)**\n\n`username || '@example.com'` creates addresses that do not belong to the users. The database cannot tell a real address from a placeholder after this step. Any code that sends mail will send to `example.com`. Any code that uses `email` as a login identifier will accept a value that the user never verified.\n\nOptions:\n- Keep the column nullable. Set `email` only when the user gives a real address.\n- If `NOT NULL` is a hard requirement, add a `email_verified BOOLEAN NOT NULL DEFAULT false` column. Set it to `false` for all backfilled rows.\n\n**2. `SET NOT NULL` can fail on rows that the backfill did not touch**\n\nThe three statements are not in one transaction. A row inserted between the `UPDATE` and the `ALTER` has `email = NULL`. Step 3 then fails. A row with `username = NULL` also gets `email = NULL`, because `NULL || 'text'` is `NULL`.\n\nFix: wrap the statements in a transaction, or add a `WHERE email IS NULL` guard and make the migration safe to run again.\n\n**3. Lock and scan cost on a large table**\n\n- `UPDATE users` with no `WHERE` clause rewrites every row in one transaction. On PostgreSQL this creates table bloat and holds row locks until commit.\n- `ALTER COLUMN ... SET NOT NULL` takes an `ACCESS EXCLUSIVE` lock and scans the full table.\n\nFix for PostgreSQL 12 or later:\n1. Run the `UPDATE` in batches by primary key range.\n2. Add `CHECK (email IS NOT NULL) NOT VALID`.\n3. Run `VALIDATE CONSTRAINT`. This step takes only a `SHARE UPDATE EXCLUSIVE` lock.\n4. Run `SET NOT NULL`. PostgreSQL skips the scan because the valid check constraint exists.\n5. Drop the check constraint.\n\n**4. Deploy order**\n\nAfter step 3, every `INSERT INTO users` must supply `email`. If the application deploys after this migration, inserts fail until the new code is live. Confirm that the application code already writes `email`, or add a `DEFAULT`.\n\n**5. Missing constraints and index**\n\n- If `email` identifies a user, add `UNIQUE (email)`. Use `CREATE UNIQUE INDEX CONCURRENTLY` on PostgreSQL to avoid a write lock.\n- If code looks up users by `email`, add an index.\n- Decide on case handling. `Alice@Example.com` and `alice@example.com` are the same mailbox. Consider `CITEXT` or a lowercase normalization.\n\n**6. Portability**\n\n`||` is string concatenation on PostgreSQL and SQLite. On MySQL it is a logical OR unless `PIPES_AS_CONCAT` is set. Confirm the target database, or use `CONCAT()`.\n\n**7. No down migration**\n\nAdd a rollback that drops the column.\n\n---\n\n**Summary of the review:** the migration adds `email`, fills it with `username@example.com`, and marks it `NOT NULL`. The fake addresses are the main problem. The migration also lacks a transaction, batching, a lock-safe `NOT NULL` path, uniqueness, and a rollback. The next step is for the author to decide whether `email` must be `NOT NULL` at all. If not, the fix is to remove statements 2 and 3.",
+  "texts": [
+    "Here is the PR comment. I did not run tools. The migration is self-contained, so I reviewed the three statements directly.\n\n---\n\n**Review: add `email` column to `users`**\n\nI do not recommend a merge in the current form. The migration has one data problem and several operational risks.\n\n**1. The backfill writes fake email addresses (blocker)**\n\n`username || '@example.com'` creates addresses that do not belong to the users. The database cannot tell a real address from a placeholder after this step. Any code that sends mail will send to `example.com`. Any code that uses `email` as a login identifier will accept a value that the user never verified.\n\nOptions:\n- Keep the column nullable. Set `email` only when the user gives a real address.\n- If `NOT NULL` is a hard requirement, add a `email_verified BOOLEAN NOT NULL DEFAULT false` column. Set it to `false` for all backfilled rows.\n\n**2. `SET NOT NULL` can fail on rows that the backfill did not touch**\n\nThe three statements are not in one transaction. A row inserted between the `UPDATE` and the `ALTER` has `email = NULL`. Step 3 then fails. A row with `username = NULL` also gets `email = NULL`, because `NULL || 'text'` is `NULL`.\n\nFix: wrap the statements in a transaction, or add a `WHERE email IS NULL` guard and make the migration safe to run again.\n\n**3. Lock and scan cost on a large table**\n\n- `UPDATE users` with no `WHERE` clause rewrites every row in one transaction. On PostgreSQL this creates table bloat and holds row locks until commit.\n- `ALTER COLUMN ... SET NOT NULL` takes an `ACCESS EXCLUSIVE` lock and scans the full table.\n\nFix for PostgreSQL 12 or later:\n1. Run the `UPDATE` in batches by primary key range.\n2. Add `CHECK (email IS NOT NULL) NOT VALID`.\n3. Run `VALIDATE CONSTRAINT`. This step takes only a `SHARE UPDATE EXCLUSIVE` lock.\n4. Run `SET NOT NULL`. PostgreSQL skips the scan because the valid check constraint exists.\n5. Drop the check constraint.\n\n**4. Deploy order**\n\nAfter step 3, every `INSERT INTO users` must supply `email`. If the application deploys after this migration, inserts fail until the new code is live. Confirm that the application code already writes `email`, or add a `DEFAULT`.\n\n**5. Missing constraints and index**\n\n- If `email` identifies a user, add `UNIQUE (email)`. Use `CREATE UNIQUE INDEX CONCURRENTLY` on PostgreSQL to avoid a write lock.\n- If code looks up users by `email`, add an index.\n- Decide on case handling. `Alice@Example.com` and `alice@example.com` are the same mailbox. Consider `CITEXT` or a lowercase normalization.\n\n**6. Portability**\n\n`||` is string concatenation on PostgreSQL and SQLite. On MySQL it is a logical OR unless `PIPES_AS_CONCAT` is set. Confirm the target database, or use `CONCAT()`.\n\n**7. No down migration**\n\nAdd a rollback that drops the column.\n\n---\n\n**Summary of the review:** the migration adds `email`, fills it with `username@example.com`, and marks it `NOT NULL`. The fake addresses are the main problem. The migration also lacks a transaction, batching, a lock-safe `NOT NULL` path, uniqueness, and a rollback. The next step is for the author to decide whether `email` must be `NOT NULL` at all. If not, the fix is to remove statements 2 and 3."
+  ],
+  "stderr_tail": ""
+}

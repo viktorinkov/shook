@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "explain-04",
+  "cat": "explain",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 22.4,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.167873,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4014,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 1663,
+    "output_tokens_details": {
+      "thinking_tokens": 1003
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4014,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1663,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 4014,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4014
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 307,
+    "sentences": 28,
+    "mean_sentence_words": 10.6,
+    "longest_sentence_words": 18,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "The query is slow because PostgreSQL cannot find the recent rows without a scan of the full table.\n\n## Why the query is slow\n\nWithout an index on `created_at`, PostgreSQL does a sequential scan. It reads all 50 million rows and applies the filter to each row. The rows for the last day are a small fraction of the table. The planner has no way to reach them directly. A table of this size is usually larger than `shared_buffers`, so most reads come from disk.\n\nTwo more points apply:\n\n- `SELECT *` returns every column. The database reads full rows and sends more data to the client.\n- `NOW()` does not block index use. The planner evaluates the expression once per query. The missing index is the real problem.\n\n## The index that helps\n\n```sql\nCREATE INDEX CONCURRENTLY orders_created_at_idx ON orders (created_at);\n```\n\nA B-tree index stores the values of `created_at` in sorted order. The planner finds the first entry after the cutoff time and reads forward. It touches only the rows for the last day. The query does not read the other rows.\n\nNotes:\n\n- Use `CONCURRENTLY` on a live table. Without it, the build blocks writes for the full duration.\n- If the query also filters on other columns, put those columns first and `created_at` last. Example: `ON orders (customer_id, created_at)`.\n- If the query needs only some columns, replace `SELECT *` with a column list. An index with `INCLUDE (...)` can then answer the query with an index-only scan.\n- If the table receives rows in time order, a BRIN index is a much smaller alternative. It is less precise than a B-tree, but it works well for append-only tables.\n- Run `EXPLAIN (ANALYZE, BUFFERS)` before and after. Confirm that the plan shows `Index Scan` instead of `Seq Scan`.\n\n**Summary:** The filter on `created_at` has no index, so PostgreSQL reads all 50 million rows. A B-tree index on `created_at` lets the planner read only the rows from the last day.",
+  "texts": [
+    "The query is slow because PostgreSQL cannot find the recent rows without a scan of the full table.\n\n## Why the query is slow\n\nWithout an index on `created_at`, PostgreSQL does a sequential scan. It reads all 50 million rows and applies the filter to each row. The rows for the last day are a small fraction of the table. The planner has no way to reach them directly. A table of this size is usually larger than `shared_buffers`, so most reads come from disk.\n\nTwo more points apply:\n\n- `SELECT *` returns every column. The database reads full rows and sends more data to the client.\n- `NOW()` does not block index use. The planner evaluates the expression once per query. The missing index is the real problem.\n\n## The index that helps\n\n```sql\nCREATE INDEX CONCURRENTLY orders_created_at_idx ON orders (created_at);\n```\n\nA B-tree index stores the values of `created_at` in sorted order. The planner finds the first entry after the cutoff time and reads forward. It touches only the rows for the last day. The query does not read the other rows.\n\nNotes:\n\n- Use `CONCURRENTLY` on a live table. Without it, the build blocks writes for the full duration.\n- If the query also filters on other columns, put those columns first and `created_at` last. Example: `ON orders (customer_id, created_at)`.\n- If the query needs only some columns, replace `SELECT *` with a column list. An index with `INCLUDE (...)` can then answer the query with an index-only scan.\n- If the table receives rows in time order, a BRIN index is a much smaller alternative. It is less precise than a B-tree, but it works well for append-only tables.\n- Run `EXPLAIN (ANALYZE, BUFFERS)` before and after. Confirm that the plan shows `Index Scan` instead of `Seq Scan`.\n\n**Summary:** The filter on `created_at` has no index, so PostgreSQL reads all 50 million rows. A B-tree index on `created_at` lets the planner read only the rows from the last day."
+  ],
+  "stderr_tail": ""
+}

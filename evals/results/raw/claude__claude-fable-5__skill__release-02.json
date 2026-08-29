@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "release-02",
+  "cat": "release",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 17.9,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.283625,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 10755,
+    "cache_read_input_tokens": 11605,
+    "output_tokens": 1118,
+    "output_tokens_details": {
+      "thinking_tokens": 192
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10755,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 945,
+        "cache_read_input_tokens": 7182,
+        "cache_creation_input_tokens": 7996,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7996
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 380,
+    "sentences": 32,
+    "mean_sentence_words": 11.6,
+    "longest_sentence_words": 34,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 3,
+      "synonym_rotation": 0
+    },
+    "violations_total": 4,
+    "violations_per_100w": 1.05
+  },
+  "text": "Here are the release notes, written in Simplified Technical English (pragmatic mode). I did not know the version number or the tool name, so those are placeholders in angle brackets.\n\n---\n\n# Release notes \u2014 `<version>`\n\n## BREAKING CHANGE: `--output` now defaults to JSON\n\n### What changed\n\nThe `--output` flag now defaults to `json`. In earlier versions, the default was `text`.\n\nIf you do not pass `--output`, the command now writes JSON to standard output. The plain text format is still available. You must select it explicitly.\n\n### Who is affected\n\nThis change affects you if:\n\n- You run the command without the `--output` flag.\n- You parse the output with a script, a pipe, or a tool such as `grep` or `awk`.\n- You compare the output against saved text files in tests.\n\nIf you already pass `--output json` or `--output text`, nothing changes for you.\n\n### What happens if you do not update\n\nScripts that expect plain text will receive JSON. As a result, text parsers can fail or give wrong results. Test comparisons against saved plain text output will fail.\n\n### How to update\n\nTo keep the old behavior, do one of these steps:\n\n1. Add `--output text` to each command that expects plain text.\n2. If the tool reads a configuration file, set the output format to `text` in that file.\n\nTo move to the new default, update your scripts:\n\n1. Remove text parsers such as `grep`, `awk`, and `cut` from your pipelines.\n2. Parse the JSON output with a JSON tool such as `jq`.\n3. If your tests compare saved output, generate new JSON files and replace the old text files.\n\n### Example\n\nBefore this release, this command wrote plain text:\n\n```\n<tool> list\n```\n\nAfter this release, the same command writes JSON. To get plain text, run:\n\n```\n<tool> list --output text\n```\n\n### Why we made this change\n\nJSON output is stable and machine-readable. Plain text output can change between releases, and scripts that parse it break easily. With JSON as the default, scripts get a format that we will keep compatible.\n\n---\n\n**Recap:** The notes state the change, list who it affects, give the failure mode if a user does nothing, and give two migration paths (keep text, or move to JSON) as numbered steps. Fill in `<version>` and `<tool>`, and delete step 2 under \"keep the old behavior\" if the tool has no configuration file for this setting. Next step if you want it: I can trim this to a one-paragraph CHANGELOG entry as well.",
+  "texts": [
+    "I'll load the Simplified Technical English skill since it covers release notes, then draft the notes.",
+    "Here are the release notes, written in Simplified Technical English (pragmatic mode). I did not know the version number or the tool name, so those are placeholders in angle brackets.\n\n---\n\n# Release notes \u2014 `<version>`\n\n## BREAKING CHANGE: `--output` now defaults to JSON\n\n### What changed\n\nThe `--output` flag now defaults to `json`. In earlier versions, the default was `text`.\n\nIf you do not pass `--output`, the command now writes JSON to standard output. The plain text format is still available. You must select it explicitly.\n\n### Who is affected\n\nThis change affects you if:\n\n- You run the command without the `--output` flag.\n- You parse the output with a script, a pipe, or a tool such as `grep` or `awk`.\n- You compare the output against saved text files in tests.\n\nIf you already pass `--output json` or `--output text`, nothing changes for you.\n\n### What happens if you do not update\n\nScripts that expect plain text will receive JSON. As a result, text parsers can fail or give wrong results. Test comparisons against saved plain text output will fail.\n\n### How to update\n\nTo keep the old behavior, do one of these steps:\n\n1. Add `--output text` to each command that expects plain text.\n2. If the tool reads a configuration file, set the output format to `text` in that file.\n\nTo move to the new default, update your scripts:\n\n1. Remove text parsers such as `grep`, `awk`, and `cut` from your pipelines.\n2. Parse the JSON output with a JSON tool such as `jq`.\n3. If your tests compare saved output, generate new JSON files and replace the old text files.\n\n### Example\n\nBefore this release, this command wrote plain text:\n\n```\n<tool> list\n```\n\nAfter this release, the same command writes JSON. To get plain text, run:\n\n```\n<tool> list --output text\n```\n\n### Why we made this change\n\nJSON output is stable and machine-readable. Plain text output can change between releases, and scripts that parse it break easily. With JSON as the default, scripts get a format that we will keep compatible.\n\n---\n\n**Recap:** The notes state the change, list who it affects, give the failure mode if a user does nothing, and give two migration paths (keep text, or move to JSON) as numbered steps. Fill in `<version>` and `<tool>`, and delete step 2 under \"keep the old behavior\" if the tool has no configuration file for this setting. Next step if you want it: I can trim this to a one-paragraph CHANGELOG entry as well."
+  ],
+  "stderr_tail": ""
+}

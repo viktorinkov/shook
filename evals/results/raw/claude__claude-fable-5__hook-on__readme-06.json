@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "readme-06",
+  "cat": "docs",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 12.0,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.118573,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3934,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 709,
+    "output_tokens_details": {
+      "thinking_tokens": 452
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3934,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 709,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 3934,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3934
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 71,
+    "sentences": 5,
+    "mean_sentence_words": 14.0,
+    "longest_sentence_words": 19,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "I will write the paragraph in Simplified Technical English, as the active STE mode requires.\n\n```markdown\n`sqlpipe` copies Postgres tables to S3 as Parquet files. It runs on a schedule that you set in a configuration file. On each run, it reads the rows from each configured table and writes them to Parquet files. It then uploads the files to an S3 bucket with a path for each table and run date. You can use `sqlpipe` to build a data lake from an operational database without changes to your application.\n```\n\nRecap: The paragraph has five sentences, each under 25 words, with simple tenses and active voice. I assumed two details that you did not state: the schedule lives in a configuration file, and the S3 path includes the table name and the run date. If either is wrong, tell me and I will change those sentences.",
+  "texts": [
+    "I will write the paragraph in Simplified Technical English, as the active STE mode requires.\n\n```markdown\n`sqlpipe` copies Postgres tables to S3 as Parquet files. It runs on a schedule that you set in a configuration file. On each run, it reads the rows from each configured table and writes them to Parquet files. It then uploads the files to an S3 bucket with a path for each table and run date. You can use `sqlpipe` to build a data lake from an operational database without changes to your application.\n```\n\nRecap: The paragraph has five sentences, each under 25 words, with simple tenses and active voice. I assumed two details that you did not state: the schedule lives in a configuration file, and the S3 path includes the table name and the run date. If either is wrong, tell me and I will change those sentences."
+  ],
+  "stderr_tail": ""
+}

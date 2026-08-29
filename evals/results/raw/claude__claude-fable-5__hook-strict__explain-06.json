@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "explain-06",
+  "cat": "explain",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 13.0,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.122853,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3998,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 769,
+    "output_tokens_details": {
+      "thinking_tokens": 38
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3998,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 769,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 3998,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3998
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 324,
+    "sentences": 32,
+    "mean_sentence_words": 9.9,
+    "longest_sentence_words": 20,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.31
+  },
+  "text": "This is a question, so I will answer directly and not run any commands.\n\n## What the command does\n\nThe command finds old log files and deletes them.\n\n`find .` starts a search in the current directory and in all subdirectories.\n\n`-name '*.log'` selects files that end in `.log`.\n\n`-mtime +7` selects files with a modification time older than 7 full days. `find` rounds down to whole days. Thus, `+7` means 8 days or more.\n\n`-exec rm {} \\;` runs `rm` one time for each match. `find` puts the file path in the place of `{}`. The `\\;` ends the `rm` command.\n\n## When the command is dangerous\n\n- The command has no confirmation step. It deletes files at once.\n- The command searches all subdirectories. This includes `node_modules`, `.git`, backups, and mounted volumes below `.`.\n- The result depends on the current directory. If you run the command from `/` or from your home directory, it deletes logs across the whole system.\n- `-name '*.log'` also matches files that are not logs, for example `build.log` from a tool or `important-data.log`.\n- Symbolic links can point outside the tree. `rm` deletes the link only. But `find -L` or a mount point can change this.\n- One `rm` process per file is slow on a large tree. This is a performance problem, not a safety problem.\n\n## Safer alternatives\n\nBefore you delete, look at the target. Run the same `find` without `-exec` to list the matches:\n\n```sh\nfind . -name '*.log' -mtime +7\n```\n\nIf the list is correct, run the delete step. Use `-delete` or `-exec rm {} +` for faster runs:\n\n```sh\nfind . -name '*.log' -mtime +7 -delete\n```\n\nIf you want a confirmation for each file, use `-ok` in the place of `-exec`:\n\n```sh\nfind . -name '*.log' -mtime +7 -ok rm {} \\;\n```\n\nIf you want to limit the search depth, add `-maxdepth 2` directly after `.`.\n\n## Recap\n\nThe command deletes all `.log` files older than 7 days below the current directory. Nothing prompts you and nothing goes to the trash. It is dangerous when the current directory is wrong or wide, or when `.log` files hold data that you need. List the matches first, then delete.",
+  "texts": [
+    "This is a question, so I will answer directly and not run any commands.\n\n## What the command does\n\nThe command finds old log files and deletes them.\n\n`find .` starts a search in the current directory and in all subdirectories.\n\n`-name '*.log'` selects files that end in `.log`.\n\n`-mtime +7` selects files with a modification time older than 7 full days. `find` rounds down to whole days. Thus, `+7` means 8 days or more.\n\n`-exec rm {} \\;` runs `rm` one time for each match. `find` puts the file path in the place of `{}`. The `\\;` ends the `rm` command.\n\n## When the command is dangerous\n\n- The command has no confirmation step. It deletes files at once.\n- The command searches all subdirectories. This includes `node_modules`, `.git`, backups, and mounted volumes below `.`.\n- The result depends on the current directory. If you run the command from `/` or from your home directory, it deletes logs across the whole system.\n- `-name '*.log'` also matches files that are not logs, for example `build.log` from a tool or `important-data.log`.\n- Symbolic links can point outside the tree. `rm` deletes the link only. But `find -L` or a mount point can change this.\n- One `rm` process per file is slow on a large tree. This is a performance problem, not a safety problem.\n\n## Safer alternatives\n\nBefore you delete, look at the target. Run the same `find` without `-exec` to list the matches:\n\n```sh\nfind . -name '*.log' -mtime +7\n```\n\nIf the list is correct, run the delete step. Use `-delete` or `-exec rm {} +` for faster runs:\n\n```sh\nfind . -name '*.log' -mtime +7 -delete\n```\n\nIf you want a confirmation for each file, use `-ok` in the place of `-exec`:\n\n```sh\nfind . -name '*.log' -mtime +7 -ok rm {} \\;\n```\n\nIf you want to limit the search depth, add `-maxdepth 2` directly after `.`.\n\n## Recap\n\nThe command deletes all `.log` files older than 7 days below the current directory. Nothing prompts you and nothing goes to the trash. It is dangerous when the current directory is wrong or wide, or when `.log` files hold data that you need. List the matches first, then delete."
+  ],
+  "stderr_tail": ""
+}

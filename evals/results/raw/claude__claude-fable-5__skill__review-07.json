@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "review-07",
+  "cat": "review",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 21.5,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.133368,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2760,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 1455,
+    "output_tokens_details": {
+      "thinking_tokens": 62
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2760,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1455,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 2760,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2760
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 582,
+    "sentences": 34,
+    "mean_sentence_words": 16.7,
+    "longest_sentence_words": 44,
+    "violations": {
+      "sentence_over_limit": 6,
+      "contraction": 3,
+      "banned_modal": 3,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 0
+    },
+    "violations_total": 14,
+    "violations_per_100w": 2.41
+  },
+  "text": "I'll draft the review summary directly, since there's no diff or repo here to inspect \u2014 treating the described behavior (retry on every status code) as the finding.\n\n---\n\n## PR Review: Add retries to HTTP client\n\n**Verdict: Request changes.** The retry mechanism itself is a welcome addition, but the retry predicate is too broad and will cause real problems in production.\n\n### Blocking issue: retries fire on every non-2xx status, including 4xx\n\nThe client currently retries any response that isn't successful, which means it will retry on `400 Bad Request`, `401`, `403`, `404`, `409`, `422`, and so on. These are deterministic client-side failures: the same request will fail the same way on every attempt. Retrying them:\n\n- **Wastes the full retry budget on a guaranteed failure.** A malformed request that should fail in ~50ms now takes N attempts \u00d7 backoff before the caller sees the error. With, say, 3 retries and exponential backoff starting at 500ms, a simple validation error surfaces after ~3.5s instead of immediately.\n- **Multiplies load on the upstream during the worst time.** If a bad deploy starts sending malformed payloads, every one of them turns into N requests. The same applies to `401`s after a credential rotation.\n- **Can duplicate side effects.** Retrying a `409 Conflict` or a non-idempotent `POST` that returned `4xx` after partially applying can produce duplicate writes, depending on the server.\n- **Hides the real error from operators.** Logs and metrics will show retry storms rather than the underlying \"bad request\" signal.\n\n### Suggested fix\n\nRetry only on failures that are plausibly transient:\n\n- **Transport-level errors**: connection refused/reset, DNS failure, timeouts (with care \u2014 see below).\n- **`5xx`** responses, ideally excluding `501 Not Implemented`.\n- **`429 Too Many Requests`**, and honor `Retry-After` if present.\n- Optionally **`408 Request Timeout`**.\n\nEverything else in the `4xx` range should return immediately. A small, explicit allowlist (`{408, 429, 500, 502, 503, 504}`) is easier to reason about and test than a \"retry unless success\" rule.\n\n### Secondary points (non-blocking, but worth addressing in this PR)\n\n1. **Idempotency.** Even for `5xx`, retrying `POST`/`PATCH` can duplicate writes if the server applied the change before failing. Consider restricting retries to idempotent methods by default (`GET`, `HEAD`, `PUT`, `DELETE`, `OPTIONS`) and letting callers opt in per request, or supporting an `Idempotency-Key` header.\n2. **Backoff and jitter.** Please confirm the delay is exponential with jitter. A fixed or un-jittered backoff synchronizes retries across clients and amplifies outages.\n3. **Total time budget.** A per-attempt timeout \u00d7 max retries can blow past the caller's overall deadline. Cap total elapsed time, or respect a caller-supplied deadline/context.\n4. **Observability.** Emit a log line or metric per retry attempt (status, attempt number, delay) so retry behavior is visible rather than inferred from latency spikes.\n5. **Tests.** Add cases asserting that `400`, `401`, `404`, and `422` are *not* retried, that `503` and `429` *are*, and that the retry count stops at the configured maximum. The current tests (if any) that assert \"eventually succeeds\" would pass with either behavior, so they don't guard against this regression.\n\n### Summary\n\nApprove the intent, but the predicate needs to be narrowed to transient failures before merge. With an explicit retryable-status set, idempotency guard, and a couple of negative tests, this is good to go.\n\n---\n\n**Recap:** I wrote a request-changes review summary that flags the indiscriminate retry as blocking (explaining the latency, load-amplification, duplicate-side-effect, and observability consequences), proposes a concrete allowlist of retryable statuses, and lists secondary items \u2014 idempotency, jitter, total time budget, metrics, and negative tests. If you share the actual diff, I can turn this into inline comments against specific lines.",
+  "texts": [
+    "I'll draft the review summary directly, since there's no diff or repo here to inspect \u2014 treating the described behavior (retry on every status code) as the finding.\n\n---\n\n## PR Review: Add retries to HTTP client\n\n**Verdict: Request changes.** The retry mechanism itself is a welcome addition, but the retry predicate is too broad and will cause real problems in production.\n\n### Blocking issue: retries fire on every non-2xx status, including 4xx\n\nThe client currently retries any response that isn't successful, which means it will retry on `400 Bad Request`, `401`, `403`, `404`, `409`, `422`, and so on. These are deterministic client-side failures: the same request will fail the same way on every attempt. Retrying them:\n\n- **Wastes the full retry budget on a guaranteed failure.** A malformed request that should fail in ~50ms now takes N attempts \u00d7 backoff before the caller sees the error. With, say, 3 retries and exponential backoff starting at 500ms, a simple validation error surfaces after ~3.5s instead of immediately.\n- **Multiplies load on the upstream during the worst time.** If a bad deploy starts sending malformed payloads, every one of them turns into N requests. The same applies to `401`s after a credential rotation.\n- **Can duplicate side effects.** Retrying a `409 Conflict` or a non-idempotent `POST` that returned `4xx` after partially applying can produce duplicate writes, depending on the server.\n- **Hides the real error from operators.** Logs and metrics will show retry storms rather than the underlying \"bad request\" signal.\n\n### Suggested fix\n\nRetry only on failures that are plausibly transient:\n\n- **Transport-level errors**: connection refused/reset, DNS failure, timeouts (with care \u2014 see below).\n- **`5xx`** responses, ideally excluding `501 Not Implemented`.\n- **`429 Too Many Requests`**, and honor `Retry-After` if present.\n- Optionally **`408 Request Timeout`**.\n\nEverything else in the `4xx` range should return immediately. A small, explicit allowlist (`{408, 429, 500, 502, 503, 504}`) is easier to reason about and test than a \"retry unless success\" rule.\n\n### Secondary points (non-blocking, but worth addressing in this PR)\n\n1. **Idempotency.** Even for `5xx`, retrying `POST`/`PATCH` can duplicate writes if the server applied the change before failing. Consider restricting retries to idempotent methods by default (`GET`, `HEAD`, `PUT`, `DELETE`, `OPTIONS`) and letting callers opt in per request, or supporting an `Idempotency-Key` header.\n2. **Backoff and jitter.** Please confirm the delay is exponential with jitter. A fixed or un-jittered backoff synchronizes retries across clients and amplifies outages.\n3. **Total time budget.** A per-attempt timeout \u00d7 max retries can blow past the caller's overall deadline. Cap total elapsed time, or respect a caller-supplied deadline/context.\n4. **Observability.** Emit a log line or metric per retry attempt (status, attempt number, delay) so retry behavior is visible rather than inferred from latency spikes.\n5. **Tests.** Add cases asserting that `400`, `401`, `404`, and `422` are *not* retried, that `503` and `429` *are*, and that the retry count stops at the configured maximum. The current tests (if any) that assert \"eventually succeeds\" would pass with either behavior, so they don't guard against this regression.\n\n### Summary\n\nApprove the intent, but the predicate needs to be narrowed to transient failures before merge. With an explicit retryable-status set, idempotency guard, and a couple of negative tests, this is good to go.\n\n---\n\n**Recap:** I wrote a request-changes review summary that flags the indiscriminate retry as blocking (explaining the latency, load-amplification, duplicate-side-effect, and observability consequences), proposes a concrete allowlist of retryable statuses, and lists secondary items \u2014 idempotency, jitter, total time budget, metrics, and negative tests. If you share the actual diff, I can turn this into inline comments against specific lines."
+  ],
+  "stderr_tail": ""
+}

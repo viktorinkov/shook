@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "review-09",
+  "cat": "review",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 11.1,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.121253,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3998,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 737,
+    "output_tokens_details": {
+      "thinking_tokens": 167
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3998,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 737,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 3998,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3998
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 221,
+    "sentences": 22,
+    "mean_sentence_words": 10.0,
+    "longest_sentence_words": 15,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 1
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.45
+  },
+  "text": "I will write the PR comment now.\n\n**PR comment:**\n\nThis code has a possible bug with the loop variable. The result depends on the Go version in `go.mod`.\n\nBefore Go 1.22, all iterations share one `item` variable. The goroutines start after the loop moves on. Many goroutines then read the last value of `item`. Each goroutine calls `process` with the same item.\n\nIn Go 1.22 and later, each iteration gets a new `item` variable. The code is correct in that case. Check the `go` line in `go.mod` to confirm the version.\n\nIf the module uses a version before 1.22, pass the item as an argument:\n\n```go\nfor _, item := range items {\n    go func(item Item) {\n        process(item)\n    }(item)\n}\n```\n\nTwo more points apply to all Go versions:\n\n1. The loop does not wait for the goroutines. If the function returns, the goroutines can stop before they complete. Use a `sync.WaitGroup` or an `errgroup.Group` to wait for them.\n2. The loop starts one goroutine per item with no limit. If `items` is large, this can use too much memory. Use a semaphore or a worker pool to limit the concurrency.\n\nExample with a wait group and a limit:\n\n```go\nvar wg sync.WaitGroup\nsem := make(chan struct{}, 8)\nfor _, item := range items {\n    wg.Add(1)\n    go func(item Item) {\n        defer wg.Done()\n        sem <- struct{}{}\n        defer func() { <-sem }()\n        process(item)\n    }(item)\n}\nwg.Wait()\n```\n\n**Recap:** The main risk is the loop variable capture before Go 1.22. The code also does not wait for the goroutines and does not limit their number. The comment above gives a fix for each point.",
+  "texts": [
+    "I will write the PR comment now.\n\n**PR comment:**\n\nThis code has a possible bug with the loop variable. The result depends on the Go version in `go.mod`.\n\nBefore Go 1.22, all iterations share one `item` variable. The goroutines start after the loop moves on. Many goroutines then read the last value of `item`. Each goroutine calls `process` with the same item.\n\nIn Go 1.22 and later, each iteration gets a new `item` variable. The code is correct in that case. Check the `go` line in `go.mod` to confirm the version.\n\nIf the module uses a version before 1.22, pass the item as an argument:\n\n```go\nfor _, item := range items {\n    go func(item Item) {\n        process(item)\n    }(item)\n}\n```\n\nTwo more points apply to all Go versions:\n\n1. The loop does not wait for the goroutines. If the function returns, the goroutines can stop before they complete. Use a `sync.WaitGroup` or an `errgroup.Group` to wait for them.\n2. The loop starts one goroutine per item with no limit. If `items` is large, this can use too much memory. Use a semaphore or a worker pool to limit the concurrency.\n\nExample with a wait group and a limit:\n\n```go\nvar wg sync.WaitGroup\nsem := make(chan struct{}, 8)\nfor _, item := range items {\n    wg.Add(1)\n    go func(item Item) {\n        defer wg.Done()\n        sem <- struct{}{}\n        defer func() { <-sem }()\n        process(item)\n    }(item)\n}\nwg.Wait()\n```\n\n**Recap:** The main risk is the loop variable capture before Go 1.22. The code also does not wait for the goroutines and does not limit their number. The comment above gives a fix for each point."
+  ],
+  "stderr_tail": ""
+}

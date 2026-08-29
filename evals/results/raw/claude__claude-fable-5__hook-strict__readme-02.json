@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "readme-02",
+  "cat": "docs",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 19.8,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.163383,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4002,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 1578,
+    "output_tokens_details": {
+      "thinking_tokens": 1056
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4002,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1578,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 4002,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4002
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 174,
+    "sentences": 17,
+    "mean_sentence_words": 10.2,
+    "longest_sentence_words": 18,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "I will write the section now with an assumed API, because there is no repository in this directory.\n\n## Getting Started\n\n### Install\n\nInstall the package with npm:\n\n```bash\nnpm install quickcache\n```\n\n`quickcache` requires Node.js 18 or later and a Redis server, version 6 or later.\n\n### Connect\n\nCreate a client and connect it to Redis:\n\n```js\nconst { QuickCache } = require('quickcache');\n\nconst cache = new QuickCache({ url: 'redis://localhost:6379' });\n\nawait cache.connect();\n```\n\nIf you do not give a `url`, the client connects to `redis://localhost:6379`. The `connect()` method returns a promise. Wait for the promise before you use the client.\n\n### Set and get a value\n\nUse `set` to store a value. Use `get` to read it.\n\n```js\nawait cache.set('user:42', { name: 'Ada' }, { ttl: 60 });\n\nconst user = await cache.get('user:42');\nconsole.log(user); // { name: 'Ada' }\n```\n\nThe `ttl` option sets the time to live in seconds. When the time expires, Redis deletes the key. If the key does not exist, `get` returns `null`.\n\n### Disconnect\n\nWhen your application stops, close the connection:\n\n```js\nawait cache.disconnect();\n```\n\n---\n\n**Recap:** The section covers install, connect, one `set`/`get` example, and disconnect. I found no repository here, so I assumed the API: a `QuickCache` class with `connect()`, `set(key, value, { ttl })`, `get(key)`, and `disconnect()`. If the real API uses different names or options, tell me, and I will update the examples.",
+  "texts": [
+    "I will write the section now with an assumed API, because there is no repository in this directory.\n\n## Getting Started\n\n### Install\n\nInstall the package with npm:\n\n```bash\nnpm install quickcache\n```\n\n`quickcache` requires Node.js 18 or later and a Redis server, version 6 or later.\n\n### Connect\n\nCreate a client and connect it to Redis:\n\n```js\nconst { QuickCache } = require('quickcache');\n\nconst cache = new QuickCache({ url: 'redis://localhost:6379' });\n\nawait cache.connect();\n```\n\nIf you do not give a `url`, the client connects to `redis://localhost:6379`. The `connect()` method returns a promise. Wait for the promise before you use the client.\n\n### Set and get a value\n\nUse `set` to store a value. Use `get` to read it.\n\n```js\nawait cache.set('user:42', { name: 'Ada' }, { ttl: 60 });\n\nconst user = await cache.get('user:42');\nconsole.log(user); // { name: 'Ada' }\n```\n\nThe `ttl` option sets the time to live in seconds. When the time expires, Redis deletes the key. If the key does not exist, `get` returns `null`.\n\n### Disconnect\n\nWhen your application stops, close the connection:\n\n```js\nawait cache.disconnect();\n```\n\n---\n\n**Recap:** The section covers install, connect, one `set`/`get` example, and disconnect. I found no repository here, so I assumed the API: a `QuickCache` class with `connect()`, `set(key, value, { ttl })`, `get(key)`, and `disconnect()`. If the real API uses different names or options, tell me, and I will update the examples."
+  ],
+  "stderr_tail": ""
+}

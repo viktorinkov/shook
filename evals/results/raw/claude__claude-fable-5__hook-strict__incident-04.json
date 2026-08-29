@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "incident-04",
+  "cat": "incident",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 13.5,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 2,
+  "strict_blocks": 1,
+  "num_turns": 2,
+  "cost_usd": 0.144573,
+  "usage": {
+    "input_tokens": 6,
+    "cache_creation_input_tokens": 4734,
+    "cache_read_input_tokens": 12833,
+    "output_tokens": 740,
+    "output_tokens_details": {
+      "thinking_tokens": 354
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4734,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 4,
+        "output_tokens": 194,
+        "cache_read_input_tokens": 8410,
+        "cache_creation_input_tokens": 747,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 747
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 110,
+    "sentences": 12,
+    "mean_sentence_words": 9.2,
+    "longest_sentence_words": 18,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "I will write the status page update now.\n\n**Title:** Search results delayed during reindex\n\n**Status:** Monitoring\n\n**Message:**\n\nA reindex of the search database is in progress. Search results can show a delay of up to 10 minutes. No data is lost.\n\nNew records are safe. When the reindex is complete, they will appear in search results. All other features operate normally.\n\nWhen the reindex is complete, we will post an update.\n\n---\n\nRecap: The update has a title, a status, and a three-paragraph message. It states the cause, the maximum delay, and the fact that no data is lost. If your page uses different status names, change the status field.",
+  "texts": [
+    "I will write the status page update now.\n\n**Title:** Search results delayed during reindex\n\n**Status:** Monitoring\n\n**Message:**\n\nA reindex of the search database is in progress. Search results can show a delay of up to 10 minutes. No data is lost.\n\nNew records are safe. They will appear in search results when the reindex is complete. All other features operate normally.\n\nWe will post an update when the reindex is complete.\n\n---\n\nRecap: The update has a title, a status, and a three-paragraph message. It states the cause, the maximum delay, and the fact that no data is lost. Change the status field if your page uses different status names.",
+    "I will write the status page update now.\n\n**Title:** Search results delayed during reindex\n\n**Status:** Monitoring\n\n**Message:**\n\nA reindex of the search database is in progress. Search results can show a delay of up to 10 minutes. No data is lost.\n\nNew records are safe. When the reindex is complete, they will appear in search results. All other features operate normally.\n\nWhen the reindex is complete, we will post an update.\n\n---\n\nRecap: The update has a title, a status, and a three-paragraph message. It states the cause, the maximum delay, and the fact that no data is lost. If your page uses different status names, change the status field."
+  ],
+  "stderr_tail": ""
+}

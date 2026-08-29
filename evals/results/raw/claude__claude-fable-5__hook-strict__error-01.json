@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "error-01",
+  "cat": "error",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 11.5,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.282428,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 12073,
+    "cache_read_input_tokens": 12828,
+    "output_tokens": 562,
+    "output_tokens_details": {
+      "thinking_tokens": 153
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12073,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 289,
+        "cache_read_input_tokens": 8405,
+        "cache_creation_input_tokens": 8091,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8091
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 123,
+    "sentences": 14,
+    "mean_sentence_words": 8.5,
+    "longest_sentence_words": 21,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "Here is the error message. The first line gives the problem. The second line gives the action.\n\n```\nFile too large. The file is larger than the 25 MB limit. Compress the file or select a smaller file, then try again.\n```\n\nStructure of the message:\n\n- The title \"File too large\" names the problem.\n- The second sentence gives the limit as a fact. The reader learns the cause in one read.\n- The last sentence is an instruction. It gives the reader two ways to correct the problem.\n\nOptional variant that shows the actual file size:\n\n```\nFile too large. The file is 41 MB. The limit is 25 MB. Compress the file or select a smaller file, then try again.\n```\n\nRecap: I wrote one main error message and one variant with the actual file size. Each sentence is under 20 words. Each sentence has one fact or one instruction. If you want a version for a specific UI, for example a toast or a modal dialog, tell me the format.",
+  "texts": [
+    "I will load the Simple English skill, then write the error message.",
+    "Here is the error message. The first line gives the problem. The second line gives the action.\n\n```\nFile too large. The file is larger than the 25 MB limit. Compress the file or select a smaller file, then try again.\n```\n\nStructure of the message:\n\n- The title \"File too large\" names the problem.\n- The second sentence gives the limit as a fact. The reader learns the cause in one read.\n- The last sentence is an instruction. It gives the reader two ways to correct the problem.\n\nOptional variant that shows the actual file size:\n\n```\nFile too large. The file is 41 MB. The limit is 25 MB. Compress the file or select a smaller file, then try again.\n```\n\nRecap: I wrote one main error message and one variant with the actual file size. Each sentence is under 20 words. Each sentence has one fact or one instruction. If you want a version for a specific UI, for example a toast or a modal dialog, tell me the format."
+  ],
+  "stderr_tail": ""
+}

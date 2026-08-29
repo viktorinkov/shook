@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "readme-03",
+  "cat": "docs",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 8.5,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.111493,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3940,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 565,
+    "output_tokens_details": {
+      "thinking_tokens": 108
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3940,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 565,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 3940,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3940
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 237,
+    "sentences": 22,
+    "mean_sentence_words": 10.5,
+    "longest_sentence_words": 25,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 1
+    },
+    "violations_total": 2,
+    "violations_per_100w": 0.84
+  },
+  "text": "I will write the Configuration section in Simplified Technical English.\n\n## Configuration\n\nThe tool reads its settings from `config.toml`. The file must be in the working directory. If the file does not exist, the tool uses the default values.\n\nThe file supports three keys:\n\n| Key | Type | Default | Description |\n|-----|------|---------|-------------|\n| `port` | integer | `8080` | The TCP port on which the tool listens. |\n| `log_level` | string | `info` | The minimum level for log messages. |\n| `workers` | integer | `4` | The number of worker processes. |\n\n### Example\n\n```toml\nport = 8080\nlog_level = \"info\"\nworkers = 4\n```\n\n### Notes\n\n- `port` must be a number between 1 and 65535. If you set a port below 1024, run the tool as root.\n- `log_level` must be one of: `debug`, `info`, `warn`, `error`.\n- `workers` must be a positive integer. Set `workers` to the number of CPU cores as a starting point.\n- If you omit a key, the tool uses the default value for that key.\n- If you change `config.toml`, restart the tool. The tool reads the file only at startup.\n\n---\n\nThe section is done. It lists the three keys with defaults, gives a full example file, and adds constraints for each value. I made two assumptions that you must verify: the file lives in the working directory, and the tool reads it only at startup. Change those lines if your tool behaves differently.",
+  "texts": [
+    "I will write the Configuration section in Simplified Technical English.\n\n## Configuration\n\nThe tool reads its settings from `config.toml`. The file must be in the working directory. If the file does not exist, the tool uses the default values.\n\nThe file supports three keys:\n\n| Key | Type | Default | Description |\n|-----|------|---------|-------------|\n| `port` | integer | `8080` | The TCP port on which the tool listens. |\n| `log_level` | string | `info` | The minimum level for log messages. |\n| `workers` | integer | `4` | The number of worker processes. |\n\n### Example\n\n```toml\nport = 8080\nlog_level = \"info\"\nworkers = 4\n```\n\n### Notes\n\n- `port` must be a number between 1 and 65535. If you set a port below 1024, run the tool as root.\n- `log_level` must be one of: `debug`, `info`, `warn`, `error`.\n- `workers` must be a positive integer. Set `workers` to the number of CPU cores as a starting point.\n- If you omit a key, the tool uses the default value for that key.\n- If you change `config.toml`, restart the tool. The tool reads the file only at startup.\n\n---\n\nThe section is done. It lists the three keys with defaults, gives a full example file, and adds constraints for each value. I made two assumptions that you must verify: the file lives in the working directory, and the tool reads it only at startup. Change those lines if your tool behaves differently."
+  ],
+  "stderr_tail": ""
+}
