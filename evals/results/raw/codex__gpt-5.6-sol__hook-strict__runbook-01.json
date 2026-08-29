@@ -1,0 +1,49 @@
+{
+  "harness": "codex",
+  "arm": "hook-strict",
+  "id": "runbook-01",
+  "cat": "runbook",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 42.3,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 83658,
+    "cached_input_tokens": 62464,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 1460,
+    "reasoning_output_tokens": 462
+  },
+  "lint": {
+    "type": "procedural",
+    "words": 340,
+    "sentences": 34,
+    "mean_sentence_words": 9.2,
+    "longest_sentence_words": 15,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "# Runbook: Rotate the `app` Database Password\n\n## Requirements\n\nThe database must accept the old and new passwords during the rotation.\n\nThe application must have at least two healthy instances.\n\nSIGHUP must read `DB_PASSWORD` from a mutable source, such as a secret file or supervisor.\n\nA process cannot receive a new environment value from another process. SIGHUP alone cannot change its environment.\n\n## Procedure\n\n1. Make sure that all application instances are healthy.\n\n2. Make sure that the database accepts two passwords for the `app` user.\n\n3. Generate a new password with the approved password tool.\n\n4. Store the new password in the secret manager.\n\n5. Add the new password as a secondary password for the `app` database user.\n\n6. Make sure that both passwords permit a database connection.\n\n7. Update the source that supplies `DB_PASSWORD`.\n\n8. Select one application instance.\n\n9. Send SIGHUP to the selected instance.\n\n```sh\nkill -HUP <pid>\n```\n\n10. Make sure that the selected instance accepts requests.\n\n11. Make sure that the selected instance opens new database connections.\n\n12. Examine the application log for authentication errors.\n\n13. Send SIGHUP to each remaining instance, one instance at a time.\n\n14. Make sure that the service stays healthy after each reload.\n\n15. Make sure that all instances use new database connections.\n\n16. Remove the old password from the `app` database user.\n\n17. Make sure that the new password permits a database connection.\n\n18. Make sure that the old password does not permit a database connection.\n\n19. Remove the old password from the secret manager.\n\n20. Record the rotation time and the new secret version.\n\n## Rollback\n\n1. If an instance reports authentication errors, stop the rotation.\n\n2. Restore the old value in the source that supplies `DB_PASSWORD`.\n\n3. Send SIGHUP to each affected instance.\n\n4. Make sure that the affected instances accept requests.\n\n5. Keep both database passwords active until you find the cause.\n\nCAUTION: Do not remove the old password before all instances use the new password. Early removal causes authentication errors.\n\nIf SIGHUP reads only the original process environment, use a rolling restart instead. Keep at least one healthy instance available.",
+  "texts": [
+    "I will use the Simple English skill because this runbook needs clear, controlled instructions.",
+    "# Runbook: Rotate the `app` Database Password\n\n## Requirements\n\nThe database must accept the old and new passwords during the rotation.\n\nThe application must have at least two healthy instances.\n\nSIGHUP must read `DB_PASSWORD` from a mutable source, such as a secret file or supervisor.\n\nA process cannot receive a new environment value from another process. SIGHUP alone cannot change its environment.\n\n## Procedure\n\n1. Make sure that all application instances are healthy.\n\n2. Make sure that the database accepts two passwords for the `app` user.\n\n3. Generate a new password with the approved password tool.\n\n4. Store the new password in the secret manager.\n\n5. Add the new password as a secondary password for the `app` database user.\n\n6. Make sure that both passwords permit a database connection.\n\n7. Update the source that supplies `DB_PASSWORD`.\n\n8. Select one application instance.\n\n9. Send SIGHUP to the selected instance.\n\n```sh\nkill -HUP <pid>\n```\n\n10. Make sure that the selected instance accepts requests.\n\n11. Make sure that the selected instance opens new database connections.\n\n12. Examine the application log for authentication errors.\n\n13. Send SIGHUP to each remaining instance, one instance at a time.\n\n14. Make sure that the service stays healthy after each reload.\n\n15. Make sure that all instances use new database connections.\n\n16. Remove the old password from the `app` database user.\n\n17. Make sure that the new password permits a database connection.\n\n18. Make sure that the old password does not permit a database connection.\n\n19. Remove the old password from the secret manager.\n\n20. Record the rotation time and the new secret version.\n\n## Rollback\n\n1. If an instance reports authentication errors, stop the rotation.\n\n2. Restore the old value in the source that supplies `DB_PASSWORD`.\n\n3. Send SIGHUP to each affected instance.\n\n4. Make sure that the affected instances accept requests.\n\n5. Keep both database passwords active until you find the cause.\n\nCAUTION: Do not remove the old password before all instances use the new password. Early removal causes authentication errors.\n\nIf SIGHUP reads only the original process environment, use a rolling restart instead. Keep at least one healthy instance available."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

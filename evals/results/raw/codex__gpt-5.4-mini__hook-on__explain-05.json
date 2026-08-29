@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "hook-on",
+  "id": "explain-05",
+  "cat": "explain",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 5.4,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 13960,
+    "cached_input_tokens": 7936,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 185,
+    "reasoning_output_tokens": 41
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 109,
+    "sentences": 10,
+    "mean_sentence_words": 10.9,
+    "longest_sentence_words": 17,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "JWT authentication works like this:\n\nThe browser first sends a sign-in request to the API.  \nIf the credentials are valid, the API returns a signed JWT.  \nThe browser stores the token, often in `HttpOnly` cookies or secure storage.  \nFor later requests, the browser sends the JWT with each API call.  \nThe API verifies the token signature and checks claims such as expiration and user identity.  \nIf the token is valid, the API allows access.  \nIf the token is invalid or expired, the API denies the request and asks for sign-in again.\n\nJWTs help the API stay stateless.  \nThe API does not need to keep session data for each user.",
+  "texts": [
+    "JWT authentication works like this:\n\nThe browser first sends a sign-in request to the API.  \nIf the credentials are valid, the API returns a signed JWT.  \nThe browser stores the token, often in `HttpOnly` cookies or secure storage.  \nFor later requests, the browser sends the JWT with each API call.  \nThe API verifies the token signature and checks claims such as expiration and user identity.  \nIf the token is valid, the API allows access.  \nIf the token is invalid or expired, the API denies the request and asks for sign-in again.\n\nJWTs help the API stay stateless.  \nThe API does not need to keep session data for each user."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

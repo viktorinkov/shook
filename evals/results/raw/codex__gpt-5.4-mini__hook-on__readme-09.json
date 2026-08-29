@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "hook-on",
+  "id": "readme-09",
+  "cat": "docs",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 5.3,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 13978,
+    "cached_input_tokens": 13568,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 144,
+    "reasoning_output_tokens": 43
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 58,
+    "sentences": 5,
+    "mean_sentence_words": 10.8,
+    "longest_sentence_words": 14,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 1.72
+  },
+  "text": "**Upgrade**\n\n1. Move your config file from `~/.tool.json` to `~/.config/tool/config.json`.\n2. Create the `~/.config/tool/` directory if it does not exist.\n3. Keep the same JSON content in the new file.\n4. Remove `~/.tool.json` after you confirm that version 2 reads the new file.\n\nIf you use automation, update any script or path that points to `~/.tool.json`.",
+  "texts": [
+    "**Upgrade**\n\n1. Move your config file from `~/.tool.json` to `~/.config/tool/config.json`.\n2. Create the `~/.config/tool/` directory if it does not exist.\n3. Keep the same JSON content in the new file.\n4. Remove `~/.tool.json` after you confirm that version 2 reads the new file.\n\nIf you use automation, update any script or path that points to `~/.tool.json`."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

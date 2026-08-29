@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "skill",
+  "id": "incident-05",
+  "cat": "incident",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 9.3,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 13155,
+    "cached_input_tokens": 12544,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 465,
+    "reasoning_output_tokens": 21
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 322,
+    "sentences": 33,
+    "mean_sentence_words": 8.8,
+    "longest_sentence_words": 27,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 3
+    },
+    "violations_total": 6,
+    "violations_per_100w": 1.86
+  },
+  "text": "**Action Items**\n\n1. Reduce log volume at the source.\n   - Audit the noisiest services and suppress repetitive, low-value messages.\n   - Downgrade expected operational events from `error` to `info` or `debug` where appropriate.\n   - Add sampling or rate limiting for high-frequency logs.\n\n2. Enforce log retention and rotation.\n   - Standardize rotation policies across all hosts and containers.\n   - Set conservative size- and time-based retention limits.\n   - Verify compressed archives are being deleted on schedule.\n\n3. Add disk-usage guardrails.\n   - Configure alerts for disk usage at 70%, 85%, and 95%.\n   - Add separate alerts for rapid growth in log directories.\n   - Create a hard alert when log partitions exceed safe headroom.\n\n4. Prevent logs from consuming critical storage.\n   - Move logs to a dedicated partition or volume where feasible.\n   - Ensure application data and logs do not share the same failure domain.\n   - Cap log volume with per-service quotas if the platform supports it.\n\n5. Improve operational visibility.\n   - Add dashboard panels for disk usage by node, mount, and log directory.\n   - Track log growth rate over time.\n   - Include recent log size trends in incident triage runbooks.\n\n6. Make remediation faster.\n   - Document the exact steps to identify and clear oversized log files safely.\n   - Provide a one-command cleanup procedure for emergency use.\n   - Add a runbook entry for disk-full incidents with clear ownership and escalation paths.\n\n7. Validate the fix.\n   - Add a periodic test that fills log storage in a staging environment to confirm alerts fire.\n   - Review rotation and cleanup behavior after deploys.\n   - Include disk-pressure scenarios in incident drills.\n\n8. Assign owners and deadlines.\n   - Assign each item to a specific team or individual.\n   - Track completion in the incident follow-up queue.\n   - Review progress weekly until all high-priority items are closed.\n\nIf you want, I can also rewrite this in a more formal postmortem tone or tailor it to a specific stack like Kubernetes, VM-based hosts, or systemd/journald.",
+  "texts": [
+    "**Action Items**\n\n1. Reduce log volume at the source.\n   - Audit the noisiest services and suppress repetitive, low-value messages.\n   - Downgrade expected operational events from `error` to `info` or `debug` where appropriate.\n   - Add sampling or rate limiting for high-frequency logs.\n\n2. Enforce log retention and rotation.\n   - Standardize rotation policies across all hosts and containers.\n   - Set conservative size- and time-based retention limits.\n   - Verify compressed archives are being deleted on schedule.\n\n3. Add disk-usage guardrails.\n   - Configure alerts for disk usage at 70%, 85%, and 95%.\n   - Add separate alerts for rapid growth in log directories.\n   - Create a hard alert when log partitions exceed safe headroom.\n\n4. Prevent logs from consuming critical storage.\n   - Move logs to a dedicated partition or volume where feasible.\n   - Ensure application data and logs do not share the same failure domain.\n   - Cap log volume with per-service quotas if the platform supports it.\n\n5. Improve operational visibility.\n   - Add dashboard panels for disk usage by node, mount, and log directory.\n   - Track log growth rate over time.\n   - Include recent log size trends in incident triage runbooks.\n\n6. Make remediation faster.\n   - Document the exact steps to identify and clear oversized log files safely.\n   - Provide a one-command cleanup procedure for emergency use.\n   - Add a runbook entry for disk-full incidents with clear ownership and escalation paths.\n\n7. Validate the fix.\n   - Add a periodic test that fills log storage in a staging environment to confirm alerts fire.\n   - Review rotation and cleanup behavior after deploys.\n   - Include disk-pressure scenarios in incident drills.\n\n8. Assign owners and deadlines.\n   - Assign each item to a specific team or individual.\n   - Track completion in the incident follow-up queue.\n   - Review progress weekly until all high-priority items are closed.\n\nIf you want, I can also rewrite this in a more formal postmortem tone or tailor it to a specific stack like Kubernetes, VM-based hosts, or systemd/journald."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

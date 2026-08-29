@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "hook-on",
+  "id": "readme-07",
+  "cat": "docs",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 5.8,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 16634,
+    "cached_input_tokens": 9984,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 122,
+    "reasoning_output_tokens": 19
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 66,
+    "sentences": 6,
+    "mean_sentence_words": 11.0,
+    "longest_sentence_words": 20,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 1.52
+  },
+  "text": "## Environment variables\n\n| Variable | Requirement | Description | Default |\n|---|---|---|---|\n| `DATABASE_URL` | Required | Specifies the database connection URL. | None |\n| `REDIS_URL` | Optional | Specifies the Redis connection URL. The service enables caching when this variable is set. | None |\n| `LOG_JSON` | Optional | Controls JSON log output. Set the value to `true` to enable JSON logs. | `false` |",
+  "texts": [
+    "## Environment variables\n\n| Variable | Requirement | Description | Default |\n|---|---|---|---|\n| `DATABASE_URL` | Required | Specifies the database connection URL. | None |\n| `REDIS_URL` | Optional | Specifies the Redis connection URL. The service enables caching when this variable is set. | None |\n| `LOG_JSON` | Optional | Controls JSON log output. Set the value to `true` to enable JSON logs. | `false` |"
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

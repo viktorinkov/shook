@@ -1,0 +1,49 @@
+{
+  "harness": "codex",
+  "arm": "skill",
+  "id": "explain-07",
+  "cat": "explain",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 18.8,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 57408,
+    "cached_input_tokens": 44288,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 601,
+    "reasoning_output_tokens": 64
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 137,
+    "sentences": 13,
+    "mean_sentence_words": 10.2,
+    "longest_sentence_words": 15,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.73
+  },
+  "text": "A database index is like an index in a book. It helps the database find specific data without reading every row.\n\nThe faster lookup has costs:\n\n- **Storage:** The database stores the index in addition to the original data.\n- **Slower writes:** Each insert, update, or delete can require an index update.\n- **Maintenance:** The database must rebuild, reorganize, or analyze indexes over time.\n- **Deployment risk:** Creating an index on a large table can use significant CPU and memory. It can also affect live traffic.\n- **Planning complexity:** More indexes give the database more query options. Some indexes duplicate others or receive no use.\n\nThe product tradeoff is simple: an index can improve read speed, but it consumes resources and increases write costs. Add one when the user benefit exceeds those costs, and measure the result.",
+  "texts": [
+    "I\u2019m using the Simplified Technical English skill to keep the explanation clear for a non-database audience.",
+    "A database index is like an index in a book. It helps the database find specific data without reading every row.\n\nThe faster lookup has costs:\n\n- **Storage:** The database stores the index in addition to the original data.\n- **Slower writes:** Each insert, update, or delete can require an index update.\n- **Maintenance:** The database must rebuild, reorganize, or analyze indexes over time.\n- **Deployment risk:** Creating an index on a large table can use significant CPU and memory. It can also affect live traffic.\n- **Planning complexity:** More indexes give the database more query options. Some indexes duplicate others or receive no use.\n\nThe product tradeoff is simple: an index can improve read speed, but it consumes resources and increases write costs. Add one when the user benefit exceeds those costs, and measure the result."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

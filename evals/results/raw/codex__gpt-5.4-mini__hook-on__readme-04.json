@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "hook-on",
+  "id": "readme-04",
+  "cat": "docs",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 6.1,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 13960,
+    "cached_input_tokens": 13568,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 199,
+    "reasoning_output_tokens": 46
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 114,
+    "sentences": 13,
+    "mean_sentence_words": 8.1,
+    "longest_sentence_words": 16,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 1
+    },
+    "violations_total": 2,
+    "violations_per_100w": 1.75
+  },
+  "text": "**Troubleshooting**\n\nIf the app stops at start with `EADDRINUSE`, another process already uses the port.\n\n1. Confirm that no other copy of the app runs.\n2. Close the other copy if it runs.\n3. Stop the process that uses the same port.\n4. Start the app again.\n\nIf the error returns, check the port setting in the app config.\n\n1. Open the config file.\n2. Find the port value.\n3. Set a free port.\n4. Save the file.\n5. Start the app again.\n\nIf a stale process still holds the port, restart the desktop session or the computer.\n\nIf the app still fails, collect the full start log and send it to support.",
+  "texts": [
+    "**Troubleshooting**\n\nIf the app stops at start with `EADDRINUSE`, another process already uses the port.\n\n1. Confirm that no other copy of the app runs.\n2. Close the other copy if it runs.\n3. Stop the process that uses the same port.\n4. Start the app again.\n\nIf the error returns, check the port setting in the app config.\n\n1. Open the config file.\n2. Find the port value.\n3. Set a free port.\n4. Save the file.\n5. Start the app again.\n\nIf a stale process still holds the port, restart the desktop session or the computer.\n\nIf the app still fails, collect the full start log and send it to support."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

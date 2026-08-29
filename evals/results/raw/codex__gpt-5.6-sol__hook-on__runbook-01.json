@@ -1,0 +1,49 @@
+{
+  "harness": "codex",
+  "arm": "hook-on",
+  "id": "runbook-01",
+  "cat": "runbook",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 30.8,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 37458,
+    "cached_input_tokens": 32256,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 1190,
+    "reasoning_output_tokens": 405
+  },
+  "lint": {
+    "type": "procedural",
+    "words": 432,
+    "sentences": 48,
+    "mean_sentence_words": 8.1,
+    "longest_sentence_words": 15,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 0
+    },
+    "violations_total": 2,
+    "violations_per_100w": 0.46
+  },
+  "text": "# Database Password Rotation Runbook\n\n## Requirements\n\nThe database must accept the old and new passwords during the rotation.\n\nThe platform must update `DB_PASSWORD` inside each process before SIGHUP. Most platforms cannot change an existing process environment.\n\nIf the platform cannot update the process environment, use a rolling restart instead of SIGHUP.\n\n## Preparation\n\n1. Record the current application health status.\n2. Record the current database error rate.\n3. List all application instances.\n4. Generate a new password with the approved password tool.\n5. Store the new password in the secret manager.\n6. Do not write either password in a command history or log.\n\n## Add the new password\n\n1. Configure the database to accept the new password for `app`.\n2. Keep the old password valid.\n3. Open a new database connection with the new password.\n4. Run a read-only query through this connection.\n5. If the query fails, restore the database password configuration.\n6. If the query fails, stop the procedure.\n\n## Update the application\n\nProcess one application instance at a time.\n\n1. Remove one instance from the load balancer.\n2. Wait until all active requests on that instance finish.\n3. Update `DB_PASSWORD` for that instance.\n4. Send SIGHUP to the application process.\n5. Add the instance to the load balancer.\n6. Make sure that the instance reports a healthy status.\n7. Make sure that the instance opens new database connections.\n8. Make sure that the database log contains no authentication errors.\n9. If a check fails, complete the rollback procedure.\n10. Repeat these steps for each remaining instance.\n\nUse a rolling restart if the platform cannot update the environment of an active process.\n\n## Validate the rotation\n\n1. Make sure that all instances use the new secret version.\n2. Make sure that all instances report a healthy status.\n3. Make sure that the application error rate remains normal.\n4. Make sure that the database connection count remains normal.\n5. Run the application health test.\n6. Run a read and write test through the application.\n\n## Remove the old password\n\n1. Configure the database to reject the old password.\n2. Attempt a database connection with the old password.\n3. Make sure that the connection fails.\n4. Attempt a database connection with the new password.\n5. Make sure that the connection succeeds.\n6. Delete the old password from the secret manager.\n7. Record the rotation date and the new secret version.\n\n## Rollback\n\n1. Stop the rotation.\n2. Keep both database passwords valid.\n3. Restore `DB_PASSWORD` to the old secret version on affected instances.\n4. Send SIGHUP to each affected instance.\n5. Use a rolling restart if the process environment cannot change.\n6. Make sure that all instances report a healthy status.\n7. Investigate the failure before another rotation attempt.",
+  "texts": [
+    "I will use the Simple English skill to make the runbook clear and unambiguous.",
+    "# Database Password Rotation Runbook\n\n## Requirements\n\nThe database must accept the old and new passwords during the rotation.\n\nThe platform must update `DB_PASSWORD` inside each process before SIGHUP. Most platforms cannot change an existing process environment.\n\nIf the platform cannot update the process environment, use a rolling restart instead of SIGHUP.\n\n## Preparation\n\n1. Record the current application health status.\n2. Record the current database error rate.\n3. List all application instances.\n4. Generate a new password with the approved password tool.\n5. Store the new password in the secret manager.\n6. Do not write either password in a command history or log.\n\n## Add the new password\n\n1. Configure the database to accept the new password for `app`.\n2. Keep the old password valid.\n3. Open a new database connection with the new password.\n4. Run a read-only query through this connection.\n5. If the query fails, restore the database password configuration.\n6. If the query fails, stop the procedure.\n\n## Update the application\n\nProcess one application instance at a time.\n\n1. Remove one instance from the load balancer.\n2. Wait until all active requests on that instance finish.\n3. Update `DB_PASSWORD` for that instance.\n4. Send SIGHUP to the application process.\n5. Add the instance to the load balancer.\n6. Make sure that the instance reports a healthy status.\n7. Make sure that the instance opens new database connections.\n8. Make sure that the database log contains no authentication errors.\n9. If a check fails, complete the rollback procedure.\n10. Repeat these steps for each remaining instance.\n\nUse a rolling restart if the platform cannot update the environment of an active process.\n\n## Validate the rotation\n\n1. Make sure that all instances use the new secret version.\n2. Make sure that all instances report a healthy status.\n3. Make sure that the application error rate remains normal.\n4. Make sure that the database connection count remains normal.\n5. Run the application health test.\n6. Run a read and write test through the application.\n\n## Remove the old password\n\n1. Configure the database to reject the old password.\n2. Attempt a database connection with the old password.\n3. Make sure that the connection fails.\n4. Attempt a database connection with the new password.\n5. Make sure that the connection succeeds.\n6. Delete the old password from the secret manager.\n7. Record the rotation date and the new secret version.\n\n## Rollback\n\n1. Stop the rotation.\n2. Keep both database passwords valid.\n3. Restore `DB_PASSWORD` to the old secret version on affected instances.\n4. Send SIGHUP to each affected instance.\n5. Use a rolling restart if the process environment cannot change.\n6. Make sure that all instances report a healthy status.\n7. Investigate the failure before another rotation attempt."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

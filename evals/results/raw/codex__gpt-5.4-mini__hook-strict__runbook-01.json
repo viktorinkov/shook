@@ -1,0 +1,49 @@
+{
+  "harness": "codex",
+  "arm": "hook-strict",
+  "id": "runbook-01",
+  "cat": "runbook",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 17.3,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 2,
+  "strict_blocks": 1,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 28616,
+    "cached_input_tokens": 27136,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 870,
+    "reasoning_output_tokens": 125
+  },
+  "lint": {
+    "type": "procedural",
+    "words": 276,
+    "sentences": 23,
+    "mean_sentence_words": 11.0,
+    "longest_sentence_words": 20,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 2
+    },
+    "violations_total": 3,
+    "violations_per_100w": 1.09
+  },
+  "text": "**Runbook: Rotate the `app` Database Password With Zero Downtime**\n\n**Purpose**\nRotate the database password for the `app` user without stopping traffic.\n\n**Prerequisites**\n- Confirm that the database supports two valid passwords for `app` during the change window.\n- Confirm that the app reloads the environment variable on `SIGHUP`.\n- Confirm that you can send `SIGHUP` to each app process or host.\n- Confirm that you can update the secret source that supplies the environment variable.\n\n**Procedure**\n1. Create a new password for the `app` database user.\n2. Keep the old password valid, and add the new password.\n3. Update the secret source with the new password.\n4. If your platform needs a refresh, restart one app instance at a time.\n5. Send `SIGHUP` to one app instance.\n6. Verify that the instance reconnects and that requests still succeed.\n7. Repeat steps 4 and 5 for each remaining instance.\n8. After all instances use the new password, revoke the old password from the `app` user.\n9. Verify that all app instances stay healthy after you remove the old password.\n\n**Validation**\n- Check app logs for a successful reload after each `SIGHUP`.\n- Check database connection counts during the rotation.\n- Confirm that no instance uses the old password after the final revoke.\n\n**Rollback**\n1. Restore the old password as valid in the database.\n2. Restore the old secret value.\n3. Send `SIGHUP` to the affected app instances.\n4. Verify that connections recover.\n\n**Notes**\n- Keep the old password valid until every live instance reads the new value.\n- Rotate one instance at a time if the app pool does not refresh all workers at once.",
+  "texts": [
+    "**Runbook: Rotate the `app` Database Password With Zero Downtime**\n\n**Purpose**\nRotate the database password for the `app` user without stopping traffic.\n\n**Prerequisites**\n- Confirm that the database supports two valid passwords for `app` during the change window.\n- Confirm that the app reloads the environment variable on `SIGHUP`.\n- Confirm that you can send `SIGHUP` to each app process or host.\n- Confirm that you can update the secret source that supplies the environment variable.\n\n**Procedure**\n1. Create a new password for the `app` database user.\n2. Grant the new password while you keep the old password valid.\n3. Update the secret source with the new password.\n4. Restart or reload one app instance at a time if your platform needs a refresh to read the new environment value.\n5. Send `SIGHUP` to one app instance.\n6. Verify that the instance reconnects and that requests still succeed.\n7. Repeat steps 4 and 5 for each remaining instance.\n8. After all instances use the new password, revoke the old password from the `app` user.\n9. Verify that all app instances stay healthy after the old password is removed.\n\n**Validation**\n- Check app logs for a successful reload after each `SIGHUP`.\n- Check database connection counts during the rotation.\n- Confirm that no instance uses the old password after the final revoke.\n\n**Rollback**\n1. Restore the old password as valid in the database.\n2. Restore the old secret value.\n3. Send `SIGHUP` to the affected app instances.\n4. Verify that connections recover.\n\n**Notes**\n- Keep the old password valid until every live instance reads the new value.\n- Rotate one instance at a time if the app pool does not refresh all workers at once.",
+    "**Runbook: Rotate the `app` Database Password With Zero Downtime**\n\n**Purpose**\nRotate the database password for the `app` user without stopping traffic.\n\n**Prerequisites**\n- Confirm that the database supports two valid passwords for `app` during the change window.\n- Confirm that the app reloads the environment variable on `SIGHUP`.\n- Confirm that you can send `SIGHUP` to each app process or host.\n- Confirm that you can update the secret source that supplies the environment variable.\n\n**Procedure**\n1. Create a new password for the `app` database user.\n2. Keep the old password valid, and add the new password.\n3. Update the secret source with the new password.\n4. If your platform needs a refresh, restart one app instance at a time.\n5. Send `SIGHUP` to one app instance.\n6. Verify that the instance reconnects and that requests still succeed.\n7. Repeat steps 4 and 5 for each remaining instance.\n8. After all instances use the new password, revoke the old password from the `app` user.\n9. Verify that all app instances stay healthy after you remove the old password.\n\n**Validation**\n- Check app logs for a successful reload after each `SIGHUP`.\n- Check database connection counts during the rotation.\n- Confirm that no instance uses the old password after the final revoke.\n\n**Rollback**\n1. Restore the old password as valid in the database.\n2. Restore the old secret value.\n3. Send `SIGHUP` to the affected app instances.\n4. Verify that connections recover.\n\n**Notes**\n- Keep the old password valid until every live instance reads the new value.\n- Rotate one instance at a time if the app pool does not refresh all workers at once."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

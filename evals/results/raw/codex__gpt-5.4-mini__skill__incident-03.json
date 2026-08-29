@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "skill",
+  "id": "incident-03",
+  "cat": "incident",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 4.7,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 13160,
+    "cached_input_tokens": 12544,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 152,
+    "reasoning_output_tokens": 31
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 98,
+    "sentences": 6,
+    "mean_sentence_words": 16.3,
+    "longest_sentence_words": 25,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 1,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 1.02
+  },
+  "text": "**What Went Wrong**\n\nA cron job ran twice because two instances of the scheduler started after a failover. The failover brought up a second scheduler before the first instance had fully stopped, so both processes believed they were responsible for triggering the job. Because the scheduler did not have an effective leader-election or single-run guard, the same cron task was emitted twice and executed twice.\n\nThe immediate impact was duplicate job execution for the affected run. This exposed a gap in our failover handling: we assumed scheduler handoff would be exclusive, but the system allowed overlap during recovery.",
+  "texts": [
+    "**What Went Wrong**\n\nA cron job ran twice because two instances of the scheduler started after a failover. The failover brought up a second scheduler before the first instance had fully stopped, so both processes believed they were responsible for triggering the job. Because the scheduler did not have an effective leader-election or single-run guard, the same cron task was emitted twice and executed twice.\n\nThe immediate impact was duplicate job execution for the affected run. This exposed a gap in our failover handling: we assumed scheduler handoff would be exclusive, but the system allowed overlap during recovery."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

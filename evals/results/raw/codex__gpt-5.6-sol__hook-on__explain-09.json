@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "hook-on",
+  "id": "explain-09",
+  "cat": "explain",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 11.5,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 16627,
+    "cached_input_tokens": 9984,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 183,
+    "reasoning_output_tokens": 42
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 84,
+    "sentences": 9,
+    "mean_sentence_words": 9.1,
+    "longest_sentence_words": 14,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "Binary floating-point cannot represent most decimal fractions exactly. Values such as `0.1` and `0.2` become nearby binary approximations.\n\nTheir sum can produce:\n\n```text\n0.30000000000000004\n```\n\nTherefore, an exact comparison with `0.3` can return false.\n\nFor money, use one of these types:\n\n- Use an integer for the smallest currency unit, such as cents.\n- Use a decimal or fixed-point type, such as `Decimal` or `BigDecimal`.\n\nDo not use binary floating-point types such as `float` or `double` for financial calculations. Rounding errors can affect totals and payments.",
+  "texts": [
+    "Binary floating-point cannot represent most decimal fractions exactly. Values such as `0.1` and `0.2` become nearby binary approximations.\n\nTheir sum can produce:\n\n```text\n0.30000000000000004\n```\n\nTherefore, an exact comparison with `0.3` can return false.\n\nFor money, use one of these types:\n\n- Use an integer for the smallest currency unit, such as cents.\n- Use a decimal or fixed-point type, such as `Decimal` or `BigDecimal`.\n\nDo not use binary floating-point types such as `float` or `double` for financial calculations. Rounding errors can affect totals and payments."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

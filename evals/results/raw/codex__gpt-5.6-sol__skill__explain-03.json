@@ -1,0 +1,49 @@
+{
+  "harness": "codex",
+  "arm": "skill",
+  "id": "explain-03",
+  "cat": "explain",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 23.6,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 57393,
+    "cached_input_tokens": 44288,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 705,
+    "reasoning_output_tokens": 118
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 140,
+    "sentences": 15,
+    "mean_sentence_words": 9.0,
+    "longest_sentence_words": 20,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 1,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 3,
+      "synonym_rotation": 0
+    },
+    "violations_total": 4,
+    "violations_per_100w": 2.86
+  },
+  "text": "`git merge` and `git rebase` both combine changes, but they create different histories.\n\n- `git merge main` adds the latest `main` changes to your feature branch. It usually creates a merge commit.\n- `git rebase main` moves your feature commits onto the latest `main`. This creates new commit hashes and a linear history.\n\nFor a feature branch:\n\n- Use **rebase** when you work alone and want a clean history before opening or updating a pull request.\n- Use **merge** when other people also use the branch. Merge does not rewrite their commit history.\n- Do not rebase a shared branch unless the team coordinates the change. Rebase usually requires a force push.\n\nTypical private-branch workflow:\n\n```bash\ngit fetch origin\ngit rebase origin/main\n```\n\nIf your team preserves merge commits, use:\n\n```bash\ngit fetch origin\ngit merge origin/main\n```\n\nA simple rule: **rebase private work; merge shared work.** Your repository policy takes priority if the team requires squash merges or another workflow.",
+  "texts": [
+    "I\u2019m using the Simplified Technical English skill to make the Git guidance clear and easy to apply.",
+    "`git merge` and `git rebase` both combine changes, but they create different histories.\n\n- `git merge main` adds the latest `main` changes to your feature branch. It usually creates a merge commit.\n- `git rebase main` moves your feature commits onto the latest `main`. This creates new commit hashes and a linear history.\n\nFor a feature branch:\n\n- Use **rebase** when you work alone and want a clean history before opening or updating a pull request.\n- Use **merge** when other people also use the branch. Merge does not rewrite their commit history.\n- Do not rebase a shared branch unless the team coordinates the change. Rebase usually requires a force push.\n\nTypical private-branch workflow:\n\n```bash\ngit fetch origin\ngit rebase origin/main\n```\n\nIf your team preserves merge commits, use:\n\n```bash\ngit fetch origin\ngit merge origin/main\n```\n\nA simple rule: **rebase private work; merge shared work.** Your repository policy takes priority if the team requires squash merges or another workflow."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

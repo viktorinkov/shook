@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "skill",
+  "id": "review-07",
+  "cat": "review",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 8.9,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 13158,
+    "cached_input_tokens": 7936,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 289,
+    "reasoning_output_tokens": 60
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 169,
+    "sentences": 11,
+    "mean_sentence_words": 14.8,
+    "longest_sentence_words": 30,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 1,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 2,
+    "violations_per_100w": 1.18
+  },
+  "text": "**Review Summary**\n\nThe retry logic is too broad. As written, it retries on every HTTP status code, including client errors like `400 Bad Request`. That changes behavior from \u201crecover from transient failures\u201d to \u201crepeat requests that are already known to be invalid,\u201d which can waste time, increase load, and make failures slower to surface.\n\n**Main issue**\n- Retrying on `400` and other 4xx responses is incorrect for most HTTP clients. Those responses usually indicate a permanent request problem, not a transient transport issue.\n- The retry policy should be limited to retryable conditions such as network failures, timeouts, `429`, and selected `5xx` responses.\n\n**Recommendation**\n- Restrict retries to explicit retryable status codes.\n- Exclude all client errors by default, especially `400`, `401`, `403`, `404`, and `422`.\n- If the intent is to support broader retry behavior, make the allowlist configurable and document it clearly.\n\n**Bottom line**\n- The change introduces a correctness regression: invalid requests will now be retried unnecessarily instead of failing fast.",
+  "texts": [
+    "**Review Summary**\n\nThe retry logic is too broad. As written, it retries on every HTTP status code, including client errors like `400 Bad Request`. That changes behavior from \u201crecover from transient failures\u201d to \u201crepeat requests that are already known to be invalid,\u201d which can waste time, increase load, and make failures slower to surface.\n\n**Main issue**\n- Retrying on `400` and other 4xx responses is incorrect for most HTTP clients. Those responses usually indicate a permanent request problem, not a transient transport issue.\n- The retry policy should be limited to retryable conditions such as network failures, timeouts, `429`, and selected `5xx` responses.\n\n**Recommendation**\n- Restrict retries to explicit retryable status codes.\n- Exclude all client errors by default, especially `400`, `401`, `403`, `404`, and `422`.\n- If the intent is to support broader retry behavior, make the allowlist configurable and document it clearly.\n\n**Bottom line**\n- The change introduces a correctness regression: invalid requests will now be retried unnecessarily instead of failing fast."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

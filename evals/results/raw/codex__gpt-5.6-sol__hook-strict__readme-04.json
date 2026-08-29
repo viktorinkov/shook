@@ -1,0 +1,49 @@
+{
+  "harness": "codex",
+  "arm": "hook-strict",
+  "id": "readme-04",
+  "cat": "docs",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 25.3,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 37412,
+    "cached_input_tokens": 19968,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 881,
+    "reasoning_output_tokens": 439
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 139,
+    "sentences": 14,
+    "mean_sentence_words": 9.4,
+    "longest_sentence_words": 16,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "## Troubleshooting `EADDRINUSE`\n\n`EADDRINUSE` means that another process uses the network port that the app needs.\n\n1. Find the port number in the error message or the app log.\n\n2. Find the process that uses the port.\n\n   On macOS or Linux, run:\n\n   ```sh\n   lsof -nP -iTCP:<port> -sTCP:LISTEN\n   ```\n\n   On Windows PowerShell, run:\n\n   ```powershell\n   Get-NetTCPConnection -LocalPort <port> -State Listen | Select-Object OwningProcess\n   ```\n\n3. Replace `<port>` with the port number from the error.\n\n4. If the process is an old instance of the app, close that process.\n\n5. If another app owns the process, close that app or change its port.\n\n6. Start the desktop app again.\n\nCAUTION: Save your work before you force a process to stop. A forced stop can cause data loss.\n\nIf the error occurs again, restart the computer. This action stops old processes that still use the port.\n\nIf the app lets you select a port, select an unused port in the app configuration.",
+  "texts": [
+    "I will use the Simple English skill to make the troubleshooting steps clear and unambiguous.",
+    "## Troubleshooting `EADDRINUSE`\n\n`EADDRINUSE` means that another process uses the network port that the app needs.\n\n1. Find the port number in the error message or the app log.\n\n2. Find the process that uses the port.\n\n   On macOS or Linux, run:\n\n   ```sh\n   lsof -nP -iTCP:<port> -sTCP:LISTEN\n   ```\n\n   On Windows PowerShell, run:\n\n   ```powershell\n   Get-NetTCPConnection -LocalPort <port> -State Listen | Select-Object OwningProcess\n   ```\n\n3. Replace `<port>` with the port number from the error.\n\n4. If the process is an old instance of the app, close that process.\n\n5. If another app owns the process, close that app or change its port.\n\n6. Start the desktop app again.\n\nCAUTION: Save your work before you force a process to stop. A forced stop can cause data loss.\n\nIf the error occurs again, restart the computer. This action stops old processes that still use the port.\n\nIf the app lets you select a port, select an unused port in the app configuration."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "skill",
+  "id": "explain-01",
+  "cat": "explain",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 12.1,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 13188,
+    "cached_input_tokens": 7936,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 302,
+    "reasoning_output_tokens": 10
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 127,
+    "sentences": 13,
+    "mean_sentence_words": 9.5,
+    "longest_sentence_words": 28,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 1,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 2,
+    "violations_per_100w": 1.57
+  },
+  "text": "The test fails because the mock is set up to return `None` from `client.upload()`, but `service.sync()` expects that call to return an object with a `.status` attribute.\n\nWhat happens here:\n\n```python\nclient.upload.return_value = None\nresult = service.sync(client)\n```\n\nInside `service.sync`, it does something like:\n\n```python\nresponse = client.upload()\nstatus = response.status\n```\n\nBut `response` is `None`, so `response.status` raises an error like:\n\n```python\nAttributeError: 'NoneType' object has no attribute 'status'\n```\n\nWhy this is a mocking mistake:\n\n- `Mock()` can stand in for the client.\n- But `upload.return_value` must match what the real `upload()` method returns.\n- Since `service.sync()` reads `.status`, the return value needs a `.status` field or attribute.\n\nHow to fix it:\n\n```python\nfrom unittest.mock import Mock\n\ndef test_upload():\n    client = Mock()\n    client.upload.return_value = Mock(status=\"ok\")\n    result = service.sync(client)\n    assert result.ok\n```\n\nOr, if `status` is supposed to be numeric:\n\n```python\nclient.upload.return_value = Mock(status=200)\n```\n\nIn short: the mock returns the wrong shape of object. The code under test does not want `None`; it wants an object with `.status`.",
+  "texts": [
+    "The test fails because the mock is set up to return `None` from `client.upload()`, but `service.sync()` expects that call to return an object with a `.status` attribute.\n\nWhat happens here:\n\n```python\nclient.upload.return_value = None\nresult = service.sync(client)\n```\n\nInside `service.sync`, it does something like:\n\n```python\nresponse = client.upload()\nstatus = response.status\n```\n\nBut `response` is `None`, so `response.status` raises an error like:\n\n```python\nAttributeError: 'NoneType' object has no attribute 'status'\n```\n\nWhy this is a mocking mistake:\n\n- `Mock()` can stand in for the client.\n- But `upload.return_value` must match what the real `upload()` method returns.\n- Since `service.sync()` reads `.status`, the return value needs a `.status` field or attribute.\n\nHow to fix it:\n\n```python\nfrom unittest.mock import Mock\n\ndef test_upload():\n    client = Mock()\n    client.upload.return_value = Mock(status=\"ok\")\n    result = service.sync(client)\n    assert result.ok\n```\n\nOr, if `status` is supposed to be numeric:\n\n```python\nclient.upload.return_value = Mock(status=200)\n```\n\nIn short: the mock returns the wrong shape of object. The code under test does not want `None`; it wants an object with `.status`."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

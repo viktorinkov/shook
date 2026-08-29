@@ -1,0 +1,49 @@
+{
+  "harness": "codex",
+  "arm": "skill",
+  "id": "readme-08",
+  "cat": "docs",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 13.4,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 30329,
+    "cached_input_tokens": 25088,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 619,
+    "reasoning_output_tokens": 153
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 68,
+    "sentences": 8,
+    "mean_sentence_words": 8.0,
+    "longest_sentence_words": 17,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "**POST `/v1/invoices`**\n\nCreate a new invoice for a customer.\n\n### Request\n\n`POST /v1/invoices`\n\n```json\n{\n  \"customer_id\": \"cus_123\",\n  \"amount_cents\": 2500,\n  \"due_date\": \"2026-09-15\"\n}\n```\n\n### Request fields\n\n- `customer_id` - The customer identifier.\n- `amount_cents` - The invoice amount in cents.\n- `due_date` - Optional. The due date in `YYYY-MM-DD` format.\n\n### Response\n\nIf the request is valid, the server returns `201 Created`.\n\n```json\n{\n  \"id\": \"inv_456\"\n}\n```\n\n### Response fields\n\n- `id` - The invoice identifier.\n\n### Example\n\n```bash\ncurl -X POST /v1/invoices \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"customer_id\": \"cus_123\",\n    \"amount_cents\": 2500,\n    \"due_date\": \"2026-09-15\"\n  }'\n```\n\nIf you want, I can also write the error responses and an OpenAPI version of this section.",
+  "texts": [
+    "Using the `simple-english` skill because you asked for an API guide section and this should be clear, unambiguous, and easy to translate. I\u2019m checking the skill rules first, then I\u2019ll draft the section with the request and response shape.",
+    "**POST `/v1/invoices`**\n\nCreate a new invoice for a customer.\n\n### Request\n\n`POST /v1/invoices`\n\n```json\n{\n  \"customer_id\": \"cus_123\",\n  \"amount_cents\": 2500,\n  \"due_date\": \"2026-09-15\"\n}\n```\n\n### Request fields\n\n- `customer_id` - The customer identifier.\n- `amount_cents` - The invoice amount in cents.\n- `due_date` - Optional. The due date in `YYYY-MM-DD` format.\n\n### Response\n\nIf the request is valid, the server returns `201 Created`.\n\n```json\n{\n  \"id\": \"inv_456\"\n}\n```\n\n### Response fields\n\n- `id` - The invoice identifier.\n\n### Example\n\n```bash\ncurl -X POST /v1/invoices \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"customer_id\": \"cus_123\",\n    \"amount_cents\": 2500,\n    \"due_date\": \"2026-09-15\"\n  }'\n```\n\nIf you want, I can also write the error responses and an OpenAPI version of this section."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

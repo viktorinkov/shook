@@ -1,0 +1,49 @@
+{
+  "harness": "codex",
+  "arm": "hook-on",
+  "id": "review-09",
+  "cat": "review",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 14.7,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 37453,
+    "cached_input_tokens": 26112,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 501,
+    "reasoning_output_tokens": 221
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 36,
+    "sentences": 3,
+    "mean_sentence_words": 12.0,
+    "longest_sentence_words": 17,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 2.78
+  },
+  "text": "**PR comment:**\n\nFor Go versions before 1.22, each closure captures the same `item` variable. Pass `item` as an argument:\n\n```go\nfor _, item := range items {\n    go func(item Item) {\n        process(item)\n    }(item)\n}\n```\n\nAlso make sure that the caller waits for these goroutines, if it requires all items to finish.",
+  "texts": [
+    "I will use the Simple English skill to write a clear PR comment with a safe correction.",
+    "**PR comment:**\n\nFor Go versions before 1.22, each closure captures the same `item` variable. Pass `item` as an argument:\n\n```go\nfor _, item := range items {\n    go func(item Item) {\n        process(item)\n    }(item)\n}\n```\n\nAlso make sure that the caller waits for these goroutines, if it requires all items to finish."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

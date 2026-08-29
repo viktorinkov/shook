@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "hook-on",
+  "id": "incident-05",
+  "cat": "incident",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 7.6,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 16623,
+    "cached_input_tokens": 16128,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 232,
+    "reasoning_output_tokens": 23
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 146,
+    "sentences": 9,
+    "mean_sentence_words": 16.2,
+    "longest_sentence_words": 23,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "## Action items\n\n| Priority | Action | Owner | Due date |\n|---|---|---|---|\n| P0 | Set disk-space alerts at 70%, 80%, and 90% usage. | SRE | [Date] |\n| P0 | Configure automatic log rotation with size and age limits. | Platform | [Date] |\n| P0 | Set a maximum storage limit for each log source. | Platform | [Date] |\n| P1 | Move logs to centralized storage with a defined retention period. | Observability | [Date] |\n| P1 | Add a disk-capacity check to the service health dashboard. | SRE | [Date] |\n| P1 | Test alerts and log rotation in a staging environment. | QA | [Date] |\n| P2 | Document the disk cleanup and service recovery procedure. | SRE | [Date] |\n| P2 | Review disk growth and alert data each month. | Operations | [Date] |",
+  "texts": [
+    "## Action items\n\n| Priority | Action | Owner | Due date |\n|---|---|---|---|\n| P0 | Set disk-space alerts at 70%, 80%, and 90% usage. | SRE | [Date] |\n| P0 | Configure automatic log rotation with size and age limits. | Platform | [Date] |\n| P0 | Set a maximum storage limit for each log source. | Platform | [Date] |\n| P1 | Move logs to centralized storage with a defined retention period. | Observability | [Date] |\n| P1 | Add a disk-capacity check to the service health dashboard. | SRE | [Date] |\n| P1 | Test alerts and log rotation in a staging environment. | QA | [Date] |\n| P2 | Document the disk cleanup and service recovery procedure. | SRE | [Date] |\n| P2 | Review disk growth and alert data each month. | Operations | [Date] |"
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

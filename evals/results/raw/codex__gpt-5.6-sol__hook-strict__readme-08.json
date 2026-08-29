@@ -1,0 +1,49 @@
+{
+  "harness": "codex",
+  "arm": "hook-strict",
+  "id": "readme-08",
+  "cat": "docs",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 18.0,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 37456,
+    "cached_input_tokens": 32256,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 566,
+    "reasoning_output_tokens": 163
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 80,
+    "sentences": 7,
+    "mean_sentence_words": 11.4,
+    "longest_sentence_words": 20,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "## Create an invoice\n\n`POST /v1/invoices` creates an invoice for a customer.\n\n### Request body\n\n| Field | Type | Required | Description |\n|---|---|---:|---|\n| `customer_id` | string | Yes | The customer identifier. |\n| `amount_cents` | integer | Yes | The invoice amount in cents. |\n| `due_date` | string | No | The due date in `YYYY-MM-DD` format. |\n\n```http\nPOST /v1/invoices\nContent-Type: application/json\n\n{\n  \"customer_id\": \"cus_123\",\n  \"amount_cents\": 5000,\n  \"due_date\": \"2026-09-30\"\n}\n```\n\n### Response\n\nThe endpoint returns HTTP status `201 Created`. The response body contains the invoice identifier.\n\n```json\n{\n  \"invoice_id\": \"inv_456\"\n}\n```\n\nFull ASD-STE100 compliance requires a check with the official ASD-STE100 dictionary.",
+  "texts": [
+    "I will use the Simplified Technical English skill to create this API guide section.",
+    "## Create an invoice\n\n`POST /v1/invoices` creates an invoice for a customer.\n\n### Request body\n\n| Field | Type | Required | Description |\n|---|---|---:|---|\n| `customer_id` | string | Yes | The customer identifier. |\n| `amount_cents` | integer | Yes | The invoice amount in cents. |\n| `due_date` | string | No | The due date in `YYYY-MM-DD` format. |\n\n```http\nPOST /v1/invoices\nContent-Type: application/json\n\n{\n  \"customer_id\": \"cus_123\",\n  \"amount_cents\": 5000,\n  \"due_date\": \"2026-09-30\"\n}\n```\n\n### Response\n\nThe endpoint returns HTTP status `201 Created`. The response body contains the invoice identifier.\n\n```json\n{\n  \"invoice_id\": \"inv_456\"\n}\n```\n\nFull ASD-STE100 compliance requires a check with the official ASD-STE100 dictionary."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

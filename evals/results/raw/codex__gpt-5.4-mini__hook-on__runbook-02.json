@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "hook-on",
+  "id": "runbook-02",
+  "cat": "runbook",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 6.7,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 13971,
+    "cached_input_tokens": 13568,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 214,
+    "reasoning_output_tokens": 41
+  },
+  "lint": {
+    "type": "procedural",
+    "words": 134,
+    "sentences": 11,
+    "mean_sentence_words": 11.2,
+    "longest_sentence_words": 17,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 2
+    },
+    "violations_total": 2,
+    "violations_per_100w": 1.49
+  },
+  "text": "1. Confirm that the `worker` service runs on the target host.\n2. Drain new work from the queue by pausing producers or placing the host in maintenance mode.\n3. Record the current queue depth before restart.\n4. Restart the `worker` service.\n5. Verify that the service starts without errors.\n6. Monitor the queue depth until it drops to the expected level.\n7. Verify that no new jobs stay queued for an abnormal time.\n8. If the queue does not drain, check the service logs for errors.\n9. If the logs show a crash or hang, restart the service one more time.\n10. If the queue still does not drain, stop the restart attempt and escalate to the on-call engineer.\n11. Record the restart time, the queue depth, and any errors in the incident log.",
+  "texts": [
+    "1. Confirm that the `worker` service runs on the target host.\n2. Drain new work from the queue by pausing producers or placing the host in maintenance mode.\n3. Record the current queue depth before restart.\n4. Restart the `worker` service.\n5. Verify that the service starts without errors.\n6. Monitor the queue depth until it drops to the expected level.\n7. Verify that no new jobs stay queued for an abnormal time.\n8. If the queue does not drain, check the service logs for errors.\n9. If the logs show a crash or hang, restart the service one more time.\n10. If the queue still does not drain, stop the restart attempt and escalate to the on-call engineer.\n11. Record the restart time, the queue depth, and any errors in the incident log."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

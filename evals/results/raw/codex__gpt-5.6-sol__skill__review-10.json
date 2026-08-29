@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "skill",
+  "id": "review-10",
+  "cat": "review",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 6.8,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 15811,
+    "cached_input_tokens": 15104,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 125,
+    "reasoning_output_tokens": 60
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 42,
+    "sentences": 3,
+    "mean_sentence_words": 13.7,
+    "longest_sentence_words": 24,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 2.38
+  },
+  "text": "Blocking: `config.py` contains a hardcoded API key. Please revoke and rotate the exposed key, remove it from the repository\u2019s history, and load the replacement from an environment variable or secrets manager. Add `config.py` or the relevant secrets file to `.gitignore` if needed.",
+  "texts": [
+    "Blocking: `config.py` contains a hardcoded API key. Please revoke and rotate the exposed key, remove it from the repository\u2019s history, and load the replacement from an environment variable or secrets manager. Add `config.py` or the relevant secrets file to `.gitignore` if needed."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "skill",
+  "id": "readme-10",
+  "cat": "docs",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 4.8,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 13156,
+    "cached_input_tokens": 12544,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 164,
+    "reasoning_output_tokens": 20
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 17,
+    "sentences": 1,
+    "mean_sentence_words": 17.0,
+    "longest_sentence_words": 17,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "```md\n## Security\n\nIf you believe you have found a security vulnerability, please report it by email to `security@yourdomain.com`.\n\nInclude as much detail as possible so we can investigate quickly:\n- A description of the issue\n- Steps to reproduce it\n- Any relevant logs, screenshots, or proof of concept\n\nPlease do not open a public issue for security vulnerabilities.\n\nWe aim to acknowledge reports promptly and work with reporters in good faith. If the issue is confirmed, we ask that you allow up to 90 days for coordinated disclosure before public release of details.\n```\n\nIf you want, I can also make this match a more formal or more community-friendly README tone.",
+  "texts": [
+    "```md\n## Security\n\nIf you believe you have found a security vulnerability, please report it by email to `security@yourdomain.com`.\n\nInclude as much detail as possible so we can investigate quickly:\n- A description of the issue\n- Steps to reproduce it\n- Any relevant logs, screenshots, or proof of concept\n\nPlease do not open a public issue for security vulnerabilities.\n\nWe aim to acknowledge reports promptly and work with reporters in good faith. If the issue is confirmed, we ask that you allow up to 90 days for coordinated disclosure before public release of details.\n```\n\nIf you want, I can also make this match a more formal or more community-friendly README tone."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

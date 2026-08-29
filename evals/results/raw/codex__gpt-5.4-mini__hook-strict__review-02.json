@@ -1,0 +1,49 @@
+{
+  "harness": "codex",
+  "arm": "hook-strict",
+  "id": "review-02",
+  "cat": "review",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 10.1,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 2,
+  "strict_blocks": 1,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 28389,
+    "cached_input_tokens": 26112,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 402,
+    "reasoning_output_tokens": 159
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 61,
+    "sentences": 8,
+    "mean_sentence_words": 7.2,
+    "longest_sentence_words": 11,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 3,
+      "synonym_rotation": 0
+    },
+    "violations_total": 3,
+    "violations_per_100w": 4.92
+  },
+  "text": "PR comment:\n\n1. `ALTER TABLE users ALTER COLUMN email SET NOT NULL;` will fail if any row still has `NULL` email.\n2. `UPDATE users SET email = username || '@example.com';` leaves `email` null when `username` is null.\n3. `email VARCHAR(255)` adds no unique rule. If `email` is a login field, add a unique constraint too.\n\nFill only rows with `NULL` email. Verify that `username` is present. Add a unique constraint if this column must identify a user.",
+  "texts": [
+    "PR comment:\n\n1. `ALTER TABLE users ALTER COLUMN email SET NOT NULL;` will fail if any row still has `NULL` email.\n2. `UPDATE users SET email = username || '@example.com';` also leaves `email` null when `username` is null.\n3. `email VARCHAR(255)` adds no uniqueness rule. If `email` must identify a user, add a unique constraint too.\n\nConsider filling only rows with `NULL` email, verifying `username` is present, and adding a unique constraint if the column is meant to be a login field.",
+    "PR comment:\n\n1. `ALTER TABLE users ALTER COLUMN email SET NOT NULL;` will fail if any row still has `NULL` email.\n2. `UPDATE users SET email = username || '@example.com';` leaves `email` null when `username` is null.\n3. `email VARCHAR(255)` adds no unique rule. If `email` is a login field, add a unique constraint too.\n\nFill only rows with `NULL` email. Verify that `username` is present. Add a unique constraint if this column must identify a user."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

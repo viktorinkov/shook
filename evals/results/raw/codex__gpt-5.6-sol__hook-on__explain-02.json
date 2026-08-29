@@ -1,0 +1,49 @@
+{
+  "harness": "codex",
+  "arm": "hook-on",
+  "id": "explain-02",
+  "cat": "explain",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 22.8,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 59830,
+    "cached_input_tokens": 46336,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 711,
+    "reasoning_output_tokens": 151
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 110,
+    "sentences": 10,
+    "mean_sentence_words": 11.0,
+    "longest_sentence_words": 18,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 0
+    },
+    "violations_total": 2,
+    "violations_per_100w": 1.82
+  },
+  "text": "## Race conditions and mutexes\n\nA race condition occurs when concurrent tasks access shared data, and the result depends on their execution order.\n\nFor example, two threads increment the same counter:\n\n```text\nThread A reads counter = 5\nThread B reads counter = 5\nThread A writes counter = 6\nThread B writes counter = 6\n```\n\nThe correct result is `7`, but the actual result is `6`. One update is lost.\n\nA mutex permits only one thread to access a protected section at one time. A thread locks the mutex before access.\n\n```text\nlock(mutex)\ncounter = counter + 1\nunlock(mutex)\n```\n\nAnother thread must wait until the first thread unlocks the mutex. This control makes the read and write operation one protected unit.\n\nAll threads must use the same mutex for the same shared data. A mutex cannot prevent a race condition if one thread ignores it.",
+  "texts": [
+    "I am using the Simple English skill because this README section targets contributors who are new to concurrency.",
+    "## Race conditions and mutexes\n\nA race condition occurs when concurrent tasks access shared data, and the result depends on their execution order.\n\nFor example, two threads increment the same counter:\n\n```text\nThread A reads counter = 5\nThread B reads counter = 5\nThread A writes counter = 6\nThread B writes counter = 6\n```\n\nThe correct result is `7`, but the actual result is `6`. One update is lost.\n\nA mutex permits only one thread to access a protected section at one time. A thread locks the mutex before access.\n\n```text\nlock(mutex)\ncounter = counter + 1\nunlock(mutex)\n```\n\nAnother thread must wait until the first thread unlocks the mutex. This control makes the read and write operation one protected unit.\n\nAll threads must use the same mutex for the same shared data. A mutex cannot prevent a race condition if one thread ignores it."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

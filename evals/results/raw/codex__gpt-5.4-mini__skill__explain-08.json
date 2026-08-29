@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "skill",
+  "id": "explain-08",
+  "cat": "explain",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 7.2,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 13153,
+    "cached_input_tokens": 12544,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 267,
+    "reasoning_output_tokens": 11
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 138,
+    "sentences": 9,
+    "mean_sentence_words": 14.8,
+    "longest_sentence_words": 34,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 1,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 3,
+    "violations_per_100w": 2.17
+  },
+  "text": "The N+1 query problem happens when an ORM loads one set of records, then runs one extra query per record to fetch related data.\n\nShort example:\n\n```python\nposts = Post.objects.all()\nfor post in posts:\n    print(post.author.name)\n```\n\nIf `author` is not preloaded, this can do:\n\n- 1 query to fetch all posts\n- N more queries, one for each post's author\n\nSo if there are 100 posts, you may run 101 queries.\n\nHow to fix it:\n\nUse eager loading, so the ORM fetches the related data up front.\n\nExamples:\n\n```python\n# Django\nposts = Post.objects.select_related(\"author\")\n```\n\n```python\n# SQLAlchemy\nposts = session.query(Post).options(joinedload(Post.author)).all()\n```\n\nThis reduces the work to a small number of queries, often just 1, by loading posts and authors together.\n\nIn practice, the fix is:\n- identify repeated per-row relationship lookups\n- use `select_related`, `prefetch_related`, `includes`, `joinedload`, or the ORM\u2019s eager-loading equivalent\n\nIf you want, I can also show the same problem in Rails, Django, or SQLAlchemy.",
+  "texts": [
+    "The N+1 query problem happens when an ORM loads one set of records, then runs one extra query per record to fetch related data.\n\nShort example:\n\n```python\nposts = Post.objects.all()\nfor post in posts:\n    print(post.author.name)\n```\n\nIf `author` is not preloaded, this can do:\n\n- 1 query to fetch all posts\n- N more queries, one for each post's author\n\nSo if there are 100 posts, you may run 101 queries.\n\nHow to fix it:\n\nUse eager loading, so the ORM fetches the related data up front.\n\nExamples:\n\n```python\n# Django\nposts = Post.objects.select_related(\"author\")\n```\n\n```python\n# SQLAlchemy\nposts = session.query(Post).options(joinedload(Post.author)).all()\n```\n\nThis reduces the work to a small number of queries, often just 1, by loading posts and authors together.\n\nIn practice, the fix is:\n- identify repeated per-row relationship lookups\n- use `select_related`, `prefetch_related`, `includes`, `joinedload`, or the ORM\u2019s eager-loading equivalent\n\nIf you want, I can also show the same problem in Rails, Django, or SQLAlchemy."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

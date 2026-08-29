@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "hook-strict",
+  "id": "runbook-02",
+  "cat": "runbook",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 9.8,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 16673,
+    "cached_input_tokens": 13056,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 324,
+    "reasoning_output_tokens": 49
+  },
+  "lint": {
+    "type": "procedural",
+    "words": 126,
+    "sentences": 15,
+    "mean_sentence_words": 7.4,
+    "longest_sentence_words": 11,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 1
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.79
+  },
+  "text": "1. Record the current queue depth.\n\n   ```sh\n   queuectl depth\n   ```\n\n2. Stop the `worker` service.\n\n   ```sh\n   sudo systemctl stop worker\n   ```\n\n3. Start the `worker` service.\n\n   ```sh\n   sudo systemctl start worker\n   ```\n\n4. Verify that the service is active.\n\n   ```sh\n   sudo systemctl is-active worker\n   ```\n\n5. Check the queue depth at regular intervals.\n\n   ```sh\n   queuectl depth\n   ```\n\n6. Continue checks until the queue depth reaches zero.\n\n7. If the queue depth does not decrease, inspect the service status.\n\n   ```sh\n   sudo systemctl status worker\n   ```\n\n8. Check the recent service logs.\n\n   ```sh\n   sudo journalctl -u worker --since \"15 minutes ago\"\n   ```\n\n9. Verify that the queue system is available.\n\n10. Verify that the host can connect to the queue system.\n\n11. If the logs show a configuration error, correct the configuration.\n\n12. Restart the service after the correction.\n\n13. If the queue still does not decrease, stop repeated restart attempts.\n\n14. Record the queue depth, service status, and relevant log messages.\n\n15. Escalate the incident to the service owner.",
+  "texts": [
+    "1. Record the current queue depth.\n\n   ```sh\n   queuectl depth\n   ```\n\n2. Stop the `worker` service.\n\n   ```sh\n   sudo systemctl stop worker\n   ```\n\n3. Start the `worker` service.\n\n   ```sh\n   sudo systemctl start worker\n   ```\n\n4. Verify that the service is active.\n\n   ```sh\n   sudo systemctl is-active worker\n   ```\n\n5. Check the queue depth at regular intervals.\n\n   ```sh\n   queuectl depth\n   ```\n\n6. Continue checks until the queue depth reaches zero.\n\n7. If the queue depth does not decrease, inspect the service status.\n\n   ```sh\n   sudo systemctl status worker\n   ```\n\n8. Check the recent service logs.\n\n   ```sh\n   sudo journalctl -u worker --since \"15 minutes ago\"\n   ```\n\n9. Verify that the queue system is available.\n\n10. Verify that the host can connect to the queue system.\n\n11. If the logs show a configuration error, correct the configuration.\n\n12. Restart the service after the correction.\n\n13. If the queue still does not decrease, stop repeated restart attempts.\n\n14. Record the queue depth, service status, and relevant log messages.\n\n15. Escalate the incident to the service owner."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

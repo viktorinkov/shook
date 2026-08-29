@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "hook-strict",
+  "id": "explain-07",
+  "cat": "explain",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 6.1,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 13994,
+    "cached_input_tokens": 13568,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 159,
+    "reasoning_output_tokens": 13
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 118,
+    "sentences": 11,
+    "mean_sentence_words": 10.7,
+    "longest_sentence_words": 18,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "A database index is a second data structure that the database must keep in step with the table.\n\nWhen you add rows, update rows, or delete rows, the database must also update the index. That adds write cost.\n\nAn index also uses disk space and memory. More data means more storage, more cache pressure, and more work for backups.\n\nAn index can also slow some reads. The database must choose a plan, and it can pick the wrong one.\n\nSo an index is not free. It trades faster reads for extra write cost, extra storage, and more system work.\n\nFor a product manager, the key point is this: an index is a paid optimization, not a no-cost flag.",
+  "texts": [
+    "A database index is a second data structure that the database must keep in step with the table.\n\nWhen you add rows, update rows, or delete rows, the database must also update the index. That adds write cost.\n\nAn index also uses disk space and memory. More data means more storage, more cache pressure, and more work for backups.\n\nAn index can also slow some reads. The database must choose a plan, and it can pick the wrong one.\n\nSo an index is not free. It trades faster reads for extra write cost, extra storage, and more system work.\n\nFor a product manager, the key point is this: an index is a paid optimization, not a no-cost flag."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

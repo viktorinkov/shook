@@ -1,0 +1,49 @@
+{
+  "harness": "codex",
+  "arm": "hook-strict",
+  "id": "explain-05",
+  "cat": "explain",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 18.8,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 37420,
+    "cached_input_tokens": 23040,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 502,
+    "reasoning_output_tokens": 185
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 93,
+    "sentences": 10,
+    "mean_sentence_words": 9.3,
+    "longest_sentence_words": 12,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "## JWT Authentication\n\nThe user sends credentials to the API. The API validates them and creates a signed JSON Web Token (JWT).\n\nThe browser stores the JWT in a secure, `HttpOnly`, `SameSite` cookie. The browser sends this cookie with each API request.\n\nThe API verifies the signature, expiration time, issuer, and audience. If the JWT is valid, the API permits access.\n\nA short-lived access token limits risk. A refresh token lets the API issue a new access token.\n\nLogout deletes the cookie and invalidates the refresh token. The API must use HTTPS for all requests.",
+  "texts": [
+    "I will use the Simple English skill to keep the wiki section clear and consistent.",
+    "## JWT Authentication\n\nThe user sends credentials to the API. The API validates them and creates a signed JSON Web Token (JWT).\n\nThe browser stores the JWT in a secure, `HttpOnly`, `SameSite` cookie. The browser sends this cookie with each API request.\n\nThe API verifies the signature, expiration time, issuer, and audience. If the JWT is valid, the API permits access.\n\nA short-lived access token limits risk. A refresh token lets the API issue a new access token.\n\nLogout deletes the cookie and invalidates the refresh token. The API must use HTTPS for all requests."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

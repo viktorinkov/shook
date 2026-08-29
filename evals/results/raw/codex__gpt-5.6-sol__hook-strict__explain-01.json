@@ -1,0 +1,49 @@
+{
+  "harness": "codex",
+  "arm": "hook-strict",
+  "id": "explain-01",
+  "cat": "explain",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 16.5,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 37530,
+    "cached_input_tokens": 26112,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 519,
+    "reasoning_output_tokens": 174
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 63,
+    "sentences": 7,
+    "mean_sentence_words": 9.0,
+    "longest_sentence_words": 16,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 1.59
+  },
+  "text": "`client.upload.return_value = None` tells the mock to return `None`.\n\nThen `service.sync` tries to read:\n\n```python\nclient.upload().status\n```\n\nThis expression becomes:\n\n```python\nNone.status\n```\n\n`None` has no `status` attribute. Python raises an `AttributeError`, or `sync` converts that error into an unsuccessful result.\n\nMake the mock return an object with the status that `sync` expects:\n\n```python\ndef test_upload():\n    client = Mock()\n    client.upload.return_value = Mock(status=200)\n\n    result = service.sync(client)\n\n    assert result.ok\n```\n\nUse the correct success status for your `sync` implementation if it does not expect `200`.",
+  "texts": [
+    "I will use the Simple English skill because this explanation targets a junior developer.",
+    "`client.upload.return_value = None` tells the mock to return `None`.\n\nThen `service.sync` tries to read:\n\n```python\nclient.upload().status\n```\n\nThis expression becomes:\n\n```python\nNone.status\n```\n\n`None` has no `status` attribute. Python raises an `AttributeError`, or `sync` converts that error into an unsuccessful result.\n\nMake the mock return an object with the status that `sync` expects:\n\n```python\ndef test_upload():\n    client = Mock()\n    client.upload.return_value = Mock(status=200)\n\n    result = service.sync(client)\n\n    assert result.ok\n```\n\nUse the correct success status for your `sync` implementation if it does not expect `200`."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

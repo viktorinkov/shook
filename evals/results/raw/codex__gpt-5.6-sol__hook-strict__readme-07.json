@@ -1,0 +1,49 @@
+{
+  "harness": "codex",
+  "arm": "hook-strict",
+  "id": "readme-07",
+  "cat": "docs",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 15.4,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 37456,
+    "cached_input_tokens": 32256,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 404,
+    "reasoning_output_tokens": 121
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 62,
+    "sentences": 5,
+    "mean_sentence_words": 12.2,
+    "longest_sentence_words": 23,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "## Environment variables\n\n| Variable | Requirement | Description |\n|---|---|---|\n| `DATABASE_URL` | Required | The service uses this URL to connect to the database. |\n| `REDIS_URL` | Optional | The service uses this URL to connect to Redis. This variable enables the cache. |\n| `LOG_JSON` | Optional | This variable enables JSON log output. The default value is `false`. |",
+  "texts": [
+    "I will use the Simple English skill because this request requires clear technical documentation.",
+    "## Environment variables\n\n| Variable | Requirement | Description |\n|---|---|---|\n| `DATABASE_URL` | Required | The service uses this URL to connect to the database. |\n| `REDIS_URL` | Optional | The service uses this URL to connect to Redis. This variable enables the cache. |\n| `LOG_JSON` | Optional | This variable enables JSON log output. The default value is `false`. |"
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

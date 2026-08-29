@@ -1,0 +1,49 @@
+{
+  "harness": "codex",
+  "arm": "skill",
+  "id": "runbook-01",
+  "cat": "runbook",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 35.1,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 35735,
+    "cached_input_tokens": 25088,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 1225,
+    "reasoning_output_tokens": 215
+  },
+  "lint": {
+    "type": "procedural",
+    "words": 538,
+    "sentences": 62,
+    "mean_sentence_words": 8.5,
+    "longest_sentence_words": 19,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 6,
+      "synonym_rotation": 0
+    },
+    "violations_total": 6,
+    "violations_per_100w": 1.12
+  },
+  "text": "# Runbook: Rotate the `app` Database Password\n\n## Purpose\n\nRotate the database password without stopping application traffic.\n\n## Requirements\n\nThe database must support two valid passwords for one user during rotation.\n\nThe application must create new database connections after `SIGHUP`. Existing connections can remain open.\n\nThe application must read the updated password from a source that its reload process can access.\n\n> Important: A running process cannot receive a changed environment variable from its parent.  \n> Updating a deployment environment variable alone does not change the running process environment.\n\nUse a supervisor, environment file, or secret provider that supplies the new value during reload. Otherwise, use a rolling restart.\n\n## Variables\n\nReplace these values before you run the procedure:\n\n```sh\nAPP_SERVICE=\"<service-name>\"\nAPP_USER=\"app\"\nNEW_PASSWORD=\"<new-random-password>\"\n```\n\nDo not put the password in command history, logs, or chat messages.\n\n## Procedure\n\n### 1. Record the initial state\n\nRecord these values:\n\n- The number of healthy application instances.\n- The database connection error rate.\n- The request error rate.\n- The current secret version.\n\nStop the procedure if the service is not healthy.\n\n### 2. Add the new password\n\nAdd `NEW_PASSWORD` as a second valid password for user `app`.\n\nKeep the current password valid.\n\nUse the approved database command for dual-password rotation.\n\nDo not replace the current password at this step.\n\n### 3. Test the new password\n\nOpen a new database connection with user `app` and `NEW_PASSWORD`.\n\nRun a read-only query:\n\n```sql\nSELECT 1;\n```\n\nStop the procedure if the connection or query fails.\n\nRemove the new password before rollback if the application does not use it.\n\n### 4. Update the application secret\n\nStore `NEW_PASSWORD` in the application secret.\n\nUpdate the environment source to reference the new secret version.\n\nDo not print the secret value.\n\n### 5. Reload one application instance\n\nRemove the instance from request routing if the platform requires this action.\n\nSend `SIGHUP` to the application process:\n\n```sh\nkill -HUP <pid>\n```\n\nReturn the instance to request routing when it is ready.\n\n### 6. Validate the first instance\n\nMake sure that the instance remains healthy.\n\nMake sure that the instance creates new database connections successfully.\n\nMake sure that request errors and database authentication errors do not increase.\n\nStop the rollout if a validation fails.\n\n### 7. Reload the remaining instances\n\nReload one instance at a time.\n\nWait for each instance to become healthy before you continue.\n\nKeep enough healthy instances to serve the current traffic.\n\n### 8. Drain old database connections\n\nWait until all connections that use the old password close.\n\nIf necessary, recycle each connection pool without stopping request traffic.\n\nMake sure that all instances can create new connections with `NEW_PASSWORD`.\n\n### 9. Remove the old password\n\nRemove the old password from user `app`.\n\nKeep `NEW_PASSWORD` as the only valid password.\n\n### 10. Complete the validation\n\nMake sure that:\n\n- All application instances are healthy.\n- New database connections succeed.\n- Database authentication errors remain at the normal level.\n- Request latency and error rates remain at the normal level.\n- The old password no longer authenticates.\n\nRecord the new secret version and the rotation completion time.\n\n## Rollback\n\nUse this rollback before you remove the old password:\n\n1. Restore the old secret version.\n2. Reload affected instances one at a time.\n3. Make sure that each instance becomes healthy.\n4. Remove the unused new password from the database.\n\nIf you already removed the old password, add it again as a temporary valid password. Then perform the rollback steps.\n\n## Database limitation\n\nIf the database does not support two passwords for user `app`, zero-downtime rotation needs a temporary database user.\n\nCreate a temporary user with the same required permissions. Move the application to that user before you rotate the `app` password. Then move the application back.",
+  "texts": [
+    "I\u2019m using the Simplified Technical English skill because this is an operational runbook that must be clear and unambiguous.",
+    "# Runbook: Rotate the `app` Database Password\n\n## Purpose\n\nRotate the database password without stopping application traffic.\n\n## Requirements\n\nThe database must support two valid passwords for one user during rotation.\n\nThe application must create new database connections after `SIGHUP`. Existing connections can remain open.\n\nThe application must read the updated password from a source that its reload process can access.\n\n> Important: A running process cannot receive a changed environment variable from its parent.  \n> Updating a deployment environment variable alone does not change the running process environment.\n\nUse a supervisor, environment file, or secret provider that supplies the new value during reload. Otherwise, use a rolling restart.\n\n## Variables\n\nReplace these values before you run the procedure:\n\n```sh\nAPP_SERVICE=\"<service-name>\"\nAPP_USER=\"app\"\nNEW_PASSWORD=\"<new-random-password>\"\n```\n\nDo not put the password in command history, logs, or chat messages.\n\n## Procedure\n\n### 1. Record the initial state\n\nRecord these values:\n\n- The number of healthy application instances.\n- The database connection error rate.\n- The request error rate.\n- The current secret version.\n\nStop the procedure if the service is not healthy.\n\n### 2. Add the new password\n\nAdd `NEW_PASSWORD` as a second valid password for user `app`.\n\nKeep the current password valid.\n\nUse the approved database command for dual-password rotation.\n\nDo not replace the current password at this step.\n\n### 3. Test the new password\n\nOpen a new database connection with user `app` and `NEW_PASSWORD`.\n\nRun a read-only query:\n\n```sql\nSELECT 1;\n```\n\nStop the procedure if the connection or query fails.\n\nRemove the new password before rollback if the application does not use it.\n\n### 4. Update the application secret\n\nStore `NEW_PASSWORD` in the application secret.\n\nUpdate the environment source to reference the new secret version.\n\nDo not print the secret value.\n\n### 5. Reload one application instance\n\nRemove the instance from request routing if the platform requires this action.\n\nSend `SIGHUP` to the application process:\n\n```sh\nkill -HUP <pid>\n```\n\nReturn the instance to request routing when it is ready.\n\n### 6. Validate the first instance\n\nMake sure that the instance remains healthy.\n\nMake sure that the instance creates new database connections successfully.\n\nMake sure that request errors and database authentication errors do not increase.\n\nStop the rollout if a validation fails.\n\n### 7. Reload the remaining instances\n\nReload one instance at a time.\n\nWait for each instance to become healthy before you continue.\n\nKeep enough healthy instances to serve the current traffic.\n\n### 8. Drain old database connections\n\nWait until all connections that use the old password close.\n\nIf necessary, recycle each connection pool without stopping request traffic.\n\nMake sure that all instances can create new connections with `NEW_PASSWORD`.\n\n### 9. Remove the old password\n\nRemove the old password from user `app`.\n\nKeep `NEW_PASSWORD` as the only valid password.\n\n### 10. Complete the validation\n\nMake sure that:\n\n- All application instances are healthy.\n- New database connections succeed.\n- Database authentication errors remain at the normal level.\n- Request latency and error rates remain at the normal level.\n- The old password no longer authenticates.\n\nRecord the new secret version and the rotation completion time.\n\n## Rollback\n\nUse this rollback before you remove the old password:\n\n1. Restore the old secret version.\n2. Reload affected instances one at a time.\n3. Make sure that each instance becomes healthy.\n4. Remove the unused new password from the database.\n\nIf you already removed the old password, add it again as a temporary valid password. Then perform the rollback steps.\n\n## Database limitation\n\nIf the database does not support two passwords for user `app`, zero-downtime rotation needs a temporary database user.\n\nCreate a temporary user with the same required permissions. Move the application to that user before you rotate the `app` password. Then move the application back."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

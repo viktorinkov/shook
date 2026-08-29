@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "hook-strict",
+  "id": "incident-04",
+  "cat": "incident",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 4.2,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 16667,
+    "cached_input_tokens": 9984,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 38,
+    "reasoning_output_tokens": 9
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 19,
+    "sentences": 2,
+    "mean_sentence_words": 9.5,
+    "longest_sentence_words": 15,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "Search results are delayed by up to 10 minutes while we reindex the search system. No data is lost.",
+  "texts": [
+    "Search results are delayed by up to 10 minutes while we reindex the search system. No data is lost."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

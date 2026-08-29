@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "skill",
+  "id": "review-02",
+  "cat": "review",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 9.5,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 15841,
+    "cached_input_tokens": 9984,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 239,
+    "reasoning_output_tokens": 50
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 129,
+    "sentences": 11,
+    "mean_sentence_words": 11.3,
+    "longest_sentence_words": 22,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 3,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 1,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 2
+    },
+    "violations_total": 7,
+    "violations_per_100w": 5.43
+  },
+  "text": "**PR comment**\n\nThis migration may be risky on a large or active `users` table:\n\n- The full-table `UPDATE` can cause heavy locking and generate substantial transaction/WAL volume. Consider backfilling in batches.\n- Verify that every `username` is non-null and produces a valid, unique email before adding `NOT NULL`. Duplicate usernames would also produce duplicate emails.\n- New rows inserted during the backfill could still have `NULL` emails. Use a temporary default, application dual-write, or another deployment-safe strategy.\n- If email addresses must be unique, add a unique index\u2014preferably concurrently where supported.\n- `username || '@example.com'` is database-specific; confirm this is valid for the target database.\n\nA safer rollout is: add the nullable column, deploy application dual-write, backfill and validate the data, add the uniqueness constraint if required, then enforce `NOT NULL`.",
+  "texts": [
+    "**PR comment**\n\nThis migration may be risky on a large or active `users` table:\n\n- The full-table `UPDATE` can cause heavy locking and generate substantial transaction/WAL volume. Consider backfilling in batches.\n- Verify that every `username` is non-null and produces a valid, unique email before adding `NOT NULL`. Duplicate usernames would also produce duplicate emails.\n- New rows inserted during the backfill could still have `NULL` emails. Use a temporary default, application dual-write, or another deployment-safe strategy.\n- If email addresses must be unique, add a unique index\u2014preferably concurrently where supported.\n- `username || '@example.com'` is database-specific; confirm this is valid for the target database.\n\nA safer rollout is: add the nullable column, deploy application dual-write, backfill and validate the data, add the uniqueness constraint if required, then enforce `NOT NULL`."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

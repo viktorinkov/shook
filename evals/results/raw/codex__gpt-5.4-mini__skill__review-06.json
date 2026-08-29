@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "skill",
+  "id": "review-06",
+  "cat": "review",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 7.9,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 13174,
+    "cached_input_tokens": 4352,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 348,
+    "reasoning_output_tokens": 180
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 107,
+    "sentences": 6,
+    "mean_sentence_words": 17.3,
+    "longest_sentence_words": 28,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 3,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 5,
+    "violations_per_100w": 4.67
+  },
+  "text": "`apt-get update` and `apt-get install` need to be in the same `RUN` when possible.\n\nRight now, the first layer updates package lists and installs `curl`, then the next layer runs `apt-get install -y git` without refreshing the indexes. That has two problems:\n\n- The package index can be stale by the time the second `RUN` executes, so `git` may fail to install or may install against outdated metadata.\n- Splitting them into separate layers adds unnecessary image size and weaker cache behavior.\n\nPrefer:\n\n```dockerfile\nRUN apt-get update && apt-get install -y curl git\n```\n\nIf you want to keep them separate for readability, each install step should still be paired with its own `apt-get update`, but combining them is the better pattern.",
+  "texts": [
+    "`apt-get update` and `apt-get install` need to be in the same `RUN` when possible.\n\nRight now, the first layer updates package lists and installs `curl`, then the next layer runs `apt-get install -y git` without refreshing the indexes. That has two problems:\n\n- The package index can be stale by the time the second `RUN` executes, so `git` may fail to install or may install against outdated metadata.\n- Splitting them into separate layers adds unnecessary image size and weaker cache behavior.\n\nPrefer:\n\n```dockerfile\nRUN apt-get update && apt-get install -y curl git\n```\n\nIf you want to keep them separate for readability, each install step should still be paired with its own `apt-get update`, but combining them is the better pattern."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

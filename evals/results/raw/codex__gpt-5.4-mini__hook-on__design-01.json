@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "hook-on",
+  "id": "design-01",
+  "cat": "design",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 6.1,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 13962,
+    "cached_input_tokens": 13568,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 202,
+    "reasoning_output_tokens": 27
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 143,
+    "sentences": 15,
+    "mean_sentence_words": 9.3,
+    "longest_sentence_words": 20,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "Use a message queue for the order-processing pipeline.\n\nDirect HTTP calls fit simple request and response flows. They keep the path easy to trace. They also give lower latency for one hop.\n\nA message queue fits pipelines with more than one step. It absorbs bursts. It decouples services. It lets each service fail and recover with less impact on the others. It also supports retries and dead-letter handling.\n\nFor order processing, reliability matters more than immediate sync response. Orders often need payment, inventory, fraud checks, and fulfillment. A queue handles these steps better than direct HTTP calls.\n\nRecommendation:\n- Use a queue for the main order flow.\n- Use direct HTTP only for synchronous checks that need an immediate answer, such as price validation or payment token setup.\n\nIf you want, I can also give a short architecture sketch for the order pipeline.",
+  "texts": [
+    "Use a message queue for the order-processing pipeline.\n\nDirect HTTP calls fit simple request and response flows. They keep the path easy to trace. They also give lower latency for one hop.\n\nA message queue fits pipelines with more than one step. It absorbs bursts. It decouples services. It lets each service fail and recover with less impact on the others. It also supports retries and dead-letter handling.\n\nFor order processing, reliability matters more than immediate sync response. Orders often need payment, inventory, fraud checks, and fulfillment. A queue handles these steps better than direct HTTP calls.\n\nRecommendation:\n- Use a queue for the main order flow.\n- Use direct HTTP only for synchronous checks that need an immediate answer, such as price validation or payment token setup.\n\nIf you want, I can also give a short architecture sketch for the order pipeline."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

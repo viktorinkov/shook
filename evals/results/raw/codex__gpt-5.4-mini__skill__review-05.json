@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "skill",
+  "id": "review-05",
+  "cat": "review",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 3.8,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 13156,
+    "cached_input_tokens": 12544,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 65,
+    "reasoning_output_tokens": 13
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 41,
+    "sentences": 3,
+    "mean_sentence_words": 13.7,
+    "longest_sentence_words": 21,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 2.44
+  },
+  "text": "Please split this into two pull requests: one for the payment logic changes and one for the CSS theme updates. They touch separate concerns, will be easier to review independently, and make rollback risk much lower if either side needs adjustment.",
+  "texts": [
+    "Please split this into two pull requests: one for the payment logic changes and one for the CSS theme updates. They touch separate concerns, will be easier to review independently, and make rollback risk much lower if either side needs adjustment."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

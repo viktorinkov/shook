@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "hook-on",
+  "id": "explain-01",
+  "cat": "explain",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 9.4,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 16673,
+    "cached_input_tokens": 9984,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 180,
+    "reasoning_output_tokens": 43
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 38,
+    "sentences": 6,
+    "mean_sentence_words": 6.3,
+    "longest_sentence_words": 11,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "The test fails because `client.upload()` returns `None`.\n\n`service.sync` then reads:\n\n```python\nupload_result = client.upload()\nstatus = upload_result.status\n```\n\nThis causes:\n\n```text\nAttributeError: 'NoneType' object has no attribute 'status'\n```\n\nThe test never reaches `assert result.ok`.\n\nReturn an object with the expected `status` attribute:\n\n```python\ndef test_upload():\n    client = Mock()\n    client.upload.return_value.status = \"success\"\n\n    result = service.sync(client)\n\n    assert result.ok\n```\n\nSet `status` to the exact value that `service.sync` treats as successful.",
+  "texts": [
+    "The test fails because `client.upload()` returns `None`.\n\n`service.sync` then reads:\n\n```python\nupload_result = client.upload()\nstatus = upload_result.status\n```\n\nThis causes:\n\n```text\nAttributeError: 'NoneType' object has no attribute 'status'\n```\n\nThe test never reaches `assert result.ok`.\n\nReturn an object with the expected `status` attribute:\n\n```python\ndef test_upload():\n    client = Mock()\n    client.upload.return_value.status = \"success\"\n\n    result = service.sync(client)\n\n    assert result.ok\n```\n\nSet `status` to the exact value that `service.sync` treats as successful."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

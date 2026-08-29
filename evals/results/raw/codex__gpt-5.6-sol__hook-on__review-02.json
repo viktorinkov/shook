@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "hook-on",
+  "id": "review-02",
+  "cat": "review",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 11.6,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 16648,
+    "cached_input_tokens": 9984,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 204,
+    "reasoning_output_tokens": 67
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 95,
+    "sentences": 11,
+    "mean_sentence_words": 8.2,
+    "longest_sentence_words": 16,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 1
+    },
+    "violations_total": 2,
+    "violations_per_100w": 2.11
+  },
+  "text": "**PR comment**\n\nThis migration can fail if any `username` value is `NULL`. The update leaves `email` as `NULL`, so the final statement fails.\n\nThe update can also lock many rows and increase database load on a large `users` table.\n\nPlease use these steps:\n\n1. Add the nullable column.\n2. Backfill rows in small batches.\n3. Verify that no `NULL` values remain.\n4. Add a valid email source for new rows.\n5. Set the `NOT NULL` constraint.\n\nAlso, confirm that generated `@example.com` addresses are acceptable. They can expose usernames and conflict with future real addresses.",
+  "texts": [
+    "**PR comment**\n\nThis migration can fail if any `username` value is `NULL`. The update leaves `email` as `NULL`, so the final statement fails.\n\nThe update can also lock many rows and increase database load on a large `users` table.\n\nPlease use these steps:\n\n1. Add the nullable column.\n2. Backfill rows in small batches.\n3. Verify that no `NULL` values remain.\n4. Add a valid email source for new rows.\n5. Set the `NOT NULL` constraint.\n\nAlso, confirm that generated `@example.com` addresses are acceptable. They can expose usernames and conflict with future real addresses."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

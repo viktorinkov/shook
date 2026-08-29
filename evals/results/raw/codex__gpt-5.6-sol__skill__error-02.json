@@ -1,0 +1,49 @@
+{
+  "harness": "codex",
+  "arm": "skill",
+  "id": "error-02",
+  "cat": "error",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 20.0,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 80128,
+    "cached_input_tokens": 70656,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 624,
+    "reasoning_output_tokens": 50
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 1,
+    "sentences": 0,
+    "mean_sentence_words": 0.0,
+    "longest_sentence_words": 0,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "```text\nError: Syntax error in `~/.tool/config.toml` on line 12. Correct the file and run the command again.\n```",
+  "texts": [
+    "I\u2019m using the Simplified Technical English skill because this is a CLI error message; it will keep the message short and actionable.",
+    "```text\nError: Syntax error in `~/.tool/config.toml` on line 12. Correct the file and run the command again.\n```"
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

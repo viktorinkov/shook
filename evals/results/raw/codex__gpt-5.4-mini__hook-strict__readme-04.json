@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "hook-strict",
+  "id": "readme-04",
+  "cat": "docs",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 5.4,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 14001,
+    "cached_input_tokens": 13568,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 171,
+    "reasoning_output_tokens": 41
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 97,
+    "sentences": 8,
+    "mean_sentence_words": 11.4,
+    "longest_sentence_words": 16,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "**Troubleshooting**\n\nIf the app shows `EADDRINUSE`, another process already uses the required port.\n\n1. Close the other copy of the app.\n2. Stop any other service that uses the same port.\n3. Restart the app.\n4. If the error returns, change the app port in the settings file.\n5. If you do not know the port owner, use a system tool to find the process.\n6. If the process remains after a crash, wait a few seconds, then start the app again.\n\nIf the app still does not start, collect the error log and contact support.",
+  "texts": [
+    "**Troubleshooting**\n\nIf the app shows `EADDRINUSE`, another process already uses the required port.\n\n1. Close the other copy of the app.\n2. Stop any other service that uses the same port.\n3. Restart the app.\n4. If the error returns, change the app port in the settings file.\n5. If you do not know the port owner, use a system tool to find the process.\n6. If the process remains after a crash, wait a few seconds, then start the app again.\n\nIf the app still does not start, collect the error log and contact support."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "hook-on",
+  "id": "explain-02",
+  "cat": "explain",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 9.4,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 13963,
+    "cached_input_tokens": 9472,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 227,
+    "reasoning_output_tokens": 15
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 180,
+    "sentences": 15,
+    "mean_sentence_words": 11.7,
+    "longest_sentence_words": 27,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 0
+    },
+    "violations_total": 3,
+    "violations_per_100w": 1.67
+  },
+  "text": "A race condition happens when two or more threads access the same data at the same time, and the result depends on the exact order of execution. This order can change from run to run, so the bug can be hard to reproduce.\n\nA mutex prevents this by allowing only one thread to enter a critical section at a time. A thread must lock the mutex before it reads or changes shared data. Other threads wait until that thread unlocks the mutex.\n\nUse a mutex when a block of code must run as one unit. This keeps shared state consistent and prevents threads from overwriting each other.\n\nExample:\n\n1. Thread A locks the mutex.\n2. Thread A updates the shared counter.\n3. Thread A unlocks the mutex.\n4. Thread B then locks the mutex and updates the same counter.\n\nWithout the mutex, both threads can read the same old value and write back the same new value. One update then gets lost.\n\nA mutex does not remove all concurrency bugs. It only protects the shared data that the mutex covers.",
+  "texts": [
+    "A race condition happens when two or more threads access the same data at the same time, and the result depends on the exact order of execution. This order can change from run to run, so the bug can be hard to reproduce.\n\nA mutex prevents this by allowing only one thread to enter a critical section at a time. A thread must lock the mutex before it reads or changes shared data. Other threads wait until that thread unlocks the mutex.\n\nUse a mutex when a block of code must run as one unit. This keeps shared state consistent and prevents threads from overwriting each other.\n\nExample:\n\n1. Thread A locks the mutex.\n2. Thread A updates the shared counter.\n3. Thread A unlocks the mutex.\n4. Thread B then locks the mutex and updates the same counter.\n\nWithout the mutex, both threads can read the same old value and write back the same new value. One update then gets lost.\n\nA mutex does not remove all concurrency bugs. It only protects the shared data that the mutex covers."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

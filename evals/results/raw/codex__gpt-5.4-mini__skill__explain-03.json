@@ -1,0 +1,48 @@
+{
+  "harness": "codex",
+  "arm": "skill",
+  "id": "explain-03",
+  "cat": "explain",
+  "model": "gpt-5.4-mini",
+  "exit": 0,
+  "seconds": 7.2,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 13160,
+    "cached_input_tokens": 4352,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 306,
+    "reasoning_output_tokens": 18
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 214,
+    "sentences": 21,
+    "mean_sentence_words": 9.5,
+    "longest_sentence_words": 17,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 0
+    },
+    "violations_total": 2,
+    "violations_per_100w": 0.93
+  },
+  "text": "`git merge` and `git rebase` both combine work from one branch into another, but they do it differently.\n\n`git merge`\n- Combines branches by creating a new merge commit.\n- Preserves the actual branch history.\n- Safer for shared branches because it does not rewrite commits.\n- History can look more tangled, but it reflects what really happened.\n\n`git rebase`\n- Replays your feature branch commits on top of another branch.\n- Creates a linear history.\n- Good for cleaning up a local feature branch before merging.\n- Rewrites commit history, so avoid it on branches other people already use.\n\nFor a feature branch, the usual rule is:\n- Use `rebase` while the branch is still private and you want a clean history.\n- Use `merge` when integrating shared work or when you want to preserve branch structure.\n\nA practical recommendation:\n- If you are working alone on the branch: `rebase` is fine.\n- If the branch is shared with others: prefer `merge` unless your team explicitly agrees to rebase.\n\nSimple example:\n- `git merge main` keeps both lines of history and adds a merge commit.\n- `git rebase main` moves your feature commits so they appear as if you started from the latest `main`.\n\nIf you want, I can also give you a 3-sentence version you can paste in Slack.",
+  "texts": [
+    "`git merge` and `git rebase` both combine work from one branch into another, but they do it differently.\n\n`git merge`\n- Combines branches by creating a new merge commit.\n- Preserves the actual branch history.\n- Safer for shared branches because it does not rewrite commits.\n- History can look more tangled, but it reflects what really happened.\n\n`git rebase`\n- Replays your feature branch commits on top of another branch.\n- Creates a linear history.\n- Good for cleaning up a local feature branch before merging.\n- Rewrites commit history, so avoid it on branches other people already use.\n\nFor a feature branch, the usual rule is:\n- Use `rebase` while the branch is still private and you want a clean history.\n- Use `merge` when integrating shared work or when you want to preserve branch structure.\n\nA practical recommendation:\n- If you are working alone on the branch: `rebase` is fine.\n- If the branch is shared with others: prefer `merge` unless your team explicitly agrees to rebase.\n\nSimple example:\n- `git merge main` keeps both lines of history and adds a merge commit.\n- `git rebase main` moves your feature commits so they appear as if you started from the latest `main`.\n\nIf you want, I can also give you a 3-sentence version you can paste in Slack."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}

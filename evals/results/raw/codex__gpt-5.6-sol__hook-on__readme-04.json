@@ -1,0 +1,49 @@
+{
+  "harness": "codex",
+  "arm": "hook-on",
+  "id": "readme-04",
+  "cat": "docs",
+  "model": "gpt-5.6-sol",
+  "exit": 0,
+  "seconds": 23.6,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": null,
+  "usage": {
+    "input_tokens": 59788,
+    "cached_input_tokens": 52480,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 758,
+    "reasoning_output_tokens": 191
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 124,
+    "sentences": 13,
+    "mean_sentence_words": 8.8,
+    "longest_sentence_words": 17,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "## Troubleshooting `EADDRINUSE`\n\nThe `EADDRINUSE` error means that another process uses the network port that the app requires.\n\n1. Close all open instances of the app.\n2. Start the app again.\n3. If the error occurs again, restart the computer.\n4. If the error continues, find the port number in the app log.\n5. On macOS or Linux, find the process with this command:\n\n   ```bash\n   lsof -i :<port>\n   ```\n\n6. On Windows, find the process with this PowerShell command:\n\n   ```powershell\n   Get-NetTCPConnection -LocalPort <port>\n   ```\n\n7. Make sure that the process belongs to the app.\n8. Stop that process.\n9. Start the app again.\n\nCAUTION: Do not stop an unknown process. This action can stop another app or a system service.\n\nIf these steps do not correct the problem, send the app log and port number to support.",
+  "texts": [
+    "I will use the Simple English skill because this section is technical documentation.",
+    "## Troubleshooting `EADDRINUSE`\n\nThe `EADDRINUSE` error means that another process uses the network port that the app requires.\n\n1. Close all open instances of the app.\n2. Start the app again.\n3. If the error occurs again, restart the computer.\n4. If the error continues, find the port number in the app log.\n5. On macOS or Linux, find the process with this command:\n\n   ```bash\n   lsof -i :<port>\n   ```\n\n6. On Windows, find the process with this PowerShell command:\n\n   ```powershell\n   Get-NetTCPConnection -LocalPort <port>\n   ```\n\n7. Make sure that the process belongs to the app.\n8. Stop that process.\n9. Start the app again.\n\nCAUTION: Do not stop an unknown process. This action can stop another app or a system service.\n\nIf these steps do not correct the problem, send the app log and port number to support."
+  ],
+  "stderr_tail": "Reading prompt from stdin...\n"
+}
