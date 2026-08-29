@@ -1,0 +1,71 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "explain-07",
+  "cat": "explain",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 7.9,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.0281688,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3966,
+    "cache_read_input_tokens": 44254,
+    "output_tokens": 345,
+    "output_tokens_details": {
+      "thinking_tokens": 72
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3966,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 345,
+        "cache_read_input_tokens": 44254,
+        "cache_creation_input_tokens": 3966,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3966
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 151,
+    "sentences": 12,
+    "mean_sentence_words": 12.6,
+    "longest_sentence_words": 21,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.66
+  },
+  "text": "A database index makes reads faster, but it has real costs. Here are the main ones.\n\n**Write speed goes down.** Each insert, update, or delete must also update every index on that table. More indexes mean slower writes.\n\n**Storage use goes up.** An index is a separate data structure. It takes its own disk space, sometimes as much as the table itself.\n\n**Maintenance takes engineering time.** The team must monitor the index, test it, and remove it if it is no longer useful.\n\n**Some indexes slow down the whole system.** A bad or unused index adds write cost without a matching benefit.\n\n**How to apply this:** Ask the engineering team two questions before you request an index. First, which slow queries will the index fix? Second, what is the expected effect on write speed and storage? This turns \"add an index\" from a free feature request into a normal cost-tradeoff decision.",
+  "stderr_tail": ""
+}

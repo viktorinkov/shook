@@ -1,0 +1,71 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "incident-02",
+  "cat": "incident",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 15.1,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 2,
+  "strict_blocks": 1,
+  "num_turns": 2,
+  "cost_usd": 0.050371200000000005,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 4815,
+    "cache_read_input_tokens": 92566,
+    "output_tokens": 1259,
+    "output_tokens_details": {
+      "thinking_tokens": 743
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4815,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 701,
+        "cache_read_input_tokens": 48312,
+        "cache_creation_input_tokens": 757,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 757
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 133,
+    "sentences": 16,
+    "mean_sentence_words": 8.3,
+    "longest_sentence_words": 17,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "**Login Service Incident Summary**\n\n**What happened**\nOn [date], the login service was not available for 18 minutes. Users were unable to log in to their accounts during this time.\n\n**Cause**\nA security certificate expired. The expired certificate blocked the login service from processing requests.\n\n**Impact**\nUsers were unable to log in for 18 minutes. No other services were affected. No user data was lost or exposed.\n\n**Resolution**\nThe team renewed the certificate. The login service returned to normal operation after the renewal.\n\n**Prevention**\nThe team set up automatic certificate renewal. This change will prevent this type of incident in the future.\n\nWe apologize for the disruption. If you have questions, contact our support team.\n\n---\n\nNote: I used `[date]` as a placeholder. Tell me the incident date and I will fill it in.",
+  "stderr_tail": ""
+}

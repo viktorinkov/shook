@@ -1,0 +1,71 @@
+{
+  "harness": "claude",
+  "arm": "style",
+  "id": "error-04",
+  "cat": "error",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 8.2,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.0670434,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 10729,
+    "cache_read_input_tokens": 92867,
+    "output_tokens": 456,
+    "output_tokens_details": {
+      "thinking_tokens": 163
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10729,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 331,
+        "cache_read_input_tokens": 47823,
+        "cache_creation_input_tokens": 7950,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7950
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 92,
+    "sentences": 10,
+    "mean_sentence_words": 9.2,
+    "longest_sentence_words": 30,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 1.09
+  },
+  "text": "**Error message:**\n\n> You cannot delete this project. The project has active deployments.\n>\n> Stop all deployments, then delete the project.\n\n**Why this form:** the command (\"you cannot delete\") comes first, then the reason (active deployments), then the required action \u2014 the same pattern STE uses for warnings (condition/risk before elaboration). No contractions, no hedging words like \"please\" or \"currently,\" and each sentence stays under 20 words.\n\nIf you want a shorter inline/toast variant:\n\n> Cannot delete project: 3 active deployments found. Stop them first.\n\n(Swap `3` for the real count.)",
+  "stderr_tail": ""
+}

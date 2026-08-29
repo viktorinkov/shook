@@ -1,0 +1,71 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "incident-02",
+  "cat": "incident",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 15.9,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 6,
+  "cost_usd": 0.118423,
+  "usage": {
+    "input_tokens": 6,
+    "cache_creation_input_tokens": 19276,
+    "cache_read_input_tokens": 146380,
+    "output_tokens": 1104,
+    "output_tokens_details": {
+      "thinking_tokens": 669
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 19276,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 307,
+        "cache_read_input_tokens": 55074,
+        "cache_creation_input_tokens": 8456,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8456
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 114,
+    "sentences": 10,
+    "mean_sentence_words": 11.4,
+    "longest_sentence_words": 23,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 2,
+      "banned_modal": 1,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 3,
+    "violations_per_100w": 2.63
+  },
+  "text": "Here's the incident summary, written in pragmatic Simple English (short sentences, active voice, no filler):\n\n---\n\n## Incident Summary: Login Service Outage\n\n**What happened**\nOn [date], the login service was not available for 18 minutes. Users could not log in to their accounts during this time.\n\n**Cause**\nA security certificate for the login service expired. The service needs a valid certificate to run.\n\n**Resolution**\nWe renewed the certificate. The login service became available again 18 minutes after the outage started.\n\n**Prevention**\nWe now renew certificates through an automated process. This process renews each certificate before it expires.\n\n---\n\nI left `[date]` as a placeholder since you didn't specify one \u2014 let me know the date and I'll fill it in.",
+  "stderr_tail": ""
+}

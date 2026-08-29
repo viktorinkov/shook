@@ -1,0 +1,71 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "runbook-02",
+  "cat": "runbook",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 9.8,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.0323168,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3988,
+    "cache_read_input_tokens": 44254,
+    "output_tokens": 751,
+    "output_tokens_details": {
+      "thinking_tokens": 136
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3988,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 751,
+        "cache_read_input_tokens": 44254,
+        "cache_creation_input_tokens": 3988,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3988
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "procedural",
+    "words": 248,
+    "sentences": 30,
+    "mean_sentence_words": 7.5,
+    "longest_sentence_words": 17,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 1
+    },
+    "violations_total": 2,
+    "violations_per_100w": 0.81
+  },
+  "text": "# Runbook: Restart the `worker` Service\n\n## Step 1: Prepare\n\n1. Open a terminal session on the target host.\n2. Check current service status: run `systemctl status worker`.\n3. Note the current queue depth before you proceed. Use your queue monitoring tool or `worker queue-depth`.\n\n## Step 2: Restart the Service\n\n1. Run `systemctl restart worker`.\n2. Wait 10 seconds.\n3. Check that the service is active: run `systemctl status worker`.\n4. If the status is not `active (running)`, go to Step 4.\n\n## Step 3: Confirm the Queue Drains\n\n1. Check the queue depth: run `worker queue-depth`.\n2. Wait 60 seconds.\n3. Check the queue depth again.\n4. Compare the two readings.\n5. If the queue depth decreases or reaches zero, the drain is normal. Go to Step 5.\n6. If the queue depth stays the same or increases for 5 minutes, go to Step 4.\n\n## Step 4: If the Queue Does Not Drain\n\n1. Check the worker logs: run `journalctl -u worker -n 200`.\n2. Look for repeated error messages or stack traces.\n3. Check that the worker can reach its dependencies (database, message broker, downstream APIs).\n4. If you find a connectivity error, fix the network or credential issue first, then repeat Step 2.\n5. If you find no clear cause, escalate to the on-call engineer.\n6. Include the log output and queue depth readings in your escalation message.\n7. Do not restart the service more than three times in 10 minutes. Repeated restarts can hide the real fault.\n\n## Step 5: Close Out\n\n1. Record the restart time and the queue depth before and after.\n2. Confirm that no new errors appear in the logs for 5 minutes.\n3. Close the incident ticket, if one exists.",
+  "stderr_tail": ""
+}

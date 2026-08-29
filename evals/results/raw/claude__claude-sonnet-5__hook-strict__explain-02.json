@@ -1,0 +1,71 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "explain-02",
+  "cat": "explain",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 41.9,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 2,
+  "strict_blocks": 1,
+  "num_turns": 2,
+  "cost_usd": 0.0897334,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 6361,
+    "cache_read_input_tokens": 92557,
+    "output_tokens": 4577,
+    "output_tokens_details": {
+      "thinking_tokens": 3825
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 6361,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2469,
+        "cache_read_input_tokens": 48305,
+        "cache_creation_input_tokens": 2308,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2308
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 189,
+    "sentences": 18,
+    "mean_sentence_words": 10.3,
+    "longest_sentence_words": 16,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "## Race Conditions and Mutexes\n\n### What Is a Race Condition\n\nWhen two or more threads access shared data at the same time, a race condition occurs. The result then depends on the order of execution.\n\nThe final state of the data becomes unpredictable. When one thread reads a value while another thread writes to it, this often occurs.\n\nFor example, two threads increment a shared counter. Each thread reads the current value, adds one, and writes the result back. If both threads read the value before either thread writes it back, one increment is lost.\n\n### How a Mutex Prevents It\n\nA mutex, or mutual exclusion lock, prevents this problem. A mutex allows only one thread to access a shared resource at a time.\n\nBefore a thread reads or writes the shared data, it must lock the mutex. Until the first thread unlocks the mutex, other threads must wait. This order removes the unpredictable result.\n\n### Steps for Contributors\n\n- Before you access shared data, lock the mutex.\n- Access the shared data.\n- After you finish the access, unlock the mutex.\n- Keep the locked section as short as possible.\n\nA long locked section blocks other threads for a longer time. It also reduces the benefit of concurrency.",
+  "stderr_tail": ""
+}

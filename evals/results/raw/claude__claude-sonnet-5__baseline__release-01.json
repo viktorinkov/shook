@@ -1,0 +1,71 @@
+{
+  "harness": "claude",
+  "arm": "baseline",
+  "id": "release-01",
+  "cat": "release",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 3.3,
+  "skill_available": false,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.021109799999999998,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2578,
+    "cache_read_input_tokens": 44254,
+    "output_tokens": 93,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2578,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 93,
+        "cache_read_input_tokens": 44254,
+        "cache_creation_input_tokens": 2578,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2578
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 36,
+    "sentences": 4,
+    "mean_sentence_words": 8.2,
+    "longest_sentence_words": 13,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 2.78
+  },
+  "text": "## Version 2.4.0\n\n**New Features**\n- Added dark mode support.\n\n**Bug Fixes**\n- Fixed a crash that occurred when searching with an empty query.\n\n**Breaking Changes**\n- Dropped support for Node 16. Node 18 or later is now required.",
+  "stderr_tail": ""
+}

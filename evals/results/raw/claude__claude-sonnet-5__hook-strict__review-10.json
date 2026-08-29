@@ -1,0 +1,71 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "review-10",
+  "cat": "review",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 5.7,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.027742799999999998,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4042,
+    "cache_read_input_tokens": 44254,
+    "output_tokens": 272,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4042,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 272,
+        "cache_read_input_tokens": 44254,
+        "cache_creation_input_tokens": 4042,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4042
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 135,
+    "sentences": 15,
+    "mean_sentence_words": 8.6,
+    "longest_sentence_words": 15,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.74
+  },
+  "text": "**Do not merge this change.**\n\nRemove the API key from `config.py`.\n\nThis commit adds a real API key as plain text. This is a security risk. An attacker with access to the repository can read the key and use it.\n\nComplete these steps:\n\n1. Revoke the exposed key now.\n2. Issue a new key.\n3. Remove the key from `config.py`.\n4. Load the key from an environment variable or a secrets manager.\n5. Add `config.py` (or the specific file with secrets) to `.gitignore`, if that applies.\n6. Purge the key from git history. A single revert does not remove it from past commits.\n\nFor example, replace the hardcoded value with:\n```python\nimport os\n\nAPI_KEY = os.environ[\"API_KEY\"]\n```\n\nIf this repository is public or has wide access, treat the old key as compromised. Rotate it before you close this PR.",
+  "stderr_tail": ""
+}

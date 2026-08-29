@@ -1,0 +1,71 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "review-07",
+  "cat": "review",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 11.3,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 2,
+  "strict_blocks": 1,
+  "num_turns": 2,
+  "cost_usd": 0.04342360000000001,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 4586,
+    "cache_read_input_tokens": 92558,
+    "output_tokens": 656,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4586,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 332,
+        "cache_read_input_tokens": 48304,
+        "cache_creation_input_tokens": 536,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 536
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 168,
+    "sentences": 16,
+    "mean_sentence_words": 10.3,
+    "longest_sentence_words": 23,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "**PR Review: HTTP client retry logic**\n\n**Issue: Retry logic includes 4xx client errors**\n\nThe retry logic sends a retry for every status code. This includes 400 (Bad Request) and other 4xx codes.\n\nA client error means that the request itself is invalid. A retry sends the same invalid request again. The server returns the same error each time.\n\nThis behavior wastes resources. It also adds delay for a request that cannot succeed.\n\n**Recommendation**\n\nRetry only on these conditions:\n- Server errors (5xx status codes)\n- Network-level failures, for example connection timeouts\n- 429 (Too Many Requests). For this code, the retry logic must respect a backoff or `Retry-After` header\n\nDo not retry on 4xx codes, except for 429. These codes signal a problem with the request, not the server.\n\n**Why this matters**\n\nIf a client sends bad data and the code retries automatically, the client repeats the same failed call multiple times. This hides the real error from the caller. It also adds unneeded load on the server.",
+  "stderr_tail": ""
+}

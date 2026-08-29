@@ -1,0 +1,71 @@
+{
+  "harness": "claude",
+  "arm": "baseline",
+  "id": "explain-08",
+  "cat": "explain",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 9.9,
+  "skill_available": false,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.0272468,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2564,
+    "cache_read_input_tokens": 44254,
+    "output_tokens": 715,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2564,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 715,
+        "cache_read_input_tokens": 44254,
+        "cache_creation_input_tokens": 2564,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2564
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 163,
+    "sentences": 10,
+    "mean_sentence_words": 15.7,
+    "longest_sentence_words": 50,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 2,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 3,
+    "violations_per_100w": 1.84
+  },
+  "text": "# The N+1 Query Problem\n\nWhen you fetch a list of N records, then loop through them accessing a related object, most ORMs issue 1 query for the list + N additional queries for each related object \u2014 hence \"N+1.\"\n\n## Example (Django-style ORM)\n\n```python\n# 1 query: fetch all books\nbooks = Book.objects.all()\n\nfor book in books:\n    # 1 query PER book to fetch its author (N queries)\n    print(book.author.name)\n```\n\nIf there are 100 books, this runs **101 queries** instead of 2 (or even 1). The same pattern shows up in SQLAlchemy, ActiveRecord, Prisma, Hibernate, etc. \u2014 anywhere lazy-loaded relationships are accessed inside a loop.\n\n## The Fix: Eager Loading\n\nTell the ORM upfront to fetch related data in a single additional query (or a JOIN), instead of on-demand per row.\n\n```python\n# 2 queries total: one for books, one for all related authors\nbooks = Book.objects.select_related(\"author\")   # SQL JOIN, for FK/one-to-one\n# or\nbooks = Book.objects.prefetch_related(\"author\")  # separate batched query, for M2M/reverse FK\n\nfor book in books:\n    print(book.author.name)  # no extra query \u2014 already loaded\n```\n\nEquivalents in other ORMs:\n- **SQLAlchemy**: `.options(joinedload(Book.author))` or `.options(selectinload(...))`\n- **ActiveRecord**: `Book.includes(:author)`\n- **Prisma**: `prisma.book.findMany({ include: { author: true } })`\n\n## Rule of thumb\n- Use **joins/eager loading** (`select_related`/`joinedload`) for single-valued relations (belongs-to/FK).\n- Use **batched secondary queries** (`prefetch_related`/`selectinload`) for collections (has-many/many-to-many) to avoid a fan-out JOIN blowing up the result set size.\n\nMany ORMs also offer query-logging or dev-mode warnings (e.g., Django's `django-debug-toolbar`, Rails' `bullet` gem) that flag N+1 patterns automatically.",
+  "stderr_tail": ""
+}

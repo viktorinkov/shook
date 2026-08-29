@@ -1,0 +1,71 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "design-01",
+  "cat": "design",
+  "model": "claude-sonnet-5",
+  "exit": 0,
+  "seconds": 6.8,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.0249758,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2795,
+    "cache_read_input_tokens": 44254,
+    "output_tokens": 395,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2795,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 395,
+        "cache_read_input_tokens": 44254,
+        "cache_creation_input_tokens": 2795,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2795
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 166,
+    "sentences": 7,
+    "mean_sentence_words": 23.0,
+    "longest_sentence_words": 48,
+    "violations": {
+      "sentence_over_limit": 2,
+      "contraction": 2,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 4,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 1
+    },
+    "violations_total": 10,
+    "violations_per_100w": 6.02
+  },
+  "text": "Message queues (e.g., Kafka, RabbitMQ, SQS) decouple services asynchronously and buffer load, while direct HTTP calls are synchronous with tighter coupling and immediate feedback but no built-in retry/backpressure handling.\n\n**Recommendation: use a message queue for the order-processing pipeline**, since order processing typically involves multi-step workflows (validate \u2192 charge \u2192 fulfill \u2192 notify) that benefit from:\n- **Resilience** \u2014 if the payment or fulfillment service is briefly down, orders queue up instead of failing outright.\n- **Load smoothing** \u2014 traffic spikes (e.g., flash sales) don't overwhelm downstream services.\n- **Retry semantics** \u2014 failed steps can be retried without the customer-facing request hanging.\n- **Loose coupling** \u2014 you can add new consumers (e.g., analytics, fraud checks) without touching the producer.\n\nThe main tradeoff is added operational complexity (broker to run/monitor) and eventual consistency (the client won't get an instant success/failure response for every step) \u2014 so still use direct HTTP/RPC for the initial synchronous request (e.g., \"order accepted\") and any step where the caller needs an immediate result.",
+  "stderr_tail": ""
+}
