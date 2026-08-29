@@ -1,10 +1,12 @@
-<p align="center"><strong>Claude picks the replies that get the Simple English skill. Most replies never qualify.<br>This plugin applies it to every reply.</strong></p>
+<p align="center"><img src="logo.png" alt="SHOOK" width="220"></p>
+
+<p align="center"><strong>SHOOK, a Simple English hook. Claude picks the replies that get the Simple English skill. Most replies never qualify.<br>This plugin applies it to every reply.</strong></p>
 
 <p align="center">Three Claude Code hooks that make <a href="https://github.com/AminBlg/SimpleEnglish">AminBlg/SimpleEnglish</a> always on:<br>the rules at session start, a reminder on every prompt, and a lint gate that sends a failed reply back for a rewrite.<br>The status line shows the mode the whole time: <code>[STE]</code> or <code>[STE:STRICT 0.3]</code>.</p>
 
 <p align="center">
   <a href="evals/results/RESULTS.md"><img src="https://img.shields.io/badge/STE_violations-%E2%88%92{{REDUCTION_STRICT}}%25_vs_the_skill_alone-brightgreen?style=flat" alt="violations vs the skill alone"></a>
-  <a href="https://github.com/viktorinkov/simple-english-hook"><img src="https://img.shields.io/badge/Claude_Code-plugin-blue?style=flat" alt="Claude Code plugin"></a>
+  <a href="https://github.com/viktorinkov/shook"><img src="https://img.shields.io/badge/Claude_Code-plugin-blue?style=flat" alt="Claude Code plugin"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-lightgrey?style=flat" alt="MIT"></a>
 </p>
 
@@ -17,7 +19,7 @@ This plugin is a companion to **[AminBlg/SimpleEnglish](https://github.com/AminB
 First install the [simple-english plugin](https://github.com/AminBlg/SimpleEnglish#-install), the prerequisite. Then install this plugin:
 
 ```bash
-claude plugin marketplace add viktorinkov/simple-english-hook
+claude plugin marketplace add viktorinkov/shook
 claude plugin install simple-english-hook@simple-english-hook
 ```
 
@@ -55,7 +57,7 @@ A plugin cannot change the status line, so the setup is one step by hand. Ask Cl
 ```bash
 git clone https://github.com/AminBlg/SimpleEnglish ~/SimpleEnglish
 export STE_PLUGIN_DIR=~/SimpleEnglish
-codex plugin marketplace add viktorinkov/simple-english-hook
+codex plugin marketplace add viktorinkov/shook
 codex plugin add simple-english-hook@simple-english-hook
 ```
 
@@ -73,7 +75,7 @@ At the first start, Codex asks you to review the hooks. See [Codex CLI](docs/oth
 ```bash
 git clone https://github.com/AminBlg/SimpleEnglish ~/SimpleEnglish
 export STE_PLUGIN_DIR=~/SimpleEnglish
-agy plugin install https://github.com/viktorinkov/simple-english-hook
+agy plugin install https://github.com/viktorinkov/shook
 ```
 
 Put the `export` line in your shell profile.
@@ -90,7 +92,7 @@ See [Antigravity CLI](docs/other-harnesses.md#antigravity-cli) in the harness do
 ```bash
 git clone https://github.com/AminBlg/SimpleEnglish ~/SimpleEnglish
 export STE_PLUGIN_DIR=~/SimpleEnglish
-copilot plugin marketplace add viktorinkov/simple-english-hook
+copilot plugin marketplace add viktorinkov/shook
 copilot plugin install simple-english-hook@simple-english-hook
 ```
 

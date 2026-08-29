@@ -6,8 +6,8 @@
     "name": "Viktor Minchev",
     "url": "https://github.com/viktorinkov"
   },
-  "homepage": "https://github.com/viktorinkov/simple-english-hook",
-  "repository": "https://github.com/viktorinkov/simple-english-hook",
+  "homepage": "https://github.com/viktorinkov/shook",
+  "repository": "https://github.com/viktorinkov/shook",
   "license": "MIT",
   "keywords": ["technical-writing", "ste", "asd-ste100", "hooks", "simple-english"],
   "skills": "./skills/",
@@ -19,7 +19,7 @@
     "developerName": "Viktor Minchev",
     "category": "Productivity",
     "capabilities": ["Lifecycle hooks", "Skills"],
-    "websiteURL": "https://github.com/viktorinkov/simple-english-hook",
+    "websiteURL": "https://github.com/viktorinkov/shook",
     "defaultPrompt": ["$ste on", "$ste strict", "$ste status"]
   }
 }

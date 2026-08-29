@@ -40,7 +40,7 @@ Verified in a live session with Codex CLI 0.149.0 on macOS. Codex plugin hooks u
 ### Install
 
 ```bash
-codex plugin marketplace add viktorinkov/simple-english-hook
+codex plugin marketplace add viktorinkov/shook
 codex plugin add simple-english-hook@simple-english-hook
 ```
 
@@ -90,7 +90,7 @@ The Copilot manifest is `.github/plugin/plugin.json`. It points at `hooks/copilo
 ### Install
 
 ```bash
-copilot plugin marketplace add viktorinkov/simple-english-hook
+copilot plugin marketplace add viktorinkov/shook
 copilot plugin install simple-english-hook@simple-english-hook
 ```
 
@@ -130,7 +130,7 @@ The events differ from Claude Code. `SessionStart` runs once per conversation. `
 ```bash
 git clone https://github.com/AminBlg/SimpleEnglish ~/SimpleEnglish
 export STE_PLUGIN_DIR=~/SimpleEnglish
-agy plugin install https://github.com/viktorinkov/simple-english-hook
+agy plugin install https://github.com/viktorinkov/shook
 ```
 
 `agy plugin install` also takes a local clone path. It copies the whole directory to `~/.gemini/config/plugins/simple-english-hook/`. Run `agy plugin validate .` in the clone to check the manifest. Then start a new `agy` session.

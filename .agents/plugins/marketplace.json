@@ -8,7 +8,7 @@
       "name": "simple-english-hook",
       "source": {
         "source": "url",
-        "url": "https://github.com/viktorinkov/simple-english-hook.git",
+        "url": "https://github.com/viktorinkov/shook.git",
         "ref": "main"
       },
       "policy": {
