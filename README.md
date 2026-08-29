@@ -5,7 +5,7 @@
 <p align="center">Three Claude Code hooks that make <a href="https://github.com/AminBlg/SimpleEnglish">AminBlg/SimpleEnglish</a> always on:<br>the rules at session start, a reminder on every prompt, and a lint gate that sends a failed reply back for a rewrite.<br>The status line shows the mode the whole time: <code>[STE]</code> or <code>[STE:STRICT 0.3]</code>.</p>
 
 <p align="center">
-  <a href="evals/results/RESULTS.md"><img src="https://img.shields.io/badge/STE_violations-%E2%88%92{{REDUCTION_STRICT}}%25_vs_the_skill_alone-brightgreen?style=flat" alt="violations vs the skill alone"></a>
+  <a href="evals/results/RESULTS.md"><img src="https://img.shields.io/badge/STE_violations-%E2%88%9277%25_vs_the_skill_alone_(mean_of_6_models)-brightgreen?style=flat" alt="violations vs the skill alone"></a>
   <a href="https://github.com/viktorinkov/shook"><img src="https://img.shields.io/badge/Claude_Code-plugin-blue?style=flat" alt="Claude Code plugin"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-lightgrey?style=flat" alt="MIT"></a>
 </p>
@@ -137,14 +137,25 @@ This plugin only changes how often the rules apply, so the comparison that matte
 
 One run per prompt and arm. Scored with the simple-english plugin's own `ste_lint.py`.
 
-{{MODEL_TABLE}}
+| Model | n prompts | skill alone (v/100w) | hook on (v/100w) | hook strict (v/100w) | reduction (strict vs skill) |
+|---|---:|---:|---:|---:|---:|
+| `claude-fable-5` (claude) | 50 | 2.41 | 0.51 | 0.22 | 91% |
+| `claude-haiku-4-5-20251001` (claude) | 50 | 2.74 | 0.97 | 0.71 | 74% |
+| `claude-opus-5` (claude) | 50 | 2.68 | 0.41 | 0.45 | 83% |
+| `claude-sonnet-5` (claude) | 50 | 2.38 | 0.47 | 0.32 | 87% |
+| `gpt-5.4-mini` (codex) | 50 | 1.66 | 0.51 | 0.63 | 62% |
+| `gpt-5.6-sol` (codex) | 50 | 0.94 | 0.59 | 0.34 | 64% |
 
 The per-model table for Claude Sonnet 5 shows the three-row shape:
 
 <!-- columns: Arm | Skill fired | Violations / 100 words | Replies with 0 violations | Output tokens per reply -->
-{{SONNET_TABLE}}
+| Arm | Skill fired | Violations / 100 words | Replies with 0 violations | Output tokens per reply |
+|---|---:|---:|---:|---:|
+| skill | 24/50 | 2.38 | 32% | 1011 |
+| hook-on | 12/50 | 0.47 | 54% | 687 |
+| hook-strict | 7/50 | 0.32 | 66% | 1237 |
 
-How to read it: Claude alone decides whether the skill fires. On Sonnet 5, it fired in {{SKILL_FIRED}} of {{N}} replies. The hook applies the rules on every reply. Strict mode adds the gate and blocked {{BLOCKS}} of {{N}} replies on Sonnet 5.
+How to read it: Claude alone decides whether the skill fires. On Sonnet 5, it fired in 24 of 50 replies. The hook applies the rules on every reply. Strict mode adds the gate and blocked 6 of 50 replies on Sonnet 5.
 
 Read the tables with care. The linter is a regex pass. It undercounts and it cannot judge meaning. The numbers compare arms against each other. They are not a compliance score. No tool can certify ASD-STE100 compliance.
 
@@ -202,11 +213,11 @@ STE is flat by design. Use it for docs, reviews, runbooks, error messages, and e
 
 ## FAQ
 
-**Why not just prompt it?** A prompt line is one instruction among many. In the benchmark, the simple-english skill fired on its own in {{SKILL_FIRED}} of {{N}} replies on Sonnet 5. This plugin does not depend on a decision. It runs every turn.
+**Why not just prompt it?** A prompt line is one instruction among many. In the benchmark, the simple-english skill fired on its own in 24 of 50 replies on Sonnet 5. This plugin does not depend on a decision. It runs every turn.
 
 **Why not the simple-english output style?** The output style is a good one-shot. It has no reminder per turn and no gate. See the five-arm table for Sonnet 5 in [`evals/results/RESULTS.md`](evals/results/RESULTS.md).
 
-**What does strict mode cost?** If a reply fails, one extra rewrite. In the benchmark, strict mode blocked {{BLOCKS}} of {{N}} replies on Sonnet 5. See the token column.
+**What does strict mode cost?** If a reply fails, one extra rewrite. In the benchmark, strict mode blocked 6 of 50 replies on Sonnet 5. See the token column.
 
 ## Update
 
