@@ -14,59 +14,41 @@ Prompts: 50. Models: `claude-opus-5` (claude), `claude-sonnet-5` (claude), `gpt-
 
 ## Per model
 
+Every arm that ran for the model, with all columns. The reduction column compares against the `skill` arm.
+
 ### `claude-opus-5` (claude)
 
-| Arm | Skill fired | Violations / 100 words | Replies with 0 violations | Output tokens per reply |
-|---|---:|---:|---:|---:|
-| skill | 25/50 | 2.68 | 14% | 1514 |
-| hook-on | 15/50 | 0.41 | 48% | 1491 |
-| hook-strict | 15/50 | 0.45 | 50% | 1986 |
-
-Reduction vs the skill alone: hook-on −85%, hook-strict −83%.
+| Arm | n | Skill fired | Violations / 100 words (mean) | median | Replies with 0 violations | Reduction vs skill | Mean words | Mean output tokens | Strict blocks | Cost USD |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| skill | 50 | 25/50 | 2.68 | 2.66 | 14% | — | 299 | 1514 | 0 | 6.50 |
+| hook-on | 50 | 15/50 | 0.41 | 0.23 | 48% | −85% | 228 | 1491 | 0 | 6.14 |
+| hook-strict | 50 | 15/50 | 0.45 | 0.12 | 50% | −83% | 233 | 1986 | 2 | 6.55 |
 
 ### `claude-sonnet-5` (claude)
 
-| Arm | Skill fired | Violations / 100 words | Replies with 0 violations | Output tokens per reply |
-|---|---:|---:|---:|---:|
-| skill | 24/50 | 2.38 | 32% | 1011 |
-| hook-on | 12/50 | 0.47 | 54% | 687 |
-| hook-strict | 7/50 | 0.32 | 66% | 1237 |
-
-Reduction vs the skill alone: hook-on −80%, hook-strict −87%.
+| Arm | n | Skill fired | Violations / 100 words (mean) | median | Replies with 0 violations | Reduction vs skill | Mean words | Mean output tokens | Strict blocks | Cost USD |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| baseline | 50 | 0/50 | 3.61 | 3.73 | 22% | +51% | 145 | 464 | 0 | 1.29 |
+| skill | 50 | 24/50 | 2.38 | 2.31 | 32% | — | 136 | 1011 | 0 | 2.79 |
+| style | 50 | 29/50 | 0.85 | 0.00 | 56% | −64% | 119 | 883 | 0 | 2.96 |
+| hook-on | 50 | 12/50 | 0.47 | 0.00 | 54% | −80% | 110 | 687 | 0 | 2.19 |
+| hook-strict | 50 | 7/50 | 0.32 | 0.00 | 66% | −87% | 100 | 1237 | 6 | 2.26 |
 
 ### `gpt-5.4-mini` (codex)
 
-| Arm | Skill fired | Violations / 100 words | Replies with 0 violations | Output tokens per reply |
-|---|---:|---:|---:|---:|
-| skill | 4/50 | 1.66 | 34% | 228 |
-| hook-on | 0/50 | 0.51 | 70% | 133 |
-| hook-strict | 0/50 | 0.63 | 74% | 158 |
-
-Reduction vs the skill alone: hook-on −69%, hook-strict −62%.
+| Arm | n | Skill fired | Violations / 100 words (mean) | median | Replies with 0 violations | Reduction vs skill | Mean words | Mean output tokens | Strict blocks | Cost USD |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| skill | 50 | 4/50 | 1.66 | 1.32 | 34% | — | 100 | 228 | 0 | 0.00 |
+| hook-on | 50 | 0/50 | 0.51 | 0.00 | 70% | −69% | 63 | 133 | 0 | 0.00 |
+| hook-strict | 50 | 0/50 | 0.63 | 0.00 | 74% | −62% | 55 | 158 | 8 | 0.00 |
 
 ### `gpt-5.6-sol` (codex)
 
-| Arm | Skill fired | Violations / 100 words | Replies with 0 violations | Output tokens per reply |
-|---|---:|---:|---:|---:|
-| skill | 36/50 | 0.94 | 62% | 509 |
-| hook-on | 17/50 | 0.59 | 68% | 274 |
-| hook-strict | 24/50 | 0.34 | 76% | 385 |
-
-Reduction vs the skill alone: hook-on −36%, hook-strict −64%.
-
-## Full five-arm table
-
-This table stays as the receipt for the reference arms. `baseline` has no plugin. `style` uses the plugin output style as a system prompt.
-
-### `claude-sonnet-5` (claude)
-
-| Arm | n | Skill fired | Violations / 100 words (mean) | median | Replies with 0 violations | Reduction vs baseline | Mean words | Mean output tokens | Strict blocks | Cost USD |
+| Arm | n | Skill fired | Violations / 100 words (mean) | median | Replies with 0 violations | Reduction vs skill | Mean words | Mean output tokens | Strict blocks | Cost USD |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| baseline | 50 | 0/50 | 3.61 | 3.73 | 22% | 0% | 145 | 464 | 0 | 1.29 |
-| skill | 50 | 24/50 | 2.38 | 2.31 | 32% | 34% | 136 | 1011 | 0 | 2.79 |
-| style | 50 | 29/50 | 0.85 | 0.00 | 56% | 76% | 119 | 883 | 0 | 2.96 |
-| hook-on | 50 | 12/50 | 0.47 | 0.00 | 54% | 87% | 110 | 687 | 0 | 2.19 |
-| hook-strict | 50 | 7/50 | 0.32 | 0.00 | 66% | 91% | 100 | 1237 | 6 | 2.26 |
+| skill | 50 | 36/50 | 0.94 | 0.00 | 62% | — | 73 | 509 | 0 | 0.00 |
+| hook-on | 50 | 17/50 | 0.59 | 0.00 | 68% | −36% | 62 | 274 | 0 | 0.00 |
+| hook-strict | 50 | 24/50 | 0.34 | 0.00 | 76% | −64% | 60 | 385 | 2 | 0.00 |
 
 ## Method
 

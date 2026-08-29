@@ -199,50 +199,29 @@ def report(records):
         lines.append(f"| {model_label(*k)} | {n} | {cell('skill')} | {cell('hook-on')} | {cell('hook-strict')} | {red} |")
     lines.append("")
 
-    # 1. Headline table per model
-    lines += ["## Per model", ""]
+    # Per model: every arm that ran, all columns. The reduction column compares
+    # against the skill arm, because the skill alone is what this plugin replaces.
+    lines += ["## Per model", "",
+              "Every arm that ran for the model, with all columns. "
+              "The reduction column compares against the `skill` arm.", ""]
     for k in keys:
         by_arm = groups[k]
-        st = {arm: arm_stats(by_arm[arm]) for arm in HEADLINE_ARMS if by_arm.get(arm)}
-        if not st:
+        present = [arm for arm in ARMS if by_arm.get(arm)]
+        if not present:
             continue
+        ref = arm_stats(by_arm["skill"])["mean_v100"] if by_arm.get("skill") else None
         lines += [f"### {model_label(*k)}", "",
-                  "| Arm | Skill fired | Violations / 100 words | Replies with 0 violations | Output tokens per reply |",
-                  "|---|---:|---:|---:|---:|"]
-        for arm in HEADLINE_ARMS:
-            if arm not in st:
-                continue
-            s = st[arm]
-            lines.append(f"| {arm} | {s['skill_used']}/{s['n']} | {s['mean_v100']:.2f} | {s['zero_pct']:.0f}% | {s['mean_out_tokens']:.0f} |")
-        if "skill" in st:
-            ref = st["skill"]["mean_v100"]
-            parts = [f"{arm} {fmt_reduction(reduction(ref, st[arm]['mean_v100']), signed=True)}"
-                     for arm in ("hook-on", "hook-strict") if arm in st]
-            if parts:
-                lines += ["", "Reduction vs the skill alone: " + ", ".join(parts) + "."]
-        lines.append("")
-
-    # 3. Full five-arm table for models that have baseline and style runs
-    full = [k for k in keys if groups[k].get("baseline") and groups[k].get("style")]
-    if full:
-        lines += ["## Full five-arm table", "",
-                  "This table stays as the receipt for the reference arms. `baseline` has no plugin. "
-                  "`style` uses the plugin output style as a system prompt.", ""]
-    for k in full:
-        by_arm = groups[k]
-        lines += [f"### {model_label(*k)}", "",
-                  "| Arm | n | Skill fired | Violations / 100 words (mean) | median | Replies with 0 violations | Reduction vs baseline | Mean words | Mean output tokens | Strict blocks | Cost USD |",
+                  "| Arm | n | Skill fired | Violations / 100 words (mean) | median | Replies with 0 violations | Reduction vs skill | Mean words | Mean output tokens | Strict blocks | Cost USD |",
                   "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|"]
-        base = arm_stats(by_arm["baseline"])["mean_v100"]
-        for arm in ARMS:
-            if not by_arm.get(arm):
-                continue
-            s = arm_stats(by_arm[arm])
-            lines.append(f"| {arm} | {s['n']} | {s['skill_used']}/{s['n']} | {s['mean_v100']:.2f} | {s['median_v100']:.2f} | "
-                         f"{s['zero_pct']:.0f}% | {fmt_reduction(reduction(base, s['mean_v100']))} | {s['mean_words']:.0f} | "
-                         f"{s['mean_out_tokens']:.0f} | {s['blocks']} | {s['cost']:.2f} |")
+        for arm in present:
+            st = arm_stats(by_arm[arm])
+            red = fmt_reduction(reduction(ref, st["mean_v100"]), signed=True) if ref is not None and arm != "skill" else "—"
+            lines.append(f"| {arm} | {st['n']} | {st['skill_used']}/{st['n']} | {st['mean_v100']:.2f} | {st['median_v100']:.2f} | "
+                         f"{st['zero_pct']:.0f}% | {red} | {st['mean_words']:.0f} | "
+                         f"{st['mean_out_tokens']:.0f} | {st['blocks']} | {st['cost']:.2f} |")
         lines.append("")
 
+    full = [k for k in keys if groups[k].get("baseline") and groups[k].get("style")]
     # 4. Method
     lines += ["## Method", "",
               "Each prompt ran once per arm with `claude -p --setting-sources project --tools Skill`, so no user settings, hooks, or other plugins were loaded. "
