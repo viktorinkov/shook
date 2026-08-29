@@ -81,16 +81,16 @@ The benchmark sends the same 50 writing prompts (docs, code reviews, error messa
 | `gpt-5.4-mini` (codex) | 50 | 1.66 | 0.51 | 0.63 | 62% |
 | `gpt-5.6-sol` (codex) | 50 | 0.94 | 0.59 | 0.34 | 64% |
 
-The per-model table for Claude Sonnet 5 shows the three-row shape:
+The per-model table for Claude Fable 5 shows the three-row shape:
 
 <!-- columns: Arm | Skill fired | Violations / 100 words | Replies with 0 violations | Output tokens per reply -->
 | Arm | Skill fired | Violations / 100 words | Replies with 0 violations | Output tokens per reply |
 |---|---:|---:|---:|---:|
-| skill | 24/50 | 2.38 | 32% | 1011 |
-| hook-on | 12/50 | 0.47 | 54% | 687 |
-| hook-strict | 7/50 | 0.32 | 66% | 1237 |
+| skill | 27/50 | 2.41 | 10% | 1224 |
+| hook-on | 19/50 | 0.51 | 38% | 1020 |
+| hook-strict | 20/50 | 0.22 | 60% | 1361 |
 
-How to read it: Claude alone decides whether the skill fires. On Sonnet 5, it fired in 24 of 50 replies. The hook applies the rules on every reply. Strict mode adds the gate and blocked 6 of 50 replies on Sonnet 5.
+How to read it: Claude alone decides whether the skill fires. On Fable 5, it fired in 27 of 50 replies. The hook applies the rules on every reply. Strict mode adds the gate, blocked 6 of 50 replies on Fable 5, and cut the violations by 91%.
 
 Read the tables with care. The linter is a regex pass. It undercounts and it cannot judge meaning. The numbers compare arms against each other. They are not a compliance score. No tool can certify ASD-STE100 compliance.
 
@@ -213,11 +213,11 @@ Toggle with `/ste on`, `/ste strict`, `/ste off`, or `/ste status` in the Agent 
 
 ## ❓ FAQ
 
-**Why not just prompt it?** A prompt line is one instruction among many. In the benchmark, the simple-english skill fired on its own in 24 of 50 replies on Sonnet 5. This plugin does not depend on a decision. It runs every turn.
+**Why not just prompt it?** A prompt line is one instruction among many. In the benchmark, the simple-english skill fired on its own in 27 of 50 replies on Fable 5. This plugin does not depend on a decision. It runs every turn.
 
 **Why not the simple-english output style?** The output style is a good one-shot. It has no reminder per turn and no gate. See the five-arm table for Sonnet 5 in [`evals/results/RESULTS.md`](evals/results/RESULTS.md).
 
-**What does strict mode cost?** If a reply fails, one extra rewrite. In the benchmark, strict mode blocked 6 of 50 replies on Sonnet 5. See the token column.
+**What does strict mode cost?** If a reply fails, one extra rewrite. In the benchmark, strict mode blocked 6 of 50 replies on Fable 5. See the token column.
 
 ## Update
 
