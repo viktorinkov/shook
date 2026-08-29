@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "explain-03",
+  "cat": "explain",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 17.2,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.0735915,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2761,
+    "cache_read_input_tokens": 38821,
+    "output_tokens": 1023,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2761,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1023,
+        "cache_read_input_tokens": 38821,
+        "cache_creation_input_tokens": 2761,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2761
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 409,
+    "sentences": 26,
+    "mean_sentence_words": 15.6,
+    "longest_sentence_words": 94,
+    "violations": {
+      "sentence_over_limit": 3,
+      "contraction": 4,
+      "banned_modal": 1,
+      "perfect_tense": 2,
+      "ing_clause": 0,
+      "semicolon": 1,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 3,
+      "synonym_rotation": 0
+    },
+    "violations_total": 14,
+    "violations_per_100w": 3.42
+  },
+  "text": "# `git merge` vs `git rebase` for a feature branch\n\nBoth integrate changes from one branch into another. The difference is what history they leave behind.\n\n## What each one does\n\nYou're on `feature`, branched off `main`, and `main` has moved on:\n\n```\n      A---B---C  feature\n     /\nD---E---F---G  main\n```\n\n**`git merge main`** creates a new commit with two parents:\n\n```\n      A---B---C---M  feature\n     /           /\nD---E---F-------G  main\n```\n\nYour commits keep their original hashes and timestamps. The merge commit `M` records exactly when and where the two lines of work came together.\n\n**`git rebase main`** replays your commits on top of `main`:\n\n```\n              A'--B'--C'  feature\n             /\nD---E---F---G  main\n```\n\n`A'`, `B'`, `C'` are *new commits* \u2014 same changes, different parents, different hashes. History reads as a straight line, as if you'd started your work from `G` all along.\n\n## The practical trade-off\n\n| | merge | rebase |\n|---|---|---|\n| History shape | Branching, shows true chronology | Linear, easy to read/bisect |\n| Commit hashes | Preserved | Rewritten |\n| Conflict resolution | Once, in the merge commit | Potentially once per commit replayed |\n| Safe on shared branches | Yes | No |\n\n## What I'd tell you to do\n\n**While you're working on your feature branch, rebase onto `main` to stay current.** It keeps your branch's history clean and makes the eventual diff easy to review \u2014 reviewers see only your changes, not merge noise from `main`.\n\n```bash\ngit fetch origin\ngit rebase origin/main\n```\n\n**Never rebase a branch someone else has pulled.** Rebasing rewrites commits, so anyone who based work on the old commits now has a divergent history and a painful cleanup. If your branch is shared, merge instead. The rule of thumb: rebase private history, merge public history.\n\n**Force-push after rebasing \u2014 with the safe flag:**\n\n```bash\ngit push --force-with-lease\n```\n\n`--force-with-lease` refuses the push if someone else pushed to the branch since you last fetched. Plain `--force` would silently destroy their work.\n\n**For landing the branch into `main`, follow whatever your team already does.** This is a team convention, not a technical question \u2014 check how existing merges look in `git log --graph` before picking. The common options:\n\n- **Merge commit** \u2014 preserves the full branch structure, shows that these commits were one unit of work.\n- **Squash merge** \u2014 collapses the branch into one commit on `main`. Popular default on GitHub; tidy `main`, but you lose the individual commits.\n- **Rebase and merge** \u2014 replays commits onto `main` with no merge commit. Linear history that keeps each commit.\n\n## One gotcha worth knowing\n\nIf a rebase goes sideways mid-way:\n\n```bash\ngit rebase --abort   # back to where you started, nothing lost\n```\n\nAnd if you finished a rebase and regret it, `git reflog` still has the pre-rebase commits for a few weeks. Rebase rewrites history, but it doesn't immediately delete the old version.",
+  "texts": [
+    "# `git merge` vs `git rebase` for a feature branch\n\nBoth integrate changes from one branch into another. The difference is what history they leave behind.\n\n## What each one does\n\nYou're on `feature`, branched off `main`, and `main` has moved on:\n\n```\n      A---B---C  feature\n     /\nD---E---F---G  main\n```\n\n**`git merge main`** creates a new commit with two parents:\n\n```\n      A---B---C---M  feature\n     /           /\nD---E---F-------G  main\n```\n\nYour commits keep their original hashes and timestamps. The merge commit `M` records exactly when and where the two lines of work came together.\n\n**`git rebase main`** replays your commits on top of `main`:\n\n```\n              A'--B'--C'  feature\n             /\nD---E---F---G  main\n```\n\n`A'`, `B'`, `C'` are *new commits* \u2014 same changes, different parents, different hashes. History reads as a straight line, as if you'd started your work from `G` all along.\n\n## The practical trade-off\n\n| | merge | rebase |\n|---|---|---|\n| History shape | Branching, shows true chronology | Linear, easy to read/bisect |\n| Commit hashes | Preserved | Rewritten |\n| Conflict resolution | Once, in the merge commit | Potentially once per commit replayed |\n| Safe on shared branches | Yes | No |\n\n## What I'd tell you to do\n\n**While you're working on your feature branch, rebase onto `main` to stay current.** It keeps your branch's history clean and makes the eventual diff easy to review \u2014 reviewers see only your changes, not merge noise from `main`.\n\n```bash\ngit fetch origin\ngit rebase origin/main\n```\n\n**Never rebase a branch someone else has pulled.** Rebasing rewrites commits, so anyone who based work on the old commits now has a divergent history and a painful cleanup. If your branch is shared, merge instead. The rule of thumb: rebase private history, merge public history.\n\n**Force-push after rebasing \u2014 with the safe flag:**\n\n```bash\ngit push --force-with-lease\n```\n\n`--force-with-lease` refuses the push if someone else pushed to the branch since you last fetched. Plain `--force` would silently destroy their work.\n\n**For landing the branch into `main`, follow whatever your team already does.** This is a team convention, not a technical question \u2014 check how existing merges look in `git log --graph` before picking. The common options:\n\n- **Merge commit** \u2014 preserves the full branch structure, shows that these commits were one unit of work.\n- **Squash merge** \u2014 collapses the branch into one commit on `main`. Popular default on GitHub; tidy `main`, but you lose the individual commits.\n- **Rebase and merge** \u2014 replays commits onto `main` with no merge commit. Linear history that keeps each commit.\n\n## One gotcha worth knowing\n\nIf a rebase goes sideways mid-way:\n\n```bash\ngit rebase --abort   # back to where you started, nothing lost\n```\n\nAnd if you finished a rebase and regret it, `git reflog` still has the pre-rebase commits for a few weeks. Rebase rewrites history, but it doesn't immediately delete the old version."
+  ],
+  "stderr_tail": ""
+}

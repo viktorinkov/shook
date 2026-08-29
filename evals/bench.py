@@ -1,24 +1,32 @@
 #!/usr/bin/env python3
 """Benchmark: does the hook make Claude Code follow STE on every reply?
 
-Runs each prompt through `claude -p` under five arms, then scores every reply
-with the simple-english plugin's own linter (evals/ste_lint.py).
+Runs each prompt through `claude -p` under up to five arms, for one or more
+models, then scores every reply with the simple-english plugin's own linter
+(ste_lint.py).
 
 Arms
-  baseline     no plugin, no hook
-  skill        simple-english plugin loaded (the skill can trigger)
-  style        simple-english plugin + its output style text as system prompt
-  hook-on      simple-english plugin + this plugin, STE_MODE=on
-  hook-strict  same, STE_MODE=strict (the Stop hook lints and can block once)
+  skill        simple-english plugin loaded (the skill can trigger)   [default]
+  hook-on      simple-english plugin + this plugin, STE_MODE=on       [default]
+  hook-strict  same, STE_MODE=strict (the Stop hook lints and can block once) [default]
+  baseline     no plugin, no hook                                     (--arms)
+  style        simple-english plugin + its output style text as system prompt (--arms)
+
+The skill arm against the hook arms is the comparison that matters. The only
+thing this plugin changes is how often the rules apply, so baseline and style
+are kept as a reference and are off by default.
 
 Usage
-  python3 evals/bench.py --smoke              # 2 prompts x 5 arms
-  python3 evals/bench.py                      # all prompts x 5 arms
-  python3 evals/bench.py --arms baseline,hook-on --n 10 --jobs 4 --model claude-sonnet-5
-  python3 evals/bench.py --report             # rebuild RESULTS.md from raw/
+  python3 evals/bench.py --smoke                       # 2 prompts x 3 arms
+  python3 evals/bench.py                               # all prompts x 3 arms, claude-sonnet-5
+  python3 evals/bench.py --model claude-opus-5,claude-haiku-4-5-20251001 --jobs 5
+  python3 evals/bench.py --arms baseline,style --model claude-sonnet-5
+  python3 evals/bench.py --report                      # rebuild RESULTS.md from raw/
 
-Every raw run is saved to evals/results/raw/<arm>__<id>.json.
-Runs that already exist are skipped, so the benchmark can resume.
+Every raw run is saved to evals/results/raw/<harness>__<model>__<arm>__<id>.json
+with harness=claude. Other harness runners (for example evals/codex_bench.py)
+write the same schema with their own harness name, and --report reads them all.
+Runs that already exist with exit 0 are skipped, so the benchmark can resume.
 """
 import argparse, glob, json, os, statistics, subprocess, sys, tempfile, time
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -28,7 +36,11 @@ HERE = Path(__file__).resolve().parent
 REPO = HERE.parent
 RAW = HERE / "results" / "raw"
 CLAUDE_DIR = Path(os.environ.get("CLAUDE_CONFIG_DIR", Path.home() / ".claude"))
+HARNESS = "claude"
 ARMS = ["baseline", "skill", "style", "hook-on", "hook-strict"]
+DEFAULT_ARMS = ["skill", "hook-on", "hook-strict"]
+HEADLINE_ARMS = ["skill", "hook-on", "hook-strict"]
+DEFAULT_MODEL = "claude-sonnet-5"
 
 
 def find_plugin_file(rel):
@@ -53,8 +65,12 @@ def style_text():
     return "\n".join(lines).strip()
 
 
+def raw_path(harness, model, arm, pid):
+    return RAW / f"{harness}__{model.replace('/', '-')}__{arm}__{pid}.json"
+
+
 def run_one(arm, item, model, workdir, max_turns, timeout):
-    out = RAW / f"{arm}__{item['id']}.json"
+    out = raw_path(HARNESS, model, arm, item["id"])
     if out.exists():
         cached = json.loads(out.read_text())
         if cached.get("exit") == 0 and cached.get("text"):
@@ -71,7 +87,7 @@ def run_one(arm, item, model, workdir, max_turns, timeout):
     if arm.startswith("hook"):
         cmd += ["--plugin-dir", str(REPO)]
         env["STE_MODE"] = "on" if arm == "hook-on" else "strict"
-        env["STE_LOG"] = str(workdir / f"{arm}__{item['id']}.blocks")
+        env["STE_LOG"] = str(workdir / f"{model}__{arm}__{item['id']}.blocks")
     t0 = time.time()
     proc = subprocess.run(cmd, input=item["prompt"], cwd=workdir, env=env,
                           capture_output=True, text=True, timeout=timeout)
@@ -103,6 +119,7 @@ def run_one(arm, item, model, workdir, max_turns, timeout):
     blocked = blocks_file.read_text().count("block") if blocks_file.exists() else 0
     lint = ste_lint.lint(text, "procedural" if item["cat"] in ("runbook",) else "descriptive")
     rec = {
+        "harness": HARNESS,
         "arm": arm, "id": item["id"], "cat": item["cat"], "model": model,
         "exit": proc.returncode, "seconds": round(time.time() - t0, 1),
         "skill_available": any("simple-english" in s for s in init.get("slash_commands", [])),
@@ -117,75 +134,152 @@ def run_one(arm, item, model, workdir, max_turns, timeout):
     return rec
 
 
+# ---------------------------------------------------------------- report
+
+def _out_tokens(r):
+    return ((r.get("usage") or {}).get("output_tokens")) or 0
+
+
+def arm_stats(rs):
+    v = [r["lint"]["violations_per_100w"] for r in rs]
+    return {
+        "n": len(rs),
+        "skill_used": sum(1 for r in rs if r.get("skill_used")),
+        "mean_v100": statistics.mean(v), "median_v100": statistics.median(v),
+        "zero_pct": 100 * sum(1 for r in rs if r["lint"]["violations_total"] == 0) / len(rs),
+        "mean_words": statistics.mean(r["lint"]["words"] for r in rs),
+        "mean_out_tokens": statistics.mean(_out_tokens(r) for r in rs),
+        "blocks": sum(r.get("strict_blocks") or 0 for r in rs),
+        "cost": sum(r.get("cost_usd") or 0 for r in rs),
+    }
+
+
+def reduction(ref, x):
+    """Percent reduction of x against ref, or None when ref is 0."""
+    return None if not ref else 100 * (1 - x / ref)
+
+
+def fmt_reduction(pct, signed=False):
+    if pct is None:
+        return "—"
+    if signed:
+        return f"−{pct:.0f}%" if pct >= 0 else f"+{-pct:.0f}%"
+    return f"{pct:.0f}%"
+
+
+def model_label(harness, model):
+    return f"`{model}` ({harness})"
+
+
 def report(records):
-    by_arm = {}
+    records = [r for r in records if r.get("text") and r.get("exit") == 0]
+    groups = {}  # (harness, model) -> arm -> [records]
     for r in records:
-        by_arm.setdefault(r["arm"], []).append(r)
-    rows, base = [], None
-    for arm in ARMS:
-        rs = [r for r in by_arm.get(arm, []) if r["text"]]
-        if not rs:
-            continue
-        v = [r["lint"]["violations_per_100w"] for r in rs]
-        zero = sum(1 for r in rs if r["lint"]["violations_total"] == 0)
-        words = [r["lint"]["words"] for r in rs]
-        outtok = [(r["usage"] or {}).get("output_tokens", 0) for r in rs]
-        row = {
-            "arm": arm, "n": len(rs),
-            "skill_used": sum(1 for r in rs if r["skill_used"]),
-            "mean_v100": statistics.mean(v), "median_v100": statistics.median(v),
-            "zero_pct": 100 * zero / len(rs),
-            "mean_words": statistics.mean(words), "mean_out_tokens": statistics.mean(outtok),
-            "blocks": sum(r["strict_blocks"] for r in rs),
-            "cost": sum(r["cost_usd"] or 0 for r in rs),
-        }
-        if arm == "baseline":
-            base = row["mean_v100"]
-        row["reduction"] = (100 * (1 - row["mean_v100"] / base)) if base else None
-        rows.append(row)
+        key = (r.get("harness", HARNESS), r["model"])
+        groups.setdefault(key, {}).setdefault(r["arm"], []).append(r)
+    # Claude harness first, then the rest by name; inside a harness, by model name.
+    keys = sorted(groups, key=lambda k: (k[0] != HARNESS, k[0], k[1]))
+    prompt_ids = sorted(set(r["id"] for r in records))
+
     lines = ["# Results", "",
-             f"Model: `{records[0]['model']}`. Prompts: {len(set(r['id'] for r in records))}. "
-             f"Scorer: the simple-english plugin's `ste_lint.py` (regex pass, undercounts, comparable between arms only).", "",
-             "| Arm | n | Skill fired | Violations / 100 words (mean) | median | Replies with 0 violations | Reduction vs baseline | Mean words | Mean output tokens | Strict blocks | Cost USD |",
-             "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|"]
-    for r in rows:
-        red = "—" if r["reduction"] is None else f"{r['reduction']:.0f}%"
-        lines.append(f"| {r['arm']} | {r['n']} | {r['skill_used']}/{r['n']} | {r['mean_v100']:.2f} | {r['median_v100']:.2f} | "
-                     f"{r['zero_pct']:.0f}% | {red} | {r['mean_words']:.0f} | {r['mean_out_tokens']:.0f} | {r['blocks']} | {r['cost']:.2f} |")
-    lines += ["", "## Per category (mean violations / 100 words)", ""]
-    cats = sorted(set(r["cat"] for r in records))
-    lines.append("| Category | " + " | ".join(r["arm"] for r in rows) + " |")
-    lines.append("|---|" + "---:|" * len(rows))
-    for c in cats:
-        cells = []
-        for r in rows:
-            rs = [x for x in by_arm[r["arm"]] if x["cat"] == c and x["text"]]
-            cells.append(f"{statistics.mean(x['lint']['violations_per_100w'] for x in rs):.2f}" if rs else "—")
-        lines.append(f"| {c} | " + " | ".join(cells) + " |")
-    lines += ["", "## Method", "",
+             f"Scorer: the simple-english plugin's `ste_lint.py`. It is a regex pass. It undercounts, and the numbers compare arms only.",
+             f"Prompts: {len(prompt_ids)}. Models: " + ", ".join(model_label(*k) for k in keys) + ".", ""]
+
+    # 2. Cross-model summary
+    lines += ["## Cross-model summary", "",
+              "| Model | n prompts | skill alone (v/100w) | hook on (v/100w) | hook strict (v/100w) | reduction (strict vs skill) |",
+              "|---|---:|---:|---:|---:|---:|"]
+    for k in keys:
+        by_arm = groups[k]
+        st = {arm: arm_stats(by_arm[arm]) for arm in HEADLINE_ARMS if by_arm.get(arm)}
+        n = len(set(r["id"] for arm in HEADLINE_ARMS for r in by_arm.get(arm, [])))
+        cell = lambda arm: f"{st[arm]['mean_v100']:.2f}" if arm in st else "—"  # noqa: E731
+        red = fmt_reduction(reduction(st["skill"]["mean_v100"], st["hook-strict"]["mean_v100"])) \
+            if "skill" in st and "hook-strict" in st else "—"
+        lines.append(f"| {model_label(*k)} | {n} | {cell('skill')} | {cell('hook-on')} | {cell('hook-strict')} | {red} |")
+    lines.append("")
+
+    # 1. Headline table per model
+    lines += ["## Per model", ""]
+    for k in keys:
+        by_arm = groups[k]
+        st = {arm: arm_stats(by_arm[arm]) for arm in HEADLINE_ARMS if by_arm.get(arm)}
+        if not st:
+            continue
+        lines += [f"### {model_label(*k)}", "",
+                  "| Arm | Skill fired | Violations / 100 words | Replies with 0 violations | Output tokens per reply |",
+                  "|---|---:|---:|---:|---:|"]
+        for arm in HEADLINE_ARMS:
+            if arm not in st:
+                continue
+            s = st[arm]
+            lines.append(f"| {arm} | {s['skill_used']}/{s['n']} | {s['mean_v100']:.2f} | {s['zero_pct']:.0f}% | {s['mean_out_tokens']:.0f} |")
+        if "skill" in st:
+            ref = st["skill"]["mean_v100"]
+            parts = [f"{arm} {fmt_reduction(reduction(ref, st[arm]['mean_v100']), signed=True)}"
+                     for arm in ("hook-on", "hook-strict") if arm in st]
+            if parts:
+                lines += ["", "Reduction vs the skill alone: " + ", ".join(parts) + "."]
+        lines.append("")
+
+    # 3. Full five-arm table for models that have baseline and style runs
+    full = [k for k in keys if groups[k].get("baseline") and groups[k].get("style")]
+    if full:
+        lines += ["## Full five-arm table", "",
+                  "This table stays as the receipt for the reference arms. `baseline` has no plugin. "
+                  "`style` uses the plugin output style as a system prompt.", ""]
+    for k in full:
+        by_arm = groups[k]
+        lines += [f"### {model_label(*k)}", "",
+                  "| Arm | n | Skill fired | Violations / 100 words (mean) | median | Replies with 0 violations | Reduction vs baseline | Mean words | Mean output tokens | Strict blocks | Cost USD |",
+                  "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|"]
+        base = arm_stats(by_arm["baseline"])["mean_v100"]
+        for arm in ARMS:
+            if not by_arm.get(arm):
+                continue
+            s = arm_stats(by_arm[arm])
+            lines.append(f"| {arm} | {s['n']} | {s['skill_used']}/{s['n']} | {s['mean_v100']:.2f} | {s['median_v100']:.2f} | "
+                         f"{s['zero_pct']:.0f}% | {fmt_reduction(reduction(base, s['mean_v100']))} | {s['mean_words']:.0f} | "
+                         f"{s['mean_out_tokens']:.0f} | {s['blocks']} | {s['cost']:.2f} |")
+        lines.append("")
+
+    # 4. Method
+    lines += ["## Method", "",
               "Each prompt ran once per arm with `claude -p --setting-sources project --tools Skill`, so no user settings, hooks, or other plugins were loaded. "
               "`skill` and `style` load the simple-english plugin with `--plugin-dir`. `style` appends the plugin's output style text as system prompt. "
               "`hook-on` and `hook-strict` also load this plugin with `--plugin-dir` and set `STE_MODE`. "
               "`Skill fired` counts replies where Claude invoked the simple-english skill. "
-              "`Strict blocks` counts replies the Stop hook sent back for a rewrite. Raw runs: `results/raw/`.", ""]
+              "`Strict blocks` counts replies the Stop hook sent back for a rewrite. Raw runs: `results/raw/`.", "",
+              "Models: " + ", ".join(model_label(*k) for k in keys) + ". "
+              "The `skill` arm against the two hook arms is the comparison that matters. "
+              "The only thing this plugin changes is how often the rules apply. "
+              "The `baseline` and `style` arms are a reference and ran for "
+              + (", ".join(model_label(*k) for k in full) if full else "no model") + " only. "
+              "`Output tokens per reply` is the mean of `output_tokens` from the CLI usage report. In `hook-strict` it includes the rewrite. "
+              "Raw record names follow `<harness>__<model>__<arm>__<id>.json`. "
+              "A `codex` harness writes the same schema from Codex CLI with `evals/codex_bench.py`.", ""]
     (HERE / "results" / "RESULTS.md").write_text("\n".join(lines))
-    print("\n".join(lines[:4 + len(rows)]))
+    print("\n".join(lines[:10 + len(keys)]))
+
+
+def load_raw():
+    return [json.loads(Path(f).read_text()) for f in sorted(RAW.glob("*.json"))]
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--arms", default=",".join(ARMS))
+    ap.add_argument("--arms", default=",".join(DEFAULT_ARMS), help=f"comma list from {','.join(ARMS)}")
     ap.add_argument("--n", type=int, default=0, help="first N prompts (0 = all)")
     ap.add_argument("--smoke", action="store_true", help="2 prompts")
     ap.add_argument("--jobs", type=int, default=3)
-    ap.add_argument("--model", default="claude-sonnet-5")
+    ap.add_argument("--model", default=DEFAULT_MODEL, help="comma-separated list of model ids")
     ap.add_argument("--max-turns", type=int, default=6)
     ap.add_argument("--timeout", type=int, default=300)
     ap.add_argument("--report", action="store_true", help="only rebuild RESULTS.md")
     a = ap.parse_args()
     RAW.mkdir(parents=True, exist_ok=True)
     if a.report:
-        report([json.loads(Path(f).read_text()) for f in sorted(RAW.glob("*.json"))])
+        report(load_raw())
         return
     prompts = json.loads((HERE / "prompts.json").read_text())
     if a.smoke:
@@ -193,22 +287,29 @@ def main():
     elif a.n:
         prompts = prompts[:a.n]
     arms = [x for x in a.arms.split(",") if x in ARMS]
+    models = [m.strip() for m in a.model.split(",") if m.strip()]
     workdir = Path(tempfile.mkdtemp(prefix="ste-bench-"))
-    jobs = [(arm, p) for p in prompts for arm in arms]
-    print(f"{len(jobs)} runs, {a.jobs} parallel, model {a.model}, workdir {workdir}", flush=True)
-    records = []
-    with ThreadPoolExecutor(max_workers=a.jobs) as ex:
-        futs = {ex.submit(run_one, arm, p, a.model, workdir, a.max_turns, a.timeout): (arm, p["id"]) for arm, p in jobs}
-        for f in as_completed(futs):
-            arm, pid = futs[f]
-            try:
-                r = f.result()
-                flag = "SKILL" if r["skill_used"] else "     "
-                print(f"  {arm:11s} {pid:12s} {flag} v/100w={r['lint']['violations_per_100w']:5.2f} words={r['lint']['words']:4d} blocks={r['strict_blocks']} exit={r['exit']}", flush=True)
-                records.append(r)
-            except Exception as e:  # noqa: BLE001
-                print(f"  {arm:11s} {pid:12s} FAILED: {e}", flush=True)
-    report([json.loads(Path(f).read_text()) for f in sorted(RAW.glob("*.json"))])
+    for model in models:
+        jobs = [(arm, p) for p in prompts for arm in arms]
+        print(f"{len(jobs)} runs, {a.jobs} parallel, model {model}, workdir {workdir}", flush=True)
+        failed = 0
+        with ThreadPoolExecutor(max_workers=a.jobs) as ex:
+            futs = {ex.submit(run_one, arm, p, model, workdir, a.max_turns, a.timeout): (arm, p["id"]) for arm, p in jobs}
+            for f in as_completed(futs):
+                arm, pid = futs[f]
+                try:
+                    r = f.result()
+                    flag = "SKILL" if r["skill_used"] else "     "
+                    print(f"  {model} {arm:11s} {pid:12s} {flag} v/100w={r['lint']['violations_per_100w']:5.2f} "
+                          f"words={r['lint']['words']:4d} blocks={r['strict_blocks']} exit={r['exit']}", flush=True)
+                    if r["exit"] != 0 or not r["text"]:
+                        failed += 1
+                        print(f"    stderr: {r['stderr_tail'][-200:]!r}", flush=True)
+                except Exception as e:  # noqa: BLE001
+                    failed += 1
+                    print(f"  {model} {arm:11s} {pid:12s} FAILED: {e}", flush=True)
+        print(f"model {model} done, {failed} failed runs (re-run the same command to retry them)", flush=True)
+    report(load_raw())
 
 
 if __name__ == "__main__":

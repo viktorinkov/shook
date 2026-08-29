@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "design-01",
+  "cat": "design",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 28.7,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.08620749999999999,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3925,
+    "cache_read_input_tokens": 4145,
+    "output_tokens": 1795,
+    "output_tokens_details": {
+      "thinking_tokens": 716
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3925,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1795,
+        "cache_read_input_tokens": 4145,
+        "cache_creation_input_tokens": 3925,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3925
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 530,
+    "sentences": 66,
+    "mean_sentence_words": 7.5,
+    "longest_sentence_words": 15,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 1
+    },
+    "violations_total": 2,
+    "violations_per_100w": 0.38
+  },
+  "text": "# Message queue compared to direct HTTP calls\n\n## Direct HTTP calls\n\nThe caller sends a request. The caller waits for the response. The two services couple in time.\n\n**Strengths**\n- The design is simple. There is no extra infrastructure to operate.\n- The caller gets an immediate result. Errors return to the caller at once.\n- Traces and debug work stay easy to follow.\n- Read operations that need fresh data work well.\n\n**Weaknesses**\n- If the receiver is down, the call fails. The caller must hold the retry logic.\n- Retries after a timeout can create duplicate orders.\n- A slow receiver blocks the caller. Thread pools fill and the failure spreads.\n- A traffic spike hits the receiver at full rate. There is no buffer.\n- Each new consumer of the same event needs a new call in the caller code.\n\n## Message queue\n\nThe producer writes a message to a broker. The consumer reads the message later. The two services decouple in time.\n\n**Strengths**\n- The broker stores messages during an outage. The consumer processes them after recovery.\n- The queue absorbs traffic spikes. Consumers work at their own rate.\n- Many consumers can read the same event. The producer does not change.\n- Retries and dead-letter queues are built in.\n- Consumer scale changes independent of the producer.\n\n**Weaknesses**\n- You must run and monitor the broker.\n- Delivery is usually at-least-once. Every consumer must be idempotent.\n- The result is eventual. The user does not see the final state at once.\n- Debug work needs correlation IDs across services.\n- A write to the database plus a publish to the broker is a dual write. This needs an outbox table.\n\n## Recommendation\n\nUse a message queue for the order-processing pipeline.\n\nAn order pipeline has the exact shape that queues fit:\n\n- The steps are asynchronous. Payment capture, inventory reservation, and shipment do not need to complete inside one web request.\n- Order loss is expensive. Durable messages protect the order after the customer clicks \"Buy\".\n- Traffic is spiky. Sales and campaigns create short bursts.\n- The number of consumers grows. Analytics, fraud checks, and email all want the same order event.\n\n## Suggested shape\n\n1. Accept the order over HTTP. Validate the input and write the order row.\n2. Write the event to an outbox table in the same transaction.\n3. Return `202 Accepted` with an order ID to the client.\n4. Publish the outbox rows to the broker with a relay process.\n5. Consume the event in each downstream worker.\n6. Send failed messages to a dead-letter queue after a retry limit.\n\n## Keep HTTP for these cases\n\n- Synchronous validation before you accept the order. An example is an address check.\n- Status reads. The client polls the order state over HTTP.\n- Any call where the caller cannot continue without the answer.\n\n## Requirements before you start\n\n- Give every message a unique key. Consumers must ignore a repeated key.\n- Version the event schema from the first release.\n- Add a correlation ID to every message and log line.\n- Monitor queue depth, consumer lag, and the dead-letter queue.\n\nThe queue adds operational cost. For an order pipeline, the durability and the decoupling pay for that cost. For a simple internal read between two services, direct HTTP stays the better choice.",
+  "texts": [
+    "# Message queue compared to direct HTTP calls\n\n## Direct HTTP calls\n\nThe caller sends a request. The caller waits for the response. The two services couple in time.\n\n**Strengths**\n- The design is simple. There is no extra infrastructure to operate.\n- The caller gets an immediate result. Errors return to the caller at once.\n- Traces and debug work stay easy to follow.\n- Read operations that need fresh data work well.\n\n**Weaknesses**\n- If the receiver is down, the call fails. The caller must hold the retry logic.\n- Retries after a timeout can create duplicate orders.\n- A slow receiver blocks the caller. Thread pools fill and the failure spreads.\n- A traffic spike hits the receiver at full rate. There is no buffer.\n- Each new consumer of the same event needs a new call in the caller code.\n\n## Message queue\n\nThe producer writes a message to a broker. The consumer reads the message later. The two services decouple in time.\n\n**Strengths**\n- The broker stores messages during an outage. The consumer processes them after recovery.\n- The queue absorbs traffic spikes. Consumers work at their own rate.\n- Many consumers can read the same event. The producer does not change.\n- Retries and dead-letter queues are built in.\n- Consumer scale changes independent of the producer.\n\n**Weaknesses**\n- You must run and monitor the broker.\n- Delivery is usually at-least-once. Every consumer must be idempotent.\n- The result is eventual. The user does not see the final state at once.\n- Debug work needs correlation IDs across services.\n- A write to the database plus a publish to the broker is a dual write. This needs an outbox table.\n\n## Recommendation\n\nUse a message queue for the order-processing pipeline.\n\nAn order pipeline has the exact shape that queues fit:\n\n- The steps are asynchronous. Payment capture, inventory reservation, and shipment do not need to complete inside one web request.\n- Order loss is expensive. Durable messages protect the order after the customer clicks \"Buy\".\n- Traffic is spiky. Sales and campaigns create short bursts.\n- The number of consumers grows. Analytics, fraud checks, and email all want the same order event.\n\n## Suggested shape\n\n1. Accept the order over HTTP. Validate the input and write the order row.\n2. Write the event to an outbox table in the same transaction.\n3. Return `202 Accepted` with an order ID to the client.\n4. Publish the outbox rows to the broker with a relay process.\n5. Consume the event in each downstream worker.\n6. Send failed messages to a dead-letter queue after a retry limit.\n\n## Keep HTTP for these cases\n\n- Synchronous validation before you accept the order. An example is an address check.\n- Status reads. The client polls the order state over HTTP.\n- Any call where the caller cannot continue without the answer.\n\n## Requirements before you start\n\n- Give every message a unique key. Consumers must ignore a repeated key.\n- Version the event schema from the first release.\n- Add a correlation ID to every message and log line.\n- Monitor queue depth, consumer lag, and the dead-letter queue.\n\nThe queue adds operational cost. For an order pipeline, the durability and the decoupling pay for that cost. For a simple internal read between two services, direct HTTP stays the better choice."
+  ],
+  "stderr_tail": ""
+}

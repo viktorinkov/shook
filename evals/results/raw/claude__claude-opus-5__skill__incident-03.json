@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "incident-03",
+  "cat": "incident",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 32.4,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.16703799999999996,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 10963,
+    "cache_read_input_tokens": 11054,
+    "output_tokens": 2034,
+    "output_tokens_details": {
+      "thinking_tokens": 1453
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10963,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1664,
+        "cache_read_input_tokens": 6909,
+        "cache_creation_input_tokens": 8199,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8199
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 268,
+    "sentences": 23,
+    "mean_sentence_words": 11.5,
+    "longest_sentence_words": 37,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.37
+  },
+  "text": "### What went wrong\n\nThe scheduler operates on two nodes: a primary node and a standby node. Only one node must hold the schedule at a time. The failover promoted the standby node, and the standby node started a scheduler instance. The primary node kept its own scheduler instance alive. As a result, two scheduler instances held the same schedule.\n\nBoth instances reached the same trigger time and each one started the cron job. The job takes no lock before it starts work. No other guard rejects a second start. As a result, the job ran twice and repeated its full effect.\n\nThe monitors count completed jobs, not started jobs. A second completion looks the same as a first one, so no alert fired. The team found the duplicate run later, from `[detection source]`.\n\n**Contributing factors:**\n\n- The failover procedure promotes the new node but does not stop the scheduler on the old node.\n- The scheduler trusts its local node role. It does not ask a shared store which instance owns the schedule.\n- The cron job is not idempotent. A second run repeats the effect of the first run.\n- The alerts watch job results, not job starts. Two starts and one start look the same.\n\n---\n\nTwo things to fill in before you publish: `[detection source]` (alert, customer report, or manual review), and the timestamps for the failover and the two job starts. I wrote the lock and idempotency points as the mechanism that fits the scenario you described \u2014 confirm them against the job code and the scheduler config, because they drive the action items in the next section.",
+  "texts": [
+    "### What went wrong\n\nThe scheduler operates on two nodes: a primary node and a standby node. Only one node must hold the schedule at a time. The failover promoted the standby node, and the standby node started a scheduler instance. The primary node kept its own scheduler instance alive. As a result, two scheduler instances held the same schedule.\n\nBoth instances reached the same trigger time and each one started the cron job. The job takes no lock before it starts work. No other guard rejects a second start. As a result, the job ran twice and repeated its full effect.\n\nThe monitors count completed jobs, not started jobs. A second completion looks the same as a first one, so no alert fired. The team found the duplicate run later, from `[detection source]`.\n\n**Contributing factors:**\n\n- The failover procedure promotes the new node but does not stop the scheduler on the old node.\n- The scheduler trusts its local node role. It does not ask a shared store which instance owns the schedule.\n- The cron job is not idempotent. A second run repeats the effect of the first run.\n- The alerts watch job results, not job starts. Two starts and one start look the same.\n\n---\n\nTwo things to fill in before you publish: `[detection source]` (alert, customer report, or manual review), and the timestamps for the failover and the two job starts. I wrote the lock and idempotency points as the mechanism that fits the scenario you described \u2014 confirm them against the job code and the scheduler config, because they drive the action items in the next section."
+  ],
+  "stderr_tail": ""
+}

@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "incident-05",
+  "cat": "incident",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 29.5,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.09449250000000001,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3916,
+    "cache_read_input_tokens": 4145,
+    "output_tokens": 2130,
+    "output_tokens_details": {
+      "thinking_tokens": 1068
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3916,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2130,
+        "cache_read_input_tokens": 4145,
+        "cache_creation_input_tokens": 3916,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3916
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 466,
+    "sentences": 29,
+    "mean_sentence_words": 16.1,
+    "longest_sentence_words": 36,
+    "violations": {
+      "sentence_over_limit": 3,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 1
+    },
+    "violations_total": 5,
+    "violations_per_100w": 1.07
+  },
+  "text": "## Action items\n\nEach action item below has one owner and one ticket. The team tracks all items to closure in the issue tracker. Replace each `[owner]` placeholder with a name before you publish this postmortem.\n\n### Prevent\n\n| ID | Action | Priority | Owner | Due date |\n|----|--------|----------|-------|----------|\n| AI-1 | Configure `logrotate` on all application hosts. Set a maximum file size of 500 MB and keep 5 files. | P0 | `[owner]` | 2026-09-04 |\n| AI-2 | Set the default log level to `INFO` in the production configuration. Remove the `DEBUG` default. | P0 | `[owner]` | 2026-09-04 |\n| AI-3 | Add a scheduled job that deletes log files older than 7 days from `/var/log`. | P1 | `[owner]` | 2026-09-11 |\n| AI-4 | Move `/var/log` to a separate partition in the host image. A full log partition must not stop the database writes. | P1 | `[owner]` | 2026-09-25 |\n\n### Detect\n\n| ID | Action | Priority | Owner | Due date |\n|----|--------|----------|-------|----------|\n| AI-5 | Add a disk usage alert at 75 percent. Send it to the team channel. | P0 | `[owner]` | 2026-09-04 |\n| AI-6 | Add a disk usage page at 85 percent. Send it to the on-call engineer. | P0 | `[owner]` | 2026-09-04 |\n| AI-7 | Add a dashboard panel that shows the growth rate of the disk for each host. | P2 | `[owner]` | 2026-10-02 |\n| AI-8 | Add an alert for the log write rate. Trigger the alert if the rate is more than 3 times the daily median. | P2 | `[owner]` | 2026-10-16 |\n\n### Mitigate\n\n| ID | Action | Priority | Owner | Due date |\n|----|--------|----------|-------|----------|\n| AI-9 | Write a runbook section for a full disk. Include the commands to find the largest files and to truncate them safely. | P1 | `[owner]` | 2026-09-11 |\n| AI-10 | Test the recovery procedure in the staging environment. Record the time to recovery. | P1 | `[owner]` | 2026-09-18 |\n| AI-11 | Ship all logs to the central log service. Keep only 7 days of logs on the local disk. | P2 | `[owner]` | 2026-10-30 |\n\n### Process\n\n| ID | Action | Priority | Owner | Due date |\n|----|--------|----------|-------|----------|\n| AI-12 | Add a disk capacity check to the launch checklist for a new service. | P2 | `[owner]` | 2026-10-02 |\n| AI-13 | Review the alert routing for the on-call rotation. Verify that each disk alert reaches a person. | P1 | `[owner]` | 2026-09-18 |\n\n### Warning\n\nDo not delete an open log file with `rm` on a production host. The process keeps the file handle open and the disk space stays in use. Use `truncate -s 0` instead, or restart the process after the deletion.",
+  "texts": [
+    "## Action items\n\nEach action item below has one owner and one ticket. The team tracks all items to closure in the issue tracker. Replace each `[owner]` placeholder with a name before you publish this postmortem.\n\n### Prevent\n\n| ID | Action | Priority | Owner | Due date |\n|----|--------|----------|-------|----------|\n| AI-1 | Configure `logrotate` on all application hosts. Set a maximum file size of 500 MB and keep 5 files. | P0 | `[owner]` | 2026-09-04 |\n| AI-2 | Set the default log level to `INFO` in the production configuration. Remove the `DEBUG` default. | P0 | `[owner]` | 2026-09-04 |\n| AI-3 | Add a scheduled job that deletes log files older than 7 days from `/var/log`. | P1 | `[owner]` | 2026-09-11 |\n| AI-4 | Move `/var/log` to a separate partition in the host image. A full log partition must not stop the database writes. | P1 | `[owner]` | 2026-09-25 |\n\n### Detect\n\n| ID | Action | Priority | Owner | Due date |\n|----|--------|----------|-------|----------|\n| AI-5 | Add a disk usage alert at 75 percent. Send it to the team channel. | P0 | `[owner]` | 2026-09-04 |\n| AI-6 | Add a disk usage page at 85 percent. Send it to the on-call engineer. | P0 | `[owner]` | 2026-09-04 |\n| AI-7 | Add a dashboard panel that shows the growth rate of the disk for each host. | P2 | `[owner]` | 2026-10-02 |\n| AI-8 | Add an alert for the log write rate. Trigger the alert if the rate is more than 3 times the daily median. | P2 | `[owner]` | 2026-10-16 |\n\n### Mitigate\n\n| ID | Action | Priority | Owner | Due date |\n|----|--------|----------|-------|----------|\n| AI-9 | Write a runbook section for a full disk. Include the commands to find the largest files and to truncate them safely. | P1 | `[owner]` | 2026-09-11 |\n| AI-10 | Test the recovery procedure in the staging environment. Record the time to recovery. | P1 | `[owner]` | 2026-09-18 |\n| AI-11 | Ship all logs to the central log service. Keep only 7 days of logs on the local disk. | P2 | `[owner]` | 2026-10-30 |\n\n### Process\n\n| ID | Action | Priority | Owner | Due date |\n|----|--------|----------|-------|----------|\n| AI-12 | Add a disk capacity check to the launch checklist for a new service. | P2 | `[owner]` | 2026-10-02 |\n| AI-13 | Review the alert routing for the on-call rotation. Verify that each disk alert reaches a person. | P1 | `[owner]` | 2026-09-18 |\n\n### Warning\n\nDo not delete an open log file with `rm` on a production host. The process keeps the file handle open and the disk space stays in use. Use `truncate -s 0` instead, or restart the process after the deletion."
+  ],
+  "stderr_tail": ""
+}

@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "review-07",
+  "cat": "review",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 22.7,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.0798275,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3987,
+    "cache_read_input_tokens": 4145,
+    "output_tokens": 1515,
+    "output_tokens_details": {
+      "thinking_tokens": 971
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3987,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1515,
+        "cache_read_input_tokens": 4145,
+        "cache_creation_input_tokens": 3987,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3987
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 254,
+    "sentences": 30,
+    "mean_sentence_words": 8.0,
+    "longest_sentence_words": 13,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "## PR review summary: retries in the HTTP client\n\n**Verdict: request changes.**\n\n### Summary\n\nThis PR adds a retry mechanism to the HTTP client. The goal is correct. The retry condition matches every status code. This behavior is not safe for release.\n\n### Blocking issue: the client retries 4xx responses\n\nThe retry condition ignores the status code. After a 400 response, the client sends the same request again. A 400 response means a bad request. The same request gives the same error every time.\n\nRisks:\n\n- 400, 404, and 422 responses never succeed after a retry. Each retry only adds latency for the caller.\n- Repeated attempts after 401 or 403 can lock an account.\n- A retry of a non-idempotent POST can create duplicate records.\n- The extra traffic adds load on a server that already rejected the request.\n\n### Requested change\n\nRetry only in these cases:\n\n1. Connection errors and timeouts.\n2. Status codes 502, 503, and 504.\n3. Status code 429. Take the delay from the `Retry-After` header.\n4. Status code 408.\n\nFor all other 4xx codes, return the response to the caller immediately.\n\n### Other notes\n\n- Set a maximum number of attempts. Also set a maximum total time for the request.\n- Use exponential backoff with jitter between attempts. A fixed delay causes synchronized retries from many clients.\n- Retry idempotent methods by default: GET, HEAD, PUT, and DELETE. Make a POST retry an explicit option per request.\n- Log each retry with the status code and the attempt number.\n- Add a test that verifies zero retries after a 400 response. Add a second test that verifies a retry after a 503 response.",
+  "texts": [
+    "## PR review summary: retries in the HTTP client\n\n**Verdict: request changes.**\n\n### Summary\n\nThis PR adds a retry mechanism to the HTTP client. The goal is correct. The retry condition matches every status code. This behavior is not safe for release.\n\n### Blocking issue: the client retries 4xx responses\n\nThe retry condition ignores the status code. After a 400 response, the client sends the same request again. A 400 response means a bad request. The same request gives the same error every time.\n\nRisks:\n\n- 400, 404, and 422 responses never succeed after a retry. Each retry only adds latency for the caller.\n- Repeated attempts after 401 or 403 can lock an account.\n- A retry of a non-idempotent POST can create duplicate records.\n- The extra traffic adds load on a server that already rejected the request.\n\n### Requested change\n\nRetry only in these cases:\n\n1. Connection errors and timeouts.\n2. Status codes 502, 503, and 504.\n3. Status code 429. Take the delay from the `Retry-After` header.\n4. Status code 408.\n\nFor all other 4xx codes, return the response to the caller immediately.\n\n### Other notes\n\n- Set a maximum number of attempts. Also set a maximum total time for the request.\n- Use exponential backoff with jitter between attempts. A fixed delay causes synchronized retries from many clients.\n- Retry idempotent methods by default: GET, HEAD, PUT, and DELETE. Make a POST retry an explicit option per request.\n- Log each retry with the status code and the attempt number.\n- Add a test that verifies zero retries after a 400 response. Add a second test that verifies a retry after a 503 response."
+  ],
+  "stderr_tail": ""
+}

@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "explain-09",
+  "cat": "explain",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 33.7,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.11150249999999999,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2756,
+    "cache_read_input_tokens": 38821,
+    "output_tokens": 2541,
+    "output_tokens_details": {
+      "thinking_tokens": 1282
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2756,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2541,
+        "cache_read_input_tokens": 38821,
+        "cache_creation_input_tokens": 2756,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2756
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 433,
+    "sentences": 25,
+    "mean_sentence_words": 17.2,
+    "longest_sentence_words": 64,
+    "violations": {
+      "sentence_over_limit": 3,
+      "contraction": 3,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 2,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 3,
+      "synonym_rotation": 0
+    },
+    "violations_total": 11,
+    "violations_per_100w": 2.54
+  },
+  "text": "## Why it happens\n\nDoubles (IEEE 754 binary64) store numbers as `sign \u00d7 mantissa \u00d7 2^exponent` \u2014 a **binary** fraction with 53 significant bits. A fraction is exactly representable only if its denominator is a power of two. `1/10` isn't, so it repeats forever in binary (`0.0001100110011...`), exactly like `1/3` repeats in decimal. The stored value is the nearest representable double:\n\n```\n0.1 \u2192 0.1000000000000000055511151231257827021181583404541015625\n0.2 \u2192 0.2000000000000000111022302462515654042363166809082031250\n0.3 \u2192 0.2999999999999999888977697537484345957636833190917968750\n```\n\nAdd the first two exactly and you get `0.3000000000000000166533453693773481063544750213623046875`. That's more precision than a double holds near 0.3, so it rounds \u2014 and it lands exactly halfway between the two neighbouring doubles. IEEE 754's default round-half-to-even breaks the tie upward, giving `0.30000000000000004`, which is a different bit pattern from the double for `0.3`. Hence `!=`.\n\nTwo things worth separating: `0.1` was already wrong before you added anything (input conversion error), and the addition introduced its own rounding. Both are inherent, neither is a language bug \u2014 Python, JS, Java, C, Rust all agree.\n\n## The non-money fix\n\nNever compare floats with `==`. Compare within a tolerance, scaled to the magnitude of the values:\n\n```python\nmath.isclose(0.1 + 0.2, 0.3, rel_tol=1e-9, abs_tol=1e-12)\n```\n\nAn absolute-only epsilon (`abs(a-b) < 1e-9`) breaks for large values, where one ulp already exceeds your epsilon.\n\n## For money\n\n**Store and transport integer minor units.** An `int64` of cents (or a scaled integer plus an explicit scale) is exact, fast, and unambiguous across language boundaries. This is what Stripe and most payment APIs do.\n\n**Compute with a decimal type** when you need fractional rates \u2014 tax, interest, currency conversion, per-unit prices:\n\n| Language | Type |\n|---|---|\n| Python | `decimal.Decimal` |\n| Java / Kotlin | `java.math.BigDecimal` |\n| C# | `decimal` |\n| Go | `shopspring/decimal` |\n| JS/TS | `decimal.js`, or `BigInt` minor units |\n| SQL | `NUMERIC(19,4)` / `DECIMAL` \u2014 never `FLOAT`/`REAL` |\n\n```python\nfrom decimal import Decimal, ROUND_HALF_UP\nDecimal(\"0.1\") + Decimal(\"0.2\") == Decimal(\"0.3\")   # True\n```\n\nConstruct decimals from **strings**, not floats \u2014 `Decimal(0.1)` faithfully preserves the wrong binary value.\n\nFour things that bite people beyond the type choice:\n\n- **Round explicitly, at defined points.** Pick the mode deliberately (`ROUND_HALF_UP` is the common legal/invoicing default; `ROUND_HALF_EVEN` for statistical aggregation) rather than inheriting a default. Round once when the amount becomes an actual charge, not on every intermediate step.\n- **Don't assume 2 decimal places.** JPY and KRW have 0, KWD and BHD have 3, and crypto goes to 8\u201318. Carry the currency's exponent alongside the amount.\n- **Amount and currency travel together.** A bare number is meaningless; make the pair a single value type so you can't add USD to EUR.\n- **In JSON, use a string or an integer**, never a JSON number \u2014 most parsers will silently deserialize it into a double and undo all of the above.",
+  "texts": [
+    "## Why it happens\n\nDoubles (IEEE 754 binary64) store numbers as `sign \u00d7 mantissa \u00d7 2^exponent` \u2014 a **binary** fraction with 53 significant bits. A fraction is exactly representable only if its denominator is a power of two. `1/10` isn't, so it repeats forever in binary (`0.0001100110011...`), exactly like `1/3` repeats in decimal. The stored value is the nearest representable double:\n\n```\n0.1 \u2192 0.1000000000000000055511151231257827021181583404541015625\n0.2 \u2192 0.2000000000000000111022302462515654042363166809082031250\n0.3 \u2192 0.2999999999999999888977697537484345957636833190917968750\n```\n\nAdd the first two exactly and you get `0.3000000000000000166533453693773481063544750213623046875`. That's more precision than a double holds near 0.3, so it rounds \u2014 and it lands exactly halfway between the two neighbouring doubles. IEEE 754's default round-half-to-even breaks the tie upward, giving `0.30000000000000004`, which is a different bit pattern from the double for `0.3`. Hence `!=`.\n\nTwo things worth separating: `0.1` was already wrong before you added anything (input conversion error), and the addition introduced its own rounding. Both are inherent, neither is a language bug \u2014 Python, JS, Java, C, Rust all agree.\n\n## The non-money fix\n\nNever compare floats with `==`. Compare within a tolerance, scaled to the magnitude of the values:\n\n```python\nmath.isclose(0.1 + 0.2, 0.3, rel_tol=1e-9, abs_tol=1e-12)\n```\n\nAn absolute-only epsilon (`abs(a-b) < 1e-9`) breaks for large values, where one ulp already exceeds your epsilon.\n\n## For money\n\n**Store and transport integer minor units.** An `int64` of cents (or a scaled integer plus an explicit scale) is exact, fast, and unambiguous across language boundaries. This is what Stripe and most payment APIs do.\n\n**Compute with a decimal type** when you need fractional rates \u2014 tax, interest, currency conversion, per-unit prices:\n\n| Language | Type |\n|---|---|\n| Python | `decimal.Decimal` |\n| Java / Kotlin | `java.math.BigDecimal` |\n| C# | `decimal` |\n| Go | `shopspring/decimal` |\n| JS/TS | `decimal.js`, or `BigInt` minor units |\n| SQL | `NUMERIC(19,4)` / `DECIMAL` \u2014 never `FLOAT`/`REAL` |\n\n```python\nfrom decimal import Decimal, ROUND_HALF_UP\nDecimal(\"0.1\") + Decimal(\"0.2\") == Decimal(\"0.3\")   # True\n```\n\nConstruct decimals from **strings**, not floats \u2014 `Decimal(0.1)` faithfully preserves the wrong binary value.\n\nFour things that bite people beyond the type choice:\n\n- **Round explicitly, at defined points.** Pick the mode deliberately (`ROUND_HALF_UP` is the common legal/invoicing default; `ROUND_HALF_EVEN` for statistical aggregation) rather than inheriting a default. Round once when the amount becomes an actual charge, not on every intermediate step.\n- **Don't assume 2 decimal places.** JPY and KRW have 0, KWD and BHD have 3, and crypto goes to 8\u201318. Carry the currency's exponent alongside the amount.\n- **Amount and currency travel together.** A bare number is meaningless; make the pair a single value type so you can't add USD to EUR.\n- **In JSON, use a string or an integer**, never a JSON number \u2014 most parsers will silently deserialize it into a double and undo all of the above."
+  ],
+  "stderr_tail": ""
+}

@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "explain-06",
+  "cat": "explain",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 23.7,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.0829225,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2768,
+    "cache_read_input_tokens": 38821,
+    "output_tokens": 1393,
+    "output_tokens_details": {
+      "thinking_tokens": 37
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2768,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1393,
+        "cache_read_input_tokens": 38821,
+        "cache_creation_input_tokens": 2768,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2768
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 559,
+    "sentences": 34,
+    "mean_sentence_words": 16.1,
+    "longest_sentence_words": 47,
+    "violations": {
+      "sentence_over_limit": 5,
+      "contraction": 7,
+      "banned_modal": 1,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 3,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 3,
+      "synonym_rotation": 0
+    },
+    "violations_total": 19,
+    "violations_per_100w": 3.4
+  },
+  "text": "## What it does, piece by piece\n\n```\nfind . -name '*.log' -mtime +7 -exec rm {} \\;\n```\n\n- **`find .`** \u2014 walk the current directory tree recursively, starting at `.`.\n- **`-name '*.log'`** \u2014 match entries whose *basename* ends in `.log`. Quoted so the shell passes the glob to `find` rather than expanding it against the cwd.\n- **`-mtime +7`** \u2014 modification time is more than 7 *24-hour periods* ago. `find` computes age in whole days and discards the remainder, so `+7` means \"age \u2265 8 days\" in practice, not \"older than exactly 168 hours.\"\n- **`-exec rm {} \\;`** \u2014 for each match, run `rm <path>`. `{}` is the current path; `\\;` terminates the command (escaped so the shell doesn't eat the `;`). One `rm` process is forked **per file**.\n\nThe predicates are ANDed implicitly, so: delete every `*.log` at or below the cwd that hasn't been modified in 8+ days.\n\n## When it's dangerous\n\n**1. It depends entirely on your current directory.** The `.` is silent. Run it from `/` or `$HOME` after a failed `cd`, and you've just swept logs out of the whole system or every project you own. There's no confirmation and no undo. This is the big one: `cd /var/log/myapp && find . ...` in a script where the `cd` fails will still run `find .` \u2014 in whatever directory you happened to be in. Use `cd ... || exit 1`, or give `find` an absolute path.\n\n**2. It descends into things you didn't mean to touch.** `find` follows the directory tree without limit \u2014 `node_modules`, `.git`, mounted network shares, backup directories, other users' trees if you're root. Add `-maxdepth 1` if you only meant the top level, and `-xdev` to stop at filesystem boundaries.\n\n**3. It deletes files it can't safely delete, or fails oddly on some.** Without `-type f`, a name like `weird.log` that's a directory or a symlink gets handed to `rm`, which fails on directories (harmless noise) but *does* delete symlinks \u2014 removing the link, not the target. `-type f` is worth adding.\n\n**4. Deleting an open log doesn't free the space.** If a daemon still holds the file open, the inode survives until the process closes it or restarts. You get \"deleted\" files that still consume disk, and the writer keeps appending into a file no one can find. Log rotation (`logrotate`, `copytruncate`) exists precisely for this.\n\n**5. `-mtime` is not \"creation time\" or \"last accessed.\"** An actively-appended log stays young forever; an archived-but-important log ages into the blast radius. If retention actually matters, mtime is a proxy that will eventually be wrong.\n\n**6. Weird filenames.** This particular form is safe against spaces and newlines \u2014 each `{}` is passed as a single argument, not re-split by a shell. But a leading-dash filename would be interpreted by `rm` as an option. `rm --` or `find`'s own `-delete` avoids that.\n\n**7. Root plus a wrong pattern.** All of the above scale with privilege. As root the same line reaches `/var/lib`, `/proc`-adjacent mounts, and other users' data.\n\n## Safer forms\n\nPreview first \u2014 always, before the destructive version:\n\n```sh\nfind /var/log/myapp -maxdepth 1 -xdev -type f -name '*.log' -mtime +7 -print\n```\n\nThen, once the list looks right:\n\n```sh\nfind /var/log/myapp -maxdepth 1 -xdev -type f -name '*.log' -mtime +7 -delete\n```\n\n`-delete` uses `unlinkat()` internally instead of forking a `rm` per file \u2014 faster, and no argument-parsing surprises. Note it implies `-depth`, which changes traversal order; that's irrelevant here but matters if you combine it with `-prune`.\n\nIf your `find` lacks `-delete` (some non-GNU versions), `-exec rm -- {} +` batches many paths per `rm` invocation and handles leading dashes.",
+  "texts": [
+    "## What it does, piece by piece\n\n```\nfind . -name '*.log' -mtime +7 -exec rm {} \\;\n```\n\n- **`find .`** \u2014 walk the current directory tree recursively, starting at `.`.\n- **`-name '*.log'`** \u2014 match entries whose *basename* ends in `.log`. Quoted so the shell passes the glob to `find` rather than expanding it against the cwd.\n- **`-mtime +7`** \u2014 modification time is more than 7 *24-hour periods* ago. `find` computes age in whole days and discards the remainder, so `+7` means \"age \u2265 8 days\" in practice, not \"older than exactly 168 hours.\"\n- **`-exec rm {} \\;`** \u2014 for each match, run `rm <path>`. `{}` is the current path; `\\;` terminates the command (escaped so the shell doesn't eat the `;`). One `rm` process is forked **per file**.\n\nThe predicates are ANDed implicitly, so: delete every `*.log` at or below the cwd that hasn't been modified in 8+ days.\n\n## When it's dangerous\n\n**1. It depends entirely on your current directory.** The `.` is silent. Run it from `/` or `$HOME` after a failed `cd`, and you've just swept logs out of the whole system or every project you own. There's no confirmation and no undo. This is the big one: `cd /var/log/myapp && find . ...` in a script where the `cd` fails will still run `find .` \u2014 in whatever directory you happened to be in. Use `cd ... || exit 1`, or give `find` an absolute path.\n\n**2. It descends into things you didn't mean to touch.** `find` follows the directory tree without limit \u2014 `node_modules`, `.git`, mounted network shares, backup directories, other users' trees if you're root. Add `-maxdepth 1` if you only meant the top level, and `-xdev` to stop at filesystem boundaries.\n\n**3. It deletes files it can't safely delete, or fails oddly on some.** Without `-type f`, a name like `weird.log` that's a directory or a symlink gets handed to `rm`, which fails on directories (harmless noise) but *does* delete symlinks \u2014 removing the link, not the target. `-type f` is worth adding.\n\n**4. Deleting an open log doesn't free the space.** If a daemon still holds the file open, the inode survives until the process closes it or restarts. You get \"deleted\" files that still consume disk, and the writer keeps appending into a file no one can find. Log rotation (`logrotate`, `copytruncate`) exists precisely for this.\n\n**5. `-mtime` is not \"creation time\" or \"last accessed.\"** An actively-appended log stays young forever; an archived-but-important log ages into the blast radius. If retention actually matters, mtime is a proxy that will eventually be wrong.\n\n**6. Weird filenames.** This particular form is safe against spaces and newlines \u2014 each `{}` is passed as a single argument, not re-split by a shell. But a leading-dash filename would be interpreted by `rm` as an option. `rm --` or `find`'s own `-delete` avoids that.\n\n**7. Root plus a wrong pattern.** All of the above scale with privilege. As root the same line reaches `/var/lib`, `/proc`-adjacent mounts, and other users' data.\n\n## Safer forms\n\nPreview first \u2014 always, before the destructive version:\n\n```sh\nfind /var/log/myapp -maxdepth 1 -xdev -type f -name '*.log' -mtime +7 -print\n```\n\nThen, once the list looks right:\n\n```sh\nfind /var/log/myapp -maxdepth 1 -xdev -type f -name '*.log' -mtime +7 -delete\n```\n\n`-delete` uses `unlinkat()` internally instead of forking a `rm` per file \u2014 faster, and no argument-parsing surprises. Note it implies `-depth`, which changes traversal order; that's irrelevant here but matters if you combine it with `-prune`.\n\nIf your `find` lacks `-delete` (some non-GNU versions), `-exec rm -- {} +` batches many paths per `rm` invocation and handles leading dashes."
+  ],
+  "stderr_tail": ""
+}

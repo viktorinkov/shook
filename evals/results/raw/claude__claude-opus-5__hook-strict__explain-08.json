@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "explain-08",
+  "cat": "explain",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 22.5,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.0967105,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3979,
+    "cache_read_input_tokens": 38821,
+    "output_tokens": 1500,
+    "output_tokens_details": {
+      "thinking_tokens": 856
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3979,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1500,
+        "cache_read_input_tokens": 38821,
+        "cache_creation_input_tokens": 3979,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3979
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 218,
+    "sentences": 23,
+    "mean_sentence_words": 9.2,
+    "longest_sentence_words": 15,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.46
+  },
+  "text": "## What the problem is\n\nAn ORM loads a list of rows with one query. The code then reads a related object on each row. The ORM sends one extra query for each row. The total is 1 + N queries.\n\n## Example (Django)\n\n```python\nposts = Post.objects.all()      # query 1: SELECT * FROM post\nfor post in posts:\n    print(post.author.name)     # one SELECT on author per post\n```\n\nWith 500 posts, the database gets 501 queries. The same pattern exists in SQLAlchemy, Rails Active Record, and Prisma.\n\n## Why it costs so much\n\nEach query pays the full round trip to the database. The data volume is small, but the latency repeats N times. The page gets slower as the table grows, so small test data hides the fault.\n\n## The fix\n\nTell the ORM to fetch the related rows with the first query.\n\nDjango:\n\n```python\nposts = Post.objects.select_related(\"author\")     # 1 query with a JOIN\nposts = Post.objects.prefetch_related(\"tags\")     # 2 queries total\n```\n\nUse `select_related` for a foreign key or a one-to-one field. It adds a SQL JOIN. Use `prefetch_related` for a many-to-many field or a reverse relation. It sends a second query with `IN (...)` and joins the results in Python.\n\nSQLAlchemy:\n\n```python\nsession.query(Post).options(joinedload(Post.author))    # JOIN\nsession.query(Post).options(selectinload(Post.tags))    # second SELECT ... IN\n```\n\nRails uses `includes`. Prisma uses `include`.\n\n## How to find it\n\n1. Turn on SQL logs in development.\n2. Look for the same query text that repeats with different parameters.\n3. Add a query counter to the tests. In Django, use `assertNumQueries`.\n4. Install a detector, for example the `nplusone` package or `django-debug-toolbar`.\n\nA test that locks the query count is the best guard. It fails when a new line of code adds a hidden query.",
+  "texts": [
+    "## What the problem is\n\nAn ORM loads a list of rows with one query. The code then reads a related object on each row. The ORM sends one extra query for each row. The total is 1 + N queries.\n\n## Example (Django)\n\n```python\nposts = Post.objects.all()      # query 1: SELECT * FROM post\nfor post in posts:\n    print(post.author.name)     # one SELECT on author per post\n```\n\nWith 500 posts, the database gets 501 queries. The same pattern exists in SQLAlchemy, Rails Active Record, and Prisma.\n\n## Why it costs so much\n\nEach query pays the full round trip to the database. The data volume is small, but the latency repeats N times. The page gets slower as the table grows, so small test data hides the fault.\n\n## The fix\n\nTell the ORM to fetch the related rows with the first query.\n\nDjango:\n\n```python\nposts = Post.objects.select_related(\"author\")     # 1 query with a JOIN\nposts = Post.objects.prefetch_related(\"tags\")     # 2 queries total\n```\n\nUse `select_related` for a foreign key or a one-to-one field. It adds a SQL JOIN. Use `prefetch_related` for a many-to-many field or a reverse relation. It sends a second query with `IN (...)` and joins the results in Python.\n\nSQLAlchemy:\n\n```python\nsession.query(Post).options(joinedload(Post.author))    # JOIN\nsession.query(Post).options(selectinload(Post.tags))    # second SELECT ... IN\n```\n\nRails uses `includes`. Prisma uses `include`.\n\n## How to find it\n\n1. Turn on SQL logs in development.\n2. Look for the same query text that repeats with different parameters.\n3. Add a query counter to the tests. In Django, use `assertNumQueries`.\n4. Install a detector, for example the `nplusone` package or `django-debug-toolbar`.\n\nA test that locks the query count is the best guard. It fails when a new line of code adds a hidden query."
+  ],
+  "stderr_tail": ""
+}

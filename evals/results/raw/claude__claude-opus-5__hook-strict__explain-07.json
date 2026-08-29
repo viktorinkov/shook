@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "explain-07",
+  "cat": "explain",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 28.4,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.10368550000000001,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3969,
+    "cache_read_input_tokens": 38821,
+    "output_tokens": 1783,
+    "output_tokens_details": {
+      "thinking_tokens": 998
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3969,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1783,
+        "cache_read_input_tokens": 38821,
+        "cache_creation_input_tokens": 3969,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3969
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 443,
+    "sentences": 39,
+    "mean_sentence_words": 11.2,
+    "longest_sentence_words": 17,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.23
+  },
+  "text": "## What an index is\n\nAn index is a second data structure beside the table. The database keeps a sorted copy of one or more columns in it. A read query uses this structure to find rows fast. That speed is the benefit. The costs below are the price for it.\n\n## Cost 1: every write becomes slower\n\nEach insert, each update, and each delete must change the table and every index on that table. If a table has five indexes, one write turns into six separate write operations. The database must also hold locks for a longer time during the write. Read traffic gets faster. Write traffic gets slower. This trade is the main cost.\n\n## Cost 2: disk and memory\n\nAn index stores a copy of the indexed columns plus a pointer to each row. On a large table, one index can add 10 to 30 percent to the table size. The database also caches the hot parts of the index in memory. That memory is not available for table data any more. A cache miss costs a disk read, and disk reads dominate query time.\n\n## Cost 3: the build itself\n\nThe creation of an index on a large table takes minutes or hours. Some databases lock the table for writes during the build. Most databases offer a concurrent build option. The concurrent option is slower, and it can fail part way and leave an unusable index. A new index on a busy production table is a deploy risk, not a config change.\n\n## Cost 4: the query planner\n\nThe planner picks one plan per query from all available options. More indexes give the planner more options and less certainty. The planner sometimes picks the wrong index and makes a query slower than before. This effect is rare, but it is hard to predict from a test environment.\n\n## Cost 5: permanent maintenance\n\nIndexes fragment as the data changes, so the database must rebuild them from time to time. An unused index still costs write time and disk space forever. Nobody notices an unused index, because it breaks nothing. Teams collect dozens of them over the years. Someone must audit and remove them.\n\n## Questions to ask before you approve an index\n\n1. Which exact query is slow today, and how slow is it?\n2. What is the read to write ratio for this table?\n3. How large is the table now, and how large will it be in one year?\n4. Does an existing index already cover this query?\n5. How long does the build take, and does it lock the table?\n6. Who removes the index if it does not help?\n\n## The short version\n\nAn index moves cost from read time to write time, disk, memory, and maintenance. For a table with many reads and few writes, this trade is good. For a table with heavy writes, this trade can make the whole system slower.",
+  "texts": [
+    "## What an index is\n\nAn index is a second data structure beside the table. The database keeps a sorted copy of one or more columns in it. A read query uses this structure to find rows fast. That speed is the benefit. The costs below are the price for it.\n\n## Cost 1: every write becomes slower\n\nEach insert, each update, and each delete must change the table and every index on that table. If a table has five indexes, one write turns into six separate write operations. The database must also hold locks for a longer time during the write. Read traffic gets faster. Write traffic gets slower. This trade is the main cost.\n\n## Cost 2: disk and memory\n\nAn index stores a copy of the indexed columns plus a pointer to each row. On a large table, one index can add 10 to 30 percent to the table size. The database also caches the hot parts of the index in memory. That memory is not available for table data any more. A cache miss costs a disk read, and disk reads dominate query time.\n\n## Cost 3: the build itself\n\nThe creation of an index on a large table takes minutes or hours. Some databases lock the table for writes during the build. Most databases offer a concurrent build option. The concurrent option is slower, and it can fail part way and leave an unusable index. A new index on a busy production table is a deploy risk, not a config change.\n\n## Cost 4: the query planner\n\nThe planner picks one plan per query from all available options. More indexes give the planner more options and less certainty. The planner sometimes picks the wrong index and makes a query slower than before. This effect is rare, but it is hard to predict from a test environment.\n\n## Cost 5: permanent maintenance\n\nIndexes fragment as the data changes, so the database must rebuild them from time to time. An unused index still costs write time and disk space forever. Nobody notices an unused index, because it breaks nothing. Teams collect dozens of them over the years. Someone must audit and remove them.\n\n## Questions to ask before you approve an index\n\n1. Which exact query is slow today, and how slow is it?\n2. What is the read to write ratio for this table?\n3. How large is the table now, and how large will it be in one year?\n4. Does an existing index already cover this query?\n5. How long does the build take, and does it lock the table?\n6. Who removes the index if it does not help?\n\n## The short version\n\nAn index moves cost from read time to write time, disk, memory, and maintenance. For a table with many reads and few writes, this trade is good. For a table with heavy writes, this trade can make the whole system slower."
+  ],
+  "stderr_tail": ""
+}

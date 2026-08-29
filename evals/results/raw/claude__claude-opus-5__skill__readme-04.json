@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "readme-04",
+  "cat": "docs",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 38.5,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.186968,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 11056,
+    "cache_read_input_tokens": 11052,
+    "output_tokens": 2794,
+    "output_tokens_details": {
+      "thinking_tokens": 1927
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 11056,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2326,
+        "cache_read_input_tokens": 6907,
+        "cache_creation_input_tokens": 8294,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8294
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 331,
+    "sentences": 28,
+    "mean_sentence_words": 11.2,
+    "longest_sentence_words": 41,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 2,
+    "violations_per_100w": 0.6
+  },
+  "text": "## Troubleshooting\n\n### The app does not start and shows `EADDRINUSE`\n\n`EADDRINUSE` means \"address already in use\". The app opens a local port when it starts. When another program holds that port, the app stops and shows this error.\n\nThree causes are common:\n\n- An earlier instance of the app still runs in the background.\n- A different program uses the same port number.\n- The port is still reserved by the operating system after a fast restart.\n\n#### Find the program that holds the port\n\n1. Close the app. The error message gives the port number.\n2. On macOS or Linux, find the program that listens on the port:\n\n   ```\n   lsof -nP -iTCP:<port> -sTCP:LISTEN\n   ```\n\n3. On Windows, find the process ID (PID) that listens on the port:\n\n   ```\n   netstat -ano | findstr :<port>\n   ```\n\n4. On Windows, get the name of the program with the PID from the last command:\n\n   ```\n   tasklist /FI \"PID eq <pid>\"\n   ```\n\n#### Stop an earlier instance of the app\n\nCAUTION: Do not stop a process that you do not know. The process can lose unsaved data.\n\n1. If the program is an earlier instance of the app, stop it from the Task Manager (Windows) or the Activity Monitor (macOS).\n2. If the process does not stop, stop it from the command line with `kill <pid>` (macOS or Linux) or `taskkill /PID <pid> /F` (Windows).\n3. Start the app again.\n\n#### Change the port\n\n1. If a different program uses the port, open the configuration file of the app.\n2. Set a new port number more than 1024 and less than 65535.\n3. Save the configuration file. Then start the app again.\n\n#### Wait for the port to become free\n\n1. If no program holds the port, wait 60 seconds. Then start the app again.\n2. If the error continues, restart the computer.\n\n#### Report the problem\n\nIf the error continues after a restart, send a report to support. Attach the log file of the app and the output of the command that lists the port.\n\n---\n\nI do not know the name of your app, its default port, or the path to its configuration file, so the section uses `<port>`, `<pid>`, and \"the configuration file\" as placeholders \u2014 replace them with your real values. Style: pragmatic ASD-STE100 (structural rules applied, domain words such as \"port\" and \"process\" kept).",
+  "texts": [
+    "## Troubleshooting\n\n### The app does not start and shows `EADDRINUSE`\n\n`EADDRINUSE` means \"address already in use\". The app opens a local port when it starts. When another program holds that port, the app stops and shows this error.\n\nThree causes are common:\n\n- An earlier instance of the app still runs in the background.\n- A different program uses the same port number.\n- The port is still reserved by the operating system after a fast restart.\n\n#### Find the program that holds the port\n\n1. Close the app. The error message gives the port number.\n2. On macOS or Linux, find the program that listens on the port:\n\n   ```\n   lsof -nP -iTCP:<port> -sTCP:LISTEN\n   ```\n\n3. On Windows, find the process ID (PID) that listens on the port:\n\n   ```\n   netstat -ano | findstr :<port>\n   ```\n\n4. On Windows, get the name of the program with the PID from the last command:\n\n   ```\n   tasklist /FI \"PID eq <pid>\"\n   ```\n\n#### Stop an earlier instance of the app\n\nCAUTION: Do not stop a process that you do not know. The process can lose unsaved data.\n\n1. If the program is an earlier instance of the app, stop it from the Task Manager (Windows) or the Activity Monitor (macOS).\n2. If the process does not stop, stop it from the command line with `kill <pid>` (macOS or Linux) or `taskkill /PID <pid> /F` (Windows).\n3. Start the app again.\n\n#### Change the port\n\n1. If a different program uses the port, open the configuration file of the app.\n2. Set a new port number more than 1024 and less than 65535.\n3. Save the configuration file. Then start the app again.\n\n#### Wait for the port to become free\n\n1. If no program holds the port, wait 60 seconds. Then start the app again.\n2. If the error continues, restart the computer.\n\n#### Report the problem\n\nIf the error continues after a restart, send a report to support. Attach the log file of the app and the output of the command that lists the port.\n\n---\n\nI do not know the name of your app, its default port, or the path to its configuration file, so the section uses `<port>`, `<pid>`, and \"the configuration file\" as placeholders \u2014 replace them with your real values. Style: pragmatic ASD-STE100 (structural rules applied, domain words such as \"port\" and \"process\" kept)."
+  ],
+  "stderr_tail": ""
+}

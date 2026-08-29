@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "readme-07",
+  "cat": "docs",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 26.5,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.17643999999999999,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 12113,
+    "cache_read_input_tokens": 12230,
+    "output_tokens": 1967,
+    "output_tokens_details": {
+      "thinking_tokens": 1235
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12113,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1631,
+        "cache_read_input_tokens": 8085,
+        "cache_creation_input_tokens": 8173,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8173
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 41,
+    "sentences": 3,
+    "mean_sentence_words": 13.7,
+    "longest_sentence_words": 18,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "```markdown\n# Environment variables\n\nThe service reads the configuration from environment variables. This page gives each variable, its default value, and its effect.\n\n| Variable | Required | Default | Effect |\n|---|---|---|---|\n| `DATABASE_URL` | Yes | None | Gives the connection string for the database. |\n| `REDIS_URL` | No | None | Turns on the cache. |\n| `LOG_JSON` | No | `false` | Selects the JSON format for the logs. |\n\n## DATABASE_URL\n\n`DATABASE_URL` is required. The service does not start without this variable. The value is the connection string for the database.\n\n```\nDATABASE_URL=postgres://user:password@localhost:5432/appdb\n```\n\n## REDIS_URL\n\n`REDIS_URL` is optional. If you set this variable, the service caches data in Redis. If you do not set this variable, the service reads all data from the database. The service operates correctly in both cases.\n\n```\nREDIS_URL=redis://localhost:6379/0\n```\n\n## LOG_JSON\n\n`LOG_JSON` is optional. The default value is `false`. The default value gives text logs for a human reader. If you set `LOG_JSON` to `true`, the service writes one JSON object for each log line. Use the value `true` when a log collector reads the logs.\n\n```\nLOG_JSON=true\n```\n\n## Set the variables\n\n1. Set `DATABASE_URL` to the connection string for your database.\n2. If you want a cache, set `REDIS_URL` to the address of your Redis server.\n3. If a log collector reads the logs, set `LOG_JSON` to `true`.\n4. Start the service.\n```\n\nThe text follows ASD-STE100 in pragmatic mode. The variable descriptions are descriptive text, and the last section is procedural text with one instruction per step. Tell me the target path, and I write this content to a file.",
+  "texts": [
+    "```markdown\n# Environment variables\n\nThe service reads the configuration from environment variables. This page gives each variable, its default value, and its effect.\n\n| Variable | Required | Default | Effect |\n|---|---|---|---|\n| `DATABASE_URL` | Yes | None | Gives the connection string for the database. |\n| `REDIS_URL` | No | None | Turns on the cache. |\n| `LOG_JSON` | No | `false` | Selects the JSON format for the logs. |\n\n## DATABASE_URL\n\n`DATABASE_URL` is required. The service does not start without this variable. The value is the connection string for the database.\n\n```\nDATABASE_URL=postgres://user:password@localhost:5432/appdb\n```\n\n## REDIS_URL\n\n`REDIS_URL` is optional. If you set this variable, the service caches data in Redis. If you do not set this variable, the service reads all data from the database. The service operates correctly in both cases.\n\n```\nREDIS_URL=redis://localhost:6379/0\n```\n\n## LOG_JSON\n\n`LOG_JSON` is optional. The default value is `false`. The default value gives text logs for a human reader. If you set `LOG_JSON` to `true`, the service writes one JSON object for each log line. Use the value `true` when a log collector reads the logs.\n\n```\nLOG_JSON=true\n```\n\n## Set the variables\n\n1. Set `DATABASE_URL` to the connection string for your database.\n2. If you want a cache, set `REDIS_URL` to the address of your Redis server.\n3. If a log collector reads the logs, set `LOG_JSON` to `true`.\n4. Start the service.\n```\n\nThe text follows ASD-STE100 in pragmatic mode. The variable descriptions are descriptive text, and the last section is procedural text with one instruction per step. Tell me the target path, and I write this content to a file."
+  ],
+  "stderr_tail": ""
+}

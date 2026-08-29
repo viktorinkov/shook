@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "explain-09",
+  "cat": "explain",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 43.7,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.1386355,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3984,
+    "cache_read_input_tokens": 38821,
+    "output_tokens": 3175,
+    "output_tokens_details": {
+      "thinking_tokens": 1903
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3984,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3175,
+        "cache_read_input_tokens": 38821,
+        "cache_creation_input_tokens": 3984,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3984
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 480,
+    "sentences": 45,
+    "mean_sentence_words": 10.5,
+    "longest_sentence_words": 70,
+    "violations": {
+      "sentence_over_limit": 2,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 1
+    },
+    "violations_total": 4,
+    "violations_per_100w": 0.83
+  },
+  "text": "## Why `0.1 + 0.2 != 0.3`\n\nA `double` stores a number in base 2, not base 10. It keeps a sign, a 53-bit significand, and an exponent. The value is always significand \u00d7 2^exponent.\n\nBase 2 represents a fraction exactly only when the denominator is a power of 2. The decimal `0.1` is 1/10, and 10 is not a power of 2. So `0.1` in binary is an endless repeat: `0.0001100110011...`. The hardware cuts the digits at 53 bits and rounds to the nearest representable value.\n\nThe same problem exists in base 10 with 1/3. Ten digits give you `0.3333333333`. Multiply that by 3 and you get `0.9999999999`, not `1`.\n\nSo the machine never holds your three numbers. It holds these:\n\n| You write | The `double` holds (approximately) |\n|---|---|\n| `0.1` | `0.1000000000000000055511151231257827` |\n| `0.2` | `0.2000000000000000111022302462515654` |\n| `0.3` | `0.2999999999999999888977697537484346` |\n\nAdd the first two rows. The exact sum is a little above the stored value of `0.3`, and it rounds to a **different** `double`. That value prints as `0.30000000000000004`. The comparison `0.1 + 0.2 == 0.3` compares two different bit patterns, so the result is `false`.\n\nThe error is tiny, near 1 part in 10^16. The error accumulates across many operations, and it never cancels out in your favor.\n\n## What to use for money\n\nPick one of the two options below. Both are exact.\n\n**Option 1: integer minor units.** Store the amount as a whole number of cents in a 64-bit integer. This is the best default for balances, prices, and totals.\n\n**Option 2: an arbitrary-precision decimal type.** Use this for tax, interest, and exchange rates, where you need fractional cents.\n\n| Language | Type to use |\n|---|---|\n| Python | `decimal.Decimal` (from a string, never from a float) |\n| Java | `java.math.BigDecimal` |\n| C# | `decimal` |\n| Go | `github.com/shopspring/decimal` |\n| Rust | `rust_decimal` |\n| JavaScript | `BigInt` of minor units, or `decimal.js` |\n| SQL | `NUMERIC(19,4)` or `DECIMAL` |\n\n### Rules to follow\n\n1. Never declare a money column as `FLOAT`, `DOUBLE`, or `REAL`. Use `NUMERIC` or an integer type.\n2. Never build a `Decimal` from a float. Write `Decimal(\"0.1\")`, not `Decimal(0.1)`.\n3. Store the currency code next to every amount. An integer `1000` means nothing on its own.\n4. Do not assume 2 decimal places. JPY has 0 and KWD has 3.\n5. Keep full precision through the calculation. Round one time, at the end.\n6. Choose the round mode on purpose. Half-even reduces bias across many rows. Many tax rules demand half-up. Check the rule for your jurisdiction.\n7. After you split an amount, verify that the parts add up to the original total. Assign the leftover cents by a fixed rule.\n\n### Example\n\n```python\nfrom decimal import Decimal, ROUND_HALF_UP\n\nprice = Decimal(\"19.99\")\ntax_rate = Decimal(\"0.0825\")\ntax = (price * tax_rate).quantize(Decimal(\"0.01\"), rounding=ROUND_HALF_UP)\n\nprint(tax)          # 1.65\nprint(price + tax)  # 21.64\n```\n\n### One more note\n\nThe tolerance trick, `abs(a - b) < 1e-9`, is correct for physics and graphics. Do not use it for money. An audit needs an exact answer, not a close one.",
+  "texts": [
+    "## Why `0.1 + 0.2 != 0.3`\n\nA `double` stores a number in base 2, not base 10. It keeps a sign, a 53-bit significand, and an exponent. The value is always significand \u00d7 2^exponent.\n\nBase 2 represents a fraction exactly only when the denominator is a power of 2. The decimal `0.1` is 1/10, and 10 is not a power of 2. So `0.1` in binary is an endless repeat: `0.0001100110011...`. The hardware cuts the digits at 53 bits and rounds to the nearest representable value.\n\nThe same problem exists in base 10 with 1/3. Ten digits give you `0.3333333333`. Multiply that by 3 and you get `0.9999999999`, not `1`.\n\nSo the machine never holds your three numbers. It holds these:\n\n| You write | The `double` holds (approximately) |\n|---|---|\n| `0.1` | `0.1000000000000000055511151231257827` |\n| `0.2` | `0.2000000000000000111022302462515654` |\n| `0.3` | `0.2999999999999999888977697537484346` |\n\nAdd the first two rows. The exact sum is a little above the stored value of `0.3`, and it rounds to a **different** `double`. That value prints as `0.30000000000000004`. The comparison `0.1 + 0.2 == 0.3` compares two different bit patterns, so the result is `false`.\n\nThe error is tiny, near 1 part in 10^16. The error accumulates across many operations, and it never cancels out in your favor.\n\n## What to use for money\n\nPick one of the two options below. Both are exact.\n\n**Option 1: integer minor units.** Store the amount as a whole number of cents in a 64-bit integer. This is the best default for balances, prices, and totals.\n\n**Option 2: an arbitrary-precision decimal type.** Use this for tax, interest, and exchange rates, where you need fractional cents.\n\n| Language | Type to use |\n|---|---|\n| Python | `decimal.Decimal` (from a string, never from a float) |\n| Java | `java.math.BigDecimal` |\n| C# | `decimal` |\n| Go | `github.com/shopspring/decimal` |\n| Rust | `rust_decimal` |\n| JavaScript | `BigInt` of minor units, or `decimal.js` |\n| SQL | `NUMERIC(19,4)` or `DECIMAL` |\n\n### Rules to follow\n\n1. Never declare a money column as `FLOAT`, `DOUBLE`, or `REAL`. Use `NUMERIC` or an integer type.\n2. Never build a `Decimal` from a float. Write `Decimal(\"0.1\")`, not `Decimal(0.1)`.\n3. Store the currency code next to every amount. An integer `1000` means nothing on its own.\n4. Do not assume 2 decimal places. JPY has 0 and KWD has 3.\n5. Keep full precision through the calculation. Round one time, at the end.\n6. Choose the round mode on purpose. Half-even reduces bias across many rows. Many tax rules demand half-up. Check the rule for your jurisdiction.\n7. After you split an amount, verify that the parts add up to the original total. Assign the leftover cents by a fixed rule.\n\n### Example\n\n```python\nfrom decimal import Decimal, ROUND_HALF_UP\n\nprice = Decimal(\"19.99\")\ntax_rate = Decimal(\"0.0825\")\ntax = (price * tax_rate).quantize(Decimal(\"0.01\"), rounding=ROUND_HALF_UP)\n\nprint(tax)          # 1.65\nprint(price + tax)  # 21.64\n```\n\n### One more note\n\nThe tolerance trick, `abs(a - b) < 1e-9`, is correct for physics and graphics. Do not use it for money. An audit needs an exact answer, not a close one."
+  ],
+  "stderr_tail": ""
+}

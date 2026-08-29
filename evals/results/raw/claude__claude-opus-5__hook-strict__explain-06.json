@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "explain-06",
+  "cat": "explain",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 45.8,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.1411055,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3996,
+    "cache_read_input_tokens": 38821,
+    "output_tokens": 3269,
+    "output_tokens_details": {
+      "thinking_tokens": 2352
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3996,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3269,
+        "cache_read_input_tokens": 38821,
+        "cache_creation_input_tokens": 3996,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3996
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 436,
+    "sentences": 36,
+    "mean_sentence_words": 12.0,
+    "longest_sentence_words": 24,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 1
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.23
+  },
+  "text": "## What the line does\n\nThe command deletes old log files below the current directory.\n\n- `find .` \u2014 The search starts in the current directory. The search includes every subdirectory.\n- `-name '*.log'` \u2014 This test selects file names that end with `.log`. The single quotes stop the shell from expansion of the pattern, so `find` receives the pattern itself.\n- `-mtime +7` \u2014 This test selects files with a modification time more than 7 full days in the past. `find` divides the age by 24 hours and discards the remainder. Therefore `+7` means 8 days or more, not 7 days.\n- `-exec rm {} \\;` \u2014 `find` starts one `rm` process for each file that passes both tests. `{}` becomes the path of the file. The `\\;` ends the command, and the backslash protects the semicolon from the shell.\n\nOne property of this form is safe: `-exec` gives the path to `rm` as a single argument. Names with spaces or newlines cause no problem here. The pipeline `find ... | xargs rm` does not have this property.\n\n## When it is dangerous\n\n**The current directory is not fixed.** If you start the line from the wrong directory, it deletes log files across a large tree. A cron job runs with the home directory of the user as the working directory. Always write an absolute path instead of `.`.\n\n**There is no `-type f` test.** The pattern also matches directories, symbolic links, sockets, and device nodes. `rm` refuses a directory, but it deletes the other types without a question.\n\n**The search crosses filesystem boundaries.** It descends into network mounts, backup volumes, and other disks. The result is slow, and the damage goes outside the intended disk. The option `-xdev` prevents this.\n\n**Deletion of an open log file does not free disk space.** The writer process keeps the inode open and continues to write to it. The space returns only after a restart of that process. This is the usual cause of a failed cleanup on a full disk.\n\n**Root access plus a world-writable directory creates a race condition.** `find` checks the path first, then `rm` deletes the path. Between the two steps, a local attacker can replace a directory in that path with a symbolic link. `rm` then deletes a different file. Use `-delete` or `-execdir` in directories such as `/tmp`.\n\n**There is no dry run and no confirmation.** `rm` is not reversible, and the command produces no record of the deleted files.\n\n**One `rm` process per file is slow.** On a tree with many files, this cost is large. `-delete` or `-exec rm {} +` is faster.\n\n## A safer form\n\n```sh\nfind /var/log/myapp -xdev -type f -name '*.log' -mtime +7 -print\nfind /var/log/myapp -xdev -type f -name '*.log' -mtime +7 -delete\n```\n\nRun the first command. Check the list of files. If the list is correct, run the second command.",
+  "texts": [
+    "## What the line does\n\nThe command deletes old log files below the current directory.\n\n- `find .` \u2014 The search starts in the current directory. The search includes every subdirectory.\n- `-name '*.log'` \u2014 This test selects file names that end with `.log`. The single quotes stop the shell from expansion of the pattern, so `find` receives the pattern itself.\n- `-mtime +7` \u2014 This test selects files with a modification time more than 7 full days in the past. `find` divides the age by 24 hours and discards the remainder. Therefore `+7` means 8 days or more, not 7 days.\n- `-exec rm {} \\;` \u2014 `find` starts one `rm` process for each file that passes both tests. `{}` becomes the path of the file. The `\\;` ends the command, and the backslash protects the semicolon from the shell.\n\nOne property of this form is safe: `-exec` gives the path to `rm` as a single argument. Names with spaces or newlines cause no problem here. The pipeline `find ... | xargs rm` does not have this property.\n\n## When it is dangerous\n\n**The current directory is not fixed.** If you start the line from the wrong directory, it deletes log files across a large tree. A cron job runs with the home directory of the user as the working directory. Always write an absolute path instead of `.`.\n\n**There is no `-type f` test.** The pattern also matches directories, symbolic links, sockets, and device nodes. `rm` refuses a directory, but it deletes the other types without a question.\n\n**The search crosses filesystem boundaries.** It descends into network mounts, backup volumes, and other disks. The result is slow, and the damage goes outside the intended disk. The option `-xdev` prevents this.\n\n**Deletion of an open log file does not free disk space.** The writer process keeps the inode open and continues to write to it. The space returns only after a restart of that process. This is the usual cause of a failed cleanup on a full disk.\n\n**Root access plus a world-writable directory creates a race condition.** `find` checks the path first, then `rm` deletes the path. Between the two steps, a local attacker can replace a directory in that path with a symbolic link. `rm` then deletes a different file. Use `-delete` or `-execdir` in directories such as `/tmp`.\n\n**There is no dry run and no confirmation.** `rm` is not reversible, and the command produces no record of the deleted files.\n\n**One `rm` process per file is slow.** On a tree with many files, this cost is large. `-delete` or `-exec rm {} +` is faster.\n\n## A safer form\n\n```sh\nfind /var/log/myapp -xdev -type f -name '*.log' -mtime +7 -print\nfind /var/log/myapp -xdev -type f -name '*.log' -mtime +7 -delete\n```\n\nRun the first command. Check the list of files. If the list is correct, run the second command."
+  ],
+  "stderr_tail": ""
+}

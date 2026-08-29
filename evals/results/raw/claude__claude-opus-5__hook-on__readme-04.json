@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "readme-04",
+  "cat": "docs",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 29.8,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.1760815,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 11998,
+    "cache_read_input_tokens": 12213,
+    "output_tokens": 1999,
+    "output_tokens_details": {
+      "thinking_tokens": 878
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 11998,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1750,
+        "cache_read_input_tokens": 8068,
+        "cache_creation_input_tokens": 8075,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8075
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 460,
+    "sentences": 50,
+    "mean_sentence_words": 8.7,
+    "longest_sentence_words": 16,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "Assumption: I do not know the app name or its port. The text uses \"the app\" and port `3000` as an example. Replace both with your values.\n\n---\n\n## Troubleshooting: the app does not start with `EADDRINUSE`\n\nThe app stops during startup and shows an error like this one:\n\n```\nError: listen EADDRINUSE: address already in use 127.0.0.1:3000\n```\n\nThe error means that another process already listens on the port that the app needs. The operating system permits only one listener per port. The app cannot open its local server, so it closes.\n\nThere are four usual causes:\n\n- A second copy of the app already runs.\n- A previous copy of the app crashed and left the process in memory.\n- A different program uses the same port.\n- The port is still in the `TIME_WAIT` state after a recent shutdown.\n\n### Step 1: Look for a second copy of the app\n\n1. Look in the Dock, the taskbar, or the menu bar for the icon of the app.\n2. If you find a second copy, open it. The app is already available.\n3. If you want a new session, close the other copy first. Then start the app again.\n\n### Step 2: Find the process that uses the port\n\nUse the command for your operating system.\n\nOn macOS and Linux, run this command in a terminal:\n\n```\nlsof -nP -iTCP:3000 -sTCP:LISTEN\n```\n\nOn Windows, run this command in a command prompt:\n\n```\nnetstat -ano | findstr :3000\n```\n\nBoth commands show the process ID (PID) of the listener. The name of the program is in the output of `lsof`. On Windows, find the PID in the **Details** tab of Task Manager to get the name.\n\n### Step 3: Stop the process\n\nCAUTION: Read the name of the process before you stop it. If you stop the wrong process, you can lose unsaved work.\n\n1. If the process belongs to the app, stop it with the command that follows.\n2. On macOS or Linux, run `kill <PID>`.\n3. On Windows, run `taskkill /PID <PID>`.\n4. Wait 5 seconds. Then start the app again.\n5. If the process stays in memory, force the stop. Run `kill -9 <PID>` or `taskkill /PID <PID> /F`.\n6. Start the app again.\n\n### Step 4: Change the port\n\nIf a different program needs port `3000`, give the app another port.\n\n1. Open the settings file of the app.\n2. Set the port to a free value between `1024` and `65535`. For example, use `3100`.\n3. Save the file.\n4. Start the app again.\n\nYou can also set the port for one session with an environment variable:\n\n```\nPORT=3100 ./the-app\n```\n\n### Step 5: Wait for the port to become free\n\nThe operating system holds a closed port in the `TIME_WAIT` state for a short time. The port is not available during this time.\n\n1. Wait 60 seconds.\n2. Start the app again.\n3. If the error continues, do Step 2 again. Another process holds the port.\n\n### The error returns after every restart\n\nA program starts with the operating system and takes the port first. Two repairs are possible:\n\n- Remove that program from the list of startup items.\n- Change the port of the app, as described in Step 4.",
+  "texts": [
+    "Assumption: I do not know the app name or its port. The text uses \"the app\" and port `3000` as an example. Replace both with your values.\n\n---\n\n## Troubleshooting: the app does not start with `EADDRINUSE`\n\nThe app stops during startup and shows an error like this one:\n\n```\nError: listen EADDRINUSE: address already in use 127.0.0.1:3000\n```\n\nThe error means that another process already listens on the port that the app needs. The operating system permits only one listener per port. The app cannot open its local server, so it closes.\n\nThere are four usual causes:\n\n- A second copy of the app already runs.\n- A previous copy of the app crashed and left the process in memory.\n- A different program uses the same port.\n- The port is still in the `TIME_WAIT` state after a recent shutdown.\n\n### Step 1: Look for a second copy of the app\n\n1. Look in the Dock, the taskbar, or the menu bar for the icon of the app.\n2. If you find a second copy, open it. The app is already available.\n3. If you want a new session, close the other copy first. Then start the app again.\n\n### Step 2: Find the process that uses the port\n\nUse the command for your operating system.\n\nOn macOS and Linux, run this command in a terminal:\n\n```\nlsof -nP -iTCP:3000 -sTCP:LISTEN\n```\n\nOn Windows, run this command in a command prompt:\n\n```\nnetstat -ano | findstr :3000\n```\n\nBoth commands show the process ID (PID) of the listener. The name of the program is in the output of `lsof`. On Windows, find the PID in the **Details** tab of Task Manager to get the name.\n\n### Step 3: Stop the process\n\nCAUTION: Read the name of the process before you stop it. If you stop the wrong process, you can lose unsaved work.\n\n1. If the process belongs to the app, stop it with the command that follows.\n2. On macOS or Linux, run `kill <PID>`.\n3. On Windows, run `taskkill /PID <PID>`.\n4. Wait 5 seconds. Then start the app again.\n5. If the process stays in memory, force the stop. Run `kill -9 <PID>` or `taskkill /PID <PID> /F`.\n6. Start the app again.\n\n### Step 4: Change the port\n\nIf a different program needs port `3000`, give the app another port.\n\n1. Open the settings file of the app.\n2. Set the port to a free value between `1024` and `65535`. For example, use `3100`.\n3. Save the file.\n4. Start the app again.\n\nYou can also set the port for one session with an environment variable:\n\n```\nPORT=3100 ./the-app\n```\n\n### Step 5: Wait for the port to become free\n\nThe operating system holds a closed port in the `TIME_WAIT` state for a short time. The port is not available during this time.\n\n1. Wait 60 seconds.\n2. Start the app again.\n3. If the error continues, do Step 2 again. Another process holds the port.\n\n### The error returns after every restart\n\nA program starts with the operating system and takes the port first. Two repairs are possible:\n\n- Remove that program from the list of startup items.\n- Change the port of the app, as described in Step 4."
+  ],
+  "stderr_tail": ""
+}

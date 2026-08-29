@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "readme-02",
+  "cat": "docs",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 29.8,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.1781105,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 12177,
+    "cache_read_input_tokens": 12291,
+    "output_tokens": 2007,
+    "output_tokens_details": {
+      "thinking_tokens": 1238
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12177,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1662,
+        "cache_read_input_tokens": 8146,
+        "cache_creation_input_tokens": 8176,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8176
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 261,
+    "sentences": 28,
+    "mean_sentence_words": 9.1,
+    "longest_sentence_words": 27,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.38
+  },
+  "text": "# Getting Started\n\nquickcache is a Node library for a cache in Redis. It gives a small interface with two primary methods: `get` and `set`. quickcache opens the connection to the Redis server and keeps it open for you.\n\n## Before you start\n\nYou need these two items:\n\n- Node.js, with support for ES modules.\n- A Redis server that you can connect to.\n\n## Install\n\nInstall the library with npm:\n\n```bash\nnpm install quickcache\n```\n\n## Connect\n\n1. Import `createClient` from the library.\n2. Create a client with the URL of your Redis server.\n3. Open the connection with `connect()`.\n\n```js\nimport { createClient } from 'quickcache';\n\nconst cache = createClient({ url: 'redis://localhost:6379' });\n\nawait cache.connect();\n```\n\n`connect()` returns a promise. The promise resolves after the server accepts the connection. If the server refuses the connection, the promise rejects with an error.\n\nDo not create a new client for each request. One client per process is enough.\n\n## Set and get a value\n\n1. Write a value with `set()`.\n2. Read the same value back with `get()`.\n\n```js\nawait cache.set('user:42', { name: 'Ada' }, { ttl: 300 });\n\nconst user = await cache.get('user:42');\n\nconsole.log(user); // { name: 'Ada' }\n```\n\nThe `ttl` option gives the lifetime of the key in seconds. In this example the key expires 300 seconds after the write. If you omit `ttl`, the key stays in Redis until you delete it.\n\n`get()` returns the value in its original form. If the key does not exist, `get()` returns `null`. If the key expired, `get()` also returns `null`.\n\n## Close the connection\n\nClose the connection before the process stops:\n\n```js\nawait cache.disconnect();\n```\n\n---\n\nOne note on the draft: the package is fictional to me, so I chose a plausible API shape (`createClient`, `connect`, `set`/`get` with a `ttl` option, `disconnect`). Give me the real signatures and I will correct the names and the option fields.",
+  "texts": [
+    "# Getting Started\n\nquickcache is a Node library for a cache in Redis. It gives a small interface with two primary methods: `get` and `set`. quickcache opens the connection to the Redis server and keeps it open for you.\n\n## Before you start\n\nYou need these two items:\n\n- Node.js, with support for ES modules.\n- A Redis server that you can connect to.\n\n## Install\n\nInstall the library with npm:\n\n```bash\nnpm install quickcache\n```\n\n## Connect\n\n1. Import `createClient` from the library.\n2. Create a client with the URL of your Redis server.\n3. Open the connection with `connect()`.\n\n```js\nimport { createClient } from 'quickcache';\n\nconst cache = createClient({ url: 'redis://localhost:6379' });\n\nawait cache.connect();\n```\n\n`connect()` returns a promise. The promise resolves after the server accepts the connection. If the server refuses the connection, the promise rejects with an error.\n\nDo not create a new client for each request. One client per process is enough.\n\n## Set and get a value\n\n1. Write a value with `set()`.\n2. Read the same value back with `get()`.\n\n```js\nawait cache.set('user:42', { name: 'Ada' }, { ttl: 300 });\n\nconst user = await cache.get('user:42');\n\nconsole.log(user); // { name: 'Ada' }\n```\n\nThe `ttl` option gives the lifetime of the key in seconds. In this example the key expires 300 seconds after the write. If you omit `ttl`, the key stays in Redis until you delete it.\n\n`get()` returns the value in its original form. If the key does not exist, `get()` returns `null`. If the key expired, `get()` also returns `null`.\n\n## Close the connection\n\nClose the connection before the process stops:\n\n```js\nawait cache.disconnect();\n```\n\n---\n\nOne note on the draft: the package is fictional to me, so I chose a plausible API shape (`createClient`, `connect`, `set`/`get` with a `ttl` option, `disconnect`). Give me the real signatures and I will correct the names and the option fields."
+  ],
+  "stderr_tail": ""
+}

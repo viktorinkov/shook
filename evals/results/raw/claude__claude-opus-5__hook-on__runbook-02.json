@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "runbook-02",
+  "cat": "runbook",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 34.9,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.1855725,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 11972,
+    "cache_read_input_tokens": 12215,
+    "output_tokens": 2389,
+    "output_tokens_details": {
+      "thinking_tokens": 955
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 11972,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2167,
+        "cache_read_input_tokens": 8070,
+        "cache_creation_input_tokens": 8047,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8047
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "procedural",
+    "words": 593,
+    "sentences": 58,
+    "mean_sentence_words": 9.6,
+    "longest_sentence_words": 17,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 4,
+      "synonym_rotation": 0
+    },
+    "violations_total": 4,
+    "violations_per_100w": 0.67
+  },
+  "text": "## Assumptions\n\nThe commands below use systemd and a generic queue client. Replace `<HOST>`, `<QUEUE>`, and the queue commands with the tools of your stack.\n\n---\n\n# Runbook: Restart the `worker` service\n\n## 1. Scope\n\nThis runbook tells you how to restart the `worker` service on one host. It also tells you how to make sure that the queue drains after the restart. The queue drains when the queue depth decreases to the normal level for the time of day.\n\n## 2. Before you start\n\nCollect this information:\n\n- The hostname of the target host (`<HOST>`).\n- The name of the queue that `worker` consumes (`<QUEUE>`).\n- The normal queue depth for the current time of day.\n- The number of `worker` replicas that stay in service during the restart.\n\nCAUTION: Do not restart every replica at the same time. The queue stops draining when no consumer is active.\n\n## 3. Restart the service\n\n1. Connect to the host with `ssh <HOST>`.\n2. Record the current queue depth. Use `<QUEUE_DEPTH_CMD> <QUEUE>`.\n3. Write this value in the incident channel. The value is your baseline.\n4. Record the service state with `systemctl status worker`.\n5. Read the last 200 lines of the log with `journalctl -u worker -n 200`.\n6. Restart the service with `sudo systemctl restart worker`.\n7. Wait 30 seconds.\n8. Make sure that the state is `active (running)`. Use `systemctl status worker`.\n9. If the state is not `active (running)`, go to section 5.\n\nCAUTION: Do not stop the process with `kill -9`. The signal stops the process before it acknowledges the current message.\n\n## 4. Make sure that the queue drains\n\n1. Watch the queue depth every 60 seconds for 10 minutes.\n2. Make sure that the number of consumers on `<QUEUE>` is more than zero.\n3. Make sure that the queue depth decreases between two consecutive samples.\n4. Make sure that the queue depth returns to the baseline within 15 minutes.\n5. If all four checks pass, the restart is successful. Close the runbook.\n6. If one check fails, go to section 5.\n\n## 5. If the queue does not drain\n\nWork through the checks in order. Stop when you find the cause.\n\n### 5.1 The service does not stay up\n\n1. Read the log with `journalctl -u worker -n 200`.\n2. If the log shows a crash loop, look for a configuration error or a missing secret.\n3. If a recent deploy caused the error, roll back to the last known good version.\n4. Escalate to the service owner.\n\n### 5.2 The service runs, but no consumer is registered\n\n1. Make sure that the host can connect to the queue broker.\n2. If the connection fails, examine the firewall rules and the credentials for the broker.\n3. If the credentials expired, replace them and restart the service.\n\n### 5.3 A consumer is registered, but the queue depth stays flat\n\n1. Look for one message that repeats in the error log. This message is a poison message.\n2. If you find a poison message, move it to the dead letter queue.\n3. If a downstream dependency is down, the workers block on it. Examine the health of each dependency.\n4. If a database or an API is slow, open an incident for that system.\n\n### 5.4 The queue depth decreases too slowly\n\n1. Compare the current message rate to the producer rate.\n2. If the producers send more messages than the workers process, add replicas.\n3. If you cannot add replicas, ask the producer owner to slow the rate.\n\n## 6. Escalation\n\nEscalate when one of these conditions is true:\n\n- The queue depth does not decrease 15 minutes after the restart.\n- The service restarts more than three times in 10 minutes.\n- The queue depth grows and the growth continues for 5 minutes.\n\nPage the on-call owner of the `worker` service. Give the baseline depth, the current depth, and the last error from the log.\n\n## 7. After the incident\n\nRecord the cause, the actions, and the time to recovery in the incident ticket.",
+  "texts": [
+    "## Assumptions\n\nThe commands below use systemd and a generic queue client. Replace `<HOST>`, `<QUEUE>`, and the queue commands with the tools of your stack.\n\n---\n\n# Runbook: Restart the `worker` service\n\n## 1. Scope\n\nThis runbook tells you how to restart the `worker` service on one host. It also tells you how to make sure that the queue drains after the restart. The queue drains when the queue depth decreases to the normal level for the time of day.\n\n## 2. Before you start\n\nCollect this information:\n\n- The hostname of the target host (`<HOST>`).\n- The name of the queue that `worker` consumes (`<QUEUE>`).\n- The normal queue depth for the current time of day.\n- The number of `worker` replicas that stay in service during the restart.\n\nCAUTION: Do not restart every replica at the same time. The queue stops draining when no consumer is active.\n\n## 3. Restart the service\n\n1. Connect to the host with `ssh <HOST>`.\n2. Record the current queue depth. Use `<QUEUE_DEPTH_CMD> <QUEUE>`.\n3. Write this value in the incident channel. The value is your baseline.\n4. Record the service state with `systemctl status worker`.\n5. Read the last 200 lines of the log with `journalctl -u worker -n 200`.\n6. Restart the service with `sudo systemctl restart worker`.\n7. Wait 30 seconds.\n8. Make sure that the state is `active (running)`. Use `systemctl status worker`.\n9. If the state is not `active (running)`, go to section 5.\n\nCAUTION: Do not stop the process with `kill -9`. The signal stops the process before it acknowledges the current message.\n\n## 4. Make sure that the queue drains\n\n1. Watch the queue depth every 60 seconds for 10 minutes.\n2. Make sure that the number of consumers on `<QUEUE>` is more than zero.\n3. Make sure that the queue depth decreases between two consecutive samples.\n4. Make sure that the queue depth returns to the baseline within 15 minutes.\n5. If all four checks pass, the restart is successful. Close the runbook.\n6. If one check fails, go to section 5.\n\n## 5. If the queue does not drain\n\nWork through the checks in order. Stop when you find the cause.\n\n### 5.1 The service does not stay up\n\n1. Read the log with `journalctl -u worker -n 200`.\n2. If the log shows a crash loop, look for a configuration error or a missing secret.\n3. If a recent deploy caused the error, roll back to the last known good version.\n4. Escalate to the service owner.\n\n### 5.2 The service runs, but no consumer is registered\n\n1. Make sure that the host can connect to the queue broker.\n2. If the connection fails, examine the firewall rules and the credentials for the broker.\n3. If the credentials expired, replace them and restart the service.\n\n### 5.3 A consumer is registered, but the queue depth stays flat\n\n1. Look for one message that repeats in the error log. This message is a poison message.\n2. If you find a poison message, move it to the dead letter queue.\n3. If a downstream dependency is down, the workers block on it. Examine the health of each dependency.\n4. If a database or an API is slow, open an incident for that system.\n\n### 5.4 The queue depth decreases too slowly\n\n1. Compare the current message rate to the producer rate.\n2. If the producers send more messages than the workers process, add replicas.\n3. If you cannot add replicas, ask the producer owner to slow the rate.\n\n## 6. Escalation\n\nEscalate when one of these conditions is true:\n\n- The queue depth does not decrease 15 minutes after the restart.\n- The service restarts more than three times in 10 minutes.\n- The queue depth grows and the growth continues for 5 minutes.\n\nPage the on-call owner of the `worker` service. Give the baseline depth, the current depth, and the last error from the log.\n\n## 7. After the incident\n\nRecord the cause, the actions, and the time to recovery in the incident ticket."
+  ],
+  "stderr_tail": ""
+}

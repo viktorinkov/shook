@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "incident-02",
+  "cat": "incident",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 35.6,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.1779795,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 11027,
+    "cache_read_input_tokens": 11057,
+    "output_tokens": 2447,
+    "output_tokens_details": {
+      "thinking_tokens": 1679
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 11027,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2024,
+        "cache_read_input_tokens": 6912,
+        "cache_creation_input_tokens": 8260,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8260
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 267,
+    "sentences": 19,
+    "mean_sentence_words": 13.8,
+    "longest_sentence_words": 36,
+    "violations": {
+      "sentence_over_limit": 3,
+      "contraction": 0,
+      "banned_modal": 1,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 5,
+    "violations_per_100w": 1.87
+  },
+  "text": "Incident summaries are descriptive text, so I wrote it to the 25-word sentence limit with simple tenses, active voice, and one fact per sentence. You gave two facts (18 minutes, expired certificate, automated renewal), so everything a customer notice normally needs but that you did not state is in `[BRACKETS]`.\n\n---\n\n# Login service outage \u2014 [DATE]\n\n## Summary\n\nThe login service was unavailable for 18 minutes on [DATE], from [START TIME] to [END TIME] [TIMEZONE]. A certificate expired. We replaced the certificate, and the service returned to normal operation.\n\n## Impact\n\nDuring these 18 minutes, users could not sign in to [PRODUCT NAME]. `[If true: Users with an open session kept access. All other services operated normally. No customer data was lost or exposed.]`\n\n## Cause\n\nA TLS certificate for the login service expired. The service then refused new connections, and sign-in requests failed. Before this incident, we renewed this certificate by hand. The manual renewal did not occur before the expiration date.\n\n## What we did\n\n- At [TIME], our monitoring found the error and alerted the on-call engineer.\n- At [TIME], the engineer installed a new certificate.\n- At [TIME], sign-in worked again for all users.\n\n## What we changed\n\nCertificate renewal is automated. The system renews each certificate before the expiration date, without a manual step. `[If true: We also alert the team [N] days before any certificate expires.]`\n\n## Contact\n\nIf you have questions about this incident, contact us at [SUPPORT EMAIL].\n\n---\n\nTwo things to confirm before you send:\n\n- **The \"Cause\" section says renewal was manual before the incident.** That is my inference from \"renewal is now automated.\" Cut that sentence if the real cause was a failed automation instead of a missed manual step.\n- **The timeline is three bracketed timestamps.** If you do not want to publish detection and recovery times, delete the section \u2014 the summary already gives the duration.",
+  "texts": [
+    "Incident summaries are descriptive text, so I wrote it to the 25-word sentence limit with simple tenses, active voice, and one fact per sentence. You gave two facts (18 minutes, expired certificate, automated renewal), so everything a customer notice normally needs but that you did not state is in `[BRACKETS]`.\n\n---\n\n# Login service outage \u2014 [DATE]\n\n## Summary\n\nThe login service was unavailable for 18 minutes on [DATE], from [START TIME] to [END TIME] [TIMEZONE]. A certificate expired. We replaced the certificate, and the service returned to normal operation.\n\n## Impact\n\nDuring these 18 minutes, users could not sign in to [PRODUCT NAME]. `[If true: Users with an open session kept access. All other services operated normally. No customer data was lost or exposed.]`\n\n## Cause\n\nA TLS certificate for the login service expired. The service then refused new connections, and sign-in requests failed. Before this incident, we renewed this certificate by hand. The manual renewal did not occur before the expiration date.\n\n## What we did\n\n- At [TIME], our monitoring found the error and alerted the on-call engineer.\n- At [TIME], the engineer installed a new certificate.\n- At [TIME], sign-in worked again for all users.\n\n## What we changed\n\nCertificate renewal is automated. The system renews each certificate before the expiration date, without a manual step. `[If true: We also alert the team [N] days before any certificate expires.]`\n\n## Contact\n\nIf you have questions about this incident, contact us at [SUPPORT EMAIL].\n\n---\n\nTwo things to confirm before you send:\n\n- **The \"Cause\" section says renewal was manual before the incident.** That is my inference from \"renewal is now automated.\" Cut that sentence if the real cause was a failed automation instead of a missed manual step.\n- **The timeline is three bracketed timestamps.** If you do not want to publish detection and recovery times, delete the section \u2014 the summary already gives the duration."
+  ],
+  "stderr_tail": ""
+}

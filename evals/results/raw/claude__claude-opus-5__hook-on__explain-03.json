@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "explain-03",
+  "cat": "explain",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 21.5,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.09016550000000001,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3922,
+    "cache_read_input_tokens": 38821,
+    "output_tokens": 1261,
+    "output_tokens_details": {
+      "thinking_tokens": 714
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3922,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1261,
+        "cache_read_input_tokens": 38821,
+        "cache_creation_input_tokens": 3922,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3922
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 260,
+    "sentences": 20,
+    "mean_sentence_words": 12.9,
+    "longest_sentence_words": 83,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.38
+  },
+  "text": "# `git merge` and `git rebase`\n\n## What each command does\n\n`git merge main` joins two lines of work. Git makes one new commit with two parents. Your branch keeps every commit exactly as you wrote it. The commit history shows a fork and a join.\n\n`git rebase main` moves your work. Git copies each of your commits on top of the newest commit on `main`. The result is one straight line. Each copy gets a new commit ID, because the parent changed.\n\n## The practical differences\n\n| Point | `merge` | `rebase` |\n|---|---|---|\n| Commit history | Keeps the true shape | Makes a straight line |\n| Commit IDs | Unchanged | New for every copied commit |\n| Extra commit | Adds a merge commit | Adds no commit |\n| Conflicts | You solve them one time | You can solve them one time for each commit |\n| Safe on a shared branch | Yes | No |\n\n## What to use for a feature branch\n\nUse both, but for different jobs:\n\n1. While you work alone on the feature branch, run `git rebase main` to get new work from `main`. The history stays clean and easy to read.\n2. When the feature is complete, merge the branch into `main`. Most teams do this with a pull request.\n\n```\ngit fetch origin\ngit rebase origin/main      # update your branch during development\n```\n\n## Warning\n\nDo not rebase a branch that other people already pulled. Rebase gives every commit a new ID. Your teammates then hold commits that no longer exist, and the next pull creates duplicates.\n\nIf other people work on the branch, use `git merge main` instead. If only you work on the branch, rebase is the better choice.\n\n## Simple rule\n\nRebase before you share. Merge after you share.",
+  "texts": [
+    "# `git merge` and `git rebase`\n\n## What each command does\n\n`git merge main` joins two lines of work. Git makes one new commit with two parents. Your branch keeps every commit exactly as you wrote it. The commit history shows a fork and a join.\n\n`git rebase main` moves your work. Git copies each of your commits on top of the newest commit on `main`. The result is one straight line. Each copy gets a new commit ID, because the parent changed.\n\n## The practical differences\n\n| Point | `merge` | `rebase` |\n|---|---|---|\n| Commit history | Keeps the true shape | Makes a straight line |\n| Commit IDs | Unchanged | New for every copied commit |\n| Extra commit | Adds a merge commit | Adds no commit |\n| Conflicts | You solve them one time | You can solve them one time for each commit |\n| Safe on a shared branch | Yes | No |\n\n## What to use for a feature branch\n\nUse both, but for different jobs:\n\n1. While you work alone on the feature branch, run `git rebase main` to get new work from `main`. The history stays clean and easy to read.\n2. When the feature is complete, merge the branch into `main`. Most teams do this with a pull request.\n\n```\ngit fetch origin\ngit rebase origin/main      # update your branch during development\n```\n\n## Warning\n\nDo not rebase a branch that other people already pulled. Rebase gives every commit a new ID. Your teammates then hold commits that no longer exist, and the next pull creates duplicates.\n\nIf other people work on the branch, use `git merge main` instead. If only you work on the branch, rebase is the better choice.\n\n## Simple rule\n\nRebase before you share. Merge after you share."
+  ],
+  "stderr_tail": ""
+}

@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "review-10",
+  "cat": "review",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 11.1,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.0565025,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3912,
+    "cache_read_input_tokens": 4145,
+    "output_tokens": 612,
+    "output_tokens_details": {
+      "thinking_tokens": 144
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3912,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 612,
+        "cache_read_input_tokens": 4145,
+        "cache_creation_input_tokens": 3912,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3912
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 226,
+    "sentences": 23,
+    "mean_sentence_words": 9.5,
+    "longest_sentence_words": 18,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.44
+  },
+  "text": "**Security: hardcoded API key in `config.py`**\n\nThis commit adds an API key directly in the source code. This is a blocker. Please change it before merge.\n\n**Risk**\n\nThe key is now in the git history. Anyone with read access to the repository can see it. If the repository becomes public, the key leaks to everyone. A deleted line does not remove the key from the history.\n\n**Required actions**\n\n1. Revoke the key in the provider console now. Treat the key as compromised.\n2. Issue a new key.\n3. Read the new key from the environment. Do not commit it.\n4. Add the key name to `.env.example` with an empty value.\n5. Confirm that `.env` is in `.gitignore`.\n6. Purge the key from the git history, or force-push a clean branch.\n\n**Suggested change**\n\n```python\nimport os\n\nAPI_KEY = os.environ[\"API_KEY\"]  # raises at startup if the key is absent\n```\n\nIf the service must start without the key, use `os.environ.get(\"API_KEY\")` and fail with a clear message.\n\n**Follow-up**\n\nAdd a secret scanner to CI, for example `gitleaks` or `detect-secrets`. The scanner blocks this class of commit before review.\n\n---\n\nTwo notes on scope: I wrote this from the description alone, so I did not see the file or the diff. Replace `API_KEY` with the real variable name. Also, if the key is a test key or a public client key, say so in the thread. The revoke step then does not apply.",
+  "texts": [
+    "**Security: hardcoded API key in `config.py`**\n\nThis commit adds an API key directly in the source code. This is a blocker. Please change it before merge.\n\n**Risk**\n\nThe key is now in the git history. Anyone with read access to the repository can see it. If the repository becomes public, the key leaks to everyone. A deleted line does not remove the key from the history.\n\n**Required actions**\n\n1. Revoke the key in the provider console now. Treat the key as compromised.\n2. Issue a new key.\n3. Read the new key from the environment. Do not commit it.\n4. Add the key name to `.env.example` with an empty value.\n5. Confirm that `.env` is in `.gitignore`.\n6. Purge the key from the git history, or force-push a clean branch.\n\n**Suggested change**\n\n```python\nimport os\n\nAPI_KEY = os.environ[\"API_KEY\"]  # raises at startup if the key is absent\n```\n\nIf the service must start without the key, use `os.environ.get(\"API_KEY\")` and fail with a clear message.\n\n**Follow-up**\n\nAdd a secret scanner to CI, for example `gitleaks` or `detect-secrets`. The scanner blocks this class of commit before review.\n\n---\n\nTwo notes on scope: I wrote this from the description alone, so I did not see the file or the diff. Replace `API_KEY` with the real variable name. Also, if the key is a test key or a public client key, say so in the thread. The revoke step then does not apply."
+  ],
+  "stderr_tail": ""
+}

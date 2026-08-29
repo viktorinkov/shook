@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "explain-08",
+  "cat": "explain",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 16.0,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.07139150000000001,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2751,
+    "cache_read_input_tokens": 38821,
+    "output_tokens": 939,
+    "output_tokens_details": {
+      "thinking_tokens": 95
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2751,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 939,
+        "cache_read_input_tokens": 38821,
+        "cache_creation_input_tokens": 2751,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2751
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 271,
+    "sentences": 14,
+    "mean_sentence_words": 19.1,
+    "longest_sentence_words": 53,
+    "violations": {
+      "sentence_over_limit": 3,
+      "contraction": 3,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 2,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 9,
+    "violations_per_100w": 3.32
+  },
+  "text": "## The problem\n\nAn N+1 happens when you fetch a list of N rows with one query, then trigger one extra query per row while accessing a related object. Total: 1 + N queries instead of 1 or 2.\n\nIt's easy to miss because the offending code is a plain attribute access \u2014 nothing in it looks like I/O.\n\n## Example (Django)\n\n```python\nposts = Post.objects.all()          # 1 query: SELECT * FROM post\nfor post in posts:\n    print(post.author.name)         # N queries: SELECT * FROM author WHERE id = ?\n```\n\n100 posts \u2192 101 round trips. Each is fast on its own, so this often passes local testing with a 10-row dev database and falls over in production.\n\n## The fix: tell the ORM about the relation up front\n\n**Foreign key / one-to-one (join):**\n\n```python\nposts = Post.objects.select_related(\"author\")\n# 1 query with an INNER/LEFT JOIN onto author\n```\n\n**Reverse FK / many-to-many (second query + in-memory stitch):**\n\n```python\nposts = Post.objects.prefetch_related(\"comments\")\n# 2 queries: SELECT * FROM post\n#            SELECT * FROM comment WHERE post_id IN (...)\n```\n\nA join can't collapse a to-many relation without duplicating parent rows, which is why the two cases use different tools.\n\n## Equivalents in other ORMs\n\n| ORM | To-one | To-many |\n|---|---|---|\n| Django | `select_related` | `prefetch_related` |\n| SQLAlchemy | `joinedload` | `selectinload` |\n| Rails ActiveRecord | `includes` / `preload` | `includes` / `preload` |\n| Prisma | `include: { author: true }` | `include: { comments: true }` |\n\n## How to catch it\n\n- **Assert on query count in tests** \u2014 `assertNumQueries` (Django), `assert_queries` gems (Rails). This is the only fix that stays fixed; the others catch it once.\n- Log SQL in dev, or use a detector: `nplusone`, `django-debug-toolbar`, Rails' `bullet`.\n- Watch for template/serializer traversal \u2014 a nested serializer field is the most common place this reappears after being fixed in the view.\n\n## The caveat\n\nEager loading isn't free. `select_related` across several to-one hops widens every row; `prefetch_related` on a large parent set builds a big `IN (...)` list. If you only need one field from the relation, `.only()` / `.values()` or a `Prefetch` with a narrowed queryset beats pulling whole related objects.",
+  "texts": [
+    "## The problem\n\nAn N+1 happens when you fetch a list of N rows with one query, then trigger one extra query per row while accessing a related object. Total: 1 + N queries instead of 1 or 2.\n\nIt's easy to miss because the offending code is a plain attribute access \u2014 nothing in it looks like I/O.\n\n## Example (Django)\n\n```python\nposts = Post.objects.all()          # 1 query: SELECT * FROM post\nfor post in posts:\n    print(post.author.name)         # N queries: SELECT * FROM author WHERE id = ?\n```\n\n100 posts \u2192 101 round trips. Each is fast on its own, so this often passes local testing with a 10-row dev database and falls over in production.\n\n## The fix: tell the ORM about the relation up front\n\n**Foreign key / one-to-one (join):**\n\n```python\nposts = Post.objects.select_related(\"author\")\n# 1 query with an INNER/LEFT JOIN onto author\n```\n\n**Reverse FK / many-to-many (second query + in-memory stitch):**\n\n```python\nposts = Post.objects.prefetch_related(\"comments\")\n# 2 queries: SELECT * FROM post\n#            SELECT * FROM comment WHERE post_id IN (...)\n```\n\nA join can't collapse a to-many relation without duplicating parent rows, which is why the two cases use different tools.\n\n## Equivalents in other ORMs\n\n| ORM | To-one | To-many |\n|---|---|---|\n| Django | `select_related` | `prefetch_related` |\n| SQLAlchemy | `joinedload` | `selectinload` |\n| Rails ActiveRecord | `includes` / `preload` | `includes` / `preload` |\n| Prisma | `include: { author: true }` | `include: { comments: true }` |\n\n## How to catch it\n\n- **Assert on query count in tests** \u2014 `assertNumQueries` (Django), `assert_queries` gems (Rails). This is the only fix that stays fixed; the others catch it once.\n- Log SQL in dev, or use a detector: `nplusone`, `django-debug-toolbar`, Rails' `bullet`.\n- Watch for template/serializer traversal \u2014 a nested serializer field is the most common place this reappears after being fixed in the view.\n\n## The caveat\n\nEager loading isn't free. `select_related` across several to-one hops widens every row; `prefetch_related` on a large parent set builds a big `IN (...)` list. If you only need one field from the relation, `.only()` / `.values()` or a `Prefetch` with a narrowed queryset beats pulling whole related objects."
+  ],
+  "stderr_tail": ""
+}

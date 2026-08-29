@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "explain-04",
+  "cat": "explain",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 39.6,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.1299155,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4012,
+    "cache_read_input_tokens": 38821,
+    "output_tokens": 2815,
+    "output_tokens_details": {
+      "thinking_tokens": 1795
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4012,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2815,
+        "cache_read_input_tokens": 38821,
+        "cache_creation_input_tokens": 4012,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4012
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 425,
+    "sentences": 42,
+    "mean_sentence_words": 10.0,
+    "longest_sentence_words": 22,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 0
+    },
+    "violations_total": 2,
+    "violations_per_100w": 0.47
+  },
+  "text": "## Why the query is slow\n\nWithout an index on `created_at`, the database reads all 50 million rows. It tests the condition on each row. This is a sequential scan.\n\n`SELECT *` adds more cost. The database reads every column of every matched row. Large text and JSON columns move to TOAST storage, and each TOAST read costs extra I/O.\n\n`NOW()` is not the cause. In PostgreSQL, `NOW()` is a stable function. The planner evaluates it one time per query, so an index scan stays possible.\n\nThree other causes are common:\n\n- **Stale statistics.** The rows from the last day are new. If autovacuum runs late, the planner has no histogram entry for these values. The planner then makes a bad row estimate and picks a bad plan.\n- **Low selectivity.** If the last day holds a large part of the table, an index scan costs more than a sequential scan. The planner ignores the index. This choice is correct.\n- **Random heap access.** An index scan reads a row pointer, then reads the heap page for that row. For many rows, these page reads are random and slow.\n\n## The index that helps\n\n```sql\nCREATE INDEX CONCURRENTLY idx_orders_created_at ON orders (created_at DESC);\n```\n\nA B-tree index on `created_at` gives the database a start point. The database reads forward from that point and skips the old rows.\n\nUse `CONCURRENTLY` on a live table. The command does not block writes. After the command, run `ANALYZE orders;` to refresh the statistics.\n\n`DESC` is optional. A B-tree scans in both directions. `DESC` helps only if you add `ORDER BY created_at DESC LIMIT n`.\n\n## Rules that keep the index in use\n\nKeep the column alone on the left side of the operator. The example query does this correctly, because the arithmetic is on the constant side.\n\nIf you write `DATE(created_at) > ...`, the database cannot use the plain index. For that form, create an expression index on `DATE(created_at)`.\n\nIf the query filters on a second column, put the equality column first:\n\n```sql\nCREATE INDEX idx_orders_customer_created ON orders (customer_id, created_at);\n```\n\n## Two alternatives for a large table\n\n**BRIN index.** Use this index if the table is append-only and the physical row order follows `created_at`.\n\n```sql\nCREATE INDEX idx_orders_created_at_brin ON orders USING brin (created_at);\n```\n\nA BRIN index stores a minimum value and a maximum value per block range. It is very small. A few megabytes replace more than one gigabyte of B-tree index.\n\n**Range partitions.** Split `orders` by day or by month on `created_at`. The planner then reads one or two partitions and ignores the rest. This method scales better than an index for a table that grows every day.\n\n## One more change\n\nReplace `SELECT *` with the columns that you need. Then add the columns to the index:\n\n```sql\nCREATE INDEX idx_orders_recent ON orders (created_at) INCLUDE (id, customer_id, total);\n```\n\nThe database answers the query from the index alone. This is an index-only scan, and it removes the random heap reads.",
+  "texts": [
+    "## Why the query is slow\n\nWithout an index on `created_at`, the database reads all 50 million rows. It tests the condition on each row. This is a sequential scan.\n\n`SELECT *` adds more cost. The database reads every column of every matched row. Large text and JSON columns move to TOAST storage, and each TOAST read costs extra I/O.\n\n`NOW()` is not the cause. In PostgreSQL, `NOW()` is a stable function. The planner evaluates it one time per query, so an index scan stays possible.\n\nThree other causes are common:\n\n- **Stale statistics.** The rows from the last day are new. If autovacuum runs late, the planner has no histogram entry for these values. The planner then makes a bad row estimate and picks a bad plan.\n- **Low selectivity.** If the last day holds a large part of the table, an index scan costs more than a sequential scan. The planner ignores the index. This choice is correct.\n- **Random heap access.** An index scan reads a row pointer, then reads the heap page for that row. For many rows, these page reads are random and slow.\n\n## The index that helps\n\n```sql\nCREATE INDEX CONCURRENTLY idx_orders_created_at ON orders (created_at DESC);\n```\n\nA B-tree index on `created_at` gives the database a start point. The database reads forward from that point and skips the old rows.\n\nUse `CONCURRENTLY` on a live table. The command does not block writes. After the command, run `ANALYZE orders;` to refresh the statistics.\n\n`DESC` is optional. A B-tree scans in both directions. `DESC` helps only if you add `ORDER BY created_at DESC LIMIT n`.\n\n## Rules that keep the index in use\n\nKeep the column alone on the left side of the operator. The example query does this correctly, because the arithmetic is on the constant side.\n\nIf you write `DATE(created_at) > ...`, the database cannot use the plain index. For that form, create an expression index on `DATE(created_at)`.\n\nIf the query filters on a second column, put the equality column first:\n\n```sql\nCREATE INDEX idx_orders_customer_created ON orders (customer_id, created_at);\n```\n\n## Two alternatives for a large table\n\n**BRIN index.** Use this index if the table is append-only and the physical row order follows `created_at`.\n\n```sql\nCREATE INDEX idx_orders_created_at_brin ON orders USING brin (created_at);\n```\n\nA BRIN index stores a minimum value and a maximum value per block range. It is very small. A few megabytes replace more than one gigabyte of B-tree index.\n\n**Range partitions.** Split `orders` by day or by month on `created_at`. The planner then reads one or two partitions and ignores the rest. This method scales better than an index for a table that grows every day.\n\n## One more change\n\nReplace `SELECT *` with the columns that you need. Then add the columns to the index:\n\n```sql\nCREATE INDEX idx_orders_recent ON orders (created_at) INCLUDE (id, customer_id, total);\n```\n\nThe database answers the query from the index alone. This is an index-only scan, and it removes the random heap reads."
+  ],
+  "stderr_tail": ""
+}

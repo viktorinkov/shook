@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "readme-08",
+  "cat": "docs",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 30.5,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.167944,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 10979,
+    "cache_read_input_tokens": 11074,
+    "output_tokens": 2063,
+    "output_tokens_details": {
+      "thinking_tokens": 1248
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10979,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1707,
+        "cache_read_input_tokens": 6929,
+        "cache_creation_input_tokens": 8195,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8195
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 269,
+    "sentences": 23,
+    "mean_sentence_words": 11.3,
+    "longest_sentence_words": 26,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 2,
+    "violations_per_100w": 0.74
+  },
+  "text": "## Create an invoice\n\n`POST /v1/invoices`\n\nThis endpoint creates an invoice for one customer. The response gives the id of the new invoice.\n\n### Parameters\n\nSend the parameters as a JSON object in the request body.\n\n| Name | Type | Required | Description |\n|---|---|---|---|\n| `customer_id` | string | Yes | The id of the customer that receives the invoice. |\n| `amount_cents` | integer | Yes | The total of the invoice, in cents. |\n| `due_date` | string | No | The date when the customer must pay, in `YYYY-MM-DD` format. |\n\nThe API reads all amounts in cents. Write `2500` for $25.00.\n\n### Request\n\n1. Set the `Content-Type` header to `application/json`.\n2. Put `customer_id` and `amount_cents` in the request body.\n3. If the invoice has a payment date, add the `due_date` field.\n4. Send the request.\n\n```bash\ncurl -X POST https://api.example.com/v1/invoices \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"customer_id\": \"cus_4820\",\n    \"amount_cents\": 2500,\n    \"due_date\": \"2026-09-15\"\n  }'\n```\n\n### Response\n\nThe endpoint returns the status code `201 Created`. The body gives the id of the new invoice. Keep this id. You need it for the requests that read or change the invoice.\n\n```json\n{\n  \"id\": \"inv_9f3c2a1\"\n}\n```\n\n---\n\n**Assumptions I made** (your spec did not give these \u2014 tell me the real values and I will correct the section):\n\n- The `due_date` format is `YYYY-MM-DD`, and the field has no default value.\n- The 201 body contains only the id, and not a full invoice object.\n- Requests use a bearer token in the `Authorization` header.\n- The host is `api.example.com`.\n\nI left out an error table, because your spec listed no error codes. Send me the failure cases (for example, an unknown `customer_id` or a negative `amount_cents`) and I will add that part in the same style.",
+  "texts": [
+    "## Create an invoice\n\n`POST /v1/invoices`\n\nThis endpoint creates an invoice for one customer. The response gives the id of the new invoice.\n\n### Parameters\n\nSend the parameters as a JSON object in the request body.\n\n| Name | Type | Required | Description |\n|---|---|---|---|\n| `customer_id` | string | Yes | The id of the customer that receives the invoice. |\n| `amount_cents` | integer | Yes | The total of the invoice, in cents. |\n| `due_date` | string | No | The date when the customer must pay, in `YYYY-MM-DD` format. |\n\nThe API reads all amounts in cents. Write `2500` for $25.00.\n\n### Request\n\n1. Set the `Content-Type` header to `application/json`.\n2. Put `customer_id` and `amount_cents` in the request body.\n3. If the invoice has a payment date, add the `due_date` field.\n4. Send the request.\n\n```bash\ncurl -X POST https://api.example.com/v1/invoices \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"customer_id\": \"cus_4820\",\n    \"amount_cents\": 2500,\n    \"due_date\": \"2026-09-15\"\n  }'\n```\n\n### Response\n\nThe endpoint returns the status code `201 Created`. The body gives the id of the new invoice. Keep this id. You need it for the requests that read or change the invoice.\n\n```json\n{\n  \"id\": \"inv_9f3c2a1\"\n}\n```\n\n---\n\n**Assumptions I made** (your spec did not give these \u2014 tell me the real values and I will correct the section):\n\n- The `due_date` format is `YYYY-MM-DD`, and the field has no default value.\n- The 201 body contains only the id, and not a full invoice object.\n- Requests use a bearer token in the `Authorization` header.\n- The host is `api.example.com`.\n\nI left out an error table, because your spec listed no error codes. Send me the failure cases (for example, an unknown `customer_id` or a negative `amount_cents`) and I will add that part in the same style."
+  ],
+  "stderr_tail": ""
+}

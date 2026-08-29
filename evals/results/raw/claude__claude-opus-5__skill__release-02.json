@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "release-02",
+  "cat": "release",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 32.6,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.170274,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 11100,
+    "cache_read_input_tokens": 11048,
+    "output_tokens": 2110,
+    "output_tokens_details": {
+      "thinking_tokens": 1415
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 11100,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1591,
+        "cache_read_input_tokens": 6903,
+        "cache_creation_input_tokens": 8342,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8342
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 241,
+    "sentences": 25,
+    "mean_sentence_words": 9.4,
+    "longest_sentence_words": 26,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.41
+  },
+  "text": "Below are the release notes. Pragmatic mode: structural rules applied, product vocabulary kept. Placeholders are in square brackets.\n\n---\n\n# [Product] [version] \u2014 release notes\n\n## Breaking change: `--output` defaults to JSON\n\nThe `--output` flag now defaults to `json`. In [previous version] and earlier, the flag defaulted to `text`.\n\nEach command that does not set `--output` now writes JSON to standard output. Scripts that read the plain text output break after this upgrade.\n\nCAUTION: Do not upgrade an automated pipeline before you update the scripts that read the output.\n\n### Who this change affects\n\nThis change affects two groups:\n\n- Users who run commands without the `--output` flag.\n- Scripts, pipelines, and aliases that parse the plain text output.\n\nThe change does not affect commands that already set `--output text` or `--output json`.\n\n### How to keep the plain text output\n\n1. Find each command that runs without the `--output` flag.\n2. Add `--output text` to the command.\n3. Run the command again. The output format must be plain text.\n\n### Example\n\nBefore this release:\n\n```\n[product] status\nNAME    STATE     AGE\nweb-1   running   4h\n```\n\nAfter this release, the same command gives JSON:\n\n```\n[product] status\n{\"items\":[{\"name\":\"web-1\",\"state\":\"running\",\"age\":\"4h\"}]}\n```\n\nTo get the previous format, run:\n\n```\n[product] status --output text\n```\n\n### Reason for the change\n\nJSON is easier to parse than plain text. Most users pipe the output into another program, so the default now matches the common case.\n\n---\n\nTwo things to fill in before you publish: the version numbers, and the reason section \u2014 I wrote a generic one because you did not give the actual motivation. If there was a deprecation warning in an earlier release, add a line that names that version, because it tells readers how long the warning ran.",
+  "texts": [
+    "Below are the release notes. Pragmatic mode: structural rules applied, product vocabulary kept. Placeholders are in square brackets.\n\n---\n\n# [Product] [version] \u2014 release notes\n\n## Breaking change: `--output` defaults to JSON\n\nThe `--output` flag now defaults to `json`. In [previous version] and earlier, the flag defaulted to `text`.\n\nEach command that does not set `--output` now writes JSON to standard output. Scripts that read the plain text output break after this upgrade.\n\nCAUTION: Do not upgrade an automated pipeline before you update the scripts that read the output.\n\n### Who this change affects\n\nThis change affects two groups:\n\n- Users who run commands without the `--output` flag.\n- Scripts, pipelines, and aliases that parse the plain text output.\n\nThe change does not affect commands that already set `--output text` or `--output json`.\n\n### How to keep the plain text output\n\n1. Find each command that runs without the `--output` flag.\n2. Add `--output text` to the command.\n3. Run the command again. The output format must be plain text.\n\n### Example\n\nBefore this release:\n\n```\n[product] status\nNAME    STATE     AGE\nweb-1   running   4h\n```\n\nAfter this release, the same command gives JSON:\n\n```\n[product] status\n{\"items\":[{\"name\":\"web-1\",\"state\":\"running\",\"age\":\"4h\"}]}\n```\n\nTo get the previous format, run:\n\n```\n[product] status --output text\n```\n\n### Reason for the change\n\nJSON is easier to parse than plain text. Most users pipe the output into another program, so the default now matches the common case.\n\n---\n\nTwo things to fill in before you publish: the version numbers, and the reason section \u2014 I wrote a generic one because you did not give the actual motivation. If there was a deprecation warning in an earlier release, add a line that names that version, because it tells readers how long the warning ran."
+  ],
+  "stderr_tail": ""
+}

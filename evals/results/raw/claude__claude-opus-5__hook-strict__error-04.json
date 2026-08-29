@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "error-04",
+  "cat": "error",
+  "model": "claude-opus-5",
+  "exit": 0,
+  "seconds": 16.8,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.0718925,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3976,
+    "cache_read_input_tokens": 4145,
+    "output_tokens": 1202,
+    "output_tokens_details": {
+      "thinking_tokens": 754
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3976,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1202,
+        "cache_read_input_tokens": 4145,
+        "cache_creation_input_tokens": 3976,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3976
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 74,
+    "sentences": 6,
+    "mean_sentence_words": 12.3,
+    "longest_sentence_words": 16,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "Here is the message, in three forms.\n\n## CLI\n\n```\nError: the project \"analytics-api\" has 3 active deployments.\nYou cannot delete a project that has active deployments.\n\nTo delete this project:\n  1. Run `deploy list --project analytics-api` to see the deployments.\n  2. Run `deploy stop <deployment-id>` for each deployment.\n  3. Run the delete command again.\n```\n\n## API response (HTTP 409)\n\n```json\n{\n  \"error\": {\n    \"code\": \"project_has_active_deployments\",\n    \"message\": \"The project \\\"analytics-api\\\" has 3 active deployments. Stop all deployments before you delete the project.\",\n    \"details\": {\n      \"project_id\": \"analytics-api\",\n      \"active_deployment_count\": 3,\n      \"active_deployment_ids\": [\"dep_8f21\", \"dep_9c04\", \"dep_a115\"]\n    }\n  }\n}\n```\n\n## Dialog in the user interface\n\n**Title:** Cannot delete this project\n\n**Body:** The project **analytics-api** has 3 active deployments. Before you delete the project, stop each deployment.\n\n**Buttons:** `View deployments` and `Cancel`\n\n## Notes on the wording\n\nThe message states the cause first, then the rule, then the action. The count and the identifiers let the user find the deployments without a second request. The status code 409 shows a conflict with the current state, not a bad request.",
+  "texts": [
+    "Here is the message, in three forms.\n\n## CLI\n\n```\nError: the project \"analytics-api\" has 3 active deployments.\nYou cannot delete a project that has active deployments.\n\nTo delete this project:\n  1. Run `deploy list --project analytics-api` to see the deployments.\n  2. Run `deploy stop <deployment-id>` for each deployment.\n  3. Run the delete command again.\n```\n\n## API response (HTTP 409)\n\n```json\n{\n  \"error\": {\n    \"code\": \"project_has_active_deployments\",\n    \"message\": \"The project \\\"analytics-api\\\" has 3 active deployments. Stop all deployments before you delete the project.\",\n    \"details\": {\n      \"project_id\": \"analytics-api\",\n      \"active_deployment_count\": 3,\n      \"active_deployment_ids\": [\"dep_8f21\", \"dep_9c04\", \"dep_a115\"]\n    }\n  }\n}\n```\n\n## Dialog in the user interface\n\n**Title:** Cannot delete this project\n\n**Body:** The project **analytics-api** has 3 active deployments. Before you delete the project, stop each deployment.\n\n**Buttons:** `View deployments` and `Cancel`\n\n## Notes on the wording\n\nThe message states the cause first, then the rule, then the action. The count and the identifiers let the user find the deployments without a second request. The status code 409 shows a conflict with the current state, not a bad request."
+  ],
+  "stderr_tail": ""
+}
