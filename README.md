@@ -14,7 +14,7 @@
 
 This plugin is a companion to **[AminBlg/SimpleEnglish](https://github.com/AminBlg/SimpleEnglish)**, the simple-english plugin. That plugin brings ASD-STE100 Simplified Technical English to Claude Code and other agents. It is a prerequisite. The full rule set and the linter `ste_lint.py` come from it at run time. This plugin adds the hooks, the `/ste` command, the status line badge, and the benchmark.
 
-## Install
+## 📦 Install
 
 First install the [simple-english plugin](https://github.com/AminBlg/SimpleEnglish#-install), the prerequisite. Then install this plugin:
 
@@ -40,7 +40,7 @@ Start a new session.
 | `/ste set <key> <value>` | Writes a lint gate setting. See [Tune the lint gate](#tune-the-lint-gate). |
 | `/ste uninstall` | Removes the badge and the state files. Then run the plugin uninstall command. |
 
-## The status line
+## 🚥 The status line
 
 The hooks enforce the mode, so the badge is how you see that the mode is on and how strict it is.
 
@@ -51,6 +51,100 @@ The hooks enforce the mode, so the badge is how you see that the mode is on and 
 | nothing | Mode `off`. |
 
 A plugin cannot change the status line, so the setup is one step by hand. Ask Claude: *install the STE status line badge*. Or run `statusline-install.sh` from this plugin's folder. The script adds one line to an existing status line script, or creates one.
+
+## Enable it
+
+The hooks run in every repo. The **mode** decides what they do. The mode has three scopes.
+
+| Scope | How to set it | Where it lives |
+|---|---|---|
+| Global | `/ste on`, `/ste strict`, `/ste off` | `~/.claude/.simple-english-active` |
+| One repo | `/ste project on`, `/ste project strict`, `/ste project off`, `/ste project clear` | `<repo>/.claude/ste-mode` |
+| Fixed | `STE_MODE=strict` in the environment, or `"env": {"STE_MODE": "strict"}` in `<repo>/.claude/settings.json` | environment |
+
+Order of precedence: environment, then the repo file, then the global flag, then off. Each harness keeps its own global flag. The repo file and `STE_MODE` apply to all harnesses.
+
+To use it in a team repo, type `/ste project strict` and commit `.claude/ste-mode`. Each team member installs both plugins once.
+
+## 📊 Numbers
+
+This plugin only changes how often the rules apply, so the comparison that matters is the simple-english skill alone against the hook. The benchmark runs on several Claude models in Claude Code and on GPT models in Codex CLI.
+
+The benchmark sends the same 50 writing prompts (docs, code reviews, error messages, commit messages, incident reports, runbooks) through each arm, one run per prompt. The simple-english plugin's own linter, `ste_lint.py`, counts the rule violations in every reply. Method, full tables, and all raw replies: [`evals/results/RESULTS.md`](evals/results/RESULTS.md).
+
+| Model | n prompts | skill alone (v/100w) | hook on (v/100w) | hook strict (v/100w) | reduction (strict vs skill) |
+|---|---:|---:|---:|---:|---:|
+| `claude-fable-5` (claude) | 50 | 2.41 | 0.51 | 0.22 | 91% |
+| `claude-haiku-4-5-20251001` (claude) | 50 | 2.74 | 0.97 | 0.71 | 74% |
+| `claude-opus-5` (claude) | 50 | 2.68 | 0.41 | 0.45 | 83% |
+| `claude-sonnet-5` (claude) | 50 | 2.38 | 0.47 | 0.32 | 87% |
+| `gpt-5.4-mini` (codex) | 50 | 1.66 | 0.51 | 0.63 | 62% |
+| `gpt-5.6-sol` (codex) | 50 | 0.94 | 0.59 | 0.34 | 64% |
+
+The per-model table for Claude Sonnet 5 shows the three-row shape:
+
+<!-- columns: Arm | Skill fired | Violations / 100 words | Replies with 0 violations | Output tokens per reply -->
+| Arm | Skill fired | Violations / 100 words | Replies with 0 violations | Output tokens per reply |
+|---|---:|---:|---:|---:|
+| skill | 24/50 | 2.38 | 32% | 1011 |
+| hook-on | 12/50 | 0.47 | 54% | 687 |
+| hook-strict | 7/50 | 0.32 | 66% | 1237 |
+
+How to read it: Claude alone decides whether the skill fires. On Sonnet 5, it fired in 24 of 50 replies. The hook applies the rules on every reply. Strict mode adds the gate and blocked 6 of 50 replies on Sonnet 5.
+
+Read the tables with care. The linter is a regex pass. It undercounts and it cannot judge meaning. The numbers compare arms against each other. They are not a compliance score. No tool can certify ASD-STE100 compliance.
+
+Reproduce: `python3 evals/bench.py` for Claude Code, and `python3 evals/codex_bench.py` for Codex. The scripts need a logged-in CLI and the installed simple-english plugin. Full tables, including a no-plugin baseline and the output-style arm for Sonnet 5, live in [`evals/results/RESULTS.md`](evals/results/RESULTS.md).
+
+## How it works
+
+| Hook | Event | Action |
+|---|---|---|
+| `SessionStart` | New session, resume, clear, compact | Loads the full rule set from the simple-english plugin as context. |
+| `UserPromptSubmit` | Every prompt | Adds a 74-word STE reminder. Handles `/ste` commands. |
+| `Stop` | End of every reply, `strict` mode only | Runs the simple-english linter `ste_lint.py` on the reply. If the reply fails, Claude must rewrite it once. |
+| Status line (optional) | Always | Shows `[STE]` in `on` mode, or `[STE:STRICT 0.3]` with the last lint score in `strict` mode. Shows nothing in `off` mode. |
+
+In strict mode, a failed reply goes back to Claude with a message like this one from the benchmark:
+
+```
+STE LINT FAILED (8 violations in 234 words, 3.42 per 100 words; longest sentence 35 words).
+Found: sentence_over_limit=2, contraction=4, trailing_condition=2. Rewrite your whole last reply ...
+```
+
+Claude rewrites the reply once per turn.
+
+The reminder on every prompt is the part that an output style cannot do. A system prompt is read once. A reminder sits next to the newest message, every turn.
+
+## 🔧 Tune the lint gate
+
+When all three conditions are true, the gate blocks the reply:
+
+- The reply has at least `min-words` words (default 40).
+- The reply has at least `min-total` violations (default 2).
+- The density is above `max-per-100w` violations per 100 words (default 1.0).
+
+A tight gate makes Claude rewrite short, correct replies. A loose gate lets slop through. The gate runs at most one rewrite per turn.
+
+| Command | What it does |
+|---|---|
+| `/ste config` | Shows every setting, its value, and its source (env, project, global, default). |
+| `/ste set <key> <value>` | Writes the global setting. |
+| `/ste project set <key> <value>` | Writes the setting for the current repo. |
+| `/ste unset <key>`, `/ste project unset <key>` | Removes one setting. |
+
+Keys: `min-words`, `min-total`, `max-per-100w`, and `lint-type` (`descriptive` or `procedural`, default `descriptive`).
+
+Files: global `~/.claude/simple-english-hook.json`, per repo `<repo>/.claude/ste-config.json`. The repo file is safe to commit. Precedence: environment variable, then the repo file, then the global file, then the default. For CI and scripts, the environment variables `STE_MIN_WORDS`, `STE_MIN_TOTAL`, `STE_MAX_PER_100W`, and `STE_LINT_TYPE` still work.
+
+## What it does not touch
+
+- Code blocks, identifiers, file paths, CLI commands, and quoted error messages. The rules and the linter skip them.
+- Code that Claude writes. The rules apply to prose only.
+- Marketing copy or brand voice that you ask for.
+- Any repo with `/ste project off`. Any session with `/ste off`.
+
+STE is flat by design. Use it for docs, reviews, runbooks, error messages, and explanations. Turn it off for a blog post.
 
 ## Codex CLI
 
@@ -117,101 +211,7 @@ bash ~/shook/cursor-install.sh strict
 
 Toggle with `/ste on`, `/ste strict`, `/ste off`, or `/ste status` in the Agent chat, or with `cursor-install.sh <mode>` from the shell. Modes `on` and `strict` both work: the rule file applies the rules to every request, and the `stop` hook sends a failed reply back once. No badge, and no live Cursor session verified it yet. Details: [docs/other-harnesses.md](docs/other-harnesses.md#cursor).
 
-## Enable it
-
-The hooks run in every repo. The **mode** decides what they do. The mode has three scopes.
-
-| Scope | How to set it | Where it lives |
-|---|---|---|
-| Global | `/ste on`, `/ste strict`, `/ste off` | `~/.claude/.simple-english-active` |
-| One repo | `/ste project on`, `/ste project strict`, `/ste project off`, `/ste project clear` | `<repo>/.claude/ste-mode` |
-| Fixed | `STE_MODE=strict` in the environment, or `"env": {"STE_MODE": "strict"}` in `<repo>/.claude/settings.json` | environment |
-
-Order of precedence: environment, then the repo file, then the global flag, then off. Each harness keeps its own global flag. The repo file and `STE_MODE` apply to all harnesses.
-
-To use it in a team repo, type `/ste project strict` and commit `.claude/ste-mode`. Each team member installs both plugins once.
-
-## Numbers
-
-This plugin only changes how often the rules apply, so the comparison that matters is the simple-english skill alone against the hook. The benchmark runs on several Claude models in Claude Code and on GPT models in Codex CLI.
-
-One run per prompt and arm. Scored with the simple-english plugin's own `ste_lint.py`.
-
-| Model | n prompts | skill alone (v/100w) | hook on (v/100w) | hook strict (v/100w) | reduction (strict vs skill) |
-|---|---:|---:|---:|---:|---:|
-| `claude-fable-5` (claude) | 50 | 2.41 | 0.51 | 0.22 | 91% |
-| `claude-haiku-4-5-20251001` (claude) | 50 | 2.74 | 0.97 | 0.71 | 74% |
-| `claude-opus-5` (claude) | 50 | 2.68 | 0.41 | 0.45 | 83% |
-| `claude-sonnet-5` (claude) | 50 | 2.38 | 0.47 | 0.32 | 87% |
-| `gpt-5.4-mini` (codex) | 50 | 1.66 | 0.51 | 0.63 | 62% |
-| `gpt-5.6-sol` (codex) | 50 | 0.94 | 0.59 | 0.34 | 64% |
-
-The per-model table for Claude Sonnet 5 shows the three-row shape:
-
-<!-- columns: Arm | Skill fired | Violations / 100 words | Replies with 0 violations | Output tokens per reply -->
-| Arm | Skill fired | Violations / 100 words | Replies with 0 violations | Output tokens per reply |
-|---|---:|---:|---:|---:|
-| skill | 24/50 | 2.38 | 32% | 1011 |
-| hook-on | 12/50 | 0.47 | 54% | 687 |
-| hook-strict | 7/50 | 0.32 | 66% | 1237 |
-
-How to read it: Claude alone decides whether the skill fires. On Sonnet 5, it fired in 24 of 50 replies. The hook applies the rules on every reply. Strict mode adds the gate and blocked 6 of 50 replies on Sonnet 5.
-
-Read the tables with care. The linter is a regex pass. It undercounts and it cannot judge meaning. The numbers compare arms against each other. They are not a compliance score. No tool can certify ASD-STE100 compliance.
-
-Reproduce: `python3 evals/bench.py` for Claude Code, and `python3 evals/codex_bench.py` for Codex. The scripts need a logged-in CLI and the installed simple-english plugin. Full tables, including a no-plugin baseline and the output-style arm for Sonnet 5, live in [`evals/results/RESULTS.md`](evals/results/RESULTS.md).
-
-## How it works
-
-| Hook | Event | Action |
-|---|---|---|
-| `SessionStart` | New session, resume, clear, compact | Loads the full rule set from the simple-english plugin as context. |
-| `UserPromptSubmit` | Every prompt | Adds a 74-word STE reminder. Handles `/ste` commands. |
-| `Stop` | End of every reply, `strict` mode only | Runs the simple-english linter `ste_lint.py` on the reply. If the reply fails, Claude must rewrite it once. |
-| Status line (optional) | Always | Shows `[STE]` in `on` mode, or `[STE:STRICT 0.3]` with the last lint score in `strict` mode. Shows nothing in `off` mode. |
-
-In strict mode, a failed reply goes back to Claude with a message like this one from the benchmark:
-
-```
-STE LINT FAILED (8 violations in 234 words, 3.42 per 100 words; longest sentence 35 words).
-Found: sentence_over_limit=2, contraction=4, trailing_condition=2. Rewrite your whole last reply ...
-```
-
-Claude rewrites the reply once per turn.
-
-The reminder on every prompt is the part that an output style cannot do. A system prompt is read once. A reminder sits next to the newest message, every turn.
-
-## Tune the lint gate
-
-When all three conditions are true, the gate blocks the reply:
-
-- The reply has at least `min-words` words (default 40).
-- The reply has at least `min-total` violations (default 2).
-- The density is above `max-per-100w` violations per 100 words (default 1.0).
-
-A tight gate makes Claude rewrite short, correct replies. A loose gate lets slop through. The gate runs at most one rewrite per turn.
-
-| Command | What it does |
-|---|---|
-| `/ste config` | Shows every setting, its value, and its source (env, project, global, default). |
-| `/ste set <key> <value>` | Writes the global setting. |
-| `/ste project set <key> <value>` | Writes the setting for the current repo. |
-| `/ste unset <key>`, `/ste project unset <key>` | Removes one setting. |
-
-Keys: `min-words`, `min-total`, `max-per-100w`, and `lint-type` (`descriptive` or `procedural`, default `descriptive`).
-
-Files: global `~/.claude/simple-english-hook.json`, per repo `<repo>/.claude/ste-config.json`. The repo file is safe to commit. Precedence: environment variable, then the repo file, then the global file, then the default. For CI and scripts, the environment variables `STE_MIN_WORDS`, `STE_MIN_TOTAL`, `STE_MAX_PER_100W`, and `STE_LINT_TYPE` still work.
-
-## What it does not touch
-
-- Code blocks, identifiers, file paths, CLI commands, and quoted error messages. The rules and the linter skip them.
-- Code that Claude writes. The rules apply to prose only.
-- Marketing copy or brand voice that you ask for.
-- Any repo with `/ste project off`. Any session with `/ste off`.
-
-STE is flat by design. Use it for docs, reviews, runbooks, error messages, and explanations. Turn it off for a blog post.
-
-## FAQ
+## ❓ FAQ
 
 **Why not just prompt it?** A prompt line is one instruction among many. In the benchmark, the simple-english skill fired on its own in 24 of 50 replies on Sonnet 5. This plugin does not depend on a decision. It runs every turn.
 
@@ -226,7 +226,7 @@ claude plugin marketplace update simple-english-hook
 claude plugin update simple-english-hook@simple-english-hook
 ```
 
-## Uninstall
+## 🧹 Uninstall
 
 1. Type `/ste uninstall`. It removes the status line badge, the state files, and the mode and config files in the current repo.
 2. Run `claude plugin uninstall simple-english-hook@simple-english-hook`.
