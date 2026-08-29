@@ -24,7 +24,7 @@ claude plugin marketplace add AminBlg/SimpleEnglish && claude plugin install sim
 
 Then start a new session and type `/ste strict`. For the status line badge:
 
-- Ask Claude: Install the STE status line badge.
+- Ask Claude: **Install the STE status line badge.**
 - Or install manually: **Run the script from the plugin cache.**
 
 ```bash
