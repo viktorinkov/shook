@@ -1,7 +1,7 @@
 # Results
 
 Scorer: the simple-english plugin's `ste_lint.py`. It is a regex pass. It undercounts, and the numbers compare arms only.
-Prompts: 50. Models: `claude-opus-5` (claude), `claude-sonnet-5` (claude).
+Prompts: 50. Models: `claude-opus-5` (claude), `claude-sonnet-5` (claude), `gpt-5.4-mini` (codex), `gpt-5.6-sol` (codex).
 
 ## Cross-model summary
 
@@ -9,6 +9,8 @@ Prompts: 50. Models: `claude-opus-5` (claude), `claude-sonnet-5` (claude).
 |---|---:|---:|---:|---:|---:|
 | `claude-opus-5` (claude) | 50 | 2.68 | 0.41 | 0.45 | 83% |
 | `claude-sonnet-5` (claude) | 50 | 2.38 | 0.47 | 0.32 | 87% |
+| `gpt-5.4-mini` (codex) | 50 | 1.66 | 0.51 | 0.63 | 62% |
+| `gpt-5.6-sol` (codex) | 50 | 0.94 | 0.59 | 0.34 | 64% |
 
 ## Per model
 
@@ -32,6 +34,26 @@ Reduction vs the skill alone: hook-on −85%, hook-strict −83%.
 
 Reduction vs the skill alone: hook-on −80%, hook-strict −87%.
 
+### `gpt-5.4-mini` (codex)
+
+| Arm | Skill fired | Violations / 100 words | Replies with 0 violations | Output tokens per reply |
+|---|---:|---:|---:|---:|
+| skill | 4/50 | 1.66 | 34% | 228 |
+| hook-on | 0/50 | 0.51 | 70% | 133 |
+| hook-strict | 0/50 | 0.63 | 74% | 158 |
+
+Reduction vs the skill alone: hook-on −69%, hook-strict −62%.
+
+### `gpt-5.6-sol` (codex)
+
+| Arm | Skill fired | Violations / 100 words | Replies with 0 violations | Output tokens per reply |
+|---|---:|---:|---:|---:|
+| skill | 36/50 | 0.94 | 62% | 509 |
+| hook-on | 17/50 | 0.59 | 68% | 274 |
+| hook-strict | 24/50 | 0.34 | 76% | 385 |
+
+Reduction vs the skill alone: hook-on −36%, hook-strict −64%.
+
 ## Full five-arm table
 
 This table stays as the receipt for the reference arms. `baseline` has no plugin. `style` uses the plugin output style as a system prompt.
@@ -50,4 +72,4 @@ This table stays as the receipt for the reference arms. `baseline` has no plugin
 
 Each prompt ran once per arm with `claude -p --setting-sources project --tools Skill`, so no user settings, hooks, or other plugins were loaded. `skill` and `style` load the simple-english plugin with `--plugin-dir`. `style` appends the plugin's output style text as system prompt. `hook-on` and `hook-strict` also load this plugin with `--plugin-dir` and set `STE_MODE`. `Skill fired` counts replies where Claude invoked the simple-english skill. `Strict blocks` counts replies the Stop hook sent back for a rewrite. Raw runs: `results/raw/`.
 
-Models: `claude-opus-5` (claude), `claude-sonnet-5` (claude). The `skill` arm against the two hook arms is the comparison that matters. The only thing this plugin changes is how often the rules apply. The `baseline` and `style` arms are a reference and ran for `claude-sonnet-5` (claude) only. `Output tokens per reply` is the mean of `output_tokens` from the CLI usage report. In `hook-strict` it includes the rewrite. Raw record names follow `<harness>__<model>__<arm>__<id>.json`. A `codex` harness writes the same schema from Codex CLI with `evals/codex_bench.py`.
+Models: `claude-opus-5` (claude), `claude-sonnet-5` (claude), `gpt-5.4-mini` (codex), `gpt-5.6-sol` (codex). The `skill` arm against the two hook arms is the comparison that matters. The only thing this plugin changes is how often the rules apply. The `baseline` and `style` arms are a reference and ran for `claude-sonnet-5` (claude) only. `Output tokens per reply` is the mean of `output_tokens` from the CLI usage report. In `hook-strict` it includes the rewrite. Raw record names follow `<harness>__<model>__<arm>__<id>.json`. A `codex` harness writes the same schema from Codex CLI with `evals/codex_bench.py`.
