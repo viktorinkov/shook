@@ -46,7 +46,8 @@ The hooks enforce the mode, so the badge is how you see that the mode is on and 
 | `[STE:STRICT 0.3]` | Mode `strict`, with the lint score of the last reply. |
 | nothing | Mode `off`. |
 
-A plugin cannot change the status line, so the setup is one step by hand. Ask Claude: *install the STE status line badge*. Or run `statusline-install.sh` from this plugin's folder. The script adds one line to an existing status line script, or creates one.
+- Ask Claude: Install the STE status line badge.
+- Or install manually: Run `statusline-install.sh` from this plugin's folder.
 
 ## Enable it
 
