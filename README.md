@@ -2,7 +2,7 @@
 
 <p align="center"><strong>SHOOK, a Simple English hook. Claude picks the replies that get the Simple English skill. Most replies never qualify.<br>This plugin applies it to every reply.</strong></p>
 
-<p align="center">Three Claude Code hooks that make <a href="https://github.com/AminBlg/SimpleEnglish">AminBlg/SimpleEnglish</a> always on:<br>the rules at session start, a reminder on every prompt, and a lint gate that sends a failed reply back for a rewrite.<br>The status line shows the mode the whole time: <code>[STE]</code> or <code>[STE:STRICT 0.3]</code>.</p>
+<p align="center">Three Claude Code hooks that make <a href="https://github.com/AminBlg/SimpleEnglish">AminBlg/SimpleEnglish</a> always on:<br>the rules at session start, a reminder on every prompt, and a lint gate that sends a failed reply back for a rewrite.<br>The status line shows the mode the whole time: <code>[STE]</code> or <code>[STE:STRICT x.x]</code>.</p>
 
 <p align="center">
   <a href="evals/results/RESULTS.md"><img src="https://img.shields.io/badge/STE_violations-%E2%88%9277%25_vs_the_skill_alone_(mean_of_6_models)-brightgreen?style=flat" alt="violations vs the skill alone"></a>
@@ -31,7 +31,7 @@ Then start a new session and type `/ste strict`. For the status line badge:
 bash "$(ls -d ~/.claude/plugins/cache/simple-english-hook/simple-english-hook/*/ | tail -1)statusline-install.sh"
 ```
 
-The status line then shows `[STE]` or `[STE:STRICT 0.3]` the whole time.
+The status line then shows `[STE]` or `[STE:STRICT x.x]` the whole time.
 
 <details>
 <summary><strong>Claude Code</strong></summary>
@@ -71,7 +71,7 @@ Status line badge (optional):
 bash "$(ls -d ~/.claude/plugins/cache/simple-english-hook/simple-english-hook/*/ | tail -1)statusline-install.sh"
 ```
 
-The script adds one line to your status line script. If you have no status line script, it creates one. The badge shows `[STE]` in `on` mode and `[STE:STRICT 0.3]` in `strict` mode.
+The script adds one line to your status line script. If you have no status line script, it creates one. The badge shows `[STE]` in `on` mode and `[STE:STRICT x.x]` in `strict` mode.
 
 </details>
 
@@ -244,7 +244,7 @@ The hooks enforce the mode, so the badge is how you see that the mode is on and 
 | Badge | Meaning |
 |---|---|
 | `[STE]` | Mode `on`. |
-| `[STE:STRICT 0.3]` | Mode `strict`, with the lint score of the last reply. |
+| `[STE:STRICT x.x]` | Mode `strict`. `x.x` is the lint score of the last reply: rule violations per 100 words. Lower is better. |
 | nothing | Mode `off`. |
 
 - Ask Claude: Install the STE status line badge.
@@ -269,6 +269,8 @@ To use it in a team repo, type `/ste project strict` and commit `.claude/ste-mod
 This plugin only changes how often the rules apply, so the comparison that matters is the simple-english skill alone against the hook. The benchmark runs on several Claude models in Claude Code and on GPT models in Codex CLI.
 
 The benchmark sends the same 50 writing prompts (docs, code reviews, error messages, commit messages, incident reports, runbooks) through each arm, one run per prompt. The simple-english plugin's own linter, `ste_lint.py`, counts the rule violations in every reply. Method, full tables, and all raw replies: [`evals/results/RESULTS.md`](evals/results/RESULTS.md).
+
+`v/100w` is the linter's count of rule violations per 100 words, so lower is better.
 
 | Model | n prompts | skill alone (v/100w) | hook on (v/100w) | hook strict (v/100w) | reduction (strict vs skill) |
 |---|---:|---:|---:|---:|---:|
@@ -301,7 +303,7 @@ Reproduce: `python3 evals/bench.py` for Claude Code, and `python3 evals/codex_be
 | `SessionStart` | New session, resume, clear, compact | Loads the full rule set from the simple-english plugin as context. |
 | `UserPromptSubmit` | Every prompt | Adds a 74-word STE reminder. Handles `/ste` commands. |
 | `Stop` | End of every reply, `strict` mode only | Runs the simple-english linter `ste_lint.py` on the reply. If the reply fails, Claude must rewrite it once. |
-| Status line (optional) | Always | Shows `[STE]` in `on` mode, or `[STE:STRICT 0.3]` with the last lint score in `strict` mode. Shows nothing in `off` mode. |
+| Status line (optional) | Always | Shows `[STE]` in `on` mode, or `[STE:STRICT x.x]` with the last lint score in `strict` mode. Shows nothing in `off` mode. |
 
 In strict mode, a failed reply goes back to Claude with a message like this one from the benchmark:
 
@@ -364,11 +366,9 @@ STE is flat by design. Use it for docs, reviews, runbooks, error messages, and e
 
 ## ❓ FAQ
 
-**Why not just prompt it?** A prompt line is one instruction among many. In the benchmark, the simple-english skill fired on its own in 27 of 50 replies on Fable 5. This plugin does not depend on a decision. It runs every turn.
+**Why not just call the skill?** You can. A call applies the rules to that one reply. The next reply forgets them. Left to itself, the skill fired in 27 of 50 replies on Fable 5. This plugin runs every turn and needs no call.
 
 **Why not the simple-english output style?** The output style is a good one-shot. It has no reminder per turn and no gate.
-
-**What does strict mode cost?** If a reply fails, one extra rewrite. In the benchmark, strict mode blocked 6 of 50 replies on Fable 5. See the token column.
 
 ## Update
 
