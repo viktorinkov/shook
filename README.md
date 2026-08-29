@@ -23,10 +23,6 @@ claude plugin marketplace add viktorinkov/shook
 claude plugin install simple-english-hook@simple-english-hook
 ```
 
-Requirements: Claude Code, the simple-english plugin, `jq`, and `python3` (strict mode only). No Node. No telemetry. Six shell files.
-
-Start a new session.
-
 ## Use
 
 | Command | What it does |
