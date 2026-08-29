@@ -107,7 +107,15 @@ See [GitHub Copilot CLI](docs/other-harnesses.md#github-copilot-cli) in the harn
 
 ## Cursor
 
-{{CURSOR_SECTION}}
+Cursor loads no plugins, so an install script writes the files that Cursor reads: an always-on rule file and four hooks.
+
+```bash
+git clone https://github.com/viktorinkov/shook ~/shook
+cd <your-project>
+bash ~/shook/cursor-install.sh strict
+```
+
+Toggle with `/ste on`, `/ste strict`, `/ste off`, or `/ste status` in the Agent chat, or with `cursor-install.sh <mode>` from the shell. Modes `on` and `strict` both work: the rule file applies the rules to every request, and the `stop` hook sends a failed reply back once. No badge, and no live Cursor session verified it yet. Details: [docs/other-harnesses.md](docs/other-harnesses.md#cursor).
 
 ## Enable it
 

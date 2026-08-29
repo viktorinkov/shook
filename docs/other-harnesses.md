@@ -184,9 +184,9 @@ Cursor is an IDE with hooks and rule files. It loads no plugins, so `cursor-inst
 ### Install
 
 ```bash
-git clone https://github.com/viktorinkov/simple-english-hook ~/simple-english-hook
+git clone https://github.com/viktorinkov/shook ~/shook
 cd <your-project>
-bash ~/simple-english-hook/cursor-install.sh strict
+bash ~/shook/cursor-install.sh strict
 ```
 
 The script writes four files into the project:
@@ -225,8 +225,8 @@ Per the docs. No live session verified it.
 
 ```bash
 cd <your-project>
-bash ~/simple-english-hook/cursor-install.sh uninstall
-bash ~/simple-english-hook/cursor-install.sh --user uninstall
+bash ~/shook/cursor-install.sh uninstall
+bash ~/shook/cursor-install.sh --user uninstall
 ```
 
 The project uninstall removes the rule file, the wrapper, and this plugin's entries in `.cursor/hooks.json`. It keeps `.claude/ste-mode`, because the other harnesses read it. Delete that file by hand if no harness needs it. The user uninstall also deletes the flag, the score file, and the saved replies.
