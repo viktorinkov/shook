@@ -38,6 +38,7 @@ Start a new session.
 | `/ste project <mode>` | Sets `on`, `strict`, or `off` for the current repo only. `/ste project clear` removes it. |
 | `/ste config` | Shows every lint gate setting, its value, and its source. |
 | `/ste set <key> <value>` | Writes a lint gate setting. See [Tune the lint gate](#tune-the-lint-gate). |
+| `/ste uninstall` | Removes the badge and the state files. Then run the plugin uninstall command. |
 
 ## Codex CLI
 
@@ -200,11 +201,10 @@ claude plugin update simple-english-hook@simple-english-hook
 
 ## Uninstall
 
-1. Run `claude plugin uninstall simple-english-hook@simple-english-hook`.
-2. If you installed the badge, remove the line that ends with `# simple-english-hook` from your status line script. Delete the `.bak` copy next to it.
-3. Delete `~/.claude/.simple-english-active`, `~/.claude/.simple-english-score`, and `~/.claude/simple-english-hook/`.
-4. Delete `.claude/ste-mode` from any repo that has one.
-5. If you do not need the simple-english plugin, run `claude plugin uninstall simple-english@simple-english`.
+1. Type `/ste uninstall`. It removes the status line badge, the state files, and the mode and config files in the current repo.
+2. Run `claude plugin uninstall simple-english-hook@simple-english-hook`.
+
+If other repos have a `.claude/ste-mode` or `.claude/ste-config.json` file, delete those by hand. To remove the simple-english plugin too, run `claude plugin uninstall simple-english@simple-english`.
 
 ---
 
