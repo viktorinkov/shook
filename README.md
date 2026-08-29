@@ -1,6 +1,6 @@
 <p align="center"><strong>Claude picks the replies that get the Simple English skill. Most replies never qualify.<br>This plugin applies it to every reply.</strong></p>
 
-<p align="center">Three Claude Code hooks that make <a href="https://github.com/AminBlg/SimpleEnglish">AminBlg/SimpleEnglish</a> always on:<br>the rules at session start, a reminder on every prompt, and a lint gate that sends a failed reply back for a rewrite.<br>The full rule set comes from the simple-english plugin at run time.</p>
+<p align="center">Three Claude Code hooks that make <a href="https://github.com/AminBlg/SimpleEnglish">AminBlg/SimpleEnglish</a> always on:<br>the rules at session start, a reminder on every prompt, and a lint gate that sends a failed reply back for a rewrite.<br>The status line shows the mode the whole time: <code>[STE]</code> or <code>[STE:STRICT 0.3]</code>.</p>
 
 <p align="center">
   <a href="evals/results/RESULTS.md"><img src="https://img.shields.io/badge/STE_violations-%E2%88%92{{REDUCTION_STRICT}}%25_vs_the_skill_alone-brightgreen?style=flat" alt="violations vs the skill alone"></a>
@@ -37,6 +37,18 @@ Start a new session.
 | `/ste config` | Shows every lint gate setting, its value, and its source. |
 | `/ste set <key> <value>` | Writes a lint gate setting. See [Tune the lint gate](#tune-the-lint-gate). |
 | `/ste uninstall` | Removes the badge and the state files. Then run the plugin uninstall command. |
+
+## The status line
+
+The hooks enforce the mode, so the badge is how you see that the mode is on and how strict it is.
+
+| Badge | Meaning |
+|---|---|
+| `[STE]` | Mode `on`. |
+| `[STE:STRICT 0.3]` | Mode `strict`, with the lint score of the last reply. |
+| nothing | Mode `off`. |
+
+A plugin cannot change the status line, so the setup is one step by hand. Ask Claude: *install the STE status line badge*. Or run `statusline-install.sh` from this plugin's folder. The script adds one line to an existing status line script, or creates one.
 
 ## Codex CLI
 
@@ -108,10 +120,6 @@ The hooks run in every repo. The **mode** decides what they do. The mode has thr
 Order of precedence: environment, then the repo file, then the global flag, then off. Each harness keeps its own global flag. The repo file and `STE_MODE` apply to all harnesses.
 
 To use it in a team repo, type `/ste project strict` and commit `.claude/ste-mode`. Each team member installs both plugins once.
-
-### The status line badge
-
-A plugin cannot change the status line, so this step is by hand. When the mode is on, ask Claude: *install the STE status line badge*. Claude runs `statusline-install.sh` from this plugin's folder. The script adds one line to your status line script. If you have no status line, the script creates one. The badge shows the lint score in strict mode only.
 
 ## Numbers
 
