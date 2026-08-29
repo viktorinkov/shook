@@ -33,6 +33,8 @@ bash "$(ls -d ~/.claude/plugins/cache/simple-english-hook/simple-english-hook/*/
 
 The status line then shows `[STE]` or `[STE:STRICT x.x]` the whole time.
 
+FYI: Remember to /reload-plugins and to start a new conversation to see the STE badge
+
 <details>
 <summary><strong>Claude Code</strong></summary>
 
