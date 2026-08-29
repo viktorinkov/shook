@@ -22,7 +22,13 @@ Quick start (Claude Code):
 claude plugin marketplace add AminBlg/SimpleEnglish && claude plugin install simple-english@simple-english && claude plugin marketplace add viktorinkov/shook && claude plugin install simple-english-hook@simple-english-hook
 ```
 
-Then start a new session and type `/ste strict`.
+Then start a new session, type `/ste strict`, and ask Claude to install the STE status line badge. Or run the badge script yourself:
+
+```bash
+bash "$(ls -d ~/.claude/plugins/cache/simple-english-hook/simple-english-hook/*/ | tail -1)statusline-install.sh"
+```
+
+The status line then shows `[STE]` or `[STE:STRICT 0.3]` the whole time.
 
 <details>
 <summary><strong>Claude Code</strong></summary>
