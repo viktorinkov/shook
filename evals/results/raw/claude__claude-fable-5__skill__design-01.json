@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "design-01",
+  "cat": "design",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 33.2,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.168034,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2765,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 2146,
+    "output_tokens_details": {
+      "thinking_tokens": 55
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2765,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2146,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 2765,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2765
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 952,
+    "sentences": 51,
+    "mean_sentence_words": 18.2,
+    "longest_sentence_words": 112,
+    "violations": {
+      "sentence_over_limit": 7,
+      "contraction": 11,
+      "banned_modal": 2,
+      "perfect_tense": 1,
+      "ing_clause": 0,
+      "semicolon": 9,
+      "latin_abbrev": 2,
+      "slop_word": 0,
+      "trailing_condition": 5,
+      "synonym_rotation": 1
+    },
+    "violations_total": 38,
+    "violations_per_100w": 3.99
+  },
+  "text": "This is an assessment question, so I'll answer it directly rather than touch any code.\n\n## Direct HTTP calls\n\n**What you get**\n- Simplest thing possible: one service calls another, gets a synchronous answer. Easy to trace, easy to test, no extra infrastructure.\n- Request/response semantics are natural when the caller *needs* the result to continue (e.g. \"is this SKU in stock right now?\").\n- Failures surface immediately as status codes; the caller decides what to do.\n\n**What it costs you**\n- **Temporal coupling.** If the downstream service is down or slow, the caller is down or slow. Latency and availability compound across every hop.\n- **Backpressure is your problem.** A traffic spike hits the downstream service directly. You end up hand-rolling retries, timeouts, circuit breakers, and idempotency keys \u2014 and every caller has to do it correctly.\n- **Retries are dangerous** without idempotency: a timed-out `POST /charge` may or may not have charged the card.\n- Fan-out (one event \u2192 N consumers) means the producer has to know about and call every consumer.\n\n## Message queue (e.g. SQS, RabbitMQ, Kafka, NATS JetStream)\n\n**What you get**\n- **Decoupling in time.** Producer writes a message and moves on; the consumer can be down for ten minutes and nothing is lost. Availability of the pipeline \u2248 availability of the broker, which is usually much higher than the product of all your services.\n- **Built-in buffering and backpressure.** Spikes queue up instead of failing; consumers drain at their own rate and scale horizontally by adding workers.\n- **Durable retries and dead-letter queues** come for free, with visibility into what failed and why.\n- **Fan-out** is trivial: multiple consumers subscribe to the same event (`OrderPlaced` \u2192 payment, inventory, email, analytics) without the producer knowing.\n\n**What it costs you**\n- **Another piece of infrastructure** to run, monitor, and secure.\n- **Eventual consistency.** The producer can't get an answer back. Anything that needs a synchronous decision needs a different mechanism (or a request/reply pattern, which is clunkier than HTTP).\n- **At-least-once delivery** is the norm, so consumers *must* be idempotent. Ordering guarantees vary by broker and usually require partitioning by key.\n- Harder to debug end-to-end without good correlation IDs and tracing; \"where is my message?\" is a real question.\n\n## Side by side\n\n| Concern | HTTP | Queue |\n|---|---|---|\n| Need a synchronous answer | \u2705 natural | \u274c awkward |\n| Downstream outage | caller fails | work waits |\n| Traffic spikes | must rate-limit / shed | absorbed by buffer |\n| Retries & DLQ | hand-rolled | built in |\n| Fan-out to many consumers | producer calls each | subscribe |\n| Idempotency required | for safe retries | always |\n| Ops overhead | none extra | broker to run |\n| Debuggability | simple | needs tracing |\n\n## Recommendation for an order-processing pipeline: **message queue**\n\nOrder processing is close to the canonical use case for async messaging, because of what an order *is*:\n\n1. **You must never lose an order.** With HTTP, an outage in payment or inventory means the checkout either fails or you have to build your own persistence-and-retry \u2014 which is a queue, but worse. With a queue, the order is durably persisted the moment it's accepted, and downstream steps catch up.\n2. **The steps are naturally asynchronous.** Once the customer sees \"Order received,\" charging the card, reserving stock, notifying the warehouse, and sending the email don't need to complete before you respond. They need to complete *eventually and reliably*.\n3. **Load is bursty** (sales, launches, marketing sends). A queue turns a spike into a longer drain time instead of a wave of 503s.\n4. **Fan-out grows over time.** Today it's payment and inventory; next quarter it's fraud scoring, analytics, and a loyalty service. With events, you add a consumer; with HTTP, you modify the orchestrator every time.\n5. **Failure handling is per-step.** A failed shipping-label call retries and dead-letters on its own without rolling back the whole order.\n\n**How I'd structure it:**\n- The API accepts the order, validates it synchronously (schema, obvious business rules), persists it, publishes `OrderPlaced`, and returns `202` with the order ID.\n- Each stage (payment, inventory, fulfillment, notification) is a consumer that emits its own event (`PaymentCaptured`, `StockReserved`, ...), so the pipeline is a chain of events rather than one big orchestrator. Use an orchestration/saga service if you need explicit compensation (e.g. release stock when payment fails).\n- Make every consumer idempotent, keyed on order ID + step. Use the order ID as the partition key if per-order ordering matters.\n- Configure a dead-letter queue per consumer and alert on it; that's your \"orders stuck\" signal.\n- Use the **transactional outbox** pattern so persisting the order and publishing the event can't diverge.\n- Propagate a correlation ID through every message and log line from day one.\n\n**Where HTTP still belongs:** the few genuinely synchronous questions \u2014 real-time inventory check or address validation at checkout, an admin \"get order status\" endpoint. Use HTTP for reads and immediate decisions; use the queue for anything that changes state and must not be lost.\n\n**If you're small and want to minimize ops:** a managed queue (SQS, Google Pub/Sub, Azure Service Bus) or a Postgres-backed queue if you're already on Postgres removes most of the broker-ops objection while keeping the durability and retry semantics. Don't reach for Kafka unless you need replay/log semantics or very high throughput.\n\n**Recap:** HTTP is simpler and right for synchronous request/response; a queue trades some operational and consistency complexity for durability, buffering, and decoupling. For order processing \u2014 where losing or double-processing an order is the worst outcome and most steps are inherently asynchronous \u2014 go with a message queue, keep HTTP for the handful of synchronous reads, and invest early in idempotency, a transactional outbox, and dead-letter alerting.",
+  "texts": [
+    "This is an assessment question, so I'll answer it directly rather than touch any code.\n\n## Direct HTTP calls\n\n**What you get**\n- Simplest thing possible: one service calls another, gets a synchronous answer. Easy to trace, easy to test, no extra infrastructure.\n- Request/response semantics are natural when the caller *needs* the result to continue (e.g. \"is this SKU in stock right now?\").\n- Failures surface immediately as status codes; the caller decides what to do.\n\n**What it costs you**\n- **Temporal coupling.** If the downstream service is down or slow, the caller is down or slow. Latency and availability compound across every hop.\n- **Backpressure is your problem.** A traffic spike hits the downstream service directly. You end up hand-rolling retries, timeouts, circuit breakers, and idempotency keys \u2014 and every caller has to do it correctly.\n- **Retries are dangerous** without idempotency: a timed-out `POST /charge` may or may not have charged the card.\n- Fan-out (one event \u2192 N consumers) means the producer has to know about and call every consumer.\n\n## Message queue (e.g. SQS, RabbitMQ, Kafka, NATS JetStream)\n\n**What you get**\n- **Decoupling in time.** Producer writes a message and moves on; the consumer can be down for ten minutes and nothing is lost. Availability of the pipeline \u2248 availability of the broker, which is usually much higher than the product of all your services.\n- **Built-in buffering and backpressure.** Spikes queue up instead of failing; consumers drain at their own rate and scale horizontally by adding workers.\n- **Durable retries and dead-letter queues** come for free, with visibility into what failed and why.\n- **Fan-out** is trivial: multiple consumers subscribe to the same event (`OrderPlaced` \u2192 payment, inventory, email, analytics) without the producer knowing.\n\n**What it costs you**\n- **Another piece of infrastructure** to run, monitor, and secure.\n- **Eventual consistency.** The producer can't get an answer back. Anything that needs a synchronous decision needs a different mechanism (or a request/reply pattern, which is clunkier than HTTP).\n- **At-least-once delivery** is the norm, so consumers *must* be idempotent. Ordering guarantees vary by broker and usually require partitioning by key.\n- Harder to debug end-to-end without good correlation IDs and tracing; \"where is my message?\" is a real question.\n\n## Side by side\n\n| Concern | HTTP | Queue |\n|---|---|---|\n| Need a synchronous answer | \u2705 natural | \u274c awkward |\n| Downstream outage | caller fails | work waits |\n| Traffic spikes | must rate-limit / shed | absorbed by buffer |\n| Retries & DLQ | hand-rolled | built in |\n| Fan-out to many consumers | producer calls each | subscribe |\n| Idempotency required | for safe retries | always |\n| Ops overhead | none extra | broker to run |\n| Debuggability | simple | needs tracing |\n\n## Recommendation for an order-processing pipeline: **message queue**\n\nOrder processing is close to the canonical use case for async messaging, because of what an order *is*:\n\n1. **You must never lose an order.** With HTTP, an outage in payment or inventory means the checkout either fails or you have to build your own persistence-and-retry \u2014 which is a queue, but worse. With a queue, the order is durably persisted the moment it's accepted, and downstream steps catch up.\n2. **The steps are naturally asynchronous.** Once the customer sees \"Order received,\" charging the card, reserving stock, notifying the warehouse, and sending the email don't need to complete before you respond. They need to complete *eventually and reliably*.\n3. **Load is bursty** (sales, launches, marketing sends). A queue turns a spike into a longer drain time instead of a wave of 503s.\n4. **Fan-out grows over time.** Today it's payment and inventory; next quarter it's fraud scoring, analytics, and a loyalty service. With events, you add a consumer; with HTTP, you modify the orchestrator every time.\n5. **Failure handling is per-step.** A failed shipping-label call retries and dead-letters on its own without rolling back the whole order.\n\n**How I'd structure it:**\n- The API accepts the order, validates it synchronously (schema, obvious business rules), persists it, publishes `OrderPlaced`, and returns `202` with the order ID.\n- Each stage (payment, inventory, fulfillment, notification) is a consumer that emits its own event (`PaymentCaptured`, `StockReserved`, ...), so the pipeline is a chain of events rather than one big orchestrator. Use an orchestration/saga service if you need explicit compensation (e.g. release stock when payment fails).\n- Make every consumer idempotent, keyed on order ID + step. Use the order ID as the partition key if per-order ordering matters.\n- Configure a dead-letter queue per consumer and alert on it; that's your \"orders stuck\" signal.\n- Use the **transactional outbox** pattern so persisting the order and publishing the event can't diverge.\n- Propagate a correlation ID through every message and log line from day one.\n\n**Where HTTP still belongs:** the few genuinely synchronous questions \u2014 real-time inventory check or address validation at checkout, an admin \"get order status\" endpoint. Use HTTP for reads and immediate decisions; use the queue for anything that changes state and must not be lost.\n\n**If you're small and want to minimize ops:** a managed queue (SQS, Google Pub/Sub, Azure Service Bus) or a Postgres-backed queue if you're already on Postgres removes most of the broker-ops objection while keeping the durability and retry semantics. Don't reach for Kafka unless you need replay/log semantics or very high throughput.\n\n**Recap:** HTTP is simpler and right for synchronous request/response; a queue trades some operational and consistency complexity for durability, buffering, and decoupling. For order processing \u2014 where losing or double-processing an order is the worst outcome and most steps are inherently asynchronous \u2014 go with a message queue, keep HTTP for the handful of synchronous reads, and invest early in idempotency, a transactional outbox, and dead-letter alerting."
+  ],
+  "stderr_tail": ""
+}

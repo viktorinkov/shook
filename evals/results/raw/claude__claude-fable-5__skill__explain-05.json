@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "explain-05",
+  "cat": "explain",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 30.2,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.34479600000000005,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 10859,
+    "cache_read_input_tokens": 11602,
+    "output_tokens": 2300,
+    "output_tokens_details": {
+      "thinking_tokens": 1166
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10859,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2017,
+        "cache_read_input_tokens": 7179,
+        "cache_creation_input_tokens": 8103,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8103
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 508,
+    "sentences": 44,
+    "mean_sentence_words": 11.3,
+    "longest_sentence_words": 35,
+    "violations": {
+      "sentence_over_limit": 2,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 3,
+    "violations_per_100w": 0.59
+  },
+  "text": "Here is the section, written in plain descriptive style (short sentences, active voice, one term per concept) so it reads well for everyone on the team.\n\n---\n\n## JWT authentication between the browser and the API\n\nA JSON Web Token (JWT) is a signed string that identifies a user. The API issues the token after a successful login. The browser then sends the token with each request. The API validates the signature on each request. As a result, the API does not need to store sessions in a database.\n\n### Token structure\n\nA JWT has three parts, divided by periods: the header, the payload, and the signature.\n\n- The header names the signing algorithm, for example `HS256` or `RS256`.\n- The payload holds claims, for example the user ID (`sub`), the issuer (`iss`), and the expiry time (`exp`).\n- The signature is a hash of the header and the payload. The API makes this hash with a secret key or a private key.\n\nThe header and the payload are Base64-encoded, not encrypted. Anyone who has the token can read them. The payload must not contain passwords or other secrets.\n\n### Login flow\n\n1. The user enters their credentials in the browser.\n2. The browser sends the credentials to the login endpoint, for example `POST /auth/login`.\n3. The API validates the credentials and makes a signed token.\n4. The API returns the token to the browser.\n5. The browser stores the token.\n6. For each later request, the browser sends the token in the `Authorization` header: `Authorization: Bearer <token>`.\n7. The API validates the signature and the `exp` claim. If the token is valid, the API processes the request. If not, the API returns `401 Unauthorized`.\n\n### Token storage in the browser\n\nThe browser can store the token in two places:\n\n- In a cookie with the `HttpOnly`, `Secure`, and `SameSite` attributes. JavaScript cannot read this cookie. This protects the token from XSS attacks, but the API needs CSRF protection.\n- In memory or `localStorage`. JavaScript can read the token from these places. An XSS attack can steal it.\n\nAn `HttpOnly` cookie is the safer option.\n\n### Expiry and refresh\n\nAn access token has a short lifetime, usually minutes. A refresh token has a longer lifetime, usually days. When the access token expires, the browser sends the refresh token to `POST /auth/refresh`. The API returns a new access token.\n\nThe API cannot revoke a JWT before it expires, because the API does not store the token. A short lifetime limits the damage from a stolen token. If you need immediate revocation, the API must keep a denylist of token IDs (`jti`).\n\n---\n\n**Recap:** The section covers what a JWT is, its three parts, the login and request flow, browser storage options, and expiry/refresh. I applied the team's Simplified Technical English rules (sentences under 25 words, active voice, one term per concept). Two things to adjust for your setup: the endpoint names (`/auth/login`, `/auth/refresh`) are examples, and the storage recommendation states the general security tradeoff rather than your team's chosen policy \u2014 replace it with your actual policy if one exists.",
+  "texts": [
+    "I'll load the project's technical-writing skill first, since this is internal documentation, then write the section.",
+    "Here is the section, written in plain descriptive style (short sentences, active voice, one term per concept) so it reads well for everyone on the team.\n\n---\n\n## JWT authentication between the browser and the API\n\nA JSON Web Token (JWT) is a signed string that identifies a user. The API issues the token after a successful login. The browser then sends the token with each request. The API validates the signature on each request. As a result, the API does not need to store sessions in a database.\n\n### Token structure\n\nA JWT has three parts, divided by periods: the header, the payload, and the signature.\n\n- The header names the signing algorithm, for example `HS256` or `RS256`.\n- The payload holds claims, for example the user ID (`sub`), the issuer (`iss`), and the expiry time (`exp`).\n- The signature is a hash of the header and the payload. The API makes this hash with a secret key or a private key.\n\nThe header and the payload are Base64-encoded, not encrypted. Anyone who has the token can read them. The payload must not contain passwords or other secrets.\n\n### Login flow\n\n1. The user enters their credentials in the browser.\n2. The browser sends the credentials to the login endpoint, for example `POST /auth/login`.\n3. The API validates the credentials and makes a signed token.\n4. The API returns the token to the browser.\n5. The browser stores the token.\n6. For each later request, the browser sends the token in the `Authorization` header: `Authorization: Bearer <token>`.\n7. The API validates the signature and the `exp` claim. If the token is valid, the API processes the request. If not, the API returns `401 Unauthorized`.\n\n### Token storage in the browser\n\nThe browser can store the token in two places:\n\n- In a cookie with the `HttpOnly`, `Secure`, and `SameSite` attributes. JavaScript cannot read this cookie. This protects the token from XSS attacks, but the API needs CSRF protection.\n- In memory or `localStorage`. JavaScript can read the token from these places. An XSS attack can steal it.\n\nAn `HttpOnly` cookie is the safer option.\n\n### Expiry and refresh\n\nAn access token has a short lifetime, usually minutes. A refresh token has a longer lifetime, usually days. When the access token expires, the browser sends the refresh token to `POST /auth/refresh`. The API returns a new access token.\n\nThe API cannot revoke a JWT before it expires, because the API does not store the token. A short lifetime limits the damage from a stolen token. If you need immediate revocation, the API must keep a denylist of token IDs (`jti`).\n\n---\n\n**Recap:** The section covers what a JWT is, its three parts, the login and request flow, browser storage options, and expiry/refresh. I applied the team's Simplified Technical English rules (sentences under 25 words, active voice, one term per concept). Two things to adjust for your setup: the endpoint names (`/auth/login`, `/auth/refresh`) are examples, and the storage recommendation states the general security tradeoff rather than your team's chosen policy \u2014 replace it with your actual policy if one exists."
+  ],
+  "stderr_tail": ""
+}

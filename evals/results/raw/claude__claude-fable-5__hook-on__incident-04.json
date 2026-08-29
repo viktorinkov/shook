@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "incident-04",
+  "cat": "incident",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 11.4,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.277316,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 12013,
+    "cache_read_input_tokens": 12766,
+    "output_tokens": 485,
+    "output_tokens_details": {
+      "thinking_tokens": 145
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12013,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 210,
+        "cache_read_input_tokens": 8343,
+        "cache_creation_input_tokens": 8093,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8093
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 131,
+    "sentences": 15,
+    "mean_sentence_words": 8.7,
+    "longest_sentence_words": 20,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.76
+  },
+  "text": "Here is the status page update:\n\n---\n\n**Search results delayed during reindex**\n\n**Status:** Monitoring\n\nWe reindex the search data at this time. Search results can show a delay of up to 10 minutes. New and updated items appear in search after this delay.\n\nNo data is lost. All items remain stored and safe. Only the search index is behind.\n\nYou do not need to take action. When the reindex completes, search results return to normal. We will post an update here at that time.\n\n---\n\nRecap: the update has three short paragraphs. The first states the effect, the second states that no data is lost, and the third states what happens next. It contains no timestamp or start time. Add one if your status page does not add it for you.",
+  "texts": [
+    "I will write the status page update in Simplified Technical English. I will load the STE skill first.",
+    "Here is the status page update:\n\n---\n\n**Search results delayed during reindex**\n\n**Status:** Monitoring\n\nWe reindex the search data at this time. Search results can show a delay of up to 10 minutes. New and updated items appear in search after this delay.\n\nNo data is lost. All items remain stored and safe. Only the search index is behind.\n\nYou do not need to take action. When the reindex completes, search results return to normal. We will post an update here at that time.\n\n---\n\nRecap: the update has three short paragraphs. The first states the effect, the second states that no data is lost, and the third states what happens next. It contains no timestamp or start time. Add one if your status page does not add it for you."
+  ],
+  "stderr_tail": ""
+}

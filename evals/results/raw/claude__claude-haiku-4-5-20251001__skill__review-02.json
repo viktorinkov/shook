@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "review-02",
+  "cat": "review",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 13.9,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.015757,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 4820,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 1021,
+    "output_tokens_details": {
+      "thinking_tokens": 491
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4820,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 1021,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 4820,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4820
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 189,
+    "sentences": 8,
+    "mean_sentence_words": 21.5,
+    "longest_sentence_words": 35,
+    "violations": {
+      "sentence_over_limit": 2,
+      "contraction": 2,
+      "banned_modal": 2,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 3,
+      "synonym_rotation": 1
+    },
+    "violations_total": 10,
+    "violations_per_100w": 5.29
+  },
+  "text": "I'll review this SQL migration and identify the key issues:\n\n## Migration Review Feedback\n\n### \ud83d\udd34 Critical Issues\n\n1. **Missing email uniqueness constraint**\n   - Email columns should typically be `UNIQUE` (or at least indexed) to prevent duplicates\n   - Consider: `ALTER TABLE users ADD CONSTRAINT email_unique UNIQUE (email);`\n\n2. **Invalid default email domain**\n   - Using `@example.com` creates non-functional email addresses\n   - These can't receive emails and violate RFC 2606 (reserved domain)\n   - Recommend: use a real domain, or store `NULL` initially and require users to set their email on first login\n\n3. **Non-reversible data transformation**\n   - If you need to rollback, the original usernames are lost after this migration\n   - Consider: keep original email generation logic documented, or preserve username separately\n\n### \u26a0\ufe0f Potential Issues\n\n4. **Missing index for performance**\n   - If emails will be used for login/lookup queries, add an index:\n   ```sql\n   CREATE INDEX idx_users_email ON users(email);\n   ```\n\n5. **No NULL username check**\n   - If any `username` is `NULL`, the email will be `'null@example.com'` (or similar depending on DB)\n   - Verify no NULL usernames exist first:\n   ```sql\n   SELECT COUNT(*) FROM users WHERE username IS NULL;\n   ```\n\n6. **Email validation missing**\n   - Consider adding a CHECK constraint for basic email format validation (varies by DB)\n\n### \u2705 Recommendation\n\nRevise to:\n```sql\n-- Step 1: Add column nullable\nALTER TABLE users ADD COLUMN email VARCHAR(254);\n\n-- Step 2: Verify no NULL usernames\nSELECT COUNT(*) FROM users WHERE username IS NULL;\n\n-- Step 3: Populate with real domain (not @example.com)\nUPDATE users SET email = username || '@yourdomain.com';\n\n-- Step 4: Add constraints and index\nALTER TABLE users ALTER COLUMN email SET NOT NULL;\nALTER TABLE users ADD CONSTRAINT email_unique UNIQUE (email);\nCREATE INDEX idx_users_email ON users(email);\n```\n\nIs this migration part of an existing PR, or would you like me to review the full context?",
+  "texts": [
+    "I'll review this SQL migration and identify the key issues:\n\n## Migration Review Feedback\n\n### \ud83d\udd34 Critical Issues\n\n1. **Missing email uniqueness constraint**\n   - Email columns should typically be `UNIQUE` (or at least indexed) to prevent duplicates\n   - Consider: `ALTER TABLE users ADD CONSTRAINT email_unique UNIQUE (email);`\n\n2. **Invalid default email domain**\n   - Using `@example.com` creates non-functional email addresses\n   - These can't receive emails and violate RFC 2606 (reserved domain)\n   - Recommend: use a real domain, or store `NULL` initially and require users to set their email on first login\n\n3. **Non-reversible data transformation**\n   - If you need to rollback, the original usernames are lost after this migration\n   - Consider: keep original email generation logic documented, or preserve username separately\n\n### \u26a0\ufe0f Potential Issues\n\n4. **Missing index for performance**\n   - If emails will be used for login/lookup queries, add an index:\n   ```sql\n   CREATE INDEX idx_users_email ON users(email);\n   ```\n\n5. **No NULL username check**\n   - If any `username` is `NULL`, the email will be `'null@example.com'` (or similar depending on DB)\n   - Verify no NULL usernames exist first:\n   ```sql\n   SELECT COUNT(*) FROM users WHERE username IS NULL;\n   ```\n\n6. **Email validation missing**\n   - Consider adding a CHECK constraint for basic email format validation (varies by DB)\n\n### \u2705 Recommendation\n\nRevise to:\n```sql\n-- Step 1: Add column nullable\nALTER TABLE users ADD COLUMN email VARCHAR(254);\n\n-- Step 2: Verify no NULL usernames\nSELECT COUNT(*) FROM users WHERE username IS NULL;\n\n-- Step 3: Populate with real domain (not @example.com)\nUPDATE users SET email = username || '@yourdomain.com';\n\n-- Step 4: Add constraints and index\nALTER TABLE users ALTER COLUMN email SET NOT NULL;\nALTER TABLE users ADD CONSTRAINT email_unique UNIQUE (email);\nCREATE INDEX idx_users_email ON users(email);\n```\n\nIs this migration part of an existing PR, or would you like me to review the full context?"
+  ],
+  "stderr_tail": ""
+}

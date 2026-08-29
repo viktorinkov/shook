@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "incident-05",
+  "cat": "incident",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 32.6,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.36798000000000003,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 12078,
+    "cache_read_input_tokens": 12830,
+    "output_tokens": 2271,
+    "output_tokens_details": {
+      "thinking_tokens": 1036
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12078,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2000,
+        "cache_read_input_tokens": 8407,
+        "cache_creation_input_tokens": 8094,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8094
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 572,
+    "sentences": 43,
+    "mean_sentence_words": 13.2,
+    "longest_sentence_words": 29,
+    "violations": {
+      "sentence_over_limit": 3,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 3,
+    "violations_per_100w": 0.52
+  },
+  "text": "Here is the section. Owner and due-date fields are placeholders, because the request did not give names or dates.\n\n---\n\n## Action items\n\nEach item has an owner, a priority, and a due date. Priority P0 items prevent a repeat of this outage. Priority P1 items decrease the time to find and repair the same class of problem. Priority P2 items improve capacity planning. The incident lead closes the postmortem only after all P0 and P1 items are done.\n\n| ID | Action | Priority | Owner | Due date | Status |\n|---|---|---|---|---|---|\n| AI-1 | Configure log rotation for the application logs on all production hosts. Set a maximum file size and a maximum number of files. | P0 | TBD | TBD | Open |\n| AI-2 | Add a disk-usage alert at 80% for every production host. Send the alert to the on-call channel. | P0 | TBD | TBD | Open |\n| AI-3 | Add a second disk-usage alert at 90%. Page the on-call engineer. | P0 | TBD | TBD | Open |\n| AI-4 | Find the services with the highest log volume. If a service writes debug logs in production, decrease the log level to INFO. | P0 | TBD | TBD | Open |\n| AI-5 | Move the application logs to a partition that is separate from the root filesystem. A full log partition must not stop the operating system. | P1 | TBD | TBD | Open |\n| AI-6 | Send all application logs to the central log store. Delete the local copies after 7 days. | P1 | TBD | TBD | Open |\n| AI-7 | Write a runbook for a full disk. Include the commands that find the largest files and free space without data loss. | P1 | TBD | TBD | Open |\n| AI-8 | Add a check to the deployment pipeline. The check must make sure that each new service has log rotation configured. | P1 | TBD | TBD | Open |\n| AI-9 | Add a disk-usage graph to the service dashboard. | P2 | TBD | TBD | Open |\n| AI-10 | Do a review of disk capacity on all production hosts once per quarter. Record the result in the capacity document. | P2 | TBD | TBD | Open |\n\n### Acceptance test for each item\n\nAn item is done only after the owner does the test that follows and records the result.\n\n1. For AI-1, fill a test host with logs to 95% disk usage. Make sure that rotation deletes the oldest files.\n2. For AI-2 and AI-3, do the same test. Make sure that both alerts arrive within 5 minutes.\n3. For AI-5, fill the log partition to 100%. Make sure that the host stays reachable and the service restarts.\n4. For AI-7, give the runbook to an engineer who did not work on this incident. The engineer must free the disk in less than 15 minutes.\n5. For AI-8, deploy a test service without log rotation. Make sure that the pipeline rejects the deployment.\n\n---\n\nRecap: the section has a short descriptive lead-in, a table of ten action items with placeholder owners and dates, and five acceptance tests. The thresholds (80%, 90%, 7 days, 15 minutes) are typical defaults. Change them to match your environment. This text obeys the ASD-STE100 structural rules. Full compliance needs a check against the official dictionary at asd-ste100.org.",
+  "texts": [
+    "I will write the Action items section in Simplified Technical English. First, I will load the STE skill.",
+    "Here is the section. Owner and due-date fields are placeholders, because the request did not give names or dates.\n\n---\n\n## Action items\n\nEach item has an owner, a priority, and a due date. Priority P0 items prevent a repeat of this outage. Priority P1 items decrease the time to find and repair the same class of problem. Priority P2 items improve capacity planning. The incident lead closes the postmortem only after all P0 and P1 items are done.\n\n| ID | Action | Priority | Owner | Due date | Status |\n|---|---|---|---|---|---|\n| AI-1 | Configure log rotation for the application logs on all production hosts. Set a maximum file size and a maximum number of files. | P0 | TBD | TBD | Open |\n| AI-2 | Add a disk-usage alert at 80% for every production host. Send the alert to the on-call channel. | P0 | TBD | TBD | Open |\n| AI-3 | Add a second disk-usage alert at 90%. Page the on-call engineer. | P0 | TBD | TBD | Open |\n| AI-4 | Find the services with the highest log volume. If a service writes debug logs in production, decrease the log level to INFO. | P0 | TBD | TBD | Open |\n| AI-5 | Move the application logs to a partition that is separate from the root filesystem. A full log partition must not stop the operating system. | P1 | TBD | TBD | Open |\n| AI-6 | Send all application logs to the central log store. Delete the local copies after 7 days. | P1 | TBD | TBD | Open |\n| AI-7 | Write a runbook for a full disk. Include the commands that find the largest files and free space without data loss. | P1 | TBD | TBD | Open |\n| AI-8 | Add a check to the deployment pipeline. The check must make sure that each new service has log rotation configured. | P1 | TBD | TBD | Open |\n| AI-9 | Add a disk-usage graph to the service dashboard. | P2 | TBD | TBD | Open |\n| AI-10 | Do a review of disk capacity on all production hosts once per quarter. Record the result in the capacity document. | P2 | TBD | TBD | Open |\n\n### Acceptance test for each item\n\nAn item is done only after the owner does the test that follows and records the result.\n\n1. For AI-1, fill a test host with logs to 95% disk usage. Make sure that rotation deletes the oldest files.\n2. For AI-2 and AI-3, do the same test. Make sure that both alerts arrive within 5 minutes.\n3. For AI-5, fill the log partition to 100%. Make sure that the host stays reachable and the service restarts.\n4. For AI-7, give the runbook to an engineer who did not work on this incident. The engineer must free the disk in less than 15 minutes.\n5. For AI-8, deploy a test service without log rotation. Make sure that the pipeline rejects the deployment.\n\n---\n\nRecap: the section has a short descriptive lead-in, a table of ten action items with placeholder owners and dates, and five acceptance tests. The thresholds (80%, 90%, 7 days, 15 minutes) are typical defaults. Change them to match your environment. This text obeys the ASD-STE100 structural rules. Full compliance needs a check against the official dictionary at asd-ste100.org."
+  ],
+  "stderr_tail": ""
+}

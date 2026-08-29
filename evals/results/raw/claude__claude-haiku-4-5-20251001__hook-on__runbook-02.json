@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "runbook-02",
+  "cat": "runbook",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 67.1,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.046368,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 5624,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 7022,
+    "output_tokens_details": {
+      "thinking_tokens": 6617
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5624,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 7022,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 5624,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5624
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "procedural",
+    "words": 151,
+    "sentences": 15,
+    "mean_sentence_words": 8.9,
+    "longest_sentence_words": 26,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.66
+  },
+  "text": "**Restart the worker service**\n\n**Prerequisites**\n- SSH access to the host\n- Permission to restart systemd services\n- Access to monitor queue depth\n\n**Steps**\n\n1. Check the current queue depth.\n   ```\n   curl http://localhost:8080/metrics | grep queue_depth\n   ```\n\n2. Stop the worker service.\n   ```\n   systemctl stop worker\n   ```\n\n3. Monitor the queue depth for 5 minutes to allow pending jobs to complete.\n   ```\n   watch -n 5 'curl http://localhost:8080/metrics | grep queue_depth'\n   ```\n\n4. Check that the queue depth reaches 0.\n   - If yes, go to step 6.\n   - If no, go to step 5.\n\n5. If the queue does not drain after 5 minutes, do the following:\n\n   a. Check for stuck jobs in the queue.\n   ```\n   redis-cli --raw LLEN worker:queue\n   ```\n\n   b. Force stop all remaining worker processes.\n   ```\n   pkill -9 -f worker\n   ```\n\n   c. Do not clear the queue unless the jobs are stuck or lost. The command deletes all queued jobs.\n   ```\n   redis-cli DEL worker:queue\n   ```\n\n   d. Check that the queue is empty.\n   ```\n   redis-cli --raw LLEN worker:queue\n   ```\n\n6. Start the worker service.\n   ```\n   systemctl start worker\n   ```\n\n7. Check that the worker service runs without errors.\n   ```\n   systemctl status worker\n   ```\n\n8. Check the service logs for warnings or errors in the restart.\n   ```\n   journalctl -u worker -n 20\n   ```",
+  "texts": [
+    "**Restart the worker service**\n\n**Prerequisites**\n- SSH access to the host\n- Permission to restart systemd services\n- Access to monitor queue depth\n\n**Steps**\n\n1. Check the current queue depth.\n   ```\n   curl http://localhost:8080/metrics | grep queue_depth\n   ```\n\n2. Stop the worker service.\n   ```\n   systemctl stop worker\n   ```\n\n3. Monitor the queue depth for 5 minutes to allow pending jobs to complete.\n   ```\n   watch -n 5 'curl http://localhost:8080/metrics | grep queue_depth'\n   ```\n\n4. Check that the queue depth reaches 0.\n   - If yes, go to step 6.\n   - If no, go to step 5.\n\n5. If the queue does not drain after 5 minutes, do the following:\n\n   a. Check for stuck jobs in the queue.\n   ```\n   redis-cli --raw LLEN worker:queue\n   ```\n\n   b. Force stop all remaining worker processes.\n   ```\n   pkill -9 -f worker\n   ```\n\n   c. Do not clear the queue unless the jobs are stuck or lost. The command deletes all queued jobs.\n   ```\n   redis-cli DEL worker:queue\n   ```\n\n   d. Check that the queue is empty.\n   ```\n   redis-cli --raw LLEN worker:queue\n   ```\n\n6. Start the worker service.\n   ```\n   systemctl start worker\n   ```\n\n7. Check that the worker service runs without errors.\n   ```\n   systemctl status worker\n   ```\n\n8. Check the service logs for warnings or errors in the restart.\n   ```\n   journalctl -u worker -n 20\n   ```"
+  ],
+  "stderr_tail": ""
+}

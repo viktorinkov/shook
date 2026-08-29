@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "incident-04",
+  "cat": "incident",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 12.9,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.26374899999999996,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 10916,
+    "cache_read_input_tokens": 11605,
+    "output_tokens": 656,
+    "output_tokens_details": {
+      "thinking_tokens": 191
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10916,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 318,
+        "cache_read_input_tokens": 7182,
+        "cache_creation_input_tokens": 8157,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8157
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 182,
+    "sentences": 16,
+    "mean_sentence_words": 11.2,
+    "longest_sentence_words": 31,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 4,
+      "synonym_rotation": 0
+    },
+    "violations_total": 5,
+    "violations_per_100w": 2.75
+  },
+  "text": "Here's the status page update, written in plain, short sentences so it reads clearly on one pass:\n\n---\n\n**Search results delayed \u2014 reindex in progress**\n\n**Status:** Monitoring\n\nWe are reindexing our search data. During this work, new and updated content can take up to 10 minutes to appear in search results.\n\nNo data is lost. All content is saved and remains available. Only search results are delayed.\n\nYou do not need to do anything. Search returns to normal speed when the reindex completes. We will post an update here when it is done.\n\n---\n\n**Notes on the draft:**\n- I marked the status as **Monitoring** and used \"we\" as the subject \u2014 swap in your team or product name if your status page uses one.\n- No cause or ETA is stated, because you did not give one. If you have an expected completion time, add it to the last paragraph (\"We expect the reindex to complete by 14:00 UTC\").\n- A resolved follow-up, if you want it ready: *\"The reindex is complete. Search results are now current. No data was lost.\"*",
+  "texts": [
+    "I'll draft this with the Simplified Technical English guidelines, since a status page update is incident communication that needs to be clear to every reader.",
+    "Here's the status page update, written in plain, short sentences so it reads clearly on one pass:\n\n---\n\n**Search results delayed \u2014 reindex in progress**\n\n**Status:** Monitoring\n\nWe are reindexing our search data. During this work, new and updated content can take up to 10 minutes to appear in search results.\n\nNo data is lost. All content is saved and remains available. Only search results are delayed.\n\nYou do not need to do anything. Search returns to normal speed when the reindex completes. We will post an update here when it is done.\n\n---\n\n**Notes on the draft:**\n- I marked the status as **Monitoring** and used \"we\" as the subject \u2014 swap in your team or product name if your status page uses one.\n- No cause or ETA is stated, because you did not give one. If you have an expected completion time, add it to the last paragraph (\"We expect the reindex to complete by 14:00 UTC\").\n- A resolved follow-up, if you want it ready: *\"The reindex is complete. Search results are now current. No data was lost.\"*"
+  ],
+  "stderr_tail": ""
+}

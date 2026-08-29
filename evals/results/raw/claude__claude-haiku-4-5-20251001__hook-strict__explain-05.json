@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "explain-05",
+  "cat": "explain",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 37.5,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.030543,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 5659,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 3843,
+    "output_tokens_details": {
+      "thinking_tokens": 3559
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5659,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 3843,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 5659,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5659
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 211,
+    "sentences": 24,
+    "mean_sentence_words": 8.8,
+    "longest_sentence_words": 14,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.47
+  },
+  "text": "## JWT Authentication Between Browser and API\n\nA JSON Web Token (JWT) is a string that contains user data. The browser and API use this token to confirm the user has permission. The API creates the JWT when the user logs in successfully.\n\n**The Authentication Flow**\n\nThe process has three main steps:\n\n**Step 1: Login**\nThe user enters credentials in the browser. The browser sends these credentials to the API. The API verifies the credentials. If correct, the API creates a JWT and sends it to the browser.\n\n**Step 2: Store the Token**\nThe browser saves the JWT in local storage or a cookie. The token remains stored until the user logs out or the session ends.\n\n**Step 3: Make Authenticated Requests**\nThe browser adds the JWT to the Authorization header. The browser sends the header with each API request. The API reads the JWT from the header. If the token is valid, the API processes the request. If not, the API rejects the request.\n\n**Token Security**\n\nA JWT has three parts separated by periods: header, payload, and signature. The payload contains the user data and claims. The API creates a signature using a secret key that only the API knows. The API verifies each token using this secret. This prevents the browser from creating a fake token.",
+  "texts": [
+    "## JWT Authentication Between Browser and API\n\nA JSON Web Token (JWT) is a string that contains user data. The browser and API use this token to confirm the user has permission. The API creates the JWT when the user logs in successfully.\n\n**The Authentication Flow**\n\nThe process has three main steps:\n\n**Step 1: Login**\nThe user enters credentials in the browser. The browser sends these credentials to the API. The API verifies the credentials. If correct, the API creates a JWT and sends it to the browser.\n\n**Step 2: Store the Token**\nThe browser saves the JWT in local storage or a cookie. The token remains stored until the user logs out or the session ends.\n\n**Step 3: Make Authenticated Requests**\nThe browser adds the JWT to the Authorization header. The browser sends the header with each API request. The API reads the JWT from the header. If the token is valid, the API processes the request. If not, the API rejects the request.\n\n**Token Security**\n\nA JWT has three parts separated by periods: header, payload, and signature. The payload contains the user data and claims. The API creates a signature using a secret key that only the API knows. The API verifies each token using this secret. This prevents the browser from creating a fake token."
+  ],
+  "stderr_tail": ""
+}

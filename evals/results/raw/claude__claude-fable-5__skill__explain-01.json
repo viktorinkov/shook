@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "explain-01",
+  "cat": "explain",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 11.3,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.180661,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 7245,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 694,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 7245,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 694,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 7245,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7245
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 242,
+    "sentences": 16,
+    "mean_sentence_words": 15.1,
+    "longest_sentence_words": 28,
+    "violations": {
+      "sentence_over_limit": 2,
+      "contraction": 2,
+      "banned_modal": 1,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 1,
+      "latin_abbrev": 2,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 9,
+    "violations_per_100w": 3.72
+  },
+  "text": "Here's the explanation, written for a junior dev:\n\n## Why the test fails\n\nThe test tells the mock to return `None` from `client.upload()`:\n\n```python\nclient.upload.return_value = None\n```\n\nThen `service.sync` does something like:\n\n```python\nresponse = client.upload(...)\nstatus = response.status   # response is None here\n```\n\n`None` has no `.status` attribute, so Python raises:\n\n```\nAttributeError: 'NoneType' object has no attribute 'status'\n```\n\nThe test never reaches `assert result.ok` \u2014 it crashes inside `service.sync` first.\n\n## The key idea\n\nA `Mock()` normally returns *another* Mock when you call it, and that Mock happily accepts any attribute access (`.status`, `.foo`, whatever). That's why mocks usually \"just work.\" But the moment you set `return_value = None`, you override that behavior: the call now returns a real `None`, which has none of that permissive magic.\n\nSo the line `client.upload.return_value = None` doesn't mean \"return nothing important\" \u2014 it means \"return `None`,\" and `None.status` is an error.\n\n## The fix\n\nGive the mock a return value that has a `.status` attribute, matching what the real client returns:\n\n```python\ndef test_upload():\n    client = Mock()\n    client.upload.return_value = Mock(status=\"ok\")   # or whatever value sync() expects\n    result = service.sync(client)\n    assert result.ok\n```\n\nCheck what `service.sync` actually compares `.status` against (e.g. `\"ok\"`, `200`, `Status.SUCCESS`) and use that value, otherwise `result.ok` may still be `False` for a different reason.\n\n## Rule of thumb\n\nWhen you stub a method with `return_value`, the stubbed value has to look enough like the real return value for the code under test to use it. Read the code you're testing, see which attributes/methods it touches on the return value, and make sure your stub provides them.\n\n**Recap:** the test fails with `AttributeError` because `client.upload()` returns `None` and `service.sync` reads `.status` off it; set `return_value` to an object with a `.status` attribute (e.g. `Mock(status=\"ok\")`) instead.",
+  "texts": [
+    "Here's the explanation, written for a junior dev:\n\n## Why the test fails\n\nThe test tells the mock to return `None` from `client.upload()`:\n\n```python\nclient.upload.return_value = None\n```\n\nThen `service.sync` does something like:\n\n```python\nresponse = client.upload(...)\nstatus = response.status   # response is None here\n```\n\n`None` has no `.status` attribute, so Python raises:\n\n```\nAttributeError: 'NoneType' object has no attribute 'status'\n```\n\nThe test never reaches `assert result.ok` \u2014 it crashes inside `service.sync` first.\n\n## The key idea\n\nA `Mock()` normally returns *another* Mock when you call it, and that Mock happily accepts any attribute access (`.status`, `.foo`, whatever). That's why mocks usually \"just work.\" But the moment you set `return_value = None`, you override that behavior: the call now returns a real `None`, which has none of that permissive magic.\n\nSo the line `client.upload.return_value = None` doesn't mean \"return nothing important\" \u2014 it means \"return `None`,\" and `None.status` is an error.\n\n## The fix\n\nGive the mock a return value that has a `.status` attribute, matching what the real client returns:\n\n```python\ndef test_upload():\n    client = Mock()\n    client.upload.return_value = Mock(status=\"ok\")   # or whatever value sync() expects\n    result = service.sync(client)\n    assert result.ok\n```\n\nCheck what `service.sync` actually compares `.status` against (e.g. `\"ok\"`, `200`, `Status.SUCCESS`) and use that value, otherwise `result.ok` may still be `False` for a different reason.\n\n## Rule of thumb\n\nWhen you stub a method with `return_value`, the stubbed value has to look enough like the real return value for the code under test to use it. Read the code you're testing, see which attributes/methods it touches on the return value, and make sure your stub provides them.\n\n**Recap:** the test fails with `AttributeError` because `client.upload()` returns `None` and `service.sync` reads `.status` off it; set `return_value` to an object with a `.status` attribute (e.g. `Mock(status=\"ok\")`) instead."
+  ],
+  "stderr_tail": ""
+}

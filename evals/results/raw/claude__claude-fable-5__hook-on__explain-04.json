@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "explain-04",
+  "cat": "explain",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 15.3,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.13133299999999998,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3947,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 959,
+    "output_tokens_details": {
+      "thinking_tokens": 45
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3947,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 959,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 3947,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3947
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 420,
+    "sentences": 37,
+    "mean_sentence_words": 11.2,
+    "longest_sentence_words": 22,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "I will explain the cause of the slow query and the index that fixes it.\n\n## Why the query is slow\n\nWithout an index on `created_at`, the database must do a sequential scan. It reads all 50 million rows from disk. It then compares each row against the time limit. The query returns only the rows from the last day, but the scan cost is the same as a full table read.\n\nThe filter is selective. One day of orders is usually a small fraction of the table. A sequential scan does not use this fact. The planner has no way to jump to the recent rows.\n\nThe `SELECT *` clause adds cost. The database must return all columns for each matched row. If the table has wide rows or large text columns, this increases the data that moves from disk to the client.\n\n## The index that helps\n\nCreate a B-tree index on `created_at`:\n\n```sql\nCREATE INDEX CONCURRENTLY orders_created_at_idx ON orders (created_at);\n```\n\nA B-tree index stores the values in sorted order. The range condition `created_at > <timestamp>` maps to a single range in the index. The planner walks from the start of that range to the end of the index. It then fetches only the matched rows from the table. The work is proportional to the number of recent rows, not to the table size.\n\n## Notes on the condition\n\nThe expression `NOW() - INTERVAL '1 day'` is not a problem for the index. `NOW()` is a stable function. The planner computes it one time at the start of the query and compares it against the indexed column. The index remains usable.\n\nDo not wrap the column in a function. A condition such as `WHERE DATE(created_at) > ...` stops the planner from the use of a plain index on `created_at`.\n\n## Optional improvements\n\n- Use `CONCURRENTLY` on a live table. A plain `CREATE INDEX` locks the table against writes for the full build time.\n- If most rows in the table are old, a partial index is smaller: `CREATE INDEX ... ON orders (created_at) WHERE created_at > '2026-01-01'`. You must update this index over time.\n- If the query always reads the same few columns, replace `SELECT *` with those columns. Add them to the index with `INCLUDE` for an index-only scan.\n- If the table grows with no limit, range partitioning on `created_at` makes the planner skip old partitions in full.\n\nRun `EXPLAIN (ANALYZE, BUFFERS)` before and after the index. Look for `Seq Scan` in the first plan and `Index Scan` in the second.\n\n## Recap\n\nThe query is slow because a sequential scan reads all 50 million rows to find one day of data. A B-tree index on `created_at` lets the planner read only the matched range. Use `CREATE INDEX CONCURRENTLY orders_created_at_idx ON orders (created_at)` and confirm the plan change with `EXPLAIN ANALYZE`.",
+  "texts": [
+    "I will explain the cause of the slow query and the index that fixes it.\n\n## Why the query is slow\n\nWithout an index on `created_at`, the database must do a sequential scan. It reads all 50 million rows from disk. It then compares each row against the time limit. The query returns only the rows from the last day, but the scan cost is the same as a full table read.\n\nThe filter is selective. One day of orders is usually a small fraction of the table. A sequential scan does not use this fact. The planner has no way to jump to the recent rows.\n\nThe `SELECT *` clause adds cost. The database must return all columns for each matched row. If the table has wide rows or large text columns, this increases the data that moves from disk to the client.\n\n## The index that helps\n\nCreate a B-tree index on `created_at`:\n\n```sql\nCREATE INDEX CONCURRENTLY orders_created_at_idx ON orders (created_at);\n```\n\nA B-tree index stores the values in sorted order. The range condition `created_at > <timestamp>` maps to a single range in the index. The planner walks from the start of that range to the end of the index. It then fetches only the matched rows from the table. The work is proportional to the number of recent rows, not to the table size.\n\n## Notes on the condition\n\nThe expression `NOW() - INTERVAL '1 day'` is not a problem for the index. `NOW()` is a stable function. The planner computes it one time at the start of the query and compares it against the indexed column. The index remains usable.\n\nDo not wrap the column in a function. A condition such as `WHERE DATE(created_at) > ...` stops the planner from the use of a plain index on `created_at`.\n\n## Optional improvements\n\n- Use `CONCURRENTLY` on a live table. A plain `CREATE INDEX` locks the table against writes for the full build time.\n- If most rows in the table are old, a partial index is smaller: `CREATE INDEX ... ON orders (created_at) WHERE created_at > '2026-01-01'`. You must update this index over time.\n- If the query always reads the same few columns, replace `SELECT *` with those columns. Add them to the index with `INCLUDE` for an index-only scan.\n- If the table grows with no limit, range partitioning on `created_at` makes the planner skip old partitions in full.\n\nRun `EXPLAIN (ANALYZE, BUFFERS)` before and after the index. Look for `Seq Scan` in the first plan and `Index Scan` in the second.\n\n## Recap\n\nThe query is slow because a sequential scan reads all 50 million rows to find one day of data. A B-tree index on `created_at` lets the planner read only the matched range. Use `CREATE INDEX CONCURRENTLY orders_created_at_idx ON orders (created_at)` and confirm the plan change with `EXPLAIN ANALYZE`."
+  ],
+  "stderr_tail": ""
+}

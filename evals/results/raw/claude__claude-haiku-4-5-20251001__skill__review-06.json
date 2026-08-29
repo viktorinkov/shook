@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "review-06",
+  "cat": "review",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 9.8,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.014438,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 4812,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 759,
+    "output_tokens_details": {
+      "thinking_tokens": 467
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4812,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 759,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 4812,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4812
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 147,
+    "sentences": 9,
+    "mean_sentence_words": 15.6,
+    "longest_sentence_words": 35,
+    "violations": {
+      "sentence_over_limit": 2,
+      "contraction": 1,
+      "banned_modal": 1,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 1,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 0
+    },
+    "violations_total": 7,
+    "violations_per_100w": 4.76
+  },
+  "text": "The issue here is **Docker layer caching combined with stale package lists**.\n\nHere's the problem:\n\n1. **Separate `RUN` commands create separate layers.** Docker caches layers independently based on the command text.\n2. **The first `apt-get update` won't re-run when the second line changes.** If you rebuild the image after modifying line 2 (e.g., adding a new package), Docker will reuse the cached layer from the first `RUN` command. The package metadata (`apt-get update`) from that cached layer becomes stale.\n3. **Result:** When `apt-get install -y git` runs, it uses outdated package lists and may fail to install the correct version or miss critical updates.\n\n**The fix:** Combine all package installations into a single `RUN` command:\n\n```dockerfile\nRUN apt-get update && apt-get install -y \\\n    curl \\\n    git\n```\n\nThis ensures:\n- `apt-get update` always runs fresh before *all* installations\n- Package metadata is current across all packages\n- Fewer layers = smaller image size\n- Follows Docker best practices (see [Dockerfile best practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#run))",
+  "texts": [
+    "The issue here is **Docker layer caching combined with stale package lists**.\n\nHere's the problem:\n\n1. **Separate `RUN` commands create separate layers.** Docker caches layers independently based on the command text.\n2. **The first `apt-get update` won't re-run when the second line changes.** If you rebuild the image after modifying line 2 (e.g., adding a new package), Docker will reuse the cached layer from the first `RUN` command. The package metadata (`apt-get update`) from that cached layer becomes stale.\n3. **Result:** When `apt-get install -y git` runs, it uses outdated package lists and may fail to install the correct version or miss critical updates.\n\n**The fix:** Combine all package installations into a single `RUN` command:\n\n```dockerfile\nRUN apt-get update && apt-get install -y \\\n    curl \\\n    git\n```\n\nThis ensures:\n- `apt-get update` always runs fresh before *all* installations\n- Package metadata is current across all packages\n- Fewer layers = smaller image size\n- Follows Docker best practices (see [Dockerfile best practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#run))"
+  ],
+  "stderr_tail": ""
+}

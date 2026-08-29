@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "readme-08",
+  "cat": "docs",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 30.1,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.034068,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 5634,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 4558,
+    "output_tokens_details": {
+      "thinking_tokens": 4052
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5634,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 4558,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 5634,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5634
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 170,
+    "sentences": 31,
+    "mean_sentence_words": 5.1,
+    "longest_sentence_words": 13,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.59
+  },
+  "text": "## POST /v1/invoices\n\nCreate a new invoice for a customer.\n\n### Request\n\nSend a POST request with a JSON body.\n\n**Parameters:**\n\n- `customer_id` (string, required): The unique identifier for the customer.\n- `amount_cents` (integer, required): The invoice amount in cents. Must be greater than zero.\n- `due_date` (string, optional): The invoice due date in ISO 8601 format (YYYY-MM-DD).\n\n**Example request:**\n\n```bash\ncurl -X POST https://api.example.com/v1/invoices \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"customer_id\": \"cust_12345\",\n    \"amount_cents\": 10000,\n    \"due_date\": \"2026-09-28\"\n  }'\n```\n\n### Response\n\nThe endpoint returns HTTP 201 Created on success.\n\n**Response body:**\n\n- `id` (string): The unique invoice identifier.\n- `customer_id` (string): The customer ID from the request.\n- `amount_cents` (integer): The invoice amount in cents.\n- `due_date` (string, optional): The invoice due date in ISO 8601 format. This field is null if the request does not include a due date.\n- `created_at` (string): The creation timestamp in ISO 8601 format.\n- `status` (string): The invoice status. The values are draft, sent, or paid.\n\n**Example response:**\n\n```json\n{\n  \"id\": \"inv_abcde\",\n  \"customer_id\": \"cust_12345\",\n  \"amount_cents\": 10000,\n  \"due_date\": \"2026-09-28\",\n  \"created_at\": \"2026-08-28T14:32:10Z\",\n  \"status\": \"draft\"\n}\n```\n\n### Error responses\n\n- `400 Bad Request`: The request body is invalid. A required parameter is missing.\n- `404 Not Found`: The customer ID does not exist.\n- `422 Unprocessable Entity`: The amount is zero or negative.",
+  "texts": [
+    "## POST /v1/invoices\n\nCreate a new invoice for a customer.\n\n### Request\n\nSend a POST request with a JSON body.\n\n**Parameters:**\n\n- `customer_id` (string, required): The unique identifier for the customer.\n- `amount_cents` (integer, required): The invoice amount in cents. Must be greater than zero.\n- `due_date` (string, optional): The invoice due date in ISO 8601 format (YYYY-MM-DD).\n\n**Example request:**\n\n```bash\ncurl -X POST https://api.example.com/v1/invoices \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"customer_id\": \"cust_12345\",\n    \"amount_cents\": 10000,\n    \"due_date\": \"2026-09-28\"\n  }'\n```\n\n### Response\n\nThe endpoint returns HTTP 201 Created on success.\n\n**Response body:**\n\n- `id` (string): The unique invoice identifier.\n- `customer_id` (string): The customer ID from the request.\n- `amount_cents` (integer): The invoice amount in cents.\n- `due_date` (string, optional): The invoice due date in ISO 8601 format. This field is null if the request does not include a due date.\n- `created_at` (string): The creation timestamp in ISO 8601 format.\n- `status` (string): The invoice status. The values are draft, sent, or paid.\n\n**Example response:**\n\n```json\n{\n  \"id\": \"inv_abcde\",\n  \"customer_id\": \"cust_12345\",\n  \"amount_cents\": 10000,\n  \"due_date\": \"2026-09-28\",\n  \"created_at\": \"2026-08-28T14:32:10Z\",\n  \"status\": \"draft\"\n}\n```\n\n### Error responses\n\n- `400 Bad Request`: The request body is invalid. A required parameter is missing.\n- `404 Not Found`: The customer ID does not exist.\n- `422 Unprocessable Entity`: The amount is zero or negative."
+  ],
+  "stderr_tail": ""
+}

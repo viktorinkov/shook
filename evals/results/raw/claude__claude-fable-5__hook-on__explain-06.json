@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "explain-06",
+  "cat": "explain",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 13.8,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.126913,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3931,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 877,
+    "output_tokens_details": {
+      "thinking_tokens": 37
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3931,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 877,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 3931,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3931
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 418,
+    "sentences": 38,
+    "mean_sentence_words": 10.9,
+    "longest_sentence_words": 27,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 0
+    },
+    "violations_total": 3,
+    "violations_per_100w": 0.72
+  },
+  "text": "I will explain the command and its risks in Simplified Technical English.\n\n## What the command does\n\nThe command `find . -name '*.log' -mtime +7 -exec rm {} \\;` deletes old log files. It has four parts.\n\n- `find .` searches the current directory and all subdirectories.\n- `-name '*.log'` selects only files with names that end in `.log`. The match is case-sensitive.\n- `-mtime +7` selects only files with a modification time more than 7 full days in the past. Files modified in the last 7 days are safe.\n- `-exec rm {} \\;` runs `rm` one time for each selected file. `find` replaces `{}` with the file path. The `\\;` marks the end of the `rm` command.\n\nThere is no `-type f` filter. The command also selects directories and symbolic links with names that end in `.log`. `rm` fails on directories, but it removes symbolic links.\n\n## When the command is dangerous\n\nDo not run the command from the wrong directory. `find .` starts at the current directory, so the command deletes matching files everywhere below it. If you run it from `/`, it deletes `.log` files in the whole system.\n\nDo not use the command on file names with special characters. `-exec rm {} \\;` is safe for spaces and quotes. The older `find ... | xargs rm` form is not safe.\n\nDo not run the command without a test. The command prints nothing and does not ask for confirmation. Run `find . -name '*.log' -mtime +7` first. Confirm the list of files, then run the full command.\n\nDo not rely on `-mtime +7` to keep active logs. A process can keep a file open while it does not write to it for 7 days. If you delete that file, the process continues to write to a file that no longer has a name. The disk space does not return until the process restarts.\n\nDo not run the command on a directory with symbolic links to other locations. `find` does not follow links by default, but it removes a link named `something.log`. This can break an application that uses the link.\n\n## Safer form\n\nUse this form if you want to delete only regular files and run `rm` fewer times:\n\n```sh\nfind . -type f -name '*.log' -mtime +7 -exec rm -- {} +\n```\n\nThe `-type f` option skips directories and links. The `+` terminator passes many paths to one `rm` call. The `--` protects against file names that start with `-`.\n\n## Recap\n\nThe command finds `.log` files that are older than 7 days and deletes each one. It is dangerous when you run it from a wide directory, when a process still writes to a matched file, or when you skip a dry run. The safer form above adds `-type f` and `--`, and it runs `rm` fewer times.",
+  "texts": [
+    "I will explain the command and its risks in Simplified Technical English.\n\n## What the command does\n\nThe command `find . -name '*.log' -mtime +7 -exec rm {} \\;` deletes old log files. It has four parts.\n\n- `find .` searches the current directory and all subdirectories.\n- `-name '*.log'` selects only files with names that end in `.log`. The match is case-sensitive.\n- `-mtime +7` selects only files with a modification time more than 7 full days in the past. Files modified in the last 7 days are safe.\n- `-exec rm {} \\;` runs `rm` one time for each selected file. `find` replaces `{}` with the file path. The `\\;` marks the end of the `rm` command.\n\nThere is no `-type f` filter. The command also selects directories and symbolic links with names that end in `.log`. `rm` fails on directories, but it removes symbolic links.\n\n## When the command is dangerous\n\nDo not run the command from the wrong directory. `find .` starts at the current directory, so the command deletes matching files everywhere below it. If you run it from `/`, it deletes `.log` files in the whole system.\n\nDo not use the command on file names with special characters. `-exec rm {} \\;` is safe for spaces and quotes. The older `find ... | xargs rm` form is not safe.\n\nDo not run the command without a test. The command prints nothing and does not ask for confirmation. Run `find . -name '*.log' -mtime +7` first. Confirm the list of files, then run the full command.\n\nDo not rely on `-mtime +7` to keep active logs. A process can keep a file open while it does not write to it for 7 days. If you delete that file, the process continues to write to a file that no longer has a name. The disk space does not return until the process restarts.\n\nDo not run the command on a directory with symbolic links to other locations. `find` does not follow links by default, but it removes a link named `something.log`. This can break an application that uses the link.\n\n## Safer form\n\nUse this form if you want to delete only regular files and run `rm` fewer times:\n\n```sh\nfind . -type f -name '*.log' -mtime +7 -exec rm -- {} +\n```\n\nThe `-type f` option skips directories and links. The `+` terminator passes many paths to one `rm` call. The `--` protects against file names that start with `-`.\n\n## Recap\n\nThe command finds `.log` files that are older than 7 days and deletes each one. It is dangerous when you run it from a wide directory, when a process still writes to a matched file, or when you skip a dry run. The safer form above adds `-type f` and `--`, and it runs `rm` fewer times."
+  ],
+  "stderr_tail": ""
+}

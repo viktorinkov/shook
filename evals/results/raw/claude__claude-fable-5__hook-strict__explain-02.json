@@ -1,0 +1,76 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "explain-02",
+  "cat": "explain",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 53.6,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 3,
+  "strict_blocks": 1,
+  "num_turns": 4,
+  "cost_usd": 0.5509379999999999,
+  "usage": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 14895,
+    "cache_read_input_tokens": 29408,
+    "output_tokens": 4471,
+    "output_tokens_details": {
+      "thinking_tokens": 2401
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 14895,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 4,
+        "output_tokens": 1590,
+        "cache_read_input_tokens": 16571,
+        "cache_creation_input_tokens": 2747,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2747
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 483,
+    "sentences": 50,
+    "mean_sentence_words": 9.5,
+    "longest_sentence_words": 21,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.21
+  },
+  "text": "Below is the README section. It is descriptive text, with one short procedural list at the end. The code examples use Go. If necessary, change them to the language of your project.\n\n---\n\n## Race conditions and mutexes\n\nThis section is for contributors who are new to concurrency. It explains what a race condition is and how a mutex prevents it.\n\n### What a race condition is\n\nWhen two or more threads use the same data at the same time, a race condition occurs. The result depends on which thread gets to the data first. This order changes from one run to the next. As a result, the program gives different results for the same input.\n\nThe example that follows shows a lost update. Two threads each add 1 to a shared counter:\n\n```go\nvar counter int\n\nfunc increment() {\n    counter++ // read the value, add 1, write the value\n}\n```\n\nThe line `counter++` is three steps: read the value, add 1, and write the value. Thread A reads 0. Before thread A writes its result, thread B also reads 0. Thread A writes 1. Thread B also writes 1. The correct result is 2, but the counter shows 1.\n\nThis error is hard to find. The program is correct on most runs. Only when the two threads read the value in the small window between the read and the write, the error occurs.\n\n### How a mutex prevents it\n\nA mutex is a lock. Only one thread can hold the lock at one time. Before a thread uses the shared data, the thread must lock the mutex. After the thread uses the data, the thread unlocks the mutex. If a second thread tries to lock a mutex that is locked, that thread waits. When the first thread unlocks the mutex, the second thread continues.\n\nThe code between the lock and the unlock is the critical section. With the mutex, the three steps of `counter++` become one unit. Thread A locks the mutex, reads 0, writes 1, and unlocks the mutex. Thread B then locks the mutex, reads 1, writes 2, and unlocks the mutex. The result is 2 on each run.\n\n```go\nvar (\n    mu      sync.Mutex\n    counter int\n)\n\nfunc increment() {\n    mu.Lock()\n    defer mu.Unlock()\n    counter++\n}\n```\n\nWhen the function returns, the `defer mu.Unlock()` line unlocks the mutex. This includes a return on an error path.\n\n### Rules for shared data in this project\n\n1. Before you read or write shared data, lock the mutex.\n2. Unlock the mutex on each code path. This includes the error paths.\n3. Keep the critical section short. While you hold the lock, do not do I/O or network calls.\n4. Use one mutex for all access to one item of data.\n5. Do not lock the same mutex twice in one thread. The second lock waits forever, and this is a deadlock.\n6. Before you open a pull request, use the race detector: `go test -race ./...`.\n\n---\n\nRecap: the section has three descriptive parts (the problem, the lost-update example, the mutex) and one procedural list. All sentences are under the 25-word and 20-word limits. The next step is to paste the section into the README. If your project uses a different language, change the Go examples.",
+  "texts": [
+    "I will write the README section in Simplified Technical English. First, I will load the STE skill.",
+    "Below is the README section. It is descriptive text, with one short procedural list at the end. The code examples use Go. Change them to the language of your project if necessary.\n\n---\n\n## Race conditions and mutexes\n\nThis section is for contributors who are new to concurrency. It explains what a race condition is and how a mutex prevents it.\n\n### What a race condition is\n\nA race condition occurs when two or more threads use the same data at the same time. The result depends on which thread gets to the data first. This order changes from one run to the next. As a result, the program gives different results for the same input.\n\nThe example that follows shows a lost update. Two threads each add 1 to a shared counter:\n\n```go\nvar counter int\n\nfunc increment() {\n    counter++ // read the value, add 1, write the value\n}\n```\n\nThe line `counter++` is three steps: read the value, add 1, and write the value. Thread A reads 0. Thread B also reads 0, before thread A writes its result. Thread A writes 1. Thread B also writes 1. The correct result is 2, but the counter shows 1.\n\nThis error is hard to find. The program is correct on most runs. The error occurs only when the two threads read the value in the small window between the read and the write.\n\n### How a mutex prevents it\n\nA mutex is a lock. Only one thread can hold the lock at one time. A thread must lock the mutex before it uses the shared data. Then the thread unlocks the mutex after it uses the data. If a second thread tries to lock a mutex that is locked, that thread waits. The second thread continues when the first thread unlocks the mutex.\n\nThe code between the lock and the unlock is the critical section. With the mutex, the three steps of `counter++` become one unit. Thread A locks the mutex, reads 0, writes 1, and unlocks the mutex. Thread B then locks the mutex, reads 1, writes 2, and unlocks the mutex. The result is 2 on each run.\n\n```go\nvar (\n    mu      sync.Mutex\n    counter int\n)\n\nfunc increment() {\n    mu.Lock()\n    defer mu.Unlock()\n    counter++\n}\n```\n\nThe `defer mu.Unlock()` line unlocks the mutex when the function returns. This includes a return on an error path.\n\n### Rules for shared data in this project\n\n1. Lock the mutex before you read or write shared data.\n2. Unlock the mutex on each code path. This includes the error paths.\n3. Keep the critical section short. Do not do I/O or network calls while you hold the lock.\n4. Use one mutex for all access to one item of data.\n5. Do not lock the same mutex twice in one thread. The second lock waits forever, and this is a deadlock.\n6. Use the race detector before you open a pull request: `go test -race ./...`.\n\n---\n\nRecap: the section has three descriptive parts (the problem, the lost-update example, the mutex) and one procedural list. All sentences are under the 25-word and 20-word limits. The next step is to paste the section into the README and to change the Go examples if your project uses a different language.",
+    "Below is the README section. It is descriptive text, with one short procedural list at the end. The code examples use Go. If necessary, change them to the language of your project.\n\n---\n\n## Race conditions and mutexes\n\nThis section is for contributors who are new to concurrency. It explains what a race condition is and how a mutex prevents it.\n\n### What a race condition is\n\nWhen two or more threads use the same data at the same time, a race condition occurs. The result depends on which thread gets to the data first. This order changes from one run to the next. As a result, the program gives different results for the same input.\n\nThe example that follows shows a lost update. Two threads each add 1 to a shared counter:\n\n```go\nvar counter int\n\nfunc increment() {\n    counter++ // read the value, add 1, write the value\n}\n```\n\nThe line `counter++` is three steps: read the value, add 1, and write the value. Thread A reads 0. Before thread A writes its result, thread B also reads 0. Thread A writes 1. Thread B also writes 1. The correct result is 2, but the counter shows 1.\n\nThis error is hard to find. The program is correct on most runs. Only when the two threads read the value in the small window between the read and the write, the error occurs.\n\n### How a mutex prevents it\n\nA mutex is a lock. Only one thread can hold the lock at one time. Before a thread uses the shared data, the thread must lock the mutex. After the thread uses the data, the thread unlocks the mutex. If a second thread tries to lock a mutex that is locked, that thread waits. When the first thread unlocks the mutex, the second thread continues.\n\nThe code between the lock and the unlock is the critical section. With the mutex, the three steps of `counter++` become one unit. Thread A locks the mutex, reads 0, writes 1, and unlocks the mutex. Thread B then locks the mutex, reads 1, writes 2, and unlocks the mutex. The result is 2 on each run.\n\n```go\nvar (\n    mu      sync.Mutex\n    counter int\n)\n\nfunc increment() {\n    mu.Lock()\n    defer mu.Unlock()\n    counter++\n}\n```\n\nWhen the function returns, the `defer mu.Unlock()` line unlocks the mutex. This includes a return on an error path.\n\n### Rules for shared data in this project\n\n1. Before you read or write shared data, lock the mutex.\n2. Unlock the mutex on each code path. This includes the error paths.\n3. Keep the critical section short. While you hold the lock, do not do I/O or network calls.\n4. Use one mutex for all access to one item of data.\n5. Do not lock the same mutex twice in one thread. The second lock waits forever, and this is a deadlock.\n6. Before you open a pull request, use the race detector: `go test -race ./...`.\n\n---\n\nRecap: the section has three descriptive parts (the problem, the lost-update example, the mutex) and one procedural list. All sentences are under the 25-word and 20-word limits. The next step is to paste the section into the README. If your project uses a different language, change the Go examples."
+  ],
+  "stderr_tail": ""
+}

@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "incident-03",
+  "cat": "incident",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 15.0,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.290952,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 12037,
+    "cache_read_input_tokens": 12772,
+    "output_tokens": 748,
+    "output_tokens_details": {
+      "thinking_tokens": 263
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12037,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 457,
+        "cache_read_input_tokens": 8349,
+        "cache_creation_input_tokens": 8111,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8111
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 210,
+    "sentences": 20,
+    "mean_sentence_words": 10.5,
+    "longest_sentence_words": 17,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 0
+    },
+    "violations_total": 2,
+    "violations_per_100w": 0.95
+  },
+  "text": "## What went wrong\n\nThe scheduled job ran twice. The cause was a failover in the scheduler service. After the failover, two instances of the scheduler were active at the same time.\n\nThe scheduler runs as a primary instance with a standby instance. When the primary instance lost its health check, the standby instance started. The primary instance did not stop. It recovered and continued to run.\n\nEach instance read the same cron schedule. Each instance believed that it was the only active scheduler. As a result, each instance started the job at the scheduled time. The job did not have a guard against a second run.\n\nThe scheduler had no lock or lease to make sure that only one instance was active. The failover procedure did not stop the old instance before the new instance started. The job did not use an idempotency key. Because of these three gaps, the duplicate run was not blocked at any layer.\n\nThe duplicate run was not visible in the alerts. Both runs completed with a success status. We found the problem when a downstream team reported duplicate records.\n\n---\n\nI kept the text general because the prompt gave no times, job name, or record counts. Add those facts to the first paragraph if you have them.",
+  "texts": [
+    "I will write the postmortem section in Simplified Technical English. First I load the STE skill.",
+    "## What went wrong\n\nThe scheduled job ran twice. The cause was a failover in the scheduler service. After the failover, two instances of the scheduler were active at the same time.\n\nThe scheduler runs as a primary instance with a standby instance. When the primary instance lost its health check, the standby instance started. The primary instance did not stop. It recovered and continued to run.\n\nEach instance read the same cron schedule. Each instance believed that it was the only active scheduler. As a result, each instance started the job at the scheduled time. The job did not have a guard against a second run.\n\nThe scheduler had no lock or lease to make sure that only one instance was active. The failover procedure did not stop the old instance before the new instance started. The job did not use an idempotency key. Because of these three gaps, the duplicate run was not blocked at any layer.\n\nThe duplicate run was not visible in the alerts. Both runs completed with a success status. We found the problem when a downstream team reported duplicate records.\n\n---\n\nI kept the text general because the prompt gave no times, job name, or record counts. Add those facts to the first paragraph if you have them."
+  ],
+  "stderr_tail": ""
+}

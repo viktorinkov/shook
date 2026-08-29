@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "readme-10",
+  "cat": "docs",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 16.7,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.301096,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 11937,
+    "cache_read_input_tokens": 12766,
+    "output_tokens": 991,
+    "output_tokens_details": {
+      "thinking_tokens": 217
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 11937,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 756,
+        "cache_read_input_tokens": 8343,
+        "cache_creation_input_tokens": 8017,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8017
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 100,
+    "sentences": 12,
+    "mean_sentence_words": 7.9,
+    "longest_sentence_words": 20,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "Here is the Security section. Replace `security@example.com` and `PROJECT` with your values. The text is in Simplified Technical English (pragmatic mode).\n\n```markdown\n## Security\n\n### Report a vulnerability\n\nDo not open a public issue for a security problem. A public issue shows the problem to attackers before a fix exists.\n\nTo report a vulnerability:\n\n1. Send an email to `security@example.com`.\n2. Put \"Security report: PROJECT\" in the subject line.\n3. Describe the problem and the steps that reproduce it.\n4. Include the affected version, the commit hash, or both.\n5. If you have a proof of concept, attach it to the email.\n\nIf you want an encrypted channel, ask for our PGP key in your first email. We will send the key in the reply.\n\n### What happens after your report\n\nWe send a reply within 3 business days. This reply says that we received your report.\n\nWe examine the report and tell you the result within 10 business days. If the problem is a vulnerability, we give you a target date for the fix.\n\nWe keep you informed until the fix is public. We name you in the release notes if you want a credit.\n\n### Disclosure window\n\nThe disclosure window is 90 days. This window starts on the date of your first email.\n\nWe release a fix before the end of the window. When the fix is public, you can publish your report.\n\nIf we do not release a fix within 90 days, you can publish your report after the window closes. We ask that you tell us 7 days before you publish.\n\nIf a fix needs more than 90 days, we will ask you for an extension. The decision to give an extension is yours.\n\nDo not publish the report before the fix is public or the window closes. Early publication puts users at risk.\n```\n\nRecap:\n- Wrote a `## Security` section with three parts: a procedure to report by email, a description of the response timeline, and a description of the 90-day disclosure window.\n- The report steps are procedural (imperative, one instruction per step). The timeline and window parts are descriptive.\n- The 3-day and 10-day response times are assumptions. Change them to match your team.\n- Placeholders to replace: `security@example.com` and `PROJECT`. If you do not offer PGP, delete that paragraph.",
+  "texts": [
+    "I will write the Security section in Simplified Technical English. Let me load the STE skill first.",
+    "Here is the Security section. Replace `security@example.com` and `PROJECT` with your values. The text is in Simplified Technical English (pragmatic mode).\n\n```markdown\n## Security\n\n### Report a vulnerability\n\nDo not open a public issue for a security problem. A public issue shows the problem to attackers before a fix exists.\n\nTo report a vulnerability:\n\n1. Send an email to `security@example.com`.\n2. Put \"Security report: PROJECT\" in the subject line.\n3. Describe the problem and the steps that reproduce it.\n4. Include the affected version, the commit hash, or both.\n5. If you have a proof of concept, attach it to the email.\n\nIf you want an encrypted channel, ask for our PGP key in your first email. We will send the key in the reply.\n\n### What happens after your report\n\nWe send a reply within 3 business days. This reply says that we received your report.\n\nWe examine the report and tell you the result within 10 business days. If the problem is a vulnerability, we give you a target date for the fix.\n\nWe keep you informed until the fix is public. We name you in the release notes if you want a credit.\n\n### Disclosure window\n\nThe disclosure window is 90 days. This window starts on the date of your first email.\n\nWe release a fix before the end of the window. When the fix is public, you can publish your report.\n\nIf we do not release a fix within 90 days, you can publish your report after the window closes. We ask that you tell us 7 days before you publish.\n\nIf a fix needs more than 90 days, we will ask you for an extension. The decision to give an extension is yours.\n\nDo not publish the report before the fix is public or the window closes. Early publication puts users at risk.\n```\n\nRecap:\n- Wrote a `## Security` section with three parts: a procedure to report by email, a description of the response timeline, and a description of the 90-day disclosure window.\n- The report steps are procedural (imperative, one instruction per step). The timeline and window parts are descriptive.\n- The 3-day and 10-day response times are assumptions. Change them to match your team.\n- Placeholders to replace: `security@example.com` and `PROJECT`. If you do not offer PGP, delete that paragraph."
+  ],
+  "stderr_tail": ""
+}

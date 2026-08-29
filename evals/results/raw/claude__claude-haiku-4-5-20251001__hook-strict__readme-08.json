@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "readme-08",
+  "cat": "docs",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 77.4,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 2,
+  "strict_blocks": 1,
+  "num_turns": 2,
+  "cost_usd": 0.055393200000000004,
+  "usage": {
+    "input_tokens": 20,
+    "cache_creation_input_tokens": 7525,
+    "cache_read_input_tokens": 5682,
+    "output_tokens": 7951,
+    "output_tokens_details": {
+      "thinking_tokens": 7104
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 7525,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 6260,
+        "cache_read_input_tokens": 5682,
+        "cache_creation_input_tokens": 1843,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1843
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 133,
+    "sentences": 13,
+    "mean_sentence_words": 9.4,
+    "longest_sentence_words": 14,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "## POST /v1/invoices\n\nCreate an invoice for a customer.\n\n### Request\n\n**Path:** `POST /v1/invoices`\n\n**Parameters:**\n\n- `customer_id` (required, string) \u2014 The unique identifier for the customer.\n- `amount_cents` (required, integer) \u2014 The invoice amount in cents.\n- `due_date` (optional, string) \u2014 The invoice due date in ISO 8601 format. Example: 2026-09-28.\n\n**Request body example:**\n\n```json\n{\n  \"customer_id\": \"cust_abc123\",\n  \"amount_cents\": 9999,\n  \"due_date\": \"2026-09-28\"\n}\n```\n\n### Response\n\nWhen the invoice is created, the endpoint returns status code 201.\n\n**Response body example:**\n\n```json\n{\n  \"id\": \"inv_xyz789\",\n  \"customer_id\": \"cust_abc123\",\n  \"amount_cents\": 9999,\n  \"due_date\": \"2026-09-28\",\n  \"created_at\": \"2026-08-28T10:30:00Z\",\n  \"status\": \"draft\"\n}\n```\n\n**Response fields:**\n\n- `id` (string) \u2014 The unique invoice identifier.\n- `customer_id` (string) \u2014 The customer ID from your request.\n- `amount_cents` (integer) \u2014 The invoice amount in cents.\n- `due_date` (string) \u2014 The invoice due date. If you do not provide the due_date, this field is null.\n- `created_at` (string) \u2014 The date and time of invoice creation.\n- `status` (string) \u2014 The invoice status. New invoices have status \"draft\".",
+  "texts": [
+    "I will write this API guide section following the ASD-STE100 Simplified Technical English standard.\n\n---\n\n## POST /v1/invoices\n\nCreate an invoice for a customer.\n\n### Request\n\n**Path:** `POST /v1/invoices`\n\n**Parameters:**\n\n- `customer_id` (required, string) \u2014 The unique identifier for the customer.\n- `amount_cents` (required, integer) \u2014 The invoice amount in cents.\n- `due_date` (optional, string) \u2014 The invoice due date in ISO 8601 format. Example: 2026-09-28.\n\n**Request body example:**\n\n```json\n{\n  \"customer_id\": \"cust_abc123\",\n  \"amount_cents\": 9999,\n  \"due_date\": \"2026-09-28\"\n}\n```\n\n### Response\n\nThe endpoint returns status code 201 when the invoice is created.\n\n**Response body example:**\n\n```json\n{\n  \"id\": \"inv_xyz789\",\n  \"customer_id\": \"cust_abc123\",\n  \"amount_cents\": 9999,\n  \"due_date\": \"2026-09-28\",\n  \"created_at\": \"2026-08-28T10:30:00Z\",\n  \"status\": \"draft\"\n}\n```\n\n**Response fields:**\n\n- `id` (string) \u2014 The unique invoice identifier.\n- `customer_id` (string) \u2014 The customer ID from your request.\n- `amount_cents` (integer) \u2014 The invoice amount in cents.\n- `due_date` (string) \u2014 The invoice due date. If you omit this in the request, this field is null.\n- `created_at` (string) \u2014 The date and time when the invoice was created.\n- `status` (string) \u2014 The invoice status. New invoices have the status \"draft\".",
+    "## POST /v1/invoices\n\nCreate an invoice for a customer.\n\n### Request\n\n**Path:** `POST /v1/invoices`\n\n**Parameters:**\n\n- `customer_id` (required, string) \u2014 The unique identifier for the customer.\n- `amount_cents` (required, integer) \u2014 The invoice amount in cents.\n- `due_date` (optional, string) \u2014 The invoice due date in ISO 8601 format. Example: 2026-09-28.\n\n**Request body example:**\n\n```json\n{\n  \"customer_id\": \"cust_abc123\",\n  \"amount_cents\": 9999,\n  \"due_date\": \"2026-09-28\"\n}\n```\n\n### Response\n\nWhen the invoice is created, the endpoint returns status code 201.\n\n**Response body example:**\n\n```json\n{\n  \"id\": \"inv_xyz789\",\n  \"customer_id\": \"cust_abc123\",\n  \"amount_cents\": 9999,\n  \"due_date\": \"2026-09-28\",\n  \"created_at\": \"2026-08-28T10:30:00Z\",\n  \"status\": \"draft\"\n}\n```\n\n**Response fields:**\n\n- `id` (string) \u2014 The unique invoice identifier.\n- `customer_id` (string) \u2014 The customer ID from your request.\n- `amount_cents` (integer) \u2014 The invoice amount in cents.\n- `due_date` (string) \u2014 The invoice due date. If you do not provide the due_date, this field is null.\n- `created_at` (string) \u2014 The date and time of invoice creation.\n- `status` (string) \u2014 The invoice status. New invoices have status \"draft\"."
+  ],
+  "stderr_tail": ""
+}

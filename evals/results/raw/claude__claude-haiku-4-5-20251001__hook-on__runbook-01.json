@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "runbook-01",
+  "cat": "runbook",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 12.2,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.016029,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 5627,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 953,
+    "output_tokens_details": {
+      "thinking_tokens": 252
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5627,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 953,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 5627,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5627
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "procedural",
+    "words": 311,
+    "sentences": 35,
+    "mean_sentence_words": 8.4,
+    "longest_sentence_words": 22,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 1,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 2
+    },
+    "violations_total": 4,
+    "violations_per_100w": 1.29
+  },
+  "text": "# Database Password Rotation Runbook\n\n**User:** `app`  \n**Zero-downtime method:** SIGHUP reload  \n**Estimated duration:** 5 minutes\n\n---\n\n## Prerequisites\n\nVerify these conditions before you start:\n\n- You have database admin credentials.\n- You have SSH access to the application server.\n- The app process ID (PID) is known or can be found.\n- You have confirmed that SIGHUP reload is enabled in the app config.\n\n---\n\n## Procedure\n\n### 1. Generate a new password\n\nCreate a strong password with at least 32 characters. Store it in a secure location temporarily.\n\n### 2. Update the database password\n\nConnect to the database with admin credentials.\n\nRun this command to set the new password for the `app` user:\n\n```sql\nALTER USER app WITH PASSWORD 'new_password_here';\n```\n\nReplace `new_password_here` with the new password from step 1.\n\n### 3. Find the app process ID\n\nOn the application server, run:\n\n```bash\npgrep -f app_process_name\n```\n\nRecord the PID output.\n\n### 4. Update the environment variable\n\nEdit the app's environment file. Common locations:\n\n- `/etc/default/app`\n- `/etc/systemd/system/app.service.d/override.conf`\n- The shell profile or .env file the app uses at startup\n\nReplace the old password value with the new password:\n\n```bash\nDB_PASSWORD=\"new_password_here\"\n```\n\nSave the file.\n\n### 5. Send SIGHUP to reload\n\nRun this command with the PID from step 3:\n\n```bash\nkill -HUP <PID>\n```\n\nThe app reloads the environment variable without stopping.\n\n### 6. Verify connectivity\n\nCheck the app logs for errors:\n\n```bash\ntail -f /var/log/app.log\n```\n\nWait 10 seconds. Confirm no connection errors appear.\n\n### 7. Test the application\n\nMake a request to the app's health check endpoint or a test query. Confirm the response is normal.\n\n### 8. Disable the old password (optional)\n\nIf your database supports it, revoke or disable the old password entry. This step is optional but adds security.\n\n---\n\n## Rollback (if needed)\n\nIf the app fails to connect after SIGHUP:\n\n1. Revert the environment variable to the old password.\n2. Run `kill -HUP <PID>` again.\n3. Verify the app reconnects.\n4. Investigate the connection error in the logs before retry.\n\n---\n\n## Verification Checklist\n\n- [ ] App process is running (check `pgrep` or `ps aux`).\n- [ ] Logs show no `FATAL` or `ERROR` for database connection.\n- [ ] Health check endpoint returns success (HTTP 200 or similar).\n- [ ] Database query latency is normal (no timeouts).\n- [ ] New password is stored securely and old copy is deleted.",
+  "texts": [
+    "# Database Password Rotation Runbook\n\n**User:** `app`  \n**Zero-downtime method:** SIGHUP reload  \n**Estimated duration:** 5 minutes\n\n---\n\n## Prerequisites\n\nVerify these conditions before you start:\n\n- You have database admin credentials.\n- You have SSH access to the application server.\n- The app process ID (PID) is known or can be found.\n- You have confirmed that SIGHUP reload is enabled in the app config.\n\n---\n\n## Procedure\n\n### 1. Generate a new password\n\nCreate a strong password with at least 32 characters. Store it in a secure location temporarily.\n\n### 2. Update the database password\n\nConnect to the database with admin credentials.\n\nRun this command to set the new password for the `app` user:\n\n```sql\nALTER USER app WITH PASSWORD 'new_password_here';\n```\n\nReplace `new_password_here` with the new password from step 1.\n\n### 3. Find the app process ID\n\nOn the application server, run:\n\n```bash\npgrep -f app_process_name\n```\n\nRecord the PID output.\n\n### 4. Update the environment variable\n\nEdit the app's environment file. Common locations:\n\n- `/etc/default/app`\n- `/etc/systemd/system/app.service.d/override.conf`\n- The shell profile or .env file the app uses at startup\n\nReplace the old password value with the new password:\n\n```bash\nDB_PASSWORD=\"new_password_here\"\n```\n\nSave the file.\n\n### 5. Send SIGHUP to reload\n\nRun this command with the PID from step 3:\n\n```bash\nkill -HUP <PID>\n```\n\nThe app reloads the environment variable without stopping.\n\n### 6. Verify connectivity\n\nCheck the app logs for errors:\n\n```bash\ntail -f /var/log/app.log\n```\n\nWait 10 seconds. Confirm no connection errors appear.\n\n### 7. Test the application\n\nMake a request to the app's health check endpoint or a test query. Confirm the response is normal.\n\n### 8. Disable the old password (optional)\n\nIf your database supports it, revoke or disable the old password entry. This step is optional but adds security.\n\n---\n\n## Rollback (if needed)\n\nIf the app fails to connect after SIGHUP:\n\n1. Revert the environment variable to the old password.\n2. Run `kill -HUP <PID>` again.\n3. Verify the app reconnects.\n4. Investigate the connection error in the logs before retry.\n\n---\n\n## Verification Checklist\n\n- [ ] App process is running (check `pgrep` or `ps aux`).\n- [ ] Logs show no `FATAL` or `ERROR` for database connection.\n- [ ] Health check endpoint returns success (HTTP 200 or similar).\n- [ ] Database query latency is normal (no timeouts).\n- [ ] New password is stored securely and old copy is deleted."
+  ],
+  "stderr_tail": ""
+}

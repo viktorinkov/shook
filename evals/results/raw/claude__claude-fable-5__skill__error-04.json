@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "error-04",
+  "cat": "error",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 13.1,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.26190599999999997,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 10722,
+    "cache_read_input_tokens": 11595,
+    "output_tokens": 697,
+    "output_tokens_details": {
+      "thinking_tokens": 248
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10722,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 534,
+        "cache_read_input_tokens": 7172,
+        "cache_creation_input_tokens": 7973,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7973
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 103,
+    "sentences": 12,
+    "mean_sentence_words": 8.2,
+    "longest_sentence_words": 17,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "**Error message**\n\n```\nCannot delete this project\n\nThis project has {n} active deployments. A project with active deployments\ncannot be deleted.\n\nTo delete the project, stop all of its deployments first.\n\n[View deployments]   [Cancel]\n```\n\n**Shorter variants**\n\nInline or toast:\n\n```\nCannot delete this project. Stop all active deployments first.\n```\n\nCLI or API:\n\n```\nerror: cannot delete project \"{project}\": {n} active deployments found.\nStop the deployments, then run the command again.\n```\n\nNotes on the choices:\n\n- The first line says what did not happen. The second line says why. The third line says what to do. Each fact is in its own sentence.\n- The condition (\"to delete the project\") is placed before the command (\"stop all of its deployments first\").\n- \"Deployments\" is the one term used throughout. If your product calls them \"services\" or \"releases\" in the UI, replace every instance with that term.\n- `{n}` and `{project}` are placeholders. If the count is not available, use \"This project has active deployments.\"",
+  "texts": [
+    "I'll load the Simplified Technical English skill since this is an error message, then write it.",
+    "**Error message**\n\n```\nCannot delete this project\n\nThis project has {n} active deployments. A project with active deployments\ncannot be deleted.\n\nTo delete the project, stop all of its deployments first.\n\n[View deployments]   [Cancel]\n```\n\n**Shorter variants**\n\nInline or toast:\n\n```\nCannot delete this project. Stop all active deployments first.\n```\n\nCLI or API:\n\n```\nerror: cannot delete project \"{project}\": {n} active deployments found.\nStop the deployments, then run the command again.\n```\n\nNotes on the choices:\n\n- The first line says what did not happen. The second line says why. The third line says what to do. Each fact is in its own sentence.\n- The condition (\"to delete the project\") is placed before the command (\"stop all of its deployments first\").\n- \"Deployments\" is the one term used throughout. If your product calls them \"services\" or \"releases\" in the UI, replace every instance with that term.\n- `{n}` and `{project}` are placeholders. If the count is not available, use \"This project has active deployments.\""
+  ],
+  "stderr_tail": ""
+}

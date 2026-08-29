@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "review-07",
+  "cat": "review",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 15.6,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.13050299999999998,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3988,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 926,
+    "output_tokens_details": {
+      "thinking_tokens": 196
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3988,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 926,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 3988,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3988
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 361,
+    "sentences": 34,
+    "mean_sentence_words": 10.1,
+    "longest_sentence_words": 22,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.28
+  },
+  "text": "I will write the PR review summary now.\n\n## PR review summary: Add retries to the HTTP client\n\n**Verdict:** Request changes.\n\n### What the change does\n\nThe PR adds a retry loop to the HTTP client. The client now repeats a request after any non-2xx response. The retry count and the delay between attempts are configurable.\n\n### Blocking issue: the client retries on every status code\n\nThe retry loop does not check the status code before a retry. It repeats the request after a 400, 401, 403, 404, and 422. These responses tell the caller that the request itself is not valid. A repeat of the same request returns the same error. This has three effects:\n\n- The caller waits for all retries before it sees the error. With the default settings, a 400 response now takes several seconds to surface.\n- The client sends the same bad request to the server many times. This adds load and can trigger rate limits.\n- Non-idempotent requests, for example `POST`, can run more than once after a 5xx. The PR does not address this case.\n\n### Requested changes\n\n1. Retry only on transient failures. Use this list:\n   - Connection errors and timeouts\n   - `429 Too Many Requests`\n   - `502`, `503`, and `504`\n2. Do not retry on 4xx responses, with the exception of 429. Return the response to the caller at once.\n3. If the response contains a `Retry-After` header, use that value for the delay.\n4. Retry non-idempotent requests only if the caller opts in. Add a flag for this, or limit retries to `GET`, `HEAD`, `PUT`, `DELETE`, and `OPTIONS`.\n5. Add tests for these cases:\n   - A 400 response returns after one attempt.\n   - A 503 response retries up to the configured limit.\n   - A 503 response, then a 200 response, returns the 200 response.\n\n### Minor comments\n\n- Use exponential backoff with jitter. A fixed delay causes many clients to retry at the same moment.\n- Log each retry at debug level with the attempt number and the status code.\n- Document the retry behavior in the client docstring.\n\n### Summary\n\nThe retry logic is a good addition, but the current version retries on errors that a retry cannot fix. Limit retries to transient failures and add tests for the 4xx case. After those changes, I will approve.",
+  "texts": [
+    "I will write the PR review summary now.\n\n## PR review summary: Add retries to the HTTP client\n\n**Verdict:** Request changes.\n\n### What the change does\n\nThe PR adds a retry loop to the HTTP client. The client now repeats a request after any non-2xx response. The retry count and the delay between attempts are configurable.\n\n### Blocking issue: the client retries on every status code\n\nThe retry loop does not check the status code before a retry. It repeats the request after a 400, 401, 403, 404, and 422. These responses tell the caller that the request itself is not valid. A repeat of the same request returns the same error. This has three effects:\n\n- The caller waits for all retries before it sees the error. With the default settings, a 400 response now takes several seconds to surface.\n- The client sends the same bad request to the server many times. This adds load and can trigger rate limits.\n- Non-idempotent requests, for example `POST`, can run more than once after a 5xx. The PR does not address this case.\n\n### Requested changes\n\n1. Retry only on transient failures. Use this list:\n   - Connection errors and timeouts\n   - `429 Too Many Requests`\n   - `502`, `503`, and `504`\n2. Do not retry on 4xx responses, with the exception of 429. Return the response to the caller at once.\n3. If the response contains a `Retry-After` header, use that value for the delay.\n4. Retry non-idempotent requests only if the caller opts in. Add a flag for this, or limit retries to `GET`, `HEAD`, `PUT`, `DELETE`, and `OPTIONS`.\n5. Add tests for these cases:\n   - A 400 response returns after one attempt.\n   - A 503 response retries up to the configured limit.\n   - A 503 response, then a 200 response, returns the 200 response.\n\n### Minor comments\n\n- Use exponential backoff with jitter. A fixed delay causes many clients to retry at the same moment.\n- Log each retry at debug level with the attempt number and the status code.\n- Document the retry behavior in the client docstring.\n\n### Summary\n\nThe retry logic is a good addition, but the current version retries on errors that a retry cannot fix. Limit retries to transient failures and add tests for the 4xx case. After those changes, I will approve."
+  ],
+  "stderr_tail": ""
+}

@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "readme-03",
+  "cat": "docs",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 19.6,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.31939300000000004,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 12125,
+    "cache_read_input_tokens": 12853,
+    "output_tokens": 1280,
+    "output_tokens_details": {
+      "thinking_tokens": 781
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12125,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1000,
+        "cache_read_input_tokens": 8430,
+        "cache_creation_input_tokens": 8118,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8118
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 172,
+    "sentences": 18,
+    "mean_sentence_words": 9.2,
+    "longest_sentence_words": 19,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "## Configuration\n\nThe tool reads its configuration from `config.toml`. Each key in this file is optional. If a key is not in the file, the tool uses the default value for that key.\n\nThe file has three keys:\n\n| Key | Default | Description |\n|---|---|---|\n| `port` | `8080` | The TCP port for incoming connections. |\n| `log_level` | `info` | The minimum level of the log messages. |\n| `workers` | `4` | The number of worker processes. |\n\nExample `config.toml`:\n\n```toml\nport = 8080\nlog_level = \"info\"\nworkers = 4\n```\n\nTo change the configuration:\n\n1. Open `config.toml` in a text editor.\n2. Set each key to the value that you want.\n3. Save the file.\n4. Restart the tool.\n\n---\n\nThe section above obeys ASD-STE100 strict mode. Two facts are not in your request, so I did not write them. If you give them to me, I will add them:\n\n- The location where the tool looks for `config.toml`.\n- The permitted values for `log_level`, for example `debug`, `info`, `warn`, and `error`.",
+  "texts": [
+    "I will write the Configuration section in Simplified Technical English. First I load the STE skill.",
+    "## Configuration\n\nThe tool reads its configuration from `config.toml`. Each key in this file is optional. If a key is not in the file, the tool uses the default value for that key.\n\nThe file has three keys:\n\n| Key | Default | Description |\n|---|---|---|\n| `port` | `8080` | The TCP port for incoming connections. |\n| `log_level` | `info` | The minimum level of the log messages. |\n| `workers` | `4` | The number of worker processes. |\n\nExample `config.toml`:\n\n```toml\nport = 8080\nlog_level = \"info\"\nworkers = 4\n```\n\nTo change the configuration:\n\n1. Open `config.toml` in a text editor.\n2. Set each key to the value that you want.\n3. Save the file.\n4. Restart the tool.\n\n---\n\nThe section above obeys ASD-STE100 strict mode. Two facts are not in your request, so I did not write them. If you give them to me, I will add them:\n\n- The location where the tool looks for `config.toml`.\n- The permitted values for `log_level`, for example `debug`, `info`, `warn`, and `error`."
+  ],
+  "stderr_tail": ""
+}

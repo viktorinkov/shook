@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "review-10",
+  "cat": "review",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 10.3,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.015413,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 5609,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 837,
+    "output_tokens_details": {
+      "thinking_tokens": 585
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5609,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 837,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 5609,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5609
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 124,
+    "sentences": 13,
+    "mean_sentence_words": 9.2,
+    "longest_sentence_words": 15,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.81
+  },
+  "text": "**Security Issue: Hardcoded API Key**\n\nThis commit contains a hardcoded API key in `config.py`. Do not merge this pull request.\n\n**Risk**\n\nAnyone with access to this repository can use this key. The key remains in the git history even after deletion. If this repository becomes public, the key is exposed.\n\n**Required Actions**\n\n1. Revoke or rotate the API key.\n2. Remove the hardcoded key from `config.py`.\n3. Store the key in an environment variable or secrets manager.\n4. Add `config.py` to `.gitignore` if it contains sensitive data.\n5. Force-push to remove the key from git history.\n\n**Example**\n\n```python\n# Before (unsafe)\nAPI_KEY = \"sk-1234567890abcdef\"\n\n# After (safe)\nimport os\nAPI_KEY = os.getenv(\"API_KEY\")\n```\n\nSet the `API_KEY` environment variable in your deployment system, `.env` file, or CI/CD secrets.\n\nPlease open a new pull request after you address this issue.",
+  "texts": [
+    "**Security Issue: Hardcoded API Key**\n\nThis commit contains a hardcoded API key in `config.py`. Do not merge this pull request.\n\n**Risk**\n\nAnyone with access to this repository can use this key. The key remains in the git history even after deletion. If this repository becomes public, the key is exposed.\n\n**Required Actions**\n\n1. Revoke or rotate the API key.\n2. Remove the hardcoded key from `config.py`.\n3. Store the key in an environment variable or secrets manager.\n4. Add `config.py` to `.gitignore` if it contains sensitive data.\n5. Force-push to remove the key from git history.\n\n**Example**\n\n```python\n# Before (unsafe)\nAPI_KEY = \"sk-1234567890abcdef\"\n\n# After (safe)\nimport os\nAPI_KEY = os.getenv(\"API_KEY\")\n```\n\nSet the `API_KEY` environment variable in your deployment system, `.env` file, or CI/CD secrets.\n\nPlease open a new pull request after you address this issue."
+  ],
+  "stderr_tail": ""
+}

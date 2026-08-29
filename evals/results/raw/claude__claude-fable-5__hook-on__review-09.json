@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "review-09",
+  "cat": "review",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 11.7,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.12156299999999999,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3931,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 770,
+    "output_tokens_details": {
+      "thinking_tokens": 132
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3931,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 770,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 3931,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3931
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 234,
+    "sentences": 22,
+    "mean_sentence_words": 10.5,
+    "longest_sentence_words": 21,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 1
+    },
+    "violations_total": 3,
+    "violations_per_100w": 1.28
+  },
+  "text": "I will write the review as a PR comment. The prose follows Simple Technical English.\n\n---\n\n**Review comment**\n\nThis loop has two problems.\n\n**1. Loop variable capture**\n\nEach goroutine reads `item` after the loop moves on. Before Go 1.22, the loop reuses one `item` variable for all iterations. Many goroutines can then process the last element, and skip the other elements. Go 1.22 and later give each iteration a new `item`. Check the `go` directive in `go.mod`. If the version is below 1.22, pass the value as an argument:\n\n```go\nfor _, item := range items {\n    go func(item Item) {\n        process(item)\n    }(item)\n}\n```\n\n**2. Nothing waits for the goroutines**\n\nThe function returns before the goroutines complete. The caller cannot know when the work is done. If `main` returns, the runtime stops all goroutines. Also, if `items` is large, the loop starts an unbounded number of goroutines at the same time.\n\nUse a `sync.WaitGroup` and a limit on concurrency. `errgroup` from `golang.org/x/sync` gives both in one type:\n\n```go\ng, ctx := errgroup.WithContext(ctx)\ng.SetLimit(runtime.NumCPU())\nfor _, item := range items {\n    g.Go(func() error {\n        return process(ctx, item)\n    })\n}\nif err := g.Wait(); err != nil {\n    return err\n}\n```\n\nIf `process` does not return an error, use `sync.WaitGroup` and a semaphore channel instead.\n\n**Also check:** does `process` write to shared state? If yes, protect that state with a mutex, or run `go test -race` on this code.\n\n---\n\n**Recap:** The code has a loop-variable capture bug on Go versions before 1.22, and it never waits for the goroutines. The comment above proposes the `errgroup` pattern with a concurrency limit. Next step: confirm the Go version in `go.mod` and apply the fix.",
+  "texts": [
+    "I will write the review as a PR comment. The prose follows Simple Technical English.\n\n---\n\n**Review comment**\n\nThis loop has two problems.\n\n**1. Loop variable capture**\n\nEach goroutine reads `item` after the loop moves on. Before Go 1.22, the loop reuses one `item` variable for all iterations. Many goroutines can then process the last element, and skip the other elements. Go 1.22 and later give each iteration a new `item`. Check the `go` directive in `go.mod`. If the version is below 1.22, pass the value as an argument:\n\n```go\nfor _, item := range items {\n    go func(item Item) {\n        process(item)\n    }(item)\n}\n```\n\n**2. Nothing waits for the goroutines**\n\nThe function returns before the goroutines complete. The caller cannot know when the work is done. If `main` returns, the runtime stops all goroutines. Also, if `items` is large, the loop starts an unbounded number of goroutines at the same time.\n\nUse a `sync.WaitGroup` and a limit on concurrency. `errgroup` from `golang.org/x/sync` gives both in one type:\n\n```go\ng, ctx := errgroup.WithContext(ctx)\ng.SetLimit(runtime.NumCPU())\nfor _, item := range items {\n    g.Go(func() error {\n        return process(ctx, item)\n    })\n}\nif err := g.Wait(); err != nil {\n    return err\n}\n```\n\nIf `process` does not return an error, use `sync.WaitGroup` and a semaphore channel instead.\n\n**Also check:** does `process` write to shared state? If yes, protect that state with a mutex, or run `go test -race` on this code.\n\n---\n\n**Recap:** The code has a loop-variable capture bug on Go versions before 1.22, and it never waits for the goroutines. The comment above proposes the `errgroup` pattern with a concurrency limit. Next step: confirm the Go version in `go.mod` and apply the fix."
+  ],
+  "stderr_tail": ""
+}

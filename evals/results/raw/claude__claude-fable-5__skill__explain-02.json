@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "explain-02",
+  "cat": "explain",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 34.6,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.49527000000000004,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 18022,
+    "cache_read_input_tokens": 4457,
+    "output_tokens": 2587,
+    "output_tokens_details": {
+      "thinking_tokens": 879
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 18022,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2378,
+        "cache_read_input_tokens": 4457,
+        "cache_creation_input_tokens": 10799,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 10799
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 810,
+    "sentences": 57,
+    "mean_sentence_words": 14.1,
+    "longest_sentence_words": 89,
+    "violations": {
+      "sentence_over_limit": 3,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 3,
+      "synonym_rotation": 0
+    },
+    "violations_total": 6,
+    "violations_per_100w": 0.74
+  },
+  "text": "Here is the README section, written to Simplified Technical English rules (short sentences, one fact per sentence, active voice, one term per concept).\n\n---\n\n## Race conditions and mutexes\n\nThis section is for contributors who are new to concurrency. It explains one problem, the race condition, and one tool that prevents it, the mutex.\n\n### What a race condition is\n\nA race condition occurs when two or more threads use the same data at the same time. At least one of the threads writes to the data. The result then depends on which thread runs first. The operating system decides this order, and the order changes from one run to the next. As a result, the program gives a correct result on one run and a wrong result on the next.\n\nHere is the classic example. Two threads each add 1 to a shared counter. The line `counter++` looks like one step. But the CPU does three separate steps:\n\n1. Read the value of `counter` into a register.\n2. Add 1 to the register.\n3. Write the register back to `counter`.\n\nThe operating system can pause a thread between any two of these steps. The table that follows shows one possible order. `counter` starts at 0.\n\n| Step | Thread A | Thread B | `counter` in memory |\n|---|---|---|---|\n| 1 | Reads 0 | | 0 |\n| 2 | | Reads 0 | 0 |\n| 3 | Adds 1 (register = 1) | | 0 |\n| 4 | | Adds 1 (register = 1) | 0 |\n| 5 | Writes 1 | | 1 |\n| 6 | | Writes 1 | 1 |\n\nBoth threads added 1, but the final value is 1, not 2. One update is lost. This bug does not occur on every run. It occurs only when the operating system pauses a thread at the wrong moment. That is why race conditions are hard to reproduce and hard to find with tests.\n\nA race condition is not limited to counters. The same problem occurs with any shared data: a map, a list, a file, a cache, or a connection pool.\n\n### How a mutex prevents it\n\nA mutex is a lock that only one thread can hold at a time. The name is short for \"mutual exclusion\". Before a thread uses the shared data, the thread locks the mutex. When the thread finishes, the thread unlocks the mutex. If a second thread tries to lock a mutex that another thread holds, the second thread waits. The second thread continues only after the first thread unlocks the mutex.\n\nThe three steps of `counter++` are now one unit. No other thread can read or write `counter` between the read step and the write step. The example that follows uses Go syntax.\n\n```go\nvar mu sync.Mutex\nvar counter int\n\nfunc increment() {\n    mu.Lock()\n    defer mu.Unlock()\n    counter++\n}\n```\n\nWith the mutex, the order of events becomes:\n\n| Step | Thread A | Thread B | `counter` in memory |\n|---|---|---|---|\n| 1 | Locks the mutex | | 0 |\n| 2 | Reads 0, adds 1, writes 1 | Waits for the mutex | 1 |\n| 3 | Unlocks the mutex | | 1 |\n| 4 | | Locks the mutex | 1 |\n| 5 | | Reads 1, adds 1, writes 2 | 2 |\n| 6 | | Unlocks the mutex | 2 |\n\nThe final value is 2. The mutex does not change what each thread does. The mutex only prevents the two threads from doing it at the same time.\n\nThe code between `Lock()` and `Unlock()` is called the critical section. Keep the critical section short. While one thread holds the mutex, all other threads that need the same data wait. A long critical section makes the program slow.\n\n### Rules for contributors\n\n1. If a value is read and written by more than one thread, protect the value with a mutex.\n2. Lock the mutex before you read the shared data, not only before you write to it.\n3. Unlock the mutex on every exit path from the function. In Go, use `defer mu.Unlock()` directly after `mu.Lock()`.\n4. Do not call a function that locks the same mutex from inside the critical section. This causes a deadlock.\n5. Do not hold a mutex during a network call or a disk read. Copy the data, unlock the mutex, then do the slow work.\n6. Before you open a pull request, run the tests with the race detector. In Go, use `go test -race ./...`.\n\n---\n\nTwo notes on choices I made: the code and the last rule use Go because it has a built-in race detector and a compact mutex API. If your project is in another language, swap the snippet and the detector command (for example, ThreadSanitizer for C and C++, or `RUSTFLAGS` with `-Zsanitizer=thread` for Rust). I also kept the term \"thread\" throughout, so if your project talks about goroutines or tasks, do a find-and-replace to match your codebase's vocabulary.",
+  "texts": [
+    "This is README documentation, so I'll use the Simplified Technical English skill to keep it clear for readers new to the topic.",
+    "Here is the README section, written to Simplified Technical English rules (short sentences, one fact per sentence, active voice, one term per concept).\n\n---\n\n## Race conditions and mutexes\n\nThis section is for contributors who are new to concurrency. It explains one problem, the race condition, and one tool that prevents it, the mutex.\n\n### What a race condition is\n\nA race condition occurs when two or more threads use the same data at the same time. At least one of the threads writes to the data. The result then depends on which thread runs first. The operating system decides this order, and the order changes from one run to the next. As a result, the program gives a correct result on one run and a wrong result on the next.\n\nHere is the classic example. Two threads each add 1 to a shared counter. The line `counter++` looks like one step. But the CPU does three separate steps:\n\n1. Read the value of `counter` into a register.\n2. Add 1 to the register.\n3. Write the register back to `counter`.\n\nThe operating system can pause a thread between any two of these steps. The table that follows shows one possible order. `counter` starts at 0.\n\n| Step | Thread A | Thread B | `counter` in memory |\n|---|---|---|---|\n| 1 | Reads 0 | | 0 |\n| 2 | | Reads 0 | 0 |\n| 3 | Adds 1 (register = 1) | | 0 |\n| 4 | | Adds 1 (register = 1) | 0 |\n| 5 | Writes 1 | | 1 |\n| 6 | | Writes 1 | 1 |\n\nBoth threads added 1, but the final value is 1, not 2. One update is lost. This bug does not occur on every run. It occurs only when the operating system pauses a thread at the wrong moment. That is why race conditions are hard to reproduce and hard to find with tests.\n\nA race condition is not limited to counters. The same problem occurs with any shared data: a map, a list, a file, a cache, or a connection pool.\n\n### How a mutex prevents it\n\nA mutex is a lock that only one thread can hold at a time. The name is short for \"mutual exclusion\". Before a thread uses the shared data, the thread locks the mutex. When the thread finishes, the thread unlocks the mutex. If a second thread tries to lock a mutex that another thread holds, the second thread waits. The second thread continues only after the first thread unlocks the mutex.\n\nThe three steps of `counter++` are now one unit. No other thread can read or write `counter` between the read step and the write step. The example that follows uses Go syntax.\n\n```go\nvar mu sync.Mutex\nvar counter int\n\nfunc increment() {\n    mu.Lock()\n    defer mu.Unlock()\n    counter++\n}\n```\n\nWith the mutex, the order of events becomes:\n\n| Step | Thread A | Thread B | `counter` in memory |\n|---|---|---|---|\n| 1 | Locks the mutex | | 0 |\n| 2 | Reads 0, adds 1, writes 1 | Waits for the mutex | 1 |\n| 3 | Unlocks the mutex | | 1 |\n| 4 | | Locks the mutex | 1 |\n| 5 | | Reads 1, adds 1, writes 2 | 2 |\n| 6 | | Unlocks the mutex | 2 |\n\nThe final value is 2. The mutex does not change what each thread does. The mutex only prevents the two threads from doing it at the same time.\n\nThe code between `Lock()` and `Unlock()` is called the critical section. Keep the critical section short. While one thread holds the mutex, all other threads that need the same data wait. A long critical section makes the program slow.\n\n### Rules for contributors\n\n1. If a value is read and written by more than one thread, protect the value with a mutex.\n2. Lock the mutex before you read the shared data, not only before you write to it.\n3. Unlock the mutex on every exit path from the function. In Go, use `defer mu.Unlock()` directly after `mu.Lock()`.\n4. Do not call a function that locks the same mutex from inside the critical section. This causes a deadlock.\n5. Do not hold a mutex during a network call or a disk read. Copy the data, unlock the mutex, then do the slow work.\n6. Before you open a pull request, run the tests with the race detector. In Go, use `go test -race ./...`.\n\n---\n\nTwo notes on choices I made: the code and the last rule use Go because it has a built-in race detector and a compact mutex API. If your project is in another language, swap the snippet and the detector command (for example, ThreadSanitizer for C and C++, or `RUSTFLAGS` with `-Zsanitizer=thread` for Rust). I also kept the term \"thread\" throughout, so if your project talks about goroutines or tasks, do a find-and-replace to match your codebase's vocabulary."
+  ],
+  "stderr_tail": ""
+}

@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "review-03",
+  "cat": "review",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 13.3,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.11658299999999999,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3912,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 678,
+    "output_tokens_details": {
+      "thinking_tokens": 75
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3912,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 678,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 3912,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3912
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 368,
+    "sentences": 34,
+    "mean_sentence_words": 10.5,
+    "longest_sentence_words": 27,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 0
+    },
+    "violations_total": 3,
+    "violations_per_100w": 0.82
+  },
+  "text": "I will write the review comment now. Here is a draft that you can paste into the PR.\n\n---\n\n**Review: request changes**\n\nThank you for this PR. The new utility file is a large addition. I have one blocking concern and two small requests.\n\n**Blocking: the file has no tests**\n\nThe PR adds approximately 400 lines of utility code with no test file. Utility code is shared code. Many callers will depend on it. A regression here will cause failures in places that are far from the change. We need tests before we merge.\n\nPlease add a test file that covers the following:\n\n- One test for each public function in the file.\n- One test for each error path. For example, test invalid input, empty input, and null input.\n- One test for each boundary condition. For example, test zero, negative numbers, and maximum sizes.\n- One test for each branch that a future maintainer can break without a clear signal.\n\nCoverage of every line is not the goal. The goal is that a change to the behavior of a public function causes a test to fail.\n\n**Request: split the file if the functions are not related**\n\nA 400-line utility file often contains functions that belong to different domains. If the functions in this file fall into two or more groups, split the file into one module for each group. Smaller modules are easier to test and easier to find.\n\n**Request: add a short module comment**\n\nAdd a comment at the top of the file. State the purpose of the module and the intended callers. This helps reviewers and helps future readers.\n\n**Next steps**\n\n1. Add the tests.\n2. Run the full test suite and confirm that all tests pass.\n3. Split the file if applicable.\n4. Request a new review.\n\nI will do a full read of the logic after the tests are in place. Tests make the review faster because they show the intended behavior.\n\n---\n\n**Recap:** The comment above blocks the merge on the absence of tests, gives a clear list of the required test types, and adds two non-blocking requests. Adjust the tone or the requests to match the norms of your team.",
+  "texts": [
+    "I will write the review comment now. Here is a draft that you can paste into the PR.\n\n---\n\n**Review: request changes**\n\nThank you for this PR. The new utility file is a large addition. I have one blocking concern and two small requests.\n\n**Blocking: the file has no tests**\n\nThe PR adds approximately 400 lines of utility code with no test file. Utility code is shared code. Many callers will depend on it. A regression here will cause failures in places that are far from the change. We need tests before we merge.\n\nPlease add a test file that covers the following:\n\n- One test for each public function in the file.\n- One test for each error path. For example, test invalid input, empty input, and null input.\n- One test for each boundary condition. For example, test zero, negative numbers, and maximum sizes.\n- One test for each branch that a future maintainer can break without a clear signal.\n\nCoverage of every line is not the goal. The goal is that a change to the behavior of a public function causes a test to fail.\n\n**Request: split the file if the functions are not related**\n\nA 400-line utility file often contains functions that belong to different domains. If the functions in this file fall into two or more groups, split the file into one module for each group. Smaller modules are easier to test and easier to find.\n\n**Request: add a short module comment**\n\nAdd a comment at the top of the file. State the purpose of the module and the intended callers. This helps reviewers and helps future readers.\n\n**Next steps**\n\n1. Add the tests.\n2. Run the full test suite and confirm that all tests pass.\n3. Split the file if applicable.\n4. Request a new review.\n\nI will do a full read of the logic after the tests are in place. Tests make the review faster because they show the intended behavior.\n\n---\n\n**Recap:** The comment above blocks the merge on the absence of tests, gives a clear list of the required test types, and adds two non-blocking requests. Adjust the tone or the requests to match the norms of your team."
+  ],
+  "stderr_tail": ""
+}

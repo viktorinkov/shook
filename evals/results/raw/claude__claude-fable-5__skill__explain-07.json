@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "explain-07",
+  "cat": "explain",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 15.3,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.10262500000000001,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2743,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 847,
+    "output_tokens_details": {
+      "thinking_tokens": 57
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2743,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 847,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 2743,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2743
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 433,
+    "sentences": 28,
+    "mean_sentence_words": 15.1,
+    "longest_sentence_words": 37,
+    "violations": {
+      "sentence_over_limit": 4,
+      "contraction": 2,
+      "banned_modal": 2,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 3,
+      "synonym_rotation": 0
+    },
+    "violations_total": 11,
+    "violations_per_100w": 2.54
+  },
+  "text": "Here's the short version you can hand to a PM.\n\n## Why a database index is not free\n\nAn index is like the index at the back of a book. It makes *finding* things fast, but someone has to keep it correct every time the book changes. That maintenance is the cost.\n\n**1. Every write gets slower.**\nWhen a row is inserted, updated, or deleted, the database must also update every index on that table. One index is cheap. Ten indexes mean every write does ten extra bookkeeping operations. Tables that take heavy write traffic (events, orders, logs) feel this most.\n\n**2. It takes disk and memory.**\nAn index is a second copy of part of the table, stored in its own structure. On a large table, a single index can be gigabytes. Indexes only help when they fit in memory, so more indexes compete for the same RAM as the data itself \u2014 and can push useful data out of cache.\n\n**3. Building it is a real operation.**\nCreating an index on a big table can take minutes to hours, and depending on the database and settings, it may lock the table or slow it noticeably while it builds. That is a scheduled deployment, not a checkbox.\n\n**4. It can make the *wrong* queries faster \u2014 or nothing faster.**\nAn index helps only the queries that match its shape (the right columns, in the right order). An index that no query uses is pure cost: writes pay for it, disk holds it, and nobody benefits. Worse, an extra index can occasionally trick the query planner into a slower plan for some other query.\n\n**5. It's permanent maintenance.**\nIndexes need to be reviewed as the product changes. Features get removed, queries change, and the indexes that supported them stay behind unless someone cleans them up. Each one is a small ongoing liability.\n\n## The trade in one sentence\n\nAn index trades write speed, storage, and memory for faster reads on a specific query pattern. It's worth it when a slow, frequent read outweighs the cost of every write on that table \u2014 and that's an engineering judgment, not a default.\n\n## What to ask when someone proposes one\n\n- Which specific query does it speed up, and how often does that query run?\n- How write-heavy is the table?\n- How big is the table, and how will the index be built in production?\n- Is there an existing index we could extend instead of adding a new one?\n\n**Recap:** an index speeds up specific reads but slows every write, consumes disk and memory, costs a real deployment to build, and needs ongoing upkeep. Add one when a measured slow query justifies it, not preemptively.",
+  "texts": [
+    "Here's the short version you can hand to a PM.\n\n## Why a database index is not free\n\nAn index is like the index at the back of a book. It makes *finding* things fast, but someone has to keep it correct every time the book changes. That maintenance is the cost.\n\n**1. Every write gets slower.**\nWhen a row is inserted, updated, or deleted, the database must also update every index on that table. One index is cheap. Ten indexes mean every write does ten extra bookkeeping operations. Tables that take heavy write traffic (events, orders, logs) feel this most.\n\n**2. It takes disk and memory.**\nAn index is a second copy of part of the table, stored in its own structure. On a large table, a single index can be gigabytes. Indexes only help when they fit in memory, so more indexes compete for the same RAM as the data itself \u2014 and can push useful data out of cache.\n\n**3. Building it is a real operation.**\nCreating an index on a big table can take minutes to hours, and depending on the database and settings, it may lock the table or slow it noticeably while it builds. That is a scheduled deployment, not a checkbox.\n\n**4. It can make the *wrong* queries faster \u2014 or nothing faster.**\nAn index helps only the queries that match its shape (the right columns, in the right order). An index that no query uses is pure cost: writes pay for it, disk holds it, and nobody benefits. Worse, an extra index can occasionally trick the query planner into a slower plan for some other query.\n\n**5. It's permanent maintenance.**\nIndexes need to be reviewed as the product changes. Features get removed, queries change, and the indexes that supported them stay behind unless someone cleans them up. Each one is a small ongoing liability.\n\n## The trade in one sentence\n\nAn index trades write speed, storage, and memory for faster reads on a specific query pattern. It's worth it when a slow, frequent read outweighs the cost of every write on that table \u2014 and that's an engineering judgment, not a default.\n\n## What to ask when someone proposes one\n\n- Which specific query does it speed up, and how often does that query run?\n- How write-heavy is the table?\n- How big is the table, and how will the index be built in production?\n- Is there an existing index we could extend instead of adding a new one?\n\n**Recap:** an index speeds up specific reads but slows every write, consumes disk and memory, costs a real deployment to build, and needs ongoing upkeep. Add one when a measured slow query justifies it, not preemptively."
+  ],
+  "stderr_tail": ""
+}

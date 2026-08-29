@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "review-01",
+  "cat": "review",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 13.1,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.11820299999999999,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3953,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 694,
+    "output_tokens_details": {
+      "thinking_tokens": 220
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3953,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 694,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 3953,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3953
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 197,
+    "sentences": 15,
+    "mean_sentence_words": 13.0,
+    "longest_sentence_words": 19,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.51
+  },
+  "text": "I will write the review comment as text for the pull request.\n\n---\n\n**Review comment on `getUser`**\n\nThis function has two problems.\n\n**1. The function does not check the HTTP status.**\n\n`fetch` does not reject on a 404 or 500 response. It only rejects on a network failure. If the server returns an error, `res.json()` runs on the error body. The caller then receives an error object, or a parse error, as if it were a user. Check `res.ok` before you parse the body. If the status is not OK, throw an error that contains the status code.\n\n**2. The `id` value is not encoded.**\n\nThe code adds `id` to the URL with string concatenation. If `id` contains `/`, `?`, `#`, or a space, the request goes to the wrong path. Use `encodeURIComponent(id)` to build the URL.\n\n**Proposed fix:**\n\n```js\nasync function getUser(id) {\n  const res = await fetch(`/api/users/${encodeURIComponent(id)}`);\n  if (!res.ok) {\n    throw new Error(`getUser(${id}) failed: HTTP ${res.status}`);\n  }\n  return res.json();\n}\n```\n\nAdd one test for a 404 response and one test for an `id` that contains `/`.\n\n---\n\n**Recap:** The comment identifies two defects. The function ignores HTTP error statuses, and it does not encode the `id` in the URL. The fix adds a `res.ok` check with a thrown error and uses `encodeURIComponent`.",
+  "texts": [
+    "I will write the review comment as text for the pull request.\n\n---\n\n**Review comment on `getUser`**\n\nThis function has two problems.\n\n**1. The function does not check the HTTP status.**\n\n`fetch` does not reject on a 404 or 500 response. It only rejects on a network failure. If the server returns an error, `res.json()` runs on the error body. The caller then receives an error object, or a parse error, as if it were a user. Check `res.ok` before you parse the body. If the status is not OK, throw an error that contains the status code.\n\n**2. The `id` value is not encoded.**\n\nThe code adds `id` to the URL with string concatenation. If `id` contains `/`, `?`, `#`, or a space, the request goes to the wrong path. Use `encodeURIComponent(id)` to build the URL.\n\n**Proposed fix:**\n\n```js\nasync function getUser(id) {\n  const res = await fetch(`/api/users/${encodeURIComponent(id)}`);\n  if (!res.ok) {\n    throw new Error(`getUser(${id}) failed: HTTP ${res.status}`);\n  }\n  return res.json();\n}\n```\n\nAdd one test for a 404 response and one test for an `id` that contains `/`.\n\n---\n\n**Recap:** The comment identifies two defects. The function ignores HTTP error statuses, and it does not encode the `id` in the URL. The fix adds a `res.ok` check with a thrown error and uses `encodeURIComponent`."
+  ],
+  "stderr_tail": ""
+}

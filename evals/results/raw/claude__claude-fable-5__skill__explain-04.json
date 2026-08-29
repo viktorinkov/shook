@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "explain-04",
+  "cat": "explain",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 21.4,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.13231700000000002,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2786,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 1423,
+    "output_tokens_details": {
+      "thinking_tokens": 25
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2786,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1423,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 2786,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2786
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 612,
+    "sentences": 36,
+    "mean_sentence_words": 16.7,
+    "longest_sentence_words": 45,
+    "violations": {
+      "sentence_over_limit": 9,
+      "contraction": 8,
+      "banned_modal": 4,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 3,
+      "latin_abbrev": 1,
+      "slop_word": 0,
+      "trailing_condition": 5,
+      "synonym_rotation": 1
+    },
+    "violations_total": 31,
+    "violations_per_100w": 5.07
+  },
+  "text": "This is a conceptual question, so I'll answer directly without touching the repo.\n\n## Why it's slow\n\nWithout a suitable index, PostgreSQL has only one way to evaluate `created_at > NOW() - INTERVAL '1 day'`: a **sequential scan** of the entire table. It reads all 50 million rows (every page on disk, typically tens of GB), evaluates the predicate on each one, and discards the ~99.9% that don't match. The cost is proportional to table size, not result size \u2014 even if only 20,000 rows were created in the last day, you still pay to read all 50 million.\n\nSecondary costs that compound this:\n\n- **I/O**: the scan evicts useful pages from `shared_buffers` and the OS cache, hurting other queries too.\n- **`SELECT *`**: every column of every matching row is fetched and sent over the wire; wide rows make the heap reads and network transfer heavier.\n- **No `LIMIT`**: the planner can't stop early.\n\nNote that `NOW() - INTERVAL '1 day'` itself is *not* the problem. `NOW()` is `STABLE`, so the planner computes it once per statement and can use it as an index bound. (The situation would be different with a `VOLATILE` function or if you wrapped `created_at` in an expression like `date(created_at)`, which would defeat a plain index.)\n\n## What index helps\n\nA plain B-tree on the filter column:\n\n```sql\nCREATE INDEX CONCURRENTLY orders_created_at_idx ON orders (created_at);\n```\n\nWith this, the planner does an **index range scan**: it seeks to the position for \"24 hours ago\" and walks forward to the end of the index \u2014 touching only the leaf pages for the last day's rows, then fetching those rows from the heap. Cost becomes proportional to the number of matching rows, so the query goes from reading 50M rows to reading, say, 20K.\n\nPractical notes:\n\n- `CONCURRENTLY` builds the index without locking out writes on the live table (takes longer, but doesn't block the app).\n- Recent rows tend to be physically clustered together on disk (inserts append), so the heap fetches after the index scan are relatively cheap \u2014 the planner will often pick a **bitmap index scan** to read those pages in order.\n- Check with `EXPLAIN (ANALYZE, BUFFERS)` before and after: you should see `Seq Scan on orders` replaced by `Index Scan` / `Bitmap Heap Scan using orders_created_at_idx`.\n- If the planner still chooses a seq scan, the table's statistics may be stale (`ANALYZE orders`) or the estimated selectivity too high; it will only use the index when the matching fraction is small, which \"last 1 day of 50M rows\" almost certainly is.\n\n## Going further\n\n- **Covering / composite index**: if the query is really `SELECT id, customer_id, total ...` rather than `*`, you can add `INCLUDE (id, customer_id, total)` to enable index-only scans and skip the heap entirely. With `SELECT *` on a wide table, that's not practical \u2014 narrowing the column list is the bigger win.\n- **Partial index**: `WHERE created_at > '2026-08-01'` in the index definition doesn't work here because `NOW()` isn't immutable, so the planner can't prove the predicate matches. A plain full-column index is the right choice.\n- **Partitioning by time** (e.g. monthly range partitions) lets the planner skip whole partitions via partition pruning and keeps each index small \u2014 worthwhile if the table keeps growing and old data is rarely queried.\n- **BRIN index** (`USING brin (created_at)`) is a tiny alternative if rows are inserted in strict time order and never updated; it's much smaller than a B-tree but less precise. A B-tree is the safe default.\n\n**Recap:** the query is slow because with no index on `created_at`, Postgres must seq-scan all 50M rows to find the ~0.1% created in the last day. A B-tree index on `created_at` (built with `CONCURRENTLY`) turns it into a range scan proportional to the result size. Verify with `EXPLAIN ANALYZE`, and consider trimming `SELECT *` or partitioning by time if the table keeps growing.",
+  "texts": [
+    "This is a conceptual question, so I'll answer directly without touching the repo.\n\n## Why it's slow\n\nWithout a suitable index, PostgreSQL has only one way to evaluate `created_at > NOW() - INTERVAL '1 day'`: a **sequential scan** of the entire table. It reads all 50 million rows (every page on disk, typically tens of GB), evaluates the predicate on each one, and discards the ~99.9% that don't match. The cost is proportional to table size, not result size \u2014 even if only 20,000 rows were created in the last day, you still pay to read all 50 million.\n\nSecondary costs that compound this:\n\n- **I/O**: the scan evicts useful pages from `shared_buffers` and the OS cache, hurting other queries too.\n- **`SELECT *`**: every column of every matching row is fetched and sent over the wire; wide rows make the heap reads and network transfer heavier.\n- **No `LIMIT`**: the planner can't stop early.\n\nNote that `NOW() - INTERVAL '1 day'` itself is *not* the problem. `NOW()` is `STABLE`, so the planner computes it once per statement and can use it as an index bound. (The situation would be different with a `VOLATILE` function or if you wrapped `created_at` in an expression like `date(created_at)`, which would defeat a plain index.)\n\n## What index helps\n\nA plain B-tree on the filter column:\n\n```sql\nCREATE INDEX CONCURRENTLY orders_created_at_idx ON orders (created_at);\n```\n\nWith this, the planner does an **index range scan**: it seeks to the position for \"24 hours ago\" and walks forward to the end of the index \u2014 touching only the leaf pages for the last day's rows, then fetching those rows from the heap. Cost becomes proportional to the number of matching rows, so the query goes from reading 50M rows to reading, say, 20K.\n\nPractical notes:\n\n- `CONCURRENTLY` builds the index without locking out writes on the live table (takes longer, but doesn't block the app).\n- Recent rows tend to be physically clustered together on disk (inserts append), so the heap fetches after the index scan are relatively cheap \u2014 the planner will often pick a **bitmap index scan** to read those pages in order.\n- Check with `EXPLAIN (ANALYZE, BUFFERS)` before and after: you should see `Seq Scan on orders` replaced by `Index Scan` / `Bitmap Heap Scan using orders_created_at_idx`.\n- If the planner still chooses a seq scan, the table's statistics may be stale (`ANALYZE orders`) or the estimated selectivity too high; it will only use the index when the matching fraction is small, which \"last 1 day of 50M rows\" almost certainly is.\n\n## Going further\n\n- **Covering / composite index**: if the query is really `SELECT id, customer_id, total ...` rather than `*`, you can add `INCLUDE (id, customer_id, total)` to enable index-only scans and skip the heap entirely. With `SELECT *` on a wide table, that's not practical \u2014 narrowing the column list is the bigger win.\n- **Partial index**: `WHERE created_at > '2026-08-01'` in the index definition doesn't work here because `NOW()` isn't immutable, so the planner can't prove the predicate matches. A plain full-column index is the right choice.\n- **Partitioning by time** (e.g. monthly range partitions) lets the planner skip whole partitions via partition pruning and keeps each index small \u2014 worthwhile if the table keeps growing and old data is rarely queried.\n- **BRIN index** (`USING brin (created_at)`) is a tiny alternative if rows are inserted in strict time order and never updated; it's much smaller than a B-tree but less precise. A B-tree is the safe default.\n\n**Recap:** the query is slow because with no index on `created_at`, Postgres must seq-scan all 50M rows to find the ~0.1% created in the last day. A B-tree index on `created_at` (built with `CONCURRENTLY`) turns it into a range scan proportional to the result size. Verify with `EXPLAIN ANALYZE`, and consider trimming `SELECT *` or partitioning by time if the table keeps growing."
+  ],
+  "stderr_tail": ""
+}

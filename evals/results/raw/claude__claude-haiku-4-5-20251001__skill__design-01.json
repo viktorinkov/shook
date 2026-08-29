@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "design-01",
+  "cat": "design",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 12.4,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.014944,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 4789,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 873,
+    "output_tokens_details": {
+      "thinking_tokens": 247
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4789,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 873,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 4789,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4789
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 321,
+    "sentences": 22,
+    "mean_sentence_words": 14.1,
+    "longest_sentence_words": 110,
+    "violations": {
+      "sentence_over_limit": 2,
+      "contraction": 1,
+      "banned_modal": 1,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 4,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 0
+    },
+    "violations_total": 10,
+    "violations_per_100w": 3.12
+  },
+  "text": "# Message Queue vs Direct HTTP for Order-Processing Pipelines\n\n## Comparison Matrix\n\n| Aspect | Direct HTTP | Message Queue |\n|--------|-------------|----------------|\n| **Coupling** | Tight | Loose |\n| **Reliability** | Fails if downstream is down | Continues; retries later |\n| **Latency** | Low (synchronous) | Higher (async processing) |\n| **Backpressure handling** | Caller blocks or times out | Queue buffers; consumer processes at own pace |\n| **Failure recovery** | Manual retry logic needed | Built-in retry/dead-letter handling |\n| **Complexity** | Simple | Moderate (broker setup, monitoring) |\n| **Audit trail** | Implicit (need logging) | Explicit (messages are records) |\n| **Cost at scale** | Higher (more infrastructure) | Lower (batched processing) |\n\n## Recommendation for Order Processing: **Message Queue**\n\n### Why\n\n1. **Resilience is critical**: Orders cannot be lost. If payment processing fails mid-pipeline, HTTP would require complex compensation logic. A queue preserves the order as an immutable record.\n\n2. **Decoupling prevents cascades**: If inventory service is slow or down, payment processing shouldn't block. Queue-based processing lets each service fail independently.\n\n3. **Variable load is common**: Order volumes spike (promotions, holidays). HTTP directly couples load between services. A queue absorbs spikes\u2014payment can process at steady state even if orders arrive in bursts.\n\n4. **Audit trail is built-in**: Regulatory compliance often requires proving every order was processed. Message queues naturally preserve this; HTTP requires retrofitted logging.\n\n5. **Retry logic is simpler**: Transient failures (network hiccup, temporary unavailability) are routine. Queues handle exponential backoff and dead-lettering natively; HTTP requires custom retry middleware.\n\n### Suggested Architecture\n\n```\nOrder Service \u2192 [Message Queue] \u2192 Payment Service\n                                \u2192 Inventory Service\n                                \u2192 Fulfillment Service\n```\n\n- **Queue type**: RabbitMQ, AWS SQS, or Kafka depending on scale and retention needs\n- **Pattern**: Choreography (services listen to events) or Orchestration (central coordinator)\n- **Monitoring**: Dead-letter queues for failed orders, lag metrics for performance\n\n### Use HTTP Only If\n- Orders are truly low-volume with no retry need\n- All services are guaranteed available (unlikely in production)\n- Sub-100ms latency is non-negotiable and you accept order loss risk\n\nFor order processing, **message queue is the production-ready choice**. Start with RabbitMQ (easier ops) or SQS (managed, less operational burden).",
+  "texts": [
+    "# Message Queue vs Direct HTTP for Order-Processing Pipelines\n\n## Comparison Matrix\n\n| Aspect | Direct HTTP | Message Queue |\n|--------|-------------|----------------|\n| **Coupling** | Tight | Loose |\n| **Reliability** | Fails if downstream is down | Continues; retries later |\n| **Latency** | Low (synchronous) | Higher (async processing) |\n| **Backpressure handling** | Caller blocks or times out | Queue buffers; consumer processes at own pace |\n| **Failure recovery** | Manual retry logic needed | Built-in retry/dead-letter handling |\n| **Complexity** | Simple | Moderate (broker setup, monitoring) |\n| **Audit trail** | Implicit (need logging) | Explicit (messages are records) |\n| **Cost at scale** | Higher (more infrastructure) | Lower (batched processing) |\n\n## Recommendation for Order Processing: **Message Queue**\n\n### Why\n\n1. **Resilience is critical**: Orders cannot be lost. If payment processing fails mid-pipeline, HTTP would require complex compensation logic. A queue preserves the order as an immutable record.\n\n2. **Decoupling prevents cascades**: If inventory service is slow or down, payment processing shouldn't block. Queue-based processing lets each service fail independently.\n\n3. **Variable load is common**: Order volumes spike (promotions, holidays). HTTP directly couples load between services. A queue absorbs spikes\u2014payment can process at steady state even if orders arrive in bursts.\n\n4. **Audit trail is built-in**: Regulatory compliance often requires proving every order was processed. Message queues naturally preserve this; HTTP requires retrofitted logging.\n\n5. **Retry logic is simpler**: Transient failures (network hiccup, temporary unavailability) are routine. Queues handle exponential backoff and dead-lettering natively; HTTP requires custom retry middleware.\n\n### Suggested Architecture\n\n```\nOrder Service \u2192 [Message Queue] \u2192 Payment Service\n                                \u2192 Inventory Service\n                                \u2192 Fulfillment Service\n```\n\n- **Queue type**: RabbitMQ, AWS SQS, or Kafka depending on scale and retention needs\n- **Pattern**: Choreography (services listen to events) or Orchestration (central coordinator)\n- **Monitoring**: Dead-letter queues for failed orders, lag metrics for performance\n\n### Use HTTP Only If\n- Orders are truly low-volume with no retry need\n- All services are guaranteed available (unlikely in production)\n- Sub-100ms latency is non-negotiable and you accept order loss risk\n\nFor order processing, **message queue is the production-ready choice**. Start with RabbitMQ (easier ops) or SQS (managed, less operational burden)."
+  ],
+  "stderr_tail": ""
+}

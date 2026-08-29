@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "error-01",
+  "cat": "error",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 11.9,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.25358800000000004,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 10740,
+    "cache_read_input_tokens": 11600,
+    "output_tokens": 523,
+    "output_tokens_details": {
+      "thinking_tokens": 31
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10740,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 358,
+        "cache_read_input_tokens": 7177,
+        "cache_creation_input_tokens": 7986,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7986
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 199,
+    "sentences": 15,
+    "mean_sentence_words": 13.0,
+    "longest_sentence_words": 24,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "Here is the message, written in pragmatic STE (short sentences, condition before command, no contractions, no hedging modals).\n\n**Title:** File too large\n\n**Body:**\n\n> This file is larger than 25 MB. Select a file that is 25 MB or smaller, then try again.\n\nIf the UI can show the actual size, use this variant so the user knows how far over the limit they are:\n\n> This file is {size}. The maximum file size is 25 MB. Select a smaller file, then try again.\n\nNotes on the choices:\n- Each sentence is under 20 words. The message names the problem first, then the limit, then the action.\n- \"Select\" is the verb for the action. Use the same verb wherever else your UI refers to choosing a file, so the copy stays consistent.\n- No blame wording (\"you tried to upload\u2026\") and no apology filler (\"Sorry, \u2026\"), which add words without adding facts.\n\nRecap: I wrote a short \"File too large\" error with two variants, one static and one that includes the actual file size. If you want a variant for a multi-file upload (for example, \"2 of 5 files are larger than 25 MB\"), I can add that.",
+  "texts": [
+    "I'll load the Simplified Technical English skill since it covers error messages, then write the message.",
+    "Here is the message, written in pragmatic STE (short sentences, condition before command, no contractions, no hedging modals).\n\n**Title:** File too large\n\n**Body:**\n\n> This file is larger than 25 MB. Select a file that is 25 MB or smaller, then try again.\n\nIf the UI can show the actual size, use this variant so the user knows how far over the limit they are:\n\n> This file is {size}. The maximum file size is 25 MB. Select a smaller file, then try again.\n\nNotes on the choices:\n- Each sentence is under 20 words. The message names the problem first, then the limit, then the action.\n- \"Select\" is the verb for the action. Use the same verb wherever else your UI refers to choosing a file, so the copy stays consistent.\n- No blame wording (\"you tried to upload\u2026\") and no apology filler (\"Sorry, \u2026\"), which add words without adding facts.\n\nRecap: I wrote a short \"File too large\" error with two variants, one static and one that includes the actual file size. If you want a variant for a multi-file upload (for example, \"2 of 5 files are larger than 25 MB\"), I can add that."
+  ],
+  "stderr_tail": ""
+}

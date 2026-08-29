@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "runbook-02",
+  "cat": "runbook",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 60.3,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.504699,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 12041,
+    "cache_read_input_tokens": 12839,
+    "output_tokens": 5020,
+    "output_tokens_details": {
+      "thinking_tokens": 3295
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12041,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 4785,
+        "cache_read_input_tokens": 8416,
+        "cache_creation_input_tokens": 8048,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8048
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "procedural",
+    "words": 789,
+    "sentences": 79,
+    "mean_sentence_words": 9.3,
+    "longest_sentence_words": 36,
+    "violations": {
+      "sentence_over_limit": 4,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 5,
+    "violations_per_100w": 0.63
+  },
+  "text": "Here is the runbook. I use strict STE: imperative steps, conditions first, and `make sure that` as the one verb for state checks. Replace the values in angle brackets with the values for your environment.\n\n# Runbook: Restart the `worker` service\n\n## Scope\n\nThis runbook tells you how to restart the `worker` service on one host. It also tells you how to make sure that the queue drains after the restart. The last sections give the steps for a queue that does not drain. The runbook assumes that the host uses systemd and that the unit name is `worker.service`.\n\n## Before you start\n\n1. Make sure that you have SSH access to the host.\n2. Make sure that you have sudo rights on the host.\n3. Tell the on-call channel that you will restart `worker` on `<host>`.\n4. Measure the queue depth with `<queue-depth-command>`.\n5. Record the queue depth and the time.\n\n## Restart the service\n\n1. Connect to the host: `ssh <host>`.\n2. Examine the service status: `systemctl status worker`.\n3. Record the PID and the start time from the output.\n4. Restart the service: `sudo systemctl restart worker`.\n5. Wait 30 seconds.\n6. Examine the service status again: `systemctl status worker`.\n7. If the status is not `active (running)`, go to the section \"If the service does not start\".\n8. Make sure that the start time is later than the time that you recorded in step 3.\n9. Examine the log for errors: `journalctl -u worker --since \"-2 min\"`.\n10. If the log shows errors, record the error text.\n\n## Make sure that the queue drains\n\n1. Measure the queue depth with `<queue-depth-command>`.\n2. Wait 60 seconds.\n3. Measure the queue depth again.\n4. If the second value is not less than the first value, go to the section \"If the queue does not drain\".\n5. Do steps 1 to 3 again until the queue depth is less than `<normal-depth>`.\n6. If the queue depth is not less than `<normal-depth>` after 15 minutes, go to the section \"If the queue does not drain\".\n7. Tell the on-call channel that the restart is completed and that the queue is at a normal depth.\n8. Go to the section \"Record the work\".\n\n## If the service does not start\n\n1. Examine the last 100 lines of the log: `journalctl -u worker -n 100`.\n2. If the log shows a configuration error, correct the configuration.\n3. If the log shows a port conflict, find the process that uses the port: `sudo ss -ltnp`.\n4. If you corrected the cause, do the steps in the section \"Restart the service\" again.\n5. If you cannot find the cause in 10 minutes, go to the section \"Escalate\".\n\n## If the queue does not drain\n\nCAUTION: Do not restart the service more than two times in one incident. Each restart stops the messages that are in progress.\n\n1. Examine the live log: `journalctl -u worker -f`.\n2. Make sure that the log shows new message IDs. New message IDs show that the worker processes messages.\n3. If the log shows the same message ID many times, move that message to the dead-letter queue: `<dlq-command>`.\n4. Measure the CPU use and the memory use of the worker: `top -p <pid>`.\n5. If the worker uses 100% CPU for more than 2 minutes, collect a stack dump: `<stack-dump-command>`.\n6. Make sure that the worker can connect to the queue broker: `<broker-health-command>`.\n7. If the worker cannot connect to the broker, go to the section \"Escalate\".\n8. If the queue depth still does not decrease, do the steps in the section \"Restart the service\" again.\n9. Wait 5 minutes.\n10. Measure the queue depth again.\n11. If the queue depth does not decrease, go to the section \"Escalate\".\n\n## Escalate\n\n1. Page the owner of `worker` at `<pager-target>`.\n2. Give the owner the facts in the list that follows.\n3. Do not restart the service again until the owner tells you to restart it.\n\nFacts for the owner:\n\n- The host name\n- The queue depth before the restart and at this time\n- The time of each restart\n- The error text from the log\n- The steps that you completed\n- The stack dump, if you collected one.\n\n## Record the work\n\n1. Write a note in the incident tracker.\n2. Put the times, the queue depths, the errors, and the result in the note.\n3. If you moved a message to the dead-letter queue, put the message ID in the note.\n\n---\n\nRecap: The runbook has seven sections. The main path is: prepare, restart, make sure that the queue drains, record. The two problem paths are: the service does not start, and the queue does not drain. Both problem paths end in the \"Escalate\" section. Full ASD-STE100 compliance needs a check against the official dictionary, which is free at asd-ste100.org. If you give me the real command names, the normal queue depth, and the pager target, I will put them in place of the placeholders.",
+  "texts": [
+    "I will write the runbook in Simplified Technical English. First I load the STE skill.",
+    "Here is the runbook. I use strict STE: imperative steps, conditions first, and `make sure that` as the one verb for state checks. Replace the values in angle brackets with the values for your environment.\n\n# Runbook: Restart the `worker` service\n\n## Scope\n\nThis runbook tells you how to restart the `worker` service on one host. It also tells you how to make sure that the queue drains after the restart. The last sections give the steps for a queue that does not drain. The runbook assumes that the host uses systemd and that the unit name is `worker.service`.\n\n## Before you start\n\n1. Make sure that you have SSH access to the host.\n2. Make sure that you have sudo rights on the host.\n3. Tell the on-call channel that you will restart `worker` on `<host>`.\n4. Measure the queue depth with `<queue-depth-command>`.\n5. Record the queue depth and the time.\n\n## Restart the service\n\n1. Connect to the host: `ssh <host>`.\n2. Examine the service status: `systemctl status worker`.\n3. Record the PID and the start time from the output.\n4. Restart the service: `sudo systemctl restart worker`.\n5. Wait 30 seconds.\n6. Examine the service status again: `systemctl status worker`.\n7. If the status is not `active (running)`, go to the section \"If the service does not start\".\n8. Make sure that the start time is later than the time that you recorded in step 3.\n9. Examine the log for errors: `journalctl -u worker --since \"-2 min\"`.\n10. If the log shows errors, record the error text.\n\n## Make sure that the queue drains\n\n1. Measure the queue depth with `<queue-depth-command>`.\n2. Wait 60 seconds.\n3. Measure the queue depth again.\n4. If the second value is not less than the first value, go to the section \"If the queue does not drain\".\n5. Do steps 1 to 3 again until the queue depth is less than `<normal-depth>`.\n6. If the queue depth is not less than `<normal-depth>` after 15 minutes, go to the section \"If the queue does not drain\".\n7. Tell the on-call channel that the restart is completed and that the queue is at a normal depth.\n8. Go to the section \"Record the work\".\n\n## If the service does not start\n\n1. Examine the last 100 lines of the log: `journalctl -u worker -n 100`.\n2. If the log shows a configuration error, correct the configuration.\n3. If the log shows a port conflict, find the process that uses the port: `sudo ss -ltnp`.\n4. If you corrected the cause, do the steps in the section \"Restart the service\" again.\n5. If you cannot find the cause in 10 minutes, go to the section \"Escalate\".\n\n## If the queue does not drain\n\nCAUTION: Do not restart the service more than two times in one incident. Each restart stops the messages that are in progress.\n\n1. Examine the live log: `journalctl -u worker -f`.\n2. Make sure that the log shows new message IDs. New message IDs show that the worker processes messages.\n3. If the log shows the same message ID many times, move that message to the dead-letter queue: `<dlq-command>`.\n4. Measure the CPU use and the memory use of the worker: `top -p <pid>`.\n5. If the worker uses 100% CPU for more than 2 minutes, collect a stack dump: `<stack-dump-command>`.\n6. Make sure that the worker can connect to the queue broker: `<broker-health-command>`.\n7. If the worker cannot connect to the broker, go to the section \"Escalate\".\n8. If the queue depth still does not decrease, do the steps in the section \"Restart the service\" again.\n9. Wait 5 minutes.\n10. Measure the queue depth again.\n11. If the queue depth does not decrease, go to the section \"Escalate\".\n\n## Escalate\n\n1. Page the owner of `worker` at `<pager-target>`.\n2. Give the owner the facts in the list that follows.\n3. Do not restart the service again until the owner tells you to restart it.\n\nFacts for the owner:\n\n- The host name\n- The queue depth before the restart and at this time\n- The time of each restart\n- The error text from the log\n- The steps that you completed\n- The stack dump, if you collected one.\n\n## Record the work\n\n1. Write a note in the incident tracker.\n2. Put the times, the queue depths, the errors, and the result in the note.\n3. If you moved a message to the dead-letter queue, put the message ID in the note.\n\n---\n\nRecap: The runbook has seven sections. The main path is: prepare, restart, make sure that the queue drains, record. The two problem paths are: the service does not start, and the queue does not drain. Both problem paths end in the \"Escalate\" section. Full ASD-STE100 compliance needs a check against the official dictionary, which is free at asd-ste100.org. If you give me the real command names, the normal queue depth, and the pager target, I will put them in place of the placeholders."
+  ],
+  "stderr_tail": ""
+}

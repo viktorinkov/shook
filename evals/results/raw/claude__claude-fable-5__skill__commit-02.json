@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "commit-02",
+  "cat": "commit",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 5.5,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.070836,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2753,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 207,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2753,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 207,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 2753,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2753
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 59,
+    "sentences": 6,
+    "mean_sentence_words": 9.8,
+    "longest_sentence_words": 15,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 1,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 1.69
+  },
+  "text": "Here's a commit message for that change:\n\n```\nAdd --dry-run flag to deploy command\n\nWhen --dry-run is set, deploy resolves the target, validates the\nconfiguration, and prints the actions it would take without\napplying any changes.\n\nThis lets users verify a deployment plan before it runs, which is\nespecially useful for production targets and CI pipelines.\n```\n\nNotes on what this assumes: the flag performs the usual validation steps and prints a plan rather than executing. If your implementation differs (e.g. it skips validation, or it also writes a plan file), adjust the body to match. The subject line stays under 50 characters, and the body wraps at 72.",
+  "texts": [
+    "Here's a commit message for that change:\n\n```\nAdd --dry-run flag to deploy command\n\nWhen --dry-run is set, deploy resolves the target, validates the\nconfiguration, and prints the actions it would take without\napplying any changes.\n\nThis lets users verify a deployment plan before it runs, which is\nespecially useful for production targets and CI pipelines.\n```\n\nNotes on what this assumes: the flag performs the usual validation steps and prints a plan rather than executing. If your implementation differs (e.g. it skips validation, or it also writes a plan file), adjust the body to match. The subject line stays under 50 characters, and the body wraps at 72."
+  ],
+  "stderr_tail": ""
+}

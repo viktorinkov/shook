@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "review-06",
+  "cat": "review",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 17.1,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.136743,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3950,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 1066,
+    "output_tokens_details": {
+      "thinking_tokens": 451
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3950,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1066,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 3950,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3950
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 279,
+    "sentences": 29,
+    "mean_sentence_words": 9.5,
+    "longest_sentence_words": 21,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "I will write the PR comment now. No repo access is necessary for this. The two lines are in your prompt.\n\nHere is the PR comment:\n\n---\n\n**Combine the two `apt-get install` lines into one `RUN` instruction.**\n\nThe second line, `RUN apt-get install -y git`, does not run `apt-get update`. It uses the package index from the first `RUN` layer. Docker caches that first layer. When a later change touches only the second line, Docker reuses the cached first layer. The cached package index can then be weeks or months old. The Debian and Ubuntu mirrors remove old package versions. The install of `git` then fails with a `404 Not Found` error. This failure is hard to reproduce on a clean machine, because a clean build gets a new index.\n\nThere is a second, smaller problem. Each `RUN` line makes one layer. The package index in `/var/lib/apt/lists/` stays in the image. That adds size with no benefit.\n\nReplace both lines with one instruction:\n\n```dockerfile\nRUN apt-get update \\\n && apt-get install -y --no-install-recommends curl git \\\n && rm -rf /var/lib/apt/lists/*\n```\n\nThis change gives three results:\n\n- One layer contains the `update` and the `install`. The cache invalidates both together.\n- `--no-install-recommends` stops the install of optional packages.\n- The `rm -rf /var/lib/apt/lists/*` step removes the package index from the image.\n\nIf a later commit adds a new package, add it to this same list. Do not add a new `RUN apt-get install` line.\n\n---\n\n**Recap.** The comment names the main fault: the second `RUN` uses a stale package index from a cached layer, and the build can fail with a `404` error. It also notes the extra image size. The proposed fix combines the two lines, adds `--no-install-recommends`, and removes the index after the install. Paste the comment into the PR as it is.",
+  "texts": [
+    "I will write the PR comment now. No repo access is necessary for this. The two lines are in your prompt.\n\nHere is the PR comment:\n\n---\n\n**Combine the two `apt-get install` lines into one `RUN` instruction.**\n\nThe second line, `RUN apt-get install -y git`, does not run `apt-get update`. It uses the package index from the first `RUN` layer. Docker caches that first layer. When a later change touches only the second line, Docker reuses the cached first layer. The cached package index can then be weeks or months old. The Debian and Ubuntu mirrors remove old package versions. The install of `git` then fails with a `404 Not Found` error. This failure is hard to reproduce on a clean machine, because a clean build gets a new index.\n\nThere is a second, smaller problem. Each `RUN` line makes one layer. The package index in `/var/lib/apt/lists/` stays in the image. That adds size with no benefit.\n\nReplace both lines with one instruction:\n\n```dockerfile\nRUN apt-get update \\\n && apt-get install -y --no-install-recommends curl git \\\n && rm -rf /var/lib/apt/lists/*\n```\n\nThis change gives three results:\n\n- One layer contains the `update` and the `install`. The cache invalidates both together.\n- `--no-install-recommends` stops the install of optional packages.\n- The `rm -rf /var/lib/apt/lists/*` step removes the package index from the image.\n\nIf a later commit adds a new package, add it to this same list. Do not add a new `RUN apt-get install` line.\n\n---\n\n**Recap.** The comment names the main fault: the second `RUN` uses a stale package index from a cached layer, and the build can fail with a `404` error. It also notes the extra image size. The proposed fix combines the two lines, adds `--no-install-recommends`, and removes the index after the install. Paste the comment into the PR as it is."
+  ],
+  "stderr_tail": ""
+}

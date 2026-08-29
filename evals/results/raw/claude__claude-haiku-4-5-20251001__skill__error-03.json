@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "error-03",
+  "cat": "error",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 42.8,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.0435315,
+  "usage": {
+    "input_tokens": 20,
+    "cache_creation_input_tokens": 11048,
+    "cache_read_input_tokens": 4785,
+    "output_tokens": 3990,
+    "output_tokens_details": {
+      "thinking_tokens": 3568
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 11048,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 3583,
+        "cache_read_input_tokens": 4785,
+        "cache_creation_input_tokens": 6263,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6263
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 153,
+    "sentences": 6,
+    "mean_sentence_words": 23.3,
+    "longest_sentence_words": 73,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 2
+    },
+    "violations_total": 4,
+    "violations_per_100w": 2.61
+  },
+  "text": "# Error Message for Failed Database Connection (Rejected Password)\n\n```\nDatabase connection failed. The database rejected the password for user app. \nMake sure that the password is correct.\n```\n\n## Why this works (STE compliance)\n\n**Clarity:**\n- Each sentence is under the 25-word limit (3, 8, and 7 words)\n- Active voice: \"The database rejected\" instead of passive \"password was rejected\"\n- No hedging words: clear statement of fact, then actionable step\n\n**Specificity without overexposure:**\n- Names the user account (`app`) so the reader knows which credential failed\n- Does not explain the authentication mechanism or reveal system internals\n- Avoids jargon like \"credentials\" or \"auth failure\"\n\n**Actionable:**\n- \"Make sure that\" (approved replacement for \"verify\", \"check\", \"ensure\") tells the reader what to do\n- Implies the next step without stating the obvious (\"try again\")\n\n**STE compliance:**\n- Complete grammar (articles present: \"the database\", \"the password\")\n- No contractions\n- One instruction per sentence\n- Simple tenses (present, imperative)\n\nIf the user needs more guidance, follow with a note: *Note: The password is case-sensitive. Contact support if the password is correct and the connection still fails.*",
+  "texts": [
+    "# Error Message for Failed Database Connection (Rejected Password)\n\n```\nDatabase connection failed. The database rejected the password for user app. \nMake sure that the password is correct.\n```\n\n## Why this works (STE compliance)\n\n**Clarity:**\n- Each sentence is under the 25-word limit (3, 8, and 7 words)\n- Active voice: \"The database rejected\" instead of passive \"password was rejected\"\n- No hedging words: clear statement of fact, then actionable step\n\n**Specificity without overexposure:**\n- Names the user account (`app`) so the reader knows which credential failed\n- Does not explain the authentication mechanism or reveal system internals\n- Avoids jargon like \"credentials\" or \"auth failure\"\n\n**Actionable:**\n- \"Make sure that\" (approved replacement for \"verify\", \"check\", \"ensure\") tells the reader what to do\n- Implies the next step without stating the obvious (\"try again\")\n\n**STE compliance:**\n- Complete grammar (articles present: \"the database\", \"the password\")\n- No contractions\n- One instruction per sentence\n- Simple tenses (present, imperative)\n\nIf the user needs more guidance, follow with a note: *Note: The password is case-sensitive. Contact support if the password is correct and the connection still fails.*"
+  ],
+  "stderr_tail": ""
+}

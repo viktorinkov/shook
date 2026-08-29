@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "explain-08",
+  "cat": "explain",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 18.9,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.153623,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3914,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 1418,
+    "output_tokens_details": {
+      "thinking_tokens": 60
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3914,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1418,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 3914,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3914
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 355,
+    "sentences": 34,
+    "mean_sentence_words": 10.2,
+    "longest_sentence_words": 36,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 3,
+      "synonym_rotation": 0
+    },
+    "violations_total": 4,
+    "violations_per_100w": 1.13
+  },
+  "text": "I will explain the N+1 query problem with a Django ORM example and show the fix.\n\n## What the N+1 query problem is\n\nThe N+1 query problem occurs when code loads a list of N parent rows with one query. The code then runs one more query for each parent row to load a related row. The total is N+1 queries. For 1000 parents, the database receives 1001 queries.\n\nEach query has a fixed cost: a network round trip, parse time, and plan time. This fixed cost makes N+1 code slow, even when each query is fast.\n\n## Example of the problem (Django ORM)\n\n```python\n# models.py\nclass Author(models.Model):\n    name = models.CharField(max_length=100)\n\nclass Book(models.Model):\n    title = models.CharField(max_length=200)\n    author = models.ForeignKey(Author, on_delete=models.CASCADE)\n```\n\n```python\n# One query loads all books.\nbooks = Book.objects.all()\n\n# Each iteration runs one more query to load the author.\nfor book in books:\n    print(book.title, book.author.name)\n```\n\nThe SQL that the database receives:\n\n```sql\nSELECT * FROM book;                         -- 1 query\nSELECT * FROM author WHERE id = 1;          -- query 2\nSELECT * FROM author WHERE id = 2;          -- query 3\nSELECT * FROM author WHERE id = 3;          -- query 4\n-- ... one query for each book\n```\n\nThe ORM hides this behavior. The line `book.author` looks like a property access, but it runs a query.\n\n## How to fix it\n\nTell the ORM to load the related rows in advance. Django has two methods for this.\n\n### Method 1: `select_related` (for foreign keys)\n\n```python\nbooks = Book.objects.select_related(\"author\")\n\nfor book in books:\n    print(book.title, book.author.name)   # no extra query\n```\n\nThe ORM now runs one query with a JOIN:\n\n```sql\nSELECT book.*, author.*\nFROM book\nJOIN author ON author.id = book.author_id;\n```\n\nUse `select_related` for `ForeignKey` and `OneToOneField` relations. The JOIN returns each parent and its related row in one result set.\n\n### Method 2: `prefetch_related` (for reverse and many-to-many relations)\n\n```python\nauthors = Author.objects.prefetch_related(\"book_set\")\n\nfor author in authors:\n    for book in author.book_set.all():    # no extra query\n        print(author.name, book.title)\n```\n\nThe ORM runs two queries in total:\n\n```sql\nSELECT * FROM author;\nSELECT * FROM book WHERE author_id IN (1, 2, 3, ...);\n```\n\nThe ORM then joins the rows in Python memory. Use `prefetch_related` for `ManyToManyField` and reverse `ForeignKey` relations. A JOIN on these relations can multiply the rows, so a second query is the better option.\n\n## Same fix in other ORMs\n\n| ORM | Fix |\n|---|---|\n| SQLAlchemy | `session.query(Book).options(joinedload(Book.author))` or `selectinload(...)` |\n| Rails (ActiveRecord) | `Book.includes(:author)` |\n| Prisma | `prisma.book.findMany({ include: { author: true } })` |\n| Hibernate / JPA | `JOIN FETCH` in JPQL, or `@EntityGraph` |\n\n## How to detect the problem\n\n- Django: enable `django.db.backends` logging at `DEBUG` level and count the queries. Use `django-debug-toolbar` in development.\n- Tests: use `assertNumQueries(2)` in Django tests. The test fails if the query count changes.\n- Rails: use the `bullet` gem. It reports each N+1 pattern at runtime.\n- General: look for loops that access a relation on each item. Each such loop is a candidate.\n\n## Summary\n\nThe N+1 problem is one query for a list, plus one query for each item in the list. The cause is lazy loading of relations inside a loop. The fix is eager loading: use `select_related` for a JOIN, or `prefetch_related` for a second `IN` query. Add a query-count assertion in tests to prevent the problem from a return.",
+  "texts": [
+    "I will explain the N+1 query problem with a Django ORM example and show the fix.\n\n## What the N+1 query problem is\n\nThe N+1 query problem occurs when code loads a list of N parent rows with one query. The code then runs one more query for each parent row to load a related row. The total is N+1 queries. For 1000 parents, the database receives 1001 queries.\n\nEach query has a fixed cost: a network round trip, parse time, and plan time. This fixed cost makes N+1 code slow, even when each query is fast.\n\n## Example of the problem (Django ORM)\n\n```python\n# models.py\nclass Author(models.Model):\n    name = models.CharField(max_length=100)\n\nclass Book(models.Model):\n    title = models.CharField(max_length=200)\n    author = models.ForeignKey(Author, on_delete=models.CASCADE)\n```\n\n```python\n# One query loads all books.\nbooks = Book.objects.all()\n\n# Each iteration runs one more query to load the author.\nfor book in books:\n    print(book.title, book.author.name)\n```\n\nThe SQL that the database receives:\n\n```sql\nSELECT * FROM book;                         -- 1 query\nSELECT * FROM author WHERE id = 1;          -- query 2\nSELECT * FROM author WHERE id = 2;          -- query 3\nSELECT * FROM author WHERE id = 3;          -- query 4\n-- ... one query for each book\n```\n\nThe ORM hides this behavior. The line `book.author` looks like a property access, but it runs a query.\n\n## How to fix it\n\nTell the ORM to load the related rows in advance. Django has two methods for this.\n\n### Method 1: `select_related` (for foreign keys)\n\n```python\nbooks = Book.objects.select_related(\"author\")\n\nfor book in books:\n    print(book.title, book.author.name)   # no extra query\n```\n\nThe ORM now runs one query with a JOIN:\n\n```sql\nSELECT book.*, author.*\nFROM book\nJOIN author ON author.id = book.author_id;\n```\n\nUse `select_related` for `ForeignKey` and `OneToOneField` relations. The JOIN returns each parent and its related row in one result set.\n\n### Method 2: `prefetch_related` (for reverse and many-to-many relations)\n\n```python\nauthors = Author.objects.prefetch_related(\"book_set\")\n\nfor author in authors:\n    for book in author.book_set.all():    # no extra query\n        print(author.name, book.title)\n```\n\nThe ORM runs two queries in total:\n\n```sql\nSELECT * FROM author;\nSELECT * FROM book WHERE author_id IN (1, 2, 3, ...);\n```\n\nThe ORM then joins the rows in Python memory. Use `prefetch_related` for `ManyToManyField` and reverse `ForeignKey` relations. A JOIN on these relations can multiply the rows, so a second query is the better option.\n\n## Same fix in other ORMs\n\n| ORM | Fix |\n|---|---|\n| SQLAlchemy | `session.query(Book).options(joinedload(Book.author))` or `selectinload(...)` |\n| Rails (ActiveRecord) | `Book.includes(:author)` |\n| Prisma | `prisma.book.findMany({ include: { author: true } })` |\n| Hibernate / JPA | `JOIN FETCH` in JPQL, or `@EntityGraph` |\n\n## How to detect the problem\n\n- Django: enable `django.db.backends` logging at `DEBUG` level and count the queries. Use `django-debug-toolbar` in development.\n- Tests: use `assertNumQueries(2)` in Django tests. The test fails if the query count changes.\n- Rails: use the `bullet` gem. It reports each N+1 pattern at runtime.\n- General: look for loops that access a relation on each item. Each such loop is a candidate.\n\n## Summary\n\nThe N+1 problem is one query for a list, plus one query for each item in the list. The cause is lazy loading of relations inside a loop. The fix is eager loading: use `select_related` for a JOIN, or `prefetch_related` for a second `IN` query. Add a query-count assertion in tests to prevent the problem from a return."
+  ],
+  "stderr_tail": ""
+}

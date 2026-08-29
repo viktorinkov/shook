@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "review-02",
+  "cat": "review",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 35.5,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.027563999999999998,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 5692,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 3234,
+    "output_tokens_details": {
+      "thinking_tokens": 3028
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5692,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 3234,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 5692,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5692
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 150,
+    "sentences": 12,
+    "mean_sentence_words": 12.5,
+    "longest_sentence_words": 18,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "I found several issues with this migration.\n\n**Data Integrity Concern**\n\nThe UPDATE statement creates fake email addresses (username@example.com). These addresses do not correspond to real mailboxes. If the application sends email to users at these addresses, the messages will not be delivered.\n\nDo not generate fake email addresses. Require users to provide real email addresses through a separate process.\n\n**Missing Uniqueness Constraint**\n\nThe migration does not add a UNIQUE constraint on the email column. If the application requires unique email addresses, add the constraint to the ALTER TABLE statement.\n\n**Breaking Change for New Users**\n\nThe NOT NULL constraint requires all new users to provide an email address. Verify that the application code handles this requirement. If email is optional for new users, either remove SET NOT NULL or add a DEFAULT value.\n\n**Performance Consideration**\n\nIf the application uses email for lookups or joins, add an INDEX on the email column.",
+  "texts": [
+    "I found several issues with this migration.\n\n**Data Integrity Concern**\n\nThe UPDATE statement creates fake email addresses (username@example.com). These addresses do not correspond to real mailboxes. If the application sends email to users at these addresses, the messages will not be delivered.\n\nDo not generate fake email addresses. Require users to provide real email addresses through a separate process.\n\n**Missing Uniqueness Constraint**\n\nThe migration does not add a UNIQUE constraint on the email column. If the application requires unique email addresses, add the constraint to the ALTER TABLE statement.\n\n**Breaking Change for New Users**\n\nThe NOT NULL constraint requires all new users to provide an email address. Verify that the application code handles this requirement. If email is optional for new users, either remove SET NOT NULL or add a DEFAULT value.\n\n**Performance Consideration**\n\nIf the application uses email for lookups or joins, add an INDEX on the email column."
+  ],
+  "stderr_tail": ""
+}

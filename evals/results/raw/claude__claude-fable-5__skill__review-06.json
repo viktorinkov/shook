@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "review-06",
+  "cat": "review",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 12.2,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.097137,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2789,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 718,
+    "output_tokens_details": {
+      "thinking_tokens": 60
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2789,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 718,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 2789,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2789
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 254,
+    "sentences": 14,
+    "mean_sentence_words": 18.0,
+    "longest_sentence_words": 40,
+    "violations": {
+      "sentence_over_limit": 3,
+      "contraction": 2,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 2,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 8,
+    "violations_per_100w": 3.15
+  },
+  "text": "Here's a PR comment for that:\n\n---\n\n**Suggestion: merge the second `apt-get install` into the first `RUN`**\n\n```dockerfile\nRUN apt-get update && apt-get install -y curl\n...\nRUN apt-get install -y git\n```\n\nTwo problems with the second line:\n\n1. **Stale package index (cache-busting).** Each `RUN` is its own layer, and Docker caches layers by instruction text. The first line's `apt-get update` is cached along with `curl`; when you later add or change `RUN apt-get install -y git`, only that layer rebuilds \u2014 against the *old* package lists from the cached `update` layer. Over time this fails with `404 Not Found` / `Unable to locate package` errors once the mirror rotates package versions, or silently installs outdated packages. This is the \"`apt-get update` and `install` in separate `RUN`s\" anti-pattern called out in the Dockerfile best-practices docs.\n\n2. **Image size.** Every `RUN` that installs packages adds a layer. Splitting installs means the apt lists and download cache get baked into multiple layers, and you can't clean them up in a single step.\n\nRecommended form \u2014 one `RUN`, all packages together, with cleanup in the same layer so the lists don't ship in the image:\n\n```dockerfile\nRUN apt-get update && apt-get install -y --no-install-recommends \\\n        curl \\\n        git \\\n    && rm -rf /var/lib/apt/lists/*\n```\n\n`--no-install-recommends` is optional but usually shaves a fair bit off the image. If `git` really needs to be installed in a later stage for some reason, that stage needs its own `apt-get update && apt-get install` on the same line, not a bare `install`.\n\n---\n\nRecap: the second `RUN apt-get install` runs without an `update` in its own layer, so it uses a cached/stale package index and can fail or install outdated packages; the fix is one combined `RUN` that updates, installs both packages, and removes `/var/lib/apt/lists/*`.",
+  "texts": [
+    "Here's a PR comment for that:\n\n---\n\n**Suggestion: merge the second `apt-get install` into the first `RUN`**\n\n```dockerfile\nRUN apt-get update && apt-get install -y curl\n...\nRUN apt-get install -y git\n```\n\nTwo problems with the second line:\n\n1. **Stale package index (cache-busting).** Each `RUN` is its own layer, and Docker caches layers by instruction text. The first line's `apt-get update` is cached along with `curl`; when you later add or change `RUN apt-get install -y git`, only that layer rebuilds \u2014 against the *old* package lists from the cached `update` layer. Over time this fails with `404 Not Found` / `Unable to locate package` errors once the mirror rotates package versions, or silently installs outdated packages. This is the \"`apt-get update` and `install` in separate `RUN`s\" anti-pattern called out in the Dockerfile best-practices docs.\n\n2. **Image size.** Every `RUN` that installs packages adds a layer. Splitting installs means the apt lists and download cache get baked into multiple layers, and you can't clean them up in a single step.\n\nRecommended form \u2014 one `RUN`, all packages together, with cleanup in the same layer so the lists don't ship in the image:\n\n```dockerfile\nRUN apt-get update && apt-get install -y --no-install-recommends \\\n        curl \\\n        git \\\n    && rm -rf /var/lib/apt/lists/*\n```\n\n`--no-install-recommends` is optional but usually shaves a fair bit off the image. If `git` really needs to be installed in a later stage for some reason, that stage needs its own `apt-get update && apt-get install` on the same line, not a bare `install`.\n\n---\n\nRecap: the second `RUN apt-get install` runs without an `update` in its own layer, so it uses a cached/stale package index and can fail or install outdated packages; the fix is one combined `RUN` that updates, installs both packages, and removes `/var/lib/apt/lists/*`."
+  ],
+  "stderr_tail": ""
+}

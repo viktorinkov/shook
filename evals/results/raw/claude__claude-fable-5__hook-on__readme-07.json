@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "readme-07",
+  "cat": "docs",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 13.0,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.127313,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3941,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 881,
+    "output_tokens_details": {
+      "thinking_tokens": 166
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3941,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 881,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 3941,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3941
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 299,
+    "sentences": 29,
+    "mean_sentence_words": 10.2,
+    "longest_sentence_words": 24,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 0
+    },
+    "violations_total": 2,
+    "violations_per_100w": 0.67
+  },
+  "text": "I will write the environment variable documentation in Simplified Technical English.\n\n## Environment Variables\n\nThe service reads its configuration from environment variables. Set these variables before you start the service.\n\n| Variable | Required | Default | Description |\n|---|---|---|---|\n| `DATABASE_URL` | Yes | None | The connection string for the primary database. |\n| `REDIS_URL` | No | None | The connection string for the Redis cache. If set, the service enables caching. |\n| `LOG_JSON` | No | `false` | Controls the log output format. If set to `true`, the service writes logs as JSON. |\n\n### `DATABASE_URL`\n\nThis variable is required. It holds the connection string for the primary database. The service reads and writes all persistent data through this connection.\n\nIf this variable is not set, the service does not start. The service writes an error to the log and exits.\n\nExample:\n\n```\nDATABASE_URL=postgres://user:password@db.example.com:5432/service\n```\n\n### `REDIS_URL`\n\nThis variable is optional. It holds the connection string for the Redis cache.\n\nIf this variable is set, the service enables caching and stores cached data in Redis. If this variable is not set, the service disables caching. All requests then go directly to the database.\n\nExample:\n\n```\nREDIS_URL=redis://cache.example.com:6379/0\n```\n\n### `LOG_JSON`\n\nThis variable is optional. The default value is `false`.\n\nIf the value is `false`, the service writes logs as plain text. If the value is `true`, the service writes logs as one JSON object per line. Use JSON logs when a log collector reads the output.\n\nExample:\n\n```\nLOG_JSON=true\n```\n\n### Example Configuration\n\nTo start the service with caching and JSON logs, set all three variables:\n\n```\nDATABASE_URL=postgres://user:password@db.example.com:5432/service\nREDIS_URL=redis://cache.example.com:6379/0\nLOG_JSON=true\n```\n\n---\n\nRecap: I wrote a documentation section for the three environment variables. It has a summary table, one subsection per variable, and a full example. The text follows ASD-STE100 rules. Tell me if you want this text in a file, for example `README.md` or `docs/configuration.md`.",
+  "texts": [
+    "I will write the environment variable documentation in Simplified Technical English.\n\n## Environment Variables\n\nThe service reads its configuration from environment variables. Set these variables before you start the service.\n\n| Variable | Required | Default | Description |\n|---|---|---|---|\n| `DATABASE_URL` | Yes | None | The connection string for the primary database. |\n| `REDIS_URL` | No | None | The connection string for the Redis cache. If set, the service enables caching. |\n| `LOG_JSON` | No | `false` | Controls the log output format. If set to `true`, the service writes logs as JSON. |\n\n### `DATABASE_URL`\n\nThis variable is required. It holds the connection string for the primary database. The service reads and writes all persistent data through this connection.\n\nIf this variable is not set, the service does not start. The service writes an error to the log and exits.\n\nExample:\n\n```\nDATABASE_URL=postgres://user:password@db.example.com:5432/service\n```\n\n### `REDIS_URL`\n\nThis variable is optional. It holds the connection string for the Redis cache.\n\nIf this variable is set, the service enables caching and stores cached data in Redis. If this variable is not set, the service disables caching. All requests then go directly to the database.\n\nExample:\n\n```\nREDIS_URL=redis://cache.example.com:6379/0\n```\n\n### `LOG_JSON`\n\nThis variable is optional. The default value is `false`.\n\nIf the value is `false`, the service writes logs as plain text. If the value is `true`, the service writes logs as one JSON object per line. Use JSON logs when a log collector reads the output.\n\nExample:\n\n```\nLOG_JSON=true\n```\n\n### Example Configuration\n\nTo start the service with caching and JSON logs, set all three variables:\n\n```\nDATABASE_URL=postgres://user:password@db.example.com:5432/service\nREDIS_URL=redis://cache.example.com:6379/0\nLOG_JSON=true\n```\n\n---\n\nRecap: I wrote a documentation section for the three environment variables. It has a summary table, one subsection per variable, and a full example. The text follows ASD-STE100 rules. Tell me if you want this text in a file, for example `README.md` or `docs/configuration.md`."
+  ],
+  "stderr_tail": ""
+}

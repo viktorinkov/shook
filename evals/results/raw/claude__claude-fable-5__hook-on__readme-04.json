@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "readme-04",
+  "cat": "docs",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 25.2,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.34635000000000005,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 11987,
+    "cache_read_input_tokens": 12770,
+    "output_tokens": 1876,
+    "output_tokens_details": {
+      "thinking_tokens": 816
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 11987,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1640,
+        "cache_read_input_tokens": 8347,
+        "cache_creation_input_tokens": 8063,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8063
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 442,
+    "sentences": 52,
+    "mean_sentence_words": 8.0,
+    "longest_sentence_words": 18,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "Here is the Troubleshooting section. It uses `<port>` and `<PID>` as placeholders because the app name and port were not given.\n\n---\n\n## Troubleshooting\n\n### The app does not start and shows `EADDRINUSE`\n\nThe app starts a local server on a fixed port. The error `EADDRINUSE` means that a different process already uses this port. As a result, the app cannot open the port and stops.\n\nThis error has three usual causes:\n\n- A previous copy of the app did not close fully.\n- A second copy of the app is open.\n- A different program uses the same port.\n\n#### Step 1: Close all copies of the app\n\n1. Close all app windows.\n2. Make sure that the app icon is not in the system tray or the menu bar.\n3. Start the app again.\n4. If the error occurs again, go to Step 2.\n\n#### Step 2: Find the process that uses the port\n\nThe error message contains the port number. Use this number in the commands that follow.\n\nOn macOS or Linux:\n\n1. Open a terminal.\n2. Run `lsof -i :<port>`. Replace `<port>` with the port number from the error message.\n3. Read the `PID` column and the `COMMAND` column. These columns show the process that uses the port.\n\nOn Windows:\n\n1. Open a Command Prompt.\n2. Run `netstat -ano | findstr :<port>`. Replace `<port>` with the port number from the error message.\n3. Read the last column. This column shows the process ID (PID).\n4. Run `tasklist /FI \"PID eq <PID>\"`. This command shows the name of the process.\n\n#### Step 3: Stop the process\n\nCAUTION: Make sure that the process belongs to the app before you stop it. The commands that follow stop the process without a save prompt.\n\nIf the process is an old copy of the app:\n\n1. On macOS or Linux, run `kill <PID>`.\n2. On Windows, run `taskkill /PID <PID> /F`.\n3. Start the app again.\n\nIf the process is a different program:\n\n1. Close that program.\n2. Start the app again.\n3. If you cannot close that program, change the port of the app in the app settings.\n\n#### Step 4: Restart the computer\n\nIf the error continues after Step 3, restart the computer. A restart releases all ports. Then start the app again.\n\n### The app still does not start\n\nIf the error continues after a restart, collect this information:\n\n- The full error message.\n- The output of the command from Step 2.\n- The operating system and the app version.\n\nThen send this information to support.\n\n---\n\n**Recap:** I wrote a Troubleshooting section for the `EADDRINUSE` start error in ASD-STE100 style. It has a short description of the cause, then four procedural steps with conditions before commands. Two items are assumptions that you must adapt: the `<port>` placeholder, and the sentence about a port setting in the app settings. If the app has no port setting, delete item 3 under \"If the process is a different program\".",
+  "texts": [
+    "I will load the Simple English skill, then write the Troubleshooting section.",
+    "Here is the Troubleshooting section. It uses `<port>` and `<PID>` as placeholders because the app name and port were not given.\n\n---\n\n## Troubleshooting\n\n### The app does not start and shows `EADDRINUSE`\n\nThe app starts a local server on a fixed port. The error `EADDRINUSE` means that a different process already uses this port. As a result, the app cannot open the port and stops.\n\nThis error has three usual causes:\n\n- A previous copy of the app did not close fully.\n- A second copy of the app is open.\n- A different program uses the same port.\n\n#### Step 1: Close all copies of the app\n\n1. Close all app windows.\n2. Make sure that the app icon is not in the system tray or the menu bar.\n3. Start the app again.\n4. If the error occurs again, go to Step 2.\n\n#### Step 2: Find the process that uses the port\n\nThe error message contains the port number. Use this number in the commands that follow.\n\nOn macOS or Linux:\n\n1. Open a terminal.\n2. Run `lsof -i :<port>`. Replace `<port>` with the port number from the error message.\n3. Read the `PID` column and the `COMMAND` column. These columns show the process that uses the port.\n\nOn Windows:\n\n1. Open a Command Prompt.\n2. Run `netstat -ano | findstr :<port>`. Replace `<port>` with the port number from the error message.\n3. Read the last column. This column shows the process ID (PID).\n4. Run `tasklist /FI \"PID eq <PID>\"`. This command shows the name of the process.\n\n#### Step 3: Stop the process\n\nCAUTION: Make sure that the process belongs to the app before you stop it. The commands that follow stop the process without a save prompt.\n\nIf the process is an old copy of the app:\n\n1. On macOS or Linux, run `kill <PID>`.\n2. On Windows, run `taskkill /PID <PID> /F`.\n3. Start the app again.\n\nIf the process is a different program:\n\n1. Close that program.\n2. Start the app again.\n3. If you cannot close that program, change the port of the app in the app settings.\n\n#### Step 4: Restart the computer\n\nIf the error continues after Step 3, restart the computer. A restart releases all ports. Then start the app again.\n\n### The app still does not start\n\nIf the error continues after a restart, collect this information:\n\n- The full error message.\n- The output of the command from Step 2.\n- The operating system and the app version.\n\nThen send this information to support.\n\n---\n\n**Recap:** I wrote a Troubleshooting section for the `EADDRINUSE` start error in ASD-STE100 style. It has a short description of the cause, then four procedural steps with conditions before commands. Two items are assumptions that you must adapt: the `<port>` placeholder, and the sentence about a port setting in the app settings. If the app has no port setting, delete item 3 under \"If the process is a different program\"."
+  ],
+  "stderr_tail": ""
+}

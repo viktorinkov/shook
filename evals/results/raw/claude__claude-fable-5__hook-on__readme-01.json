@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "readme-01",
+  "cat": "docs",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 11.8,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.287571,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 12010,
+    "cache_read_input_tokens": 12781,
+    "output_tokens": 691,
+    "output_tokens_details": {
+      "thinking_tokens": 101
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12010,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 452,
+        "cache_read_input_tokens": 8358,
+        "cache_creation_input_tokens": 8075,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8075
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 88,
+    "sentences": 9,
+    "mean_sentence_words": 9.8,
+    "longest_sentence_words": 13,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 1.14
+  },
+  "text": "Here is the Installation section, written in pragmatic STE mode. Steps are procedural, and the requirements note is descriptive.\n\n```markdown\n## Installation\n\n### Requirements\n\n`logtail` requires Python 3.10 or later. It runs on Linux, macOS, and Windows.\n\n### Install with pip\n\n1. Make sure that your Python version is 3.10 or later:\n\n   ```\n   python --version\n   ```\n\n2. Install `logtail`:\n\n   ```\n   pip install logtail\n   ```\n\n3. Make sure that the installation succeeded:\n\n   ```\n   logtail --version\n   ```\n\n   The command shows the installed version.\n\n### Upgrade\n\nTo upgrade to the latest version:\n\n```\npip install --upgrade logtail\n```\n\n### Troubleshooting\n\nIf `python --version` shows a version earlier than 3.10, install a newer Python before you continue.\n\nIf the shell reports `logtail: command not found`, the install directory for pip scripts is not on your `PATH`. Add that directory to your `PATH`, then open a new shell.\n```\n\nRecap: The section has four parts: requirements, install steps, upgrade, and troubleshooting. Each step gives one instruction, and each condition comes before its command. The \"make sure that\" form is the one verification phrase in the document. The macOS, Linux, and Windows support line is an assumption. Delete it if `logtail` does not support one of those platforms.",
+  "texts": [
+    "I will load the Simple English skill first, then write the section.",
+    "Here is the Installation section, written in pragmatic STE mode. Steps are procedural, and the requirements note is descriptive.\n\n```markdown\n## Installation\n\n### Requirements\n\n`logtail` requires Python 3.10 or later. It runs on Linux, macOS, and Windows.\n\n### Install with pip\n\n1. Make sure that your Python version is 3.10 or later:\n\n   ```\n   python --version\n   ```\n\n2. Install `logtail`:\n\n   ```\n   pip install logtail\n   ```\n\n3. Make sure that the installation succeeded:\n\n   ```\n   logtail --version\n   ```\n\n   The command shows the installed version.\n\n### Upgrade\n\nTo upgrade to the latest version:\n\n```\npip install --upgrade logtail\n```\n\n### Troubleshooting\n\nIf `python --version` shows a version earlier than 3.10, install a newer Python before you continue.\n\nIf the shell reports `logtail: command not found`, the install directory for pip scripts is not on your `PATH`. Add that directory to your `PATH`, then open a new shell.\n```\n\nRecap: The section has four parts: requirements, install steps, upgrade, and troubleshooting. Each step gives one instruction, and each condition comes before its command. The \"make sure that\" form is the one verification phrase in the document. The macOS, Linux, and Windows support line is an assumption. Delete it if `logtail` does not support one of those platforms."
+  ],
+  "stderr_tail": ""
+}

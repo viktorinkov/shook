@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "incident-01",
+  "cat": "incident",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 66.2,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.0572033,
+  "usage": {
+    "input_tokens": 20,
+    "cache_creation_input_tokens": 11503,
+    "cache_read_input_tokens": 4823,
+    "output_tokens": 6531,
+    "output_tokens_details": {
+      "thinking_tokens": 5769
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 11503,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 5937,
+        "cache_read_input_tokens": 4823,
+        "cache_creation_input_tokens": 6680,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6680
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 230,
+    "sentences": 14,
+    "mean_sentence_words": 15.5,
+    "longest_sentence_words": 73,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 1
+    },
+    "violations_total": 2,
+    "violations_per_100w": 0.87
+  },
+  "text": "# Incident Report\n\n**Date:** 2026-08-28  \n**Impact Duration:** 14:02\u201314:31 UTC (29 minutes)  \n**Severity:** Medium\n\n## Summary\n\nA production deploy removed the cache warmup step. This caused 12% of API requests to return 500 errors until we deployed the previous version.\n\n## Timeline\n\n- **14:00 UTC** \u2013 Deploy pushed to production\n- **14:02 UTC** \u2013 Monitoring alerts triggered (error rate: 12%)\n- **14:27 UTC** \u2013 Previous version deployed, errors resolved\n- **14:31 UTC** \u2013 All metrics normal\n\n## Root Cause\n\nThe cache warmup step was removed from the deploy pipeline. Without this step, the application cache was empty at startup. Requests that required cached data failed immediately.\n\n## Resolution\n\nWe deployed the previous version at 14:27 UTC. Cache warmup resumed. The error rate returned to normal.\n\n## Recommended Actions:\n\n1. Review the deploy process. Do not remove the cache warmup step without explicit approval.\n2. Add a pre-deploy check to make sure that the cache warmup is enabled.\n3. Document all required initialization steps in the deploy runbook.\n\n---\n\n**Changes from your draft:**\n\n- Replaced vague timeline items with precise facts and parenthetical details\n- Changed \"verify\" to \"make sure that\" (STE vocabulary requirement)\n- Added \"we\" as the agent in procedural sections (faster read, no ambiguity about who acted)\n- Separated timeline and resolution from recommendations to keep narrative clear\n- Removed semicolons and split compound ideas into active, simple sentences\n- All sentences are now under the 25-word limit for clarity on a single read",
+  "texts": [
+    "I'll write a clear incident report using Simplified Technical English for maximum clarity.",
+    "# Incident Report\n\n**Date:** 2026-08-28  \n**Impact Duration:** 14:02\u201314:31 UTC (29 minutes)  \n**Severity:** Medium\n\n## Summary\n\nA production deploy removed the cache warmup step. This caused 12% of API requests to return 500 errors until we deployed the previous version.\n\n## Timeline\n\n- **14:00 UTC** \u2013 Deploy pushed to production\n- **14:02 UTC** \u2013 Monitoring alerts triggered (error rate: 12%)\n- **14:27 UTC** \u2013 Previous version deployed, errors resolved\n- **14:31 UTC** \u2013 All metrics normal\n\n## Root Cause\n\nThe cache warmup step was removed from the deploy pipeline. Without this step, the application cache was empty at startup. Requests that required cached data failed immediately.\n\n## Resolution\n\nWe deployed the previous version at 14:27 UTC. Cache warmup resumed. The error rate returned to normal.\n\n## Recommended Actions:\n\n1. Review the deploy process. Do not remove the cache warmup step without explicit approval.\n2. Add a pre-deploy check to make sure that the cache warmup is enabled.\n3. Document all required initialization steps in the deploy runbook.\n\n---\n\n**Changes from your draft:**\n\n- Replaced vague timeline items with precise facts and parenthetical details\n- Changed \"verify\" to \"make sure that\" (STE vocabulary requirement)\n- Added \"we\" as the agent in procedural sections (faster read, no ambiguity about who acted)\n- Separated timeline and resolution from recommendations to keep narrative clear\n- Removed semicolons and split compound ideas into active, simple sentences\n- All sentences are now under the 25-word limit for clarity on a single read"
+  ],
+  "stderr_tail": ""
+}

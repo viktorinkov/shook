@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "explain-10",
+  "cat": "explain",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 10.5,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.014164999999999999,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 4791,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 718,
+    "output_tokens_details": {
+      "thinking_tokens": 248
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4791,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 718,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 4791,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4791
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 187,
+    "sentences": 11,
+    "mean_sentence_words": 16.4,
+    "longest_sentence_words": 48,
+    "violations": {
+      "sentence_over_limit": 2,
+      "contraction": 2,
+      "banned_modal": 1,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 1,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 1
+    },
+    "violations_total": 8,
+    "violations_per_100w": 4.28
+  },
+  "text": "# Purpose of `.gitignore`\n\nA `.gitignore` file tells Git which files and folders to ignore\u2014that is, which ones should *not* be tracked or committed to your repository. Git will skip these files when you run `git add` and `git status`, keeping your repository clean and focused on source code.\n\n## Why It Matters\n\nWithout a `.gitignore`, you risk committing:\n- **Sensitive data** (API keys, passwords, credentials)\n- **Generated files** that shouldn't be version-controlled (build outputs, compiled binaries, dependencies)\n- **Personal or local settings** (IDE configuration, OS-specific files, cache directories)\n- **Large files** that bloat the repository (node_modules, virtual environments, compiled artifacts)\n\nOnce files are committed, removing them from history is tedious. A good `.gitignore` prevents this from the start.\n\n## What Typically Goes in `.gitignore`\n\nCommon entries include:\n\n```\n# Environment & secrets\n.env\n.env.local\n*.pem\ncredentials.json\n\n# Dependencies\nnode_modules/\nvenv/\nvendor/\n__pycache__/\n\n# Build & output\ndist/\nbuild/\n*.o\n*.pyc\n\n# IDE & editor files\n.vscode/\n.idea/\n*.swp\n*.swo\n\n# OS files\n.DS_Store\nThumbs.db\n\n# Local config\n.config.local\n```\n\n## How It Works\n\n- **Lines starting with `#`** are comments\n- **Patterns** use wildcards: `*.log` matches any `.log` file, `node_modules/` ignores that folder anywhere\n- **One pattern per line**\n\nWhen you run `git add .` or `git add <file>`, Git checks `.gitignore` and skips matching files. They become \"untracked\" and won't appear in commits.\n\n**Tip:** Most project templates (for Node.js, Python, Ruby, etc.) include a starter `.gitignore`. Use those as a baseline and customize for your workflow.",
+  "texts": [
+    "# Purpose of `.gitignore`\n\nA `.gitignore` file tells Git which files and folders to ignore\u2014that is, which ones should *not* be tracked or committed to your repository. Git will skip these files when you run `git add` and `git status`, keeping your repository clean and focused on source code.\n\n## Why It Matters\n\nWithout a `.gitignore`, you risk committing:\n- **Sensitive data** (API keys, passwords, credentials)\n- **Generated files** that shouldn't be version-controlled (build outputs, compiled binaries, dependencies)\n- **Personal or local settings** (IDE configuration, OS-specific files, cache directories)\n- **Large files** that bloat the repository (node_modules, virtual environments, compiled artifacts)\n\nOnce files are committed, removing them from history is tedious. A good `.gitignore` prevents this from the start.\n\n## What Typically Goes in `.gitignore`\n\nCommon entries include:\n\n```\n# Environment & secrets\n.env\n.env.local\n*.pem\ncredentials.json\n\n# Dependencies\nnode_modules/\nvenv/\nvendor/\n__pycache__/\n\n# Build & output\ndist/\nbuild/\n*.o\n*.pyc\n\n# IDE & editor files\n.vscode/\n.idea/\n*.swp\n*.swo\n\n# OS files\n.DS_Store\nThumbs.db\n\n# Local config\n.config.local\n```\n\n## How It Works\n\n- **Lines starting with `#`** are comments\n- **Patterns** use wildcards: `*.log` matches any `.log` file, `node_modules/` ignores that folder anywhere\n- **One pattern per line**\n\nWhen you run `git add .` or `git add <file>`, Git checks `.gitignore` and skips matching files. They become \"untracked\" and won't appear in commits.\n\n**Tip:** Most project templates (for Node.js, Python, Ruby, etc.) include a starter `.gitignore`. Use those as a baseline and customize for your workflow."
+  ],
+  "stderr_tail": ""
+}

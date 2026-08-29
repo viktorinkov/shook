@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "review-01",
+  "cat": "review",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 43.2,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.03172,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 5645,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 4084,
+    "output_tokens_details": {
+      "thinking_tokens": 3856
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5645,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 4084,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 5645,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5645
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 79,
+    "sentences": 7,
+    "mean_sentence_words": 11.3,
+    "longest_sentence_words": 23,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 2
+    },
+    "violations_total": 3,
+    "violations_per_100w": 3.8
+  },
+  "text": "**This function does not handle errors properly.** Fetch does not reject on HTTP error codes like 404 or 500. Your code calls `res.json()` even when the server returns an error. Add an error check:\n\n```js\nif (!res.ok) {\n  throw new Error(`Failed to fetch user: ${res.status}`);\n}\nreturn res.json();\n```\n\n**Add input validation.** The `id` parameter is never validated. Verify that it matches what your API expects.\n\n**Use a template literal for the URL.** Replace `'/api/users/' + id` with `` `/api/users/${id}` ``\n\n**Add a timeout.** Fetch requests can hang indefinitely. Use AbortController to prevent this:\n\n```js\nconst controller = new AbortController();\nsetTimeout(() => controller.abort(), 5000);\nconst res = await fetch(`/api/users/${id}`, { \n  signal: controller.signal \n});\n```",
+  "texts": [
+    "**This function does not handle errors properly.** Fetch does not reject on HTTP error codes like 404 or 500. Your code calls `res.json()` even when the server returns an error. Add an error check:\n\n```js\nif (!res.ok) {\n  throw new Error(`Failed to fetch user: ${res.status}`);\n}\nreturn res.json();\n```\n\n**Add input validation.** The `id` parameter is never validated. Verify that it matches what your API expects.\n\n**Use a template literal for the URL.** Replace `'/api/users/' + id` with `` `/api/users/${id}` ``\n\n**Add a timeout.** Fetch requests can hang indefinitely. Use AbortController to prevent this:\n\n```js\nconst controller = new AbortController();\nsetTimeout(() => controller.abort(), 5000);\nconst res = await fetch(`/api/users/${id}`, { \n  signal: controller.signal \n});\n```"
+  ],
+  "stderr_tail": ""
+}

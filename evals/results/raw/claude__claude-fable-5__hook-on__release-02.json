@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "release-02",
+  "cat": "release",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 24.8,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.345176,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 11996,
+    "cache_read_input_tokens": 12766,
+    "output_tokens": 1849,
+    "output_tokens_details": {
+      "thinking_tokens": 854
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 11996,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1593,
+        "cache_read_input_tokens": 8343,
+        "cache_creation_input_tokens": 8076,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8076
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 326,
+    "sentences": 30,
+    "mean_sentence_words": 10.6,
+    "longest_sentence_words": 19,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "Here are the release notes. I used `<tool>` and `vX.Y.Z` as placeholders because the prompt did not give a product name or a version.\n\n---\n\n# Release notes \u2014 vX.Y.Z\n\n## Breaking change: `--output` now defaults to JSON\n\n### What changed\n\nIn earlier versions, the `--output` flag defaulted to `text`. In this version, the `--output` flag defaults to `json`. This change applies to all commands that accept the `--output` flag. Plain text output is still available. To get plain text output, pass `--output text`.\n\n**Before (earlier versions):**\n\n```\n$ <tool> list\nNAME      STATUS\nweb-1     running\nweb-2     stopped\n```\n\n**After (this version):**\n\n```\n$ <tool> list\n[\n  {\"name\": \"web-1\", \"status\": \"running\"},\n  {\"name\": \"web-2\", \"status\": \"stopped\"}\n]\n```\n\n### Who this change affects\n\nThis change affects scripts and pipelines that call `<tool>` without the `--output` flag. After the upgrade, these scripts receive JSON instead of plain text. Scripts that parse the plain text output will stop with parse errors. If a script already passes `--output json` or `--output text`, this change does not affect it.\n\n### What you must do\n\n1. Find all scripts that call `<tool>` without the `--output` flag.\n2. If a script parses the plain text output, add `--output text` to the command.\n3. If a script can parse JSON, change the parser to read JSON. Then remove the `--output text` flag.\n4. Run each script again. Make sure that the output is correct.\n\n**Example:**\n\n```diff\n- <tool> list | awk '{print $1}'\n+ <tool> list --output text | awk '{print $1}'\n```\n\n### Why we made this change\n\nScripts parse JSON output with standard tools, for example `jq`. Plain text output has no stable structure. JSON output has a stable structure across versions. This change makes `<tool>` safer to use in automation.\n\n### Other notes\n\n- The `--output text` flag gives the same plain text output as earlier versions.\n- The `--output json` flag gives the same JSON output as earlier versions.\n- Interactive use in a terminal also shows JSON by default. To get the old view, pass `--output text`.\n\n---\n\n**Recap:** The notes have five parts: what changed, who it affects, a four-step migration procedure, the reason, and other notes. All sentences are under the 20-word limit for procedures and the 25-word limit for descriptions. Replace `<tool>` and `vX.Y.Z` with your product name and version. If the rationale in \"Why we made this change\" does not match your real reason, edit that paragraph.",
+  "texts": [
+    "I will write the release notes with the Simplified Technical English rules. First, I load the `simple-english` skill.",
+    "Here are the release notes. I used `<tool>` and `vX.Y.Z` as placeholders because the prompt did not give a product name or a version.\n\n---\n\n# Release notes \u2014 vX.Y.Z\n\n## Breaking change: `--output` now defaults to JSON\n\n### What changed\n\nIn earlier versions, the `--output` flag defaulted to `text`. In this version, the `--output` flag defaults to `json`. This change applies to all commands that accept the `--output` flag. Plain text output is still available. To get plain text output, pass `--output text`.\n\n**Before (earlier versions):**\n\n```\n$ <tool> list\nNAME      STATUS\nweb-1     running\nweb-2     stopped\n```\n\n**After (this version):**\n\n```\n$ <tool> list\n[\n  {\"name\": \"web-1\", \"status\": \"running\"},\n  {\"name\": \"web-2\", \"status\": \"stopped\"}\n]\n```\n\n### Who this change affects\n\nThis change affects scripts and pipelines that call `<tool>` without the `--output` flag. After the upgrade, these scripts receive JSON instead of plain text. Scripts that parse the plain text output will stop with parse errors. If a script already passes `--output json` or `--output text`, this change does not affect it.\n\n### What you must do\n\n1. Find all scripts that call `<tool>` without the `--output` flag.\n2. If a script parses the plain text output, add `--output text` to the command.\n3. If a script can parse JSON, change the parser to read JSON. Then remove the `--output text` flag.\n4. Run each script again. Make sure that the output is correct.\n\n**Example:**\n\n```diff\n- <tool> list | awk '{print $1}'\n+ <tool> list --output text | awk '{print $1}'\n```\n\n### Why we made this change\n\nScripts parse JSON output with standard tools, for example `jq`. Plain text output has no stable structure. JSON output has a stable structure across versions. This change makes `<tool>` safer to use in automation.\n\n### Other notes\n\n- The `--output text` flag gives the same plain text output as earlier versions.\n- The `--output json` flag gives the same JSON output as earlier versions.\n- Interactive use in a terminal also shows JSON by default. To get the old view, pass `--output text`.\n\n---\n\n**Recap:** The notes have five parts: what changed, who it affects, a four-step migration procedure, the reason, and other notes. All sentences are under the 20-word limit for procedures and the 25-word limit for descriptions. Replace `<tool>` and `vX.Y.Z` with your product name and version. If the rationale in \"Why we made this change\" does not match your real reason, edit that paragraph."
+  ],
+  "stderr_tail": ""
+}

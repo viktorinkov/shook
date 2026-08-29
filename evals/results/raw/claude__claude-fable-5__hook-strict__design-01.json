@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "design-01",
+  "cat": "design",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 21.4,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.151453,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3993,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 1343,
+    "output_tokens_details": {
+      "thinking_tokens": 164
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3993,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1343,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 3993,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3993
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 628,
+    "sentences": 62,
+    "mean_sentence_words": 9.7,
+    "longest_sentence_words": 98,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 4,
+      "synonym_rotation": 1
+    },
+    "violations_total": 6,
+    "violations_per_100w": 0.96
+  },
+  "text": "I will compare the two options and then give one recommendation.\n\n## Direct HTTP calls\n\nA direct HTTP call is a synchronous request from one service to another. The caller sends the request and waits for the response.\n\n**Advantages**\n\n- The design is simple. There is no extra infrastructure.\n- The caller gets the result immediately.\n- Errors are visible at the call site. The caller can read the status code and act.\n- Debugging is easy. One request maps to one trace.\n\n**Disadvantages**\n\n- The two services are coupled in time. If the callee is down, the call fails.\n- Load moves directly from one service to the other. A traffic spike hits both services at the same time.\n- Retries are the responsibility of the caller. Unsafe retries can create duplicate orders.\n- Each new consumer of the order data needs a new call in the producer code.\n\n## Message queue\n\nA message queue puts a broker between the two services. The producer writes a message to the queue. The consumer reads the message later.\n\n**Advantages**\n\n- The services are decoupled in time. The producer continues when the consumer is down.\n- The queue absorbs traffic spikes. The consumer reads at its own speed.\n- The broker keeps the message until the consumer confirms it. Work is not lost on a crash.\n- New consumers can read the same messages. The producer code does not change.\n\n**Disadvantages**\n\n- The design is more complex. You must operate a broker, for example RabbitMQ, SQS, or Kafka.\n- The producer does not get a result. Status must flow through a second channel.\n- Most brokers deliver a message at least one time. The consumer must process each message idempotently.\n- Debugging is harder. One order spans several services and several points in time.\n\n## Comparison\n\n| Property | Direct HTTP | Message queue |\n|---|---|---|\n| Coupling in time | Tight | Loose |\n| Behavior when the callee is down | Call fails | Message waits |\n| Behavior under a traffic spike | Both services see the spike | Queue absorbs the spike |\n| Result for the caller | Immediate | Not available |\n| Duplicate protection | Caller must do it | Consumer must do it |\n| Infrastructure | None | Broker |\n| Debugging | Easy | Harder |\n\n## Recommendation\n\nUse a message queue for the order-processing pipeline.\n\nAn order pipeline has three properties that favor a queue:\n\n- Orders must not be lost. The broker stores each message until a consumer confirms it.\n- Order volume is not constant. The queue absorbs spikes without a failure in the downstream service.\n- The steps in the pipeline are independent. Payment, inventory, and shipment can each read from the queue.\n\nKeep direct HTTP calls for one case. Use HTTP when the caller needs an answer before it can continue. An example is a stock check before the order is accepted.\n\n## Conditions for the queue design\n\nObey these rules when you build the queue design:\n\n1. Give each order a unique ID. Put the ID in every message.\n2. Make each consumer idempotent. If the consumer sees the same ID two times, it must not process the order again.\n3. Configure a dead-letter queue. Move a message there after a fixed number of failed attempts.\n4. Write the order to the database and the message to the queue in one transaction. Use the outbox pattern for this.\n5. Record the order ID in every log line. This makes a trace across services possible.\n\n## Recap\n\nDirect HTTP is simpler but couples the two services in time. A message queue costs a broker and idempotent consumers, but it protects orders from loss and absorbs load. For an order pipeline, use a message queue. Keep HTTP only for calls that need an immediate answer.",
+  "texts": [
+    "I will compare the two options and then give one recommendation.\n\n## Direct HTTP calls\n\nA direct HTTP call is a synchronous request from one service to another. The caller sends the request and waits for the response.\n\n**Advantages**\n\n- The design is simple. There is no extra infrastructure.\n- The caller gets the result immediately.\n- Errors are visible at the call site. The caller can read the status code and act.\n- Debugging is easy. One request maps to one trace.\n\n**Disadvantages**\n\n- The two services are coupled in time. If the callee is down, the call fails.\n- Load moves directly from one service to the other. A traffic spike hits both services at the same time.\n- Retries are the responsibility of the caller. Unsafe retries can create duplicate orders.\n- Each new consumer of the order data needs a new call in the producer code.\n\n## Message queue\n\nA message queue puts a broker between the two services. The producer writes a message to the queue. The consumer reads the message later.\n\n**Advantages**\n\n- The services are decoupled in time. The producer continues when the consumer is down.\n- The queue absorbs traffic spikes. The consumer reads at its own speed.\n- The broker keeps the message until the consumer confirms it. Work is not lost on a crash.\n- New consumers can read the same messages. The producer code does not change.\n\n**Disadvantages**\n\n- The design is more complex. You must operate a broker, for example RabbitMQ, SQS, or Kafka.\n- The producer does not get a result. Status must flow through a second channel.\n- Most brokers deliver a message at least one time. The consumer must process each message idempotently.\n- Debugging is harder. One order spans several services and several points in time.\n\n## Comparison\n\n| Property | Direct HTTP | Message queue |\n|---|---|---|\n| Coupling in time | Tight | Loose |\n| Behavior when the callee is down | Call fails | Message waits |\n| Behavior under a traffic spike | Both services see the spike | Queue absorbs the spike |\n| Result for the caller | Immediate | Not available |\n| Duplicate protection | Caller must do it | Consumer must do it |\n| Infrastructure | None | Broker |\n| Debugging | Easy | Harder |\n\n## Recommendation\n\nUse a message queue for the order-processing pipeline.\n\nAn order pipeline has three properties that favor a queue:\n\n- Orders must not be lost. The broker stores each message until a consumer confirms it.\n- Order volume is not constant. The queue absorbs spikes without a failure in the downstream service.\n- The steps in the pipeline are independent. Payment, inventory, and shipment can each read from the queue.\n\nKeep direct HTTP calls for one case. Use HTTP when the caller needs an answer before it can continue. An example is a stock check before the order is accepted.\n\n## Conditions for the queue design\n\nObey these rules when you build the queue design:\n\n1. Give each order a unique ID. Put the ID in every message.\n2. Make each consumer idempotent. If the consumer sees the same ID two times, it must not process the order again.\n3. Configure a dead-letter queue. Move a message there after a fixed number of failed attempts.\n4. Write the order to the database and the message to the queue in one transaction. Use the outbox pattern for this.\n5. Record the order ID in every log line. This makes a trace across services possible.\n\n## Recap\n\nDirect HTTP is simpler but couples the two services in time. A message queue costs a broker and idempotent consumers, but it protects orders from loss and absorbs load. For an order pipeline, use a message queue. Keep HTTP only for calls that need an immediate answer."
+  ],
+  "stderr_tail": ""
+}

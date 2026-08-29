@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "readme-10",
+  "cat": "docs",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 22.7,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.32844300000000004,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 12011,
+    "cache_read_input_tokens": 12833,
+    "output_tokens": 1507,
+    "output_tokens_details": {
+      "thinking_tokens": 955
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12011,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1265,
+        "cache_read_input_tokens": 8410,
+        "cache_creation_input_tokens": 8024,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8024
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 59,
+    "sentences": 7,
+    "mean_sentence_words": 8.3,
+    "longest_sentence_words": 13,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "Here is the Security section. Replace `security@example.com` with the real address.\n\n```markdown\n## Security\n\n### Report a vulnerability\n\nDo not open a public issue for a security problem. A public issue shows the problem to attackers before a fix exists.\n\nTo report a vulnerability:\n\n1. Send an email to `security@example.com`.\n2. Put \"Security report\" in the subject line.\n3. Describe the problem in the email body.\n4. Include the steps that cause the problem.\n5. Include the affected version or the commit hash.\n6. If you have a proof of concept, attach it to the email.\n\nWe will send a reply within 3 business days. This reply includes a tracking number for the report. We will send status updates to the same email address.\n\n### Disclosure window\n\nWe use a disclosure window of 90 days. The window starts on the day that we receive the report.\n\nDuring the 90 days:\n\n- We examine the problem and prepare a fix.\n- We keep you informed about the status of the fix.\n- We ask you to keep the report private.\n\nIf we release a fix before the end of the window, you can publish the report after the release. If no fix exists after 90 days, you can publish the report. If we need more time, we will ask you for an extension before the end of the window.\n\nWe do not take legal action against people who obey this process.\n```\n\nRecap: the section has two parts. The first part is a procedure for the email report. The second part describes the 90-day disclosure window and the rules for publication. Two values are placeholders that you must adjust: the email address and the reply time of 3 business days.",
+  "texts": [
+    "I will load the Simple English rules, then write the Security section.",
+    "Here is the Security section. Replace `security@example.com` with the real address.\n\n```markdown\n## Security\n\n### Report a vulnerability\n\nDo not open a public issue for a security problem. A public issue shows the problem to attackers before a fix exists.\n\nTo report a vulnerability:\n\n1. Send an email to `security@example.com`.\n2. Put \"Security report\" in the subject line.\n3. Describe the problem in the email body.\n4. Include the steps that cause the problem.\n5. Include the affected version or the commit hash.\n6. If you have a proof of concept, attach it to the email.\n\nWe will send a reply within 3 business days. This reply includes a tracking number for the report. We will send status updates to the same email address.\n\n### Disclosure window\n\nWe use a disclosure window of 90 days. The window starts on the day that we receive the report.\n\nDuring the 90 days:\n\n- We examine the problem and prepare a fix.\n- We keep you informed about the status of the fix.\n- We ask you to keep the report private.\n\nIf we release a fix before the end of the window, you can publish the report after the release. If no fix exists after 90 days, you can publish the report. If we need more time, we will ask you for an extension before the end of the window.\n\nWe do not take legal action against people who obey this process.\n```\n\nRecap: the section has two parts. The first part is a procedure for the email report. The second part describes the 90-day disclosure window and the rules for publication. Two values are placeholders that you must adjust: the email address and the reply time of 3 business days."
+  ],
+  "stderr_tail": ""
+}

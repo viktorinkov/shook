@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "review-01",
+  "cat": "review",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 22.4,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.022946,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 5693,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 2310,
+    "output_tokens_details": {
+      "thinking_tokens": 2040
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5693,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 2310,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 5693,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5693
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 115,
+    "sentences": 11,
+    "mean_sentence_words": 10.5,
+    "longest_sentence_words": 24,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.87
+  },
+  "text": "**Problem 1: Missing error handling**\n\nThe function does not check the HTTP response status. If the server returns an error code, the function still calls `res.json()` and returns the error response as user data. The function never throws an error.\n\n**Fix:** Check `res.ok` before you call `res.json()`. Throw an error if the response status indicates failure.\n\n---\n\n**Problem 2: URL not encoded**\n\nThe URL uses string concatenation without encoding the `id` parameter. Special characters in the ID (such as `/`, `?`, or `&`) will create an invalid URL or cause unexpected routing behavior.\n\n**Fix:** Use `encodeURIComponent(id)` to encode the parameter before you insert it into the URL path.\n\n---\n\n**Suggested replacement:**\n\n```js\nasync function getUser(id) {\n  const encodedId = encodeURIComponent(id);\n  const res = await fetch(`/api/users/${encodedId}`);\n  \n  if (!res.ok) {\n    throw new Error(`Failed to fetch user: ${res.status}`);\n  }\n  \n  return res.json();\n}\n```",
+  "texts": [
+    "**Problem 1: Missing error handling**\n\nThe function does not check the HTTP response status. If the server returns an error code, the function still calls `res.json()` and returns the error response as user data. The function never throws an error.\n\n**Fix:** Check `res.ok` before you call `res.json()`. Throw an error if the response status indicates failure.\n\n---\n\n**Problem 2: URL not encoded**\n\nThe URL uses string concatenation without encoding the `id` parameter. Special characters in the ID (such as `/`, `?`, or `&`) will create an invalid URL or cause unexpected routing behavior.\n\n**Fix:** Use `encodeURIComponent(id)` to encode the parameter before you insert it into the URL path.\n\n---\n\n**Suggested replacement:**\n\n```js\nasync function getUser(id) {\n  const encodedId = encodeURIComponent(id);\n  const res = await fetch(`/api/users/${encodedId}`);\n  \n  if (!res.ok) {\n    throw new Error(`Failed to fetch user: ${res.status}`);\n  }\n  \n  return res.json();\n}\n```"
+  ],
+  "stderr_tail": ""
+}

@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "explain-03",
+  "cat": "explain",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 25.5,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.186463,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3991,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 2044,
+    "output_tokens_details": {
+      "thinking_tokens": 1314
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3991,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2044,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 3991,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3991
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 356,
+    "sentences": 43,
+    "mean_sentence_words": 8.0,
+    "longest_sentence_words": 18,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "Here is an explanation that you can send to your teammate.\n\n## What each command does\n\n`git merge` joins two branches. It creates one new merge commit with two parents. The commits on both branches keep their IDs. The history shows where the branches split and where they joined.\n\n`git rebase` moves your commits to a new base. Git removes your commits from the old base and applies them again on top of the target branch. Your commits get new IDs. The history shows one straight line.\n\n## Example\n\nYou start `feature` from `main`. Later, a teammate adds two commits to `main`.\n\nIf you run `git merge main` on `feature`:\n- Your commits keep their IDs.\n- Git adds one merge commit at the top.\n- The history shows a fork and a join.\n\nIf you run `git rebase main` on `feature`:\n- Git replays your commits after the new commits on `main`.\n- Your commits get new IDs.\n- The history shows one straight line.\n\n## Which one to use\n\nUse `git rebase` on a feature branch that only you use. This keeps the history clean. Use it to update your branch with the latest commits from `main`.\n\nUse `git merge` on a branch that other people also work on. Rebase rewrites history. If you rebase a shared branch, your teammates get conflicts when they pull.\n\nDo not rebase commits that you pushed to a shared branch. The commit IDs change. Other clones then have a history that does not match.\n\nWhen the feature is complete, merge the branch into `main` with a pull request.\n\n## Procedure: update a feature branch with rebase\n\n1. Run `git fetch origin`.\n2. Run `git checkout feature`.\n3. Run `git rebase origin/main`.\n4. If Git reports a conflict, open the file.\n5. Fix the conflict.\n6. Run `git add <file>`.\n7. Run `git rebase --continue`.\n8. When the rebase is complete, run `git push --force-with-lease`.\n\nUse `--force-with-lease`, not `--force`. The `--force` option overwrites commits that other people pushed after your last fetch.\n\n## Summary\n\nRebase gives a straight history and is safe on a private branch. Merge keeps the true history and is safe on a shared branch. For a normal feature branch, rebase on `main` while you work. Then merge into `main` with a pull request.",
+  "texts": [
+    "Here is an explanation that you can send to your teammate.\n\n## What each command does\n\n`git merge` joins two branches. It creates one new merge commit with two parents. The commits on both branches keep their IDs. The history shows where the branches split and where they joined.\n\n`git rebase` moves your commits to a new base. Git removes your commits from the old base and applies them again on top of the target branch. Your commits get new IDs. The history shows one straight line.\n\n## Example\n\nYou start `feature` from `main`. Later, a teammate adds two commits to `main`.\n\nIf you run `git merge main` on `feature`:\n- Your commits keep their IDs.\n- Git adds one merge commit at the top.\n- The history shows a fork and a join.\n\nIf you run `git rebase main` on `feature`:\n- Git replays your commits after the new commits on `main`.\n- Your commits get new IDs.\n- The history shows one straight line.\n\n## Which one to use\n\nUse `git rebase` on a feature branch that only you use. This keeps the history clean. Use it to update your branch with the latest commits from `main`.\n\nUse `git merge` on a branch that other people also work on. Rebase rewrites history. If you rebase a shared branch, your teammates get conflicts when they pull.\n\nDo not rebase commits that you pushed to a shared branch. The commit IDs change. Other clones then have a history that does not match.\n\nWhen the feature is complete, merge the branch into `main` with a pull request.\n\n## Procedure: update a feature branch with rebase\n\n1. Run `git fetch origin`.\n2. Run `git checkout feature`.\n3. Run `git rebase origin/main`.\n4. If Git reports a conflict, open the file.\n5. Fix the conflict.\n6. Run `git add <file>`.\n7. Run `git rebase --continue`.\n8. When the rebase is complete, run `git push --force-with-lease`.\n\nUse `--force-with-lease`, not `--force`. The `--force` option overwrites commits that other people pushed after your last fetch.\n\n## Summary\n\nRebase gives a straight history and is safe on a private branch. Merge keeps the true history and is safe on a shared branch. For a normal feature branch, rebase on `main` while you work. Then merge into `main` with a pull request."
+  ],
+  "stderr_tail": ""
+}

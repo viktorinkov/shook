@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "review-02",
+  "cat": "review",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 30.3,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.17081,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2828,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 2176,
+    "output_tokens_details": {
+      "thinking_tokens": 589
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2828,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2176,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 2828,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2828
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 546,
+    "sentences": 31,
+    "mean_sentence_words": 17.1,
+    "longest_sentence_words": 52,
+    "violations": {
+      "sentence_over_limit": 5,
+      "contraction": 6,
+      "banned_modal": 0,
+      "perfect_tense": 1,
+      "ing_clause": 0,
+      "semicolon": 1,
+      "latin_abbrev": 2,
+      "slop_word": 0,
+      "trailing_condition": 4,
+      "synonym_rotation": 1
+    },
+    "violations_total": 20,
+    "violations_per_100w": 3.66
+  },
+  "text": "Reviewing the migration now \u2014 no repo context needed for this one, so here's the feedback written up as a PR comment.\n\n---\n\n**Review: `users.email` migration**\n\nRequesting changes. The shape of this is fine (add nullable \u2192 backfill \u2192 tighten), but there are a few problems worth fixing before this ships.\n\n**1. The backfill invents fake email addresses (blocking)**\n\n```sql\nUPDATE users SET email = username || '@example.com';\n```\n\nAfter this runs, every user has an email that looks real but isn't. Nothing distinguishes a placeholder from a genuine address, so any future code that does \"if user has email, send mail / use it for login / show it in the UI\" will act on garbage. `example.com` is a reserved domain so the mail won't actually go anywhere, but you've still poisoned the column permanently.\n\nOptions, roughly in order of preference:\n- Leave the column nullable and let the app populate it (collect at next login, import from the auth provider, etc.). Enforce `NOT NULL` in a later migration once real data is in place.\n- If you truly need `NOT NULL` now, backfill with something obviously synthetic *and* record it, e.g. an `email_verified BOOLEAN DEFAULT false` column or a `placeholder+<id>@invalid` pattern using the `.invalid` TLD. Using `username` also risks collisions if you later add a unique index.\n\n**2. `SET NOT NULL` can fail or break the app depending on ordering**\n\n- If `username` is nullable anywhere, `username || '@example.com'` is `NULL` and step 3 fails.\n- If the migration isn't wrapped in a transaction (dialect/tool dependent), any row inserted between the `UPDATE` and the `ALTER` with a null email makes step 3 fail.\n- Once `NOT NULL` is on, every existing `INSERT INTO users` in the app that doesn't set `email` breaks. Confirm the app code writing `email` deploys *before* this migration, or add a `DEFAULT` (see #1 for why that's questionable).\n\n**3. Locking / performance on a large table (Postgres)**\n\n- The `UPDATE` rewrites every row in one statement, one transaction \u2014 long row locks, WAL spike, and table bloat. Batch it (`WHERE email IS NULL LIMIT n` in a loop, or by id ranges) if `users` is nontrivial.\n- `ALTER COLUMN ... SET NOT NULL` takes `ACCESS EXCLUSIVE` and does a full scan to verify. The lock-friendly pattern is:\n  ```sql\n  ALTER TABLE users ADD CONSTRAINT users_email_not_null CHECK (email IS NOT NULL) NOT VALID;\n  ALTER TABLE users VALIDATE CONSTRAINT users_email_not_null;  -- SHARE UPDATE EXCLUSIVE only\n  ALTER TABLE users ALTER COLUMN email SET NOT NULL;           -- PG 12+ skips the scan\n  ALTER TABLE users DROP CONSTRAINT users_email_not_null;\n  ```\n\n**4. Smaller things**\n\n- **Dialect:** `||` is concatenation in Postgres/SQLite/Oracle but logical OR in MySQL by default (unless `PIPES_AS_CONCAT`). If this targets MySQL, use `CONCAT()`. Please note the target DB in the PR description.\n- **No unique constraint/index:** if email is going to be used for login or lookup, add `CREATE UNIQUE INDEX CONCURRENTLY` (outside a transaction) \u2014 and note that the `username`-based backfill only stays unique if `username` is.\n- **No down migration.** At minimum `ALTER TABLE users DROP COLUMN email;`.\n- **Transactionality:** state whether these three statements run atomically. If they don't, a failure at step 3 leaves a half-migrated column with fake data in it.\n\n**Suggested minimal version for this PR**\n\n```sql\nALTER TABLE users ADD COLUMN email VARCHAR(255);\n-- (optional) CREATE UNIQUE INDEX CONCURRENTLY users_email_idx ON users (email);\n```\n\nThen a follow-up migration adds `NOT NULL` once the application has populated real addresses.\n\n---\n\n**Recap:** The main blocker is that the backfill writes fabricated `@example.com` addresses with no way to tell them apart from real ones later; secondary concerns are `NOT NULL` failing on null usernames or racing app writes, full-table lock/rewrite on large tables, the MySQL `||` gotcha, and missing unique index / down migration. Recommended path is to ship the nullable column now and enforce `NOT NULL` in a later migration after real data exists.",
+  "texts": [
+    "Reviewing the migration now \u2014 no repo context needed for this one, so here's the feedback written up as a PR comment.\n\n---\n\n**Review: `users.email` migration**\n\nRequesting changes. The shape of this is fine (add nullable \u2192 backfill \u2192 tighten), but there are a few problems worth fixing before this ships.\n\n**1. The backfill invents fake email addresses (blocking)**\n\n```sql\nUPDATE users SET email = username || '@example.com';\n```\n\nAfter this runs, every user has an email that looks real but isn't. Nothing distinguishes a placeholder from a genuine address, so any future code that does \"if user has email, send mail / use it for login / show it in the UI\" will act on garbage. `example.com` is a reserved domain so the mail won't actually go anywhere, but you've still poisoned the column permanently.\n\nOptions, roughly in order of preference:\n- Leave the column nullable and let the app populate it (collect at next login, import from the auth provider, etc.). Enforce `NOT NULL` in a later migration once real data is in place.\n- If you truly need `NOT NULL` now, backfill with something obviously synthetic *and* record it, e.g. an `email_verified BOOLEAN DEFAULT false` column or a `placeholder+<id>@invalid` pattern using the `.invalid` TLD. Using `username` also risks collisions if you later add a unique index.\n\n**2. `SET NOT NULL` can fail or break the app depending on ordering**\n\n- If `username` is nullable anywhere, `username || '@example.com'` is `NULL` and step 3 fails.\n- If the migration isn't wrapped in a transaction (dialect/tool dependent), any row inserted between the `UPDATE` and the `ALTER` with a null email makes step 3 fail.\n- Once `NOT NULL` is on, every existing `INSERT INTO users` in the app that doesn't set `email` breaks. Confirm the app code writing `email` deploys *before* this migration, or add a `DEFAULT` (see #1 for why that's questionable).\n\n**3. Locking / performance on a large table (Postgres)**\n\n- The `UPDATE` rewrites every row in one statement, one transaction \u2014 long row locks, WAL spike, and table bloat. Batch it (`WHERE email IS NULL LIMIT n` in a loop, or by id ranges) if `users` is nontrivial.\n- `ALTER COLUMN ... SET NOT NULL` takes `ACCESS EXCLUSIVE` and does a full scan to verify. The lock-friendly pattern is:\n  ```sql\n  ALTER TABLE users ADD CONSTRAINT users_email_not_null CHECK (email IS NOT NULL) NOT VALID;\n  ALTER TABLE users VALIDATE CONSTRAINT users_email_not_null;  -- SHARE UPDATE EXCLUSIVE only\n  ALTER TABLE users ALTER COLUMN email SET NOT NULL;           -- PG 12+ skips the scan\n  ALTER TABLE users DROP CONSTRAINT users_email_not_null;\n  ```\n\n**4. Smaller things**\n\n- **Dialect:** `||` is concatenation in Postgres/SQLite/Oracle but logical OR in MySQL by default (unless `PIPES_AS_CONCAT`). If this targets MySQL, use `CONCAT()`. Please note the target DB in the PR description.\n- **No unique constraint/index:** if email is going to be used for login or lookup, add `CREATE UNIQUE INDEX CONCURRENTLY` (outside a transaction) \u2014 and note that the `username`-based backfill only stays unique if `username` is.\n- **No down migration.** At minimum `ALTER TABLE users DROP COLUMN email;`.\n- **Transactionality:** state whether these three statements run atomically. If they don't, a failure at step 3 leaves a half-migrated column with fake data in it.\n\n**Suggested minimal version for this PR**\n\n```sql\nALTER TABLE users ADD COLUMN email VARCHAR(255);\n-- (optional) CREATE UNIQUE INDEX CONCURRENTLY users_email_idx ON users (email);\n```\n\nThen a follow-up migration adds `NOT NULL` once the application has populated real addresses.\n\n---\n\n**Recap:** The main blocker is that the backfill writes fabricated `@example.com` addresses with no way to tell them apart from real ones later; secondary concerns are `NOT NULL` failing on null usernames or racing app writes, full-table lock/rewrite on large tables, the MySQL `||` gotcha, and missing unique index / down migration. Recommended path is to ship the nullable column now and enforce `NOT NULL` in a later migration after real data exists."
+  ],
+  "stderr_tail": ""
+}

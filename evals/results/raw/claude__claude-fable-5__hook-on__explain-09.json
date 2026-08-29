@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "explain-09",
+  "cat": "explain",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 15.1,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.135123,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3919,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 1046,
+    "output_tokens_details": {
+      "thinking_tokens": 42
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3919,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1046,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 3919,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3919
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 351,
+    "sentences": 41,
+    "mean_sentence_words": 8.3,
+    "longest_sentence_words": 18,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.28
+  },
+  "text": "I will explain the cause and give a recommendation for money.\n\n## Why `0.1 + 0.2 != 0.3`\n\nComputers store floating point numbers in binary (IEEE 754). A `double` has 53 bits for the fraction part. Binary can only represent fractions with a power-of-two denominator exactly. Examples are `0.5`, `0.25`, and `0.125`.\n\nThe decimal `0.1` is `1/10`. The denominator `10` contains the factor `5`. Binary cannot represent this value with a finite number of bits. The same is true for `0.2` and `0.3`. The computer stores the nearest value that fits in 53 bits.\n\nThe stored values are:\n\n- `0.1` \u2192 `0.1000000000000000055511151231257827...`\n- `0.2` \u2192 `0.2000000000000000111022302462515654...`\n- `0.3` \u2192 `0.2999999999999999888977697537484345...`\n\nThe addition `0.1 + 0.2` produces a result near `0.3000000000000000166`. The nearest `double` to this result is `0.30000000000000004`. The stored `0.3` is a different `double`. The comparison then fails.\n\nYou can see the stored values in Python:\n\n```python\n>>> from decimal import Decimal\n>>> Decimal(0.1)\nDecimal('0.1000000000000000055511151231257827021181583404541015625')\n>>> 0.1 + 0.2\n0.30000000000000004\n```\n\nThe error is small for one operation. The error grows when you add many values. This is a problem for money.\n\n## What to use for money\n\nDo not use `float` or `double` for money. Use one of these options:\n\n1. **Integer minor units.** Store the amount as an integer count of the smallest unit. For example, store `$12.34` as `1234` cents. Use a 64-bit integer. This option is fast and exact for addition and subtraction.\n2. **A decimal type.** Use a base-10 decimal type with a fixed scale. Examples are `decimal.Decimal` in Python, `BigDecimal` in Java, `decimal` in C#, and `NUMERIC(19, 4)` in SQL.\n\nExample in Python:\n\n```python\nfrom decimal import Decimal, ROUND_HALF_EVEN\n\na = Decimal(\"0.10\")\nb = Decimal(\"0.20\")\nprint(a + b == Decimal(\"0.30\"))  # True\n```\n\nFollow these rules with a decimal type:\n\n- Construct decimals from strings, not from floats. `Decimal(\"0.1\")` is exact. `Decimal(0.1)` copies the float error.\n- Define the rounding mode for division and for percentages. Banks usually use `ROUND_HALF_EVEN`.\n- Keep the currency with the amount. Do not add amounts of different currencies.\n- Round only at the end of a calculation, not after each step.\n\n## Summary\n\nBinary floating point cannot store `0.1`, `0.2`, or `0.3` exactly. The rounding errors do not cancel. For money, store integer minor units or use a base-10 decimal type. Never compare floats with `==` for financial values.",
+  "texts": [
+    "I will explain the cause and give a recommendation for money.\n\n## Why `0.1 + 0.2 != 0.3`\n\nComputers store floating point numbers in binary (IEEE 754). A `double` has 53 bits for the fraction part. Binary can only represent fractions with a power-of-two denominator exactly. Examples are `0.5`, `0.25`, and `0.125`.\n\nThe decimal `0.1` is `1/10`. The denominator `10` contains the factor `5`. Binary cannot represent this value with a finite number of bits. The same is true for `0.2` and `0.3`. The computer stores the nearest value that fits in 53 bits.\n\nThe stored values are:\n\n- `0.1` \u2192 `0.1000000000000000055511151231257827...`\n- `0.2` \u2192 `0.2000000000000000111022302462515654...`\n- `0.3` \u2192 `0.2999999999999999888977697537484345...`\n\nThe addition `0.1 + 0.2` produces a result near `0.3000000000000000166`. The nearest `double` to this result is `0.30000000000000004`. The stored `0.3` is a different `double`. The comparison then fails.\n\nYou can see the stored values in Python:\n\n```python\n>>> from decimal import Decimal\n>>> Decimal(0.1)\nDecimal('0.1000000000000000055511151231257827021181583404541015625')\n>>> 0.1 + 0.2\n0.30000000000000004\n```\n\nThe error is small for one operation. The error grows when you add many values. This is a problem for money.\n\n## What to use for money\n\nDo not use `float` or `double` for money. Use one of these options:\n\n1. **Integer minor units.** Store the amount as an integer count of the smallest unit. For example, store `$12.34` as `1234` cents. Use a 64-bit integer. This option is fast and exact for addition and subtraction.\n2. **A decimal type.** Use a base-10 decimal type with a fixed scale. Examples are `decimal.Decimal` in Python, `BigDecimal` in Java, `decimal` in C#, and `NUMERIC(19, 4)` in SQL.\n\nExample in Python:\n\n```python\nfrom decimal import Decimal, ROUND_HALF_EVEN\n\na = Decimal(\"0.10\")\nb = Decimal(\"0.20\")\nprint(a + b == Decimal(\"0.30\"))  # True\n```\n\nFollow these rules with a decimal type:\n\n- Construct decimals from strings, not from floats. `Decimal(\"0.1\")` is exact. `Decimal(0.1)` copies the float error.\n- Define the rounding mode for division and for percentages. Banks usually use `ROUND_HALF_EVEN`.\n- Keep the currency with the amount. Do not add amounts of different currencies.\n- Round only at the end of a calculation, not after each step.\n\n## Summary\n\nBinary floating point cannot store `0.1`, `0.2`, or `0.3` exactly. The rounding errors do not cancel. For money, store integer minor units or use a base-10 decimal type. Never compare floats with `==` for financial values."
+  ],
+  "stderr_tail": ""
+}

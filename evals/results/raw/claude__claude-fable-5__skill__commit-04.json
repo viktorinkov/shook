@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "commit-04",
+  "cat": "commit",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 10.0,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.083234,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2756,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 453,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2756,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 453,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 2756,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2756
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 109,
+    "sentences": 9,
+    "mean_sentence_words": 11.9,
+    "longest_sentence_words": 22,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 3,
+      "banned_modal": 1,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 1,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 6,
+    "violations_per_100w": 5.5
+  },
+  "text": "Here's a commit message for that migration:\n\n```\nAdd index on orders(customer_id, created_at)\n\nQueries that list a customer's orders filter on customer_id and sort by\ncreated_at. Without a covering index, Postgres scans all of the\ncustomer's orders and sorts them in memory, which gets slower as order\nvolume grows.\n\nThe composite index lets the planner satisfy both the filter and the\nORDER BY with a single index scan. Column order matters: customer_id\nfirst for equality lookup, created_at second so the range/sort is\nalready ordered within each customer.\n\nThe index is created CONCURRENTLY to avoid taking a write lock on\norders during deployment.\n```\n\nTwo assumptions baked in that you should adjust if they don't match your migration:\n\n- **Database and `CONCURRENTLY`** \u2014 I assumed Postgres. If you're on MySQL or the migration doesn't use `CONCURRENTLY`/`algorithm: :inplace`, drop or reword the last paragraph.\n- **Motivating query** \u2014 I described the common \"list orders for a customer, newest first\" pattern. If the real driver is something else (e.g. a slow report, a specific endpoint, or a ticket number), swap that into the second paragraph so the reason survives in history.\n\nIf you want a shorter one-liner for a repo with terse conventions: `Add index on orders(customer_id, created_at) for per-customer order listing`.",
+  "texts": [
+    "Here's a commit message for that migration:\n\n```\nAdd index on orders(customer_id, created_at)\n\nQueries that list a customer's orders filter on customer_id and sort by\ncreated_at. Without a covering index, Postgres scans all of the\ncustomer's orders and sorts them in memory, which gets slower as order\nvolume grows.\n\nThe composite index lets the planner satisfy both the filter and the\nORDER BY with a single index scan. Column order matters: customer_id\nfirst for equality lookup, created_at second so the range/sort is\nalready ordered within each customer.\n\nThe index is created CONCURRENTLY to avoid taking a write lock on\norders during deployment.\n```\n\nTwo assumptions baked in that you should adjust if they don't match your migration:\n\n- **Database and `CONCURRENTLY`** \u2014 I assumed Postgres. If you're on MySQL or the migration doesn't use `CONCURRENTLY`/`algorithm: :inplace`, drop or reword the last paragraph.\n- **Motivating query** \u2014 I described the common \"list orders for a customer, newest first\" pattern. If the real driver is something else (e.g. a slow report, a specific endpoint, or a ticket number), swap that into the second paragraph so the reason survives in history.\n\nIf you want a shorter one-liner for a repo with terse conventions: `Add index on orders(customer_id, created_at) for per-customer order listing`."
+  ],
+  "stderr_tail": ""
+}

@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "readme-10",
+  "cat": "docs",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 59.4,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 2,
+  "strict_blocks": 1,
+  "num_turns": 2,
+  "cost_usd": 0.0471622,
+  "usage": {
+    "input_tokens": 20,
+    "cache_creation_input_tokens": 7688,
+    "cache_read_input_tokens": 5662,
+    "output_tokens": 6240,
+    "output_tokens_details": {
+      "thinking_tokens": 5886
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 7688,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 4374,
+        "cache_read_input_tokens": 5662,
+        "cache_creation_input_tokens": 2026,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2026
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 114,
+    "sentences": 10,
+    "mean_sentence_words": 10.7,
+    "longest_sentence_words": 27,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.88
+  },
+  "text": "## Security\n\n**Report a vulnerability**\n\nDo not open a public issue for security vulnerabilities. Email your report to security@example.com instead.\n\nInclude the following information in your email:\n\n- A description of the vulnerability\n- The affected versions\n- Steps to reproduce the issue\n- The potential impact\n\n**Disclosure window**\n\nWe will respond to your report within 7 days. We will disclose the vulnerability within 90 days of your report. We will work with you to coordinate the disclosure date.\n\n---\n\nTo use this section:\n\n1. Replace security@example.com with your actual email address.\n2. If your team needs a different response time, adjust the 7-day period.\n3. Add this section to your README after the main description.",
+  "texts": [
+    "## Security\n\n**Report a vulnerability**\n\nDo not open a public issue for security vulnerabilities. Email your report to security@example.com instead.\n\nInclude the following information in your email:\n\n- A description of the vulnerability\n- The affected versions\n- Steps to reproduce the issue\n- The potential impact\n\n**Disclosure window**\n\nWe will respond to your report within 7 days. We will disclose the vulnerability within 90 days of your report. We will work with you to coordinate the disclosure date.\n\n---\n\n**To use this in your README:**\n\n1. Replace `security@example.com` with your actual security contact email.\n2. Adjust the 7-day response time if your team needs a different window.\n3. Add this section near the top of your README, after the main description.",
+    "## Security\n\n**Report a vulnerability**\n\nDo not open a public issue for security vulnerabilities. Email your report to security@example.com instead.\n\nInclude the following information in your email:\n\n- A description of the vulnerability\n- The affected versions\n- Steps to reproduce the issue\n- The potential impact\n\n**Disclosure window**\n\nWe will respond to your report within 7 days. We will disclose the vulnerability within 90 days of your report. We will work with you to coordinate the disclosure date.\n\n---\n\nTo use this section:\n\n1. Replace security@example.com with your actual email address.\n2. If your team needs a different response time, adjust the 7-day period.\n3. Add this section to your README after the main description."
+  ],
+  "stderr_tail": ""
+}

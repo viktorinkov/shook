@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "readme-08",
+  "cat": "docs",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 18.9,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.30784199999999995,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 11933,
+    "cache_read_input_tokens": 12792,
+    "output_tokens": 1127,
+    "output_tokens_details": {
+      "thinking_tokens": 193
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 11933,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 946,
+        "cache_read_input_tokens": 8369,
+        "cache_creation_input_tokens": 7987,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7987
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 361,
+    "sentences": 31,
+    "mean_sentence_words": 11.5,
+    "longest_sentence_words": 28,
+    "violations": {
+      "sentence_over_limit": 3,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 3,
+    "violations_per_100w": 0.83
+  },
+  "text": "Here is the section. I wrote it in pragmatic STE mode. The user gave three fields and the 201 response, so I kept the other details general and marked assumptions at the end.\n\n---\n\n## Create an invoice\n\n`POST /v1/invoices` creates one invoice for one customer. The request body is a JSON object. The response returns the id of the new invoice.\n\n### Request\n\nSend a `POST` request to `/v1/invoices` with the header `Content-Type: application/json`.\n\nThe request body has these fields:\n\n| Field | Type | Required | Description |\n|---|---|---|---|\n| `customer_id` | string | Yes | The id of the customer that receives the invoice. |\n| `amount_cents` | integer | Yes | The amount of the invoice in cents. The value must be a positive integer. |\n| `due_date` | string | No | The date on which the payment is due, in the format `YYYY-MM-DD`. |\n\nIf you do not send `due_date`, the invoice has no due date.\n\n### Example request\n\n```http\nPOST /v1/invoices HTTP/1.1\nContent-Type: application/json\n\n{\n  \"customer_id\": \"cus_8f3a2c\",\n  \"amount_cents\": 125000,\n  \"due_date\": \"2026-09-30\"\n}\n```\n\n### Response\n\nIf the request succeeds, the API returns the status `201 Created`. The response body contains the id of the new invoice.\n\n```json\n{\n  \"id\": \"inv_4b9e1d\"\n}\n```\n\n### Errors\n\nIf the request fails, the API returns an error status. The table that follows lists the common causes:\n\n| Status | Cause |\n|---|---|\n| `400 Bad Request` | The body is not valid JSON, or a required field is missing, or a value has the wrong type. |\n| `404 Not Found` | No customer with the given `customer_id` exists. |\n\n### Procedure\n\n1. Make sure that the customer exists. Use the value of its id as `customer_id`.\n2. Convert the amount to cents. For example, write $1,250.00 as `125000`.\n3. If the invoice has a payment deadline, add the `due_date` field.\n4. Send the request.\n5. Make sure that the status is `201 Created`. Then save the `id` from the response body.\n\n---\n\n**Assumptions that I made:** The `amount_cents` type (positive integer), the `due_date` format (`YYYY-MM-DD`), the example ids, and the error table are not in your request. Replace them with the real values of your API. I did not add an authentication header because you did not name a scheme. If the API needs one, add a line to the **Request** section.",
+  "texts": [
+    "I will load the Simple English skill, then write the guide section.",
+    "Here is the section. I wrote it in pragmatic STE mode. The user gave three fields and the 201 response, so I kept the other details general and marked assumptions at the end.\n\n---\n\n## Create an invoice\n\n`POST /v1/invoices` creates one invoice for one customer. The request body is a JSON object. The response returns the id of the new invoice.\n\n### Request\n\nSend a `POST` request to `/v1/invoices` with the header `Content-Type: application/json`.\n\nThe request body has these fields:\n\n| Field | Type | Required | Description |\n|---|---|---|---|\n| `customer_id` | string | Yes | The id of the customer that receives the invoice. |\n| `amount_cents` | integer | Yes | The amount of the invoice in cents. The value must be a positive integer. |\n| `due_date` | string | No | The date on which the payment is due, in the format `YYYY-MM-DD`. |\n\nIf you do not send `due_date`, the invoice has no due date.\n\n### Example request\n\n```http\nPOST /v1/invoices HTTP/1.1\nContent-Type: application/json\n\n{\n  \"customer_id\": \"cus_8f3a2c\",\n  \"amount_cents\": 125000,\n  \"due_date\": \"2026-09-30\"\n}\n```\n\n### Response\n\nIf the request succeeds, the API returns the status `201 Created`. The response body contains the id of the new invoice.\n\n```json\n{\n  \"id\": \"inv_4b9e1d\"\n}\n```\n\n### Errors\n\nIf the request fails, the API returns an error status. The table that follows lists the common causes:\n\n| Status | Cause |\n|---|---|\n| `400 Bad Request` | The body is not valid JSON, or a required field is missing, or a value has the wrong type. |\n| `404 Not Found` | No customer with the given `customer_id` exists. |\n\n### Procedure\n\n1. Make sure that the customer exists. Use the value of its id as `customer_id`.\n2. Convert the amount to cents. For example, write $1,250.00 as `125000`.\n3. If the invoice has a payment deadline, add the `due_date` field.\n4. Send the request.\n5. Make sure that the status is `201 Created`. Then save the `id` from the response body.\n\n---\n\n**Assumptions that I made:** The `amount_cents` type (positive integer), the `due_date` format (`YYYY-MM-DD`), the example ids, and the error table are not in your request. Replace them with the real values of your API. I did not add an authentication header because you did not name a scheme. If the API needs one, add a line to the **Request** section."
+  ],
+  "stderr_tail": ""
+}

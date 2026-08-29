@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "explain-07",
+  "cat": "explain",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 10.2,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.014734,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 5652,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 684,
+    "output_tokens_details": {
+      "thinking_tokens": 372
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5652,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 684,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 5652,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5652
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 227,
+    "sentences": 20,
+    "mean_sentence_words": 11.2,
+    "longest_sentence_words": 38,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 1,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 2,
+    "violations_per_100w": 0.88
+  },
+  "text": "# Why Database Indexes Have a Cost\n\nA database index is a data structure that speeds up read queries. When you add an index, the database must update it every time data changes. This creates three main costs:\n\n## Storage space\nIndexes duplicate your data in a new format. A large index can consume gigabytes of disk storage. You must pay for this storage on your infrastructure. This cost persists whether you use the index often or not.\n\n## Write performance impact\nEvery insert, update, or delete operation must update all indexes on that table. If a table has five indexes, the database does five times more work during writes. On tables with frequent changes, this slowdown becomes significant. You trade fast reads for slower writes.\n\n## Maintenance overhead\nIndexes degrade over time as data changes. The database must periodically rebuild or reorganize them. During this maintenance, the database locks parts of the table. Application performance suffers during these operations. You need monitoring and tuning to keep indexes efficient.\n\n## When the trade-off makes sense\nAdd an index only when:\n- The read query runs frequently\n- The read query is slow without the index\n- The table has far more reads than writes\n- You have disk space and CPU budget available\n\nIndex decisions require measuring both sides of the cost. A fast query that saves users time but slows down your bulk data loads may not be worth it. The right choice depends on your actual usage patterns.",
+  "texts": [
+    "# Why Database Indexes Have a Cost\n\nA database index is a data structure that speeds up read queries. When you add an index, the database must update it every time data changes. This creates three main costs:\n\n## Storage space\nIndexes duplicate your data in a new format. A large index can consume gigabytes of disk storage. You must pay for this storage on your infrastructure. This cost persists whether you use the index often or not.\n\n## Write performance impact\nEvery insert, update, or delete operation must update all indexes on that table. If a table has five indexes, the database does five times more work during writes. On tables with frequent changes, this slowdown becomes significant. You trade fast reads for slower writes.\n\n## Maintenance overhead\nIndexes degrade over time as data changes. The database must periodically rebuild or reorganize them. During this maintenance, the database locks parts of the table. Application performance suffers during these operations. You need monitoring and tuning to keep indexes efficient.\n\n## When the trade-off makes sense\nAdd an index only when:\n- The read query runs frequently\n- The read query is slow without the index\n- The table has far more reads than writes\n- You have disk space and CPU budget available\n\nIndex decisions require measuring both sides of the cost. A fast query that saves users time but slows down your bulk data loads may not be worth it. The right choice depends on your actual usage patterns."
+  ],
+  "stderr_tail": ""
+}

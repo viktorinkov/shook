@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "review-10",
+  "cat": "review",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 13.4,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.017299,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 5657,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 1195,
+    "output_tokens_details": {
+      "thinking_tokens": 1015
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5657,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 1195,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 5657,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5657
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 87,
+    "sentences": 8,
+    "mean_sentence_words": 10.2,
+    "longest_sentence_words": 16,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 1.15
+  },
+  "text": "---\n\n**Security issue: Do not commit API keys to version control.** This exposes credentials to anyone with repository access.\n\n**Remove the hardcoded key from `config.py`.** Store the API key in an environment variable instead.\n\n**Steps to fix:**\n\n1. Remove the API key from `config.py`.\n2. Read the API key from the environment at runtime.\n3. Add `config.py` to `.gitignore` if it contains sensitive data.\n4. If the key was already pushed, rotate it immediately.\n\n**Example:**\n\n```python\nimport os\napi_key = os.getenv('API_KEY')\n```\n\nSet the environment variable before you run the application:\n\n```bash\nexport API_KEY=\"your-api-key\"\n```\n\n---",
+  "texts": [
+    "---\n\n**Security issue: Do not commit API keys to version control.** This exposes credentials to anyone with repository access.\n\n**Remove the hardcoded key from `config.py`.** Store the API key in an environment variable instead.\n\n**Steps to fix:**\n\n1. Remove the API key from `config.py`.\n2. Read the API key from the environment at runtime.\n3. Add `config.py` to `.gitignore` if it contains sensitive data.\n4. If the key was already pushed, rotate it immediately.\n\n**Example:**\n\n```python\nimport os\napi_key = os.getenv('API_KEY')\n```\n\nSet the environment variable before you run the application:\n\n```bash\nexport API_KEY=\"your-api-key\"\n```\n\n---"
+  ],
+  "stderr_tail": ""
+}

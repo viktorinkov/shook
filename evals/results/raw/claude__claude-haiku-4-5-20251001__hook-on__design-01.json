@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "design-01",
+  "cat": "design",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 14.6,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.016831,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 5613,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 1119,
+    "output_tokens_details": {
+      "thinking_tokens": 479
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5613,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 1119,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 5613,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5613
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 370,
+    "sentences": 41,
+    "mean_sentence_words": 8.7,
+    "longest_sentence_words": 21,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 4,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 3,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 8,
+    "violations_per_100w": 2.16
+  },
+  "text": "# Message Queue vs. Direct HTTP for Order Processing\n\n## Message Queue Approach\n\n**How it works.** A service publishes order events to a message broker. Other services consume those events and process them asynchronously.\n\n**Strengths for order processing.**\n\n- **Decoupling.** Services do not call each other directly. Each service changes without affecting others.\n- **Durability.** Messages persist in the queue. If a service fails, messages stay until it recovers.\n- **Handle spikes.** Orders arrive in bursts. The queue buffers them; services process at their own rate.\n- **Retry logic.** Failed message processing retries automatically. Dead-letter queues catch persistent failures.\n- **Audit trail.** All order events log to the queue. This creates a complete transaction history.\n\n**Challenges.**\n\n- **Operational complexity.** You run and monitor a broker service.\n- **Debugging.** Async flows are harder to trace end-to-end.\n- **Eventual consistency.** Services do not update at once. A caller may not know the order status immediately.\n\n## Direct HTTP Approach\n\n**How it works.** Service A calls Service B via HTTP (REST, gRPC). It waits for a response.\n\n**Strengths.**\n\n- **Simplicity.** No extra infrastructure. Use only what you have.\n- **Synchronous feedback.** The caller knows the result right away.\n- **Debugging.** Trace execution in order. Logs line up in time.\n\n**Challenges.**\n\n- **Tight coupling.** If Service B changes, Service A may break.\n- **Cascading failures.** If Service B is down, Service A hangs or fails. Timeouts help but do not solve this.\n- **Overload.** A surge in orders makes all services busy at once. No buffering occurs.\n- **No durability.** If the network fails mid-call, the order may be lost.\n\n## Recommendation: Use a Message Queue\n\nFor order processing, a message queue is the better choice.\n\n**Why.** Orders are business-critical. You cannot lose them. A queue guarantees that each order message persists until processed. Orders also arrive in unpredictable bursts; a queue buffers these spikes. Payment, inventory, and shipping services must work independently; if one slows down, others continue. Direct HTTP calls would cause the entire pipeline to block.\n\n**Implementation.** Use a message broker such as RabbitMQ, Apache Kafka, or AWS SQS. Each service publishes and subscribes to order events. Configure retry policies and dead-letter queues for failed orders. Log all events for auditing and reconciliation.\n\n**Exception.** Use direct HTTP for synchronous lookups only\u2014for example, checking whether an item is in stock before you show a price.",
+  "texts": [
+    "# Message Queue vs. Direct HTTP for Order Processing\n\n## Message Queue Approach\n\n**How it works.** A service publishes order events to a message broker. Other services consume those events and process them asynchronously.\n\n**Strengths for order processing.**\n\n- **Decoupling.** Services do not call each other directly. Each service changes without affecting others.\n- **Durability.** Messages persist in the queue. If a service fails, messages stay until it recovers.\n- **Handle spikes.** Orders arrive in bursts. The queue buffers them; services process at their own rate.\n- **Retry logic.** Failed message processing retries automatically. Dead-letter queues catch persistent failures.\n- **Audit trail.** All order events log to the queue. This creates a complete transaction history.\n\n**Challenges.**\n\n- **Operational complexity.** You run and monitor a broker service.\n- **Debugging.** Async flows are harder to trace end-to-end.\n- **Eventual consistency.** Services do not update at once. A caller may not know the order status immediately.\n\n## Direct HTTP Approach\n\n**How it works.** Service A calls Service B via HTTP (REST, gRPC). It waits for a response.\n\n**Strengths.**\n\n- **Simplicity.** No extra infrastructure. Use only what you have.\n- **Synchronous feedback.** The caller knows the result right away.\n- **Debugging.** Trace execution in order. Logs line up in time.\n\n**Challenges.**\n\n- **Tight coupling.** If Service B changes, Service A may break.\n- **Cascading failures.** If Service B is down, Service A hangs or fails. Timeouts help but do not solve this.\n- **Overload.** A surge in orders makes all services busy at once. No buffering occurs.\n- **No durability.** If the network fails mid-call, the order may be lost.\n\n## Recommendation: Use a Message Queue\n\nFor order processing, a message queue is the better choice.\n\n**Why.** Orders are business-critical. You cannot lose them. A queue guarantees that each order message persists until processed. Orders also arrive in unpredictable bursts; a queue buffers these spikes. Payment, inventory, and shipping services must work independently; if one slows down, others continue. Direct HTTP calls would cause the entire pipeline to block.\n\n**Implementation.** Use a message broker such as RabbitMQ, Apache Kafka, or AWS SQS. Each service publishes and subscribes to order events. Configure retry policies and dead-letter queues for failed orders. Log all events for auditing and reconciliation.\n\n**Exception.** Use direct HTTP for synchronous lookups only\u2014for example, checking whether an item is in stock before you show a price."
+  ],
+  "stderr_tail": ""
+}

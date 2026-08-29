@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "incident-03",
+  "cat": "incident",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 23.7,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.33548900000000004,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 12108,
+    "cache_read_input_tokens": 12839,
+    "output_tokens": 1609,
+    "output_tokens_details": {
+      "thinking_tokens": 1038
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12108,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1317,
+        "cache_read_input_tokens": 8416,
+        "cache_creation_input_tokens": 8115,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8115
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 235,
+    "sentences": 25,
+    "mean_sentence_words": 9.3,
+    "longest_sentence_words": 14,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "## What went wrong\n\nThe scheduler must run as one instance at a time. A leader lock gives one node the right to start cron jobs. After the failover at [TIME], this rule did not hold. Two nodes became active at the same time. Both nodes started the `[JOB_NAME]` job. As a result, the job ran twice.\n\nThe sequence of events was as follows. The primary node lost its connection to the cluster at [TIME]. The standby node saw that the primary node was not available. The standby node took the leader lock and started its scheduler. The primary node did not stop. Its connection came back after [DURATION], and it continued as a scheduler.\n\nThree defects let this happen:\n\n- The scheduler read the leader lock only at startup. The primary node did not read the lock again after its connection came back.\n- The leader lock had no lease. Thus the primary node kept a lock that was no longer valid.\n- The job was not idempotent. A second start caused a duplicate [RESULT].\n\nThe scheduler had no alarm for two active instances. We found the duplicate run at [TIME] from [SOURCE]. The time between the failover and the discovery was [DURATION].\n\n---\n\nFill in the placeholders in square brackets with the facts from your incident. I did not invent times, names, or effects. Note that a full ASD-STE100 compliance claim needs the official dictionary from asd-ste100.org.",
+  "texts": [
+    "I will write the section with the Simple English rules. I will load the skill first.",
+    "## What went wrong\n\nThe scheduler must run as one instance at a time. A leader lock gives one node the right to start cron jobs. After the failover at [TIME], this rule did not hold. Two nodes became active at the same time. Both nodes started the `[JOB_NAME]` job. As a result, the job ran twice.\n\nThe sequence of events was as follows. The primary node lost its connection to the cluster at [TIME]. The standby node saw that the primary node was not available. The standby node took the leader lock and started its scheduler. The primary node did not stop. Its connection came back after [DURATION], and it continued as a scheduler.\n\nThree defects let this happen:\n\n- The scheduler read the leader lock only at startup. The primary node did not read the lock again after its connection came back.\n- The leader lock had no lease. Thus the primary node kept a lock that was no longer valid.\n- The job was not idempotent. A second start caused a duplicate [RESULT].\n\nThe scheduler had no alarm for two active instances. We found the duplicate run at [TIME] from [SOURCE]. The time between the failover and the discovery was [DURATION].\n\n---\n\nFill in the placeholders in square brackets with the facts from your incident. I did not invent times, names, or effects. Note that a full ASD-STE100 compliance claim needs the official dictionary from asd-ste100.org."
+  ],
+  "stderr_tail": ""
+}

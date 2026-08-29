@@ -1,0 +1,76 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "error-05",
+  "cat": "error",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 15.6,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 3,
+  "strict_blocks": 1,
+  "num_turns": 4,
+  "cost_usd": 0.31265499999999996,
+  "usage": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 12448,
+    "cache_read_input_tokens": 29265,
+    "output_tokens": 687,
+    "output_tokens_details": {
+      "thinking_tokens": 124
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12448,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 4,
+        "output_tokens": 225,
+        "cache_read_input_tokens": 16446,
+        "cache_creation_input_tokens": 425,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 425
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 117,
+    "sentences": 15,
+    "mean_sentence_words": 7.8,
+    "longest_sentence_words": 13,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "Here is the error text. The first line gives the fact. The second line gives the instruction.\n\n**Title:** Session expired\n\n**Body:**\n> Your session expired. Log in again to continue.\n\nIf the interface has space for a reason, use this longer variant:\n\n> Your session expired because you were inactive for 30 minutes. Log in again to continue. Your unsaved changes are lost.\n\nReplace \"30 minutes\" with the real timeout value. If the application keeps unsaved changes, delete the last sentence.\n\n**Button label:** Log in\n\nRecap: I wrote a short error message and a longer variant. Each sentence gives one fact or one instruction. Put the real timeout value in the longer variant before you use it.",
+  "texts": [
+    "I will load the Simple English skill, then write the error text.",
+    "Here is the error text. The first line gives the fact. The second line gives the instruction.\n\n**Title:** Session expired\n\n**Body:**\n> Your session expired. Log in again to continue.\n\nA longer variant, if the interface has space for a reason:\n\n> Your session expired because you were inactive for 30 minutes. Log in again to continue. Your unsaved changes are lost.\n\nReplace \"30 minutes\" with the real timeout value. Delete the last sentence if the application keeps unsaved changes.\n\n**Button label:** Log in\n\nRecap: I wrote a short error message and a longer variant. Each sentence gives one fact or one instruction. Put the real timeout value in the longer variant before you use it.",
+    "Here is the error text. The first line gives the fact. The second line gives the instruction.\n\n**Title:** Session expired\n\n**Body:**\n> Your session expired. Log in again to continue.\n\nIf the interface has space for a reason, use this longer variant:\n\n> Your session expired because you were inactive for 30 minutes. Log in again to continue. Your unsaved changes are lost.\n\nReplace \"30 minutes\" with the real timeout value. If the application keeps unsaved changes, delete the last sentence.\n\n**Button label:** Log in\n\nRecap: I wrote a short error message and a longer variant. Each sentence gives one fact or one instruction. Put the real timeout value in the longer variant before you use it."
+  ],
+  "stderr_tail": ""
+}

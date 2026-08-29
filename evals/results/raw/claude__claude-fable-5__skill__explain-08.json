@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "explain-08",
+  "cat": "explain",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 15.0,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.115589,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2753,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 1102,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2753,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1102,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 2753,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2753
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 298,
+    "sentences": 11,
+    "mean_sentence_words": 26.9,
+    "longest_sentence_words": 75,
+    "violations": {
+      "sentence_over_limit": 4,
+      "contraction": 1,
+      "banned_modal": 1,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 2,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 9,
+    "violations_per_100w": 3.02
+  },
+  "text": "The N+1 query problem is when your code runs one query to fetch a list of N records, then runs one additional query per record to fetch related data \u2014 N+1 queries total instead of one or two.\n\n## Example (Django ORM)\n\n```python\n# models.py\nclass Author(models.Model):\n    name = models.CharField(max_length=100)\n\nclass Book(models.Model):\n    title = models.CharField(max_length=200)\n    author = models.ForeignKey(Author, on_delete=models.CASCADE)\n```\n\n```python\n# The N+1 version\nbooks = Book.objects.all()          # Query 1: SELECT * FROM book\nfor book in books:\n    print(book.title, book.author.name)   # Query 2..N+1: SELECT * FROM author WHERE id = ?\n```\n\nWith 1,000 books, this is 1,001 round trips to the database. Each one is small, but the per-query latency (network + parsing + planning) adds up \u2014 this is typically the single most common cause of \"the page is slow but every query is fast.\"\n\nIt's easy to miss because the ORM makes `book.author` look like a plain attribute access; the lazy load is invisible in the code.\n\n## Fix 1: JOIN in one query (`select_related`)\n\nFor foreign keys / one-to-one relations:\n\n```python\nbooks = Book.objects.select_related(\"author\")   # SELECT ... FROM book JOIN author ON ...\nfor book in books:\n    print(book.title, book.author.name)          # no extra queries\n```\n\nOne query, authors populated in the same row.\n\n## Fix 2: Batch load (`prefetch_related`)\n\nFor reverse or many-to-many relations, where a JOIN would multiply rows:\n\n```python\nauthors = Author.objects.prefetch_related(\"book_set\")\n# Query 1: SELECT * FROM author\n# Query 2: SELECT * FROM book WHERE author_id IN (1, 2, 3, ...)\nfor author in authors:\n    for book in author.book_set.all():           # served from memory\n        print(author.name, book.title)\n```\n\nTwo queries regardless of N; the ORM stitches the results together in Python.\n\n## Same idea in other ORMs\n\n| ORM | JOIN-style | Batch-style |\n|---|---|---|\n| Django | `select_related` | `prefetch_related` |\n| SQLAlchemy | `joinedload` | `selectinload` |\n| Rails / ActiveRecord | `eager_load` / `joins` | `includes` / `preload` |\n| Prisma | `include: { author: true }` | (batched automatically) |\n| Hibernate / JPA | `JOIN FETCH` | `@BatchSize` |\n\n## How to catch it\n\n- Log queries in development (Django Debug Toolbar, SQLAlchemy `echo=True`, Rails `bullet` gem) and look for the same statement repeated with different parameters.\n- Assert query counts in tests (Django's `assertNumQueries(2)`), so a future change that reintroduces lazy loading fails CI.\n\n**Recap:** N+1 is one list query plus one lazy-loaded query per row. Fix it by telling the ORM up front which relations you need \u2014 either a JOIN (`select_related`/`joinedload`) for to-one relations or a batched `WHERE id IN (...)` load (`prefetch_related`/`selectinload`) for to-many relations \u2014 and guard against regressions with query-count assertions in tests.",
+  "texts": [
+    "The N+1 query problem is when your code runs one query to fetch a list of N records, then runs one additional query per record to fetch related data \u2014 N+1 queries total instead of one or two.\n\n## Example (Django ORM)\n\n```python\n# models.py\nclass Author(models.Model):\n    name = models.CharField(max_length=100)\n\nclass Book(models.Model):\n    title = models.CharField(max_length=200)\n    author = models.ForeignKey(Author, on_delete=models.CASCADE)\n```\n\n```python\n# The N+1 version\nbooks = Book.objects.all()          # Query 1: SELECT * FROM book\nfor book in books:\n    print(book.title, book.author.name)   # Query 2..N+1: SELECT * FROM author WHERE id = ?\n```\n\nWith 1,000 books, this is 1,001 round trips to the database. Each one is small, but the per-query latency (network + parsing + planning) adds up \u2014 this is typically the single most common cause of \"the page is slow but every query is fast.\"\n\nIt's easy to miss because the ORM makes `book.author` look like a plain attribute access; the lazy load is invisible in the code.\n\n## Fix 1: JOIN in one query (`select_related`)\n\nFor foreign keys / one-to-one relations:\n\n```python\nbooks = Book.objects.select_related(\"author\")   # SELECT ... FROM book JOIN author ON ...\nfor book in books:\n    print(book.title, book.author.name)          # no extra queries\n```\n\nOne query, authors populated in the same row.\n\n## Fix 2: Batch load (`prefetch_related`)\n\nFor reverse or many-to-many relations, where a JOIN would multiply rows:\n\n```python\nauthors = Author.objects.prefetch_related(\"book_set\")\n# Query 1: SELECT * FROM author\n# Query 2: SELECT * FROM book WHERE author_id IN (1, 2, 3, ...)\nfor author in authors:\n    for book in author.book_set.all():           # served from memory\n        print(author.name, book.title)\n```\n\nTwo queries regardless of N; the ORM stitches the results together in Python.\n\n## Same idea in other ORMs\n\n| ORM | JOIN-style | Batch-style |\n|---|---|---|\n| Django | `select_related` | `prefetch_related` |\n| SQLAlchemy | `joinedload` | `selectinload` |\n| Rails / ActiveRecord | `eager_load` / `joins` | `includes` / `preload` |\n| Prisma | `include: { author: true }` | (batched automatically) |\n| Hibernate / JPA | `JOIN FETCH` | `@BatchSize` |\n\n## How to catch it\n\n- Log queries in development (Django Debug Toolbar, SQLAlchemy `echo=True`, Rails `bullet` gem) and look for the same statement repeated with different parameters.\n- Assert query counts in tests (Django's `assertNumQueries(2)`), so a future change that reintroduces lazy loading fails CI.\n\n**Recap:** N+1 is one list query plus one lazy-loaded query per row. Fix it by telling the ORM up front which relations you need \u2014 either a JOIN (`select_related`/`joinedload`) for to-one relations or a batched `WHERE id IN (...)` load (`prefetch_related`/`selectinload`) for to-many relations \u2014 and guard against regressions with query-count assertions in tests."
+  ],
+  "stderr_tail": ""
+}

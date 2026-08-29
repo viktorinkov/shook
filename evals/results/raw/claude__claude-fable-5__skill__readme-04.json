@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "readme-04",
+  "cat": "docs",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 32.1,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.34661600000000004,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 10798,
+    "cache_read_input_tokens": 11609,
+    "output_tokens": 2360,
+    "output_tokens_details": {
+      "thinking_tokens": 1089
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 10798,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2152,
+        "cache_read_input_tokens": 7186,
+        "cache_creation_input_tokens": 8035,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8035
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 518,
+    "sentences": 50,
+    "mean_sentence_words": 10.1,
+    "longest_sentence_words": 29,
+    "violations": {
+      "sentence_over_limit": 3,
+      "contraction": 0,
+      "banned_modal": 1,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 2,
+      "synonym_rotation": 0
+    },
+    "violations_total": 6,
+    "violations_per_100w": 1.16
+  },
+  "text": "Here is the section, written in pragmatic Simplified Technical English. Placeholders in angle brackets (`<port>`, `<pid>`) mark values that come from the error message or from the reader's machine. Two places are marked for you to fill in with facts about your app (its name and its port setting), because I did not want to invent them.\n\n---\n\n## Troubleshooting\n\n### The app does not start and shows `EADDRINUSE`\n\n**Symptom.** The app stops during startup. The log file or the error dialog shows a message like this one:\n\n```\nError: listen EADDRINUSE: address already in use 127.0.0.1:<port>\n```\n\n**Cause.** The app opens a local network port when it starts. The error occurs when a different process already uses that port. There are three usual causes:\n\n- A previous instance of the app is open in the background.\n- A different application uses the same port.\n- The operating system holds the port for a short time after a crash.\n\nThe port number is at the end of the error message. Use this number in the steps that follow.\n\n#### Step 1: Make sure that the app is not open in the background\n\n1. Look for the app icon in the menu bar (macOS) or the system tray (Windows).\n2. If the icon is present, quit the app from the icon menu.\n3. Start the app again.\n\nIf the app starts, the problem is solved. If the error occurs again, continue with Step 2.\n\n#### Step 2: Find the process that uses the port\n\nOn macOS or Linux, run this command in a terminal:\n\n```\nlsof -i :<port>\n```\n\nThe `PID` column shows the process ID. The `COMMAND` column shows the process name.\n\nOn Windows, run these two commands in PowerShell:\n\n```\nnetstat -ano | findstr :<port>\n```\n\nThe last column shows the process ID (PID). Then show the name of this process:\n\n```\ntasklist /FI \"PID eq <pid>\"\n```\n\n#### Step 3: Stop the process or change the port\n\nIf the process is an old instance of the app, stop it:\n\n- On macOS or Linux, run `kill <pid>`. If the process does not stop, run `kill -9 <pid>`.\n- On Windows, run `taskkill /PID <pid> /F`.\n\nIf the process belongs to a different application that you use, do not stop it. Change the port of the app instead. <!-- FILL IN: how to change the port, for example \"Open **Settings > Advanced** and enter a different port.\" -->\n\nThen start the app again.\n\n#### Step 4: If no process uses the port\n\nThe operating system can hold a port for up to one minute after a crash. Wait one minute. Then start the app again.\n\nIf the error occurs again after one minute, restart the computer. Then start the app.\n\n#### If the problem continues\n\nCollect this information and send it to support: <!-- FILL IN: support address or issue tracker URL -->\n\n- The full error message.\n- The operating system and its version.\n- The output of the command in Step 2.\n\n---\n\n**Self-check results:** longest sentence is 20 words (\"If the process belongs to a different application that you use, do not stop it.\" and the Cause sentence). No contractions, no \"should/however/therefore\", no semicolons. Every \"if\" stands before its command. One verb for verification throughout: \"make sure that\". Error text, commands, and flags left exact.\n\n**What is left for you:** the two `<!-- FILL IN -->` comments need your app's port setting and your support contact. If the app pins a fixed port with no setting, delete the \"change the port\" sentence in Step 3 and tell the reader to stop the other application instead.",
+  "texts": [
+    "I'll load the Simplified Technical English skill first, since this is documentation that benefits from clear, unambiguous procedural writing.",
+    "Here is the section, written in pragmatic Simplified Technical English. Placeholders in angle brackets (`<port>`, `<pid>`) mark values that come from the error message or from the reader's machine. Two places are marked for you to fill in with facts about your app (its name and its port setting), because I did not want to invent them.\n\n---\n\n## Troubleshooting\n\n### The app does not start and shows `EADDRINUSE`\n\n**Symptom.** The app stops during startup. The log file or the error dialog shows a message like this one:\n\n```\nError: listen EADDRINUSE: address already in use 127.0.0.1:<port>\n```\n\n**Cause.** The app opens a local network port when it starts. The error occurs when a different process already uses that port. There are three usual causes:\n\n- A previous instance of the app is open in the background.\n- A different application uses the same port.\n- The operating system holds the port for a short time after a crash.\n\nThe port number is at the end of the error message. Use this number in the steps that follow.\n\n#### Step 1: Make sure that the app is not open in the background\n\n1. Look for the app icon in the menu bar (macOS) or the system tray (Windows).\n2. If the icon is present, quit the app from the icon menu.\n3. Start the app again.\n\nIf the app starts, the problem is solved. If the error occurs again, continue with Step 2.\n\n#### Step 2: Find the process that uses the port\n\nOn macOS or Linux, run this command in a terminal:\n\n```\nlsof -i :<port>\n```\n\nThe `PID` column shows the process ID. The `COMMAND` column shows the process name.\n\nOn Windows, run these two commands in PowerShell:\n\n```\nnetstat -ano | findstr :<port>\n```\n\nThe last column shows the process ID (PID). Then show the name of this process:\n\n```\ntasklist /FI \"PID eq <pid>\"\n```\n\n#### Step 3: Stop the process or change the port\n\nIf the process is an old instance of the app, stop it:\n\n- On macOS or Linux, run `kill <pid>`. If the process does not stop, run `kill -9 <pid>`.\n- On Windows, run `taskkill /PID <pid> /F`.\n\nIf the process belongs to a different application that you use, do not stop it. Change the port of the app instead. <!-- FILL IN: how to change the port, for example \"Open **Settings > Advanced** and enter a different port.\" -->\n\nThen start the app again.\n\n#### Step 4: If no process uses the port\n\nThe operating system can hold a port for up to one minute after a crash. Wait one minute. Then start the app again.\n\nIf the error occurs again after one minute, restart the computer. Then start the app.\n\n#### If the problem continues\n\nCollect this information and send it to support: <!-- FILL IN: support address or issue tracker URL -->\n\n- The full error message.\n- The operating system and its version.\n- The output of the command in Step 2.\n\n---\n\n**Self-check results:** longest sentence is 20 words (\"If the process belongs to a different application that you use, do not stop it.\" and the Cause sentence). No contractions, no \"should/however/therefore\", no semicolons. Every \"if\" stands before its command. One verb for verification throughout: \"make sure that\". Error text, commands, and flags left exact.\n\n**What is left for you:** the two `<!-- FILL IN -->` comments need your app's port setting and your support contact. If the app pins a fixed port with no setting, delete the \"change the port\" sentence in Step 3 and tell the reader to stop the other application instead."
+  ],
+  "stderr_tail": ""
+}

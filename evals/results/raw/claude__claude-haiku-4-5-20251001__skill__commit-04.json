@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "commit-04",
+  "cat": "commit",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 8.9,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.013649,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 4789,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 608,
+    "output_tokens_details": {
+      "thinking_tokens": 363
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4789,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 608,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 4789,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4789
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 74,
+    "sentences": 1,
+    "mean_sentence_words": 69.0,
+    "longest_sentence_words": 69,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 1,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 1,
+      "latin_abbrev": 1,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 5,
+    "violations_per_100w": 6.76
+  },
+  "text": "```\nAdd index on orders(customer_id, created_at)\n\nThis composite index optimizes queries that filter orders by customer\nand sort by creation date, commonly used for customer order history\nand time-range lookups. The index reduces full table scans and improves\nquery performance for these access patterns.\n```\n\n**Alternative, more concise version:**\n\n```\nAdd index on orders(customer_id, created_at)\n\nImproves performance of customer order history queries by enabling\nefficient filtering and sorting on the indexed columns.\n```\n\n**Notes:**\n- Use imperative mood (\"Add\" not \"Adds\")\n- Keep the subject line under 50 characters\n- The body explains the *why* \u2014 performance improvement for customer-related queries\n- Mention it's a composite/multi-column index if that's noteworthy for your team\n- Reference any issue/ticket if applicable (e.g., `Fixes #123` or `Relates to ticket XYZ`)\n\nChoose the length based on your project's convention \u2014 some teams prefer the concise version; others expect more context.",
+  "texts": [
+    "```\nAdd index on orders(customer_id, created_at)\n\nThis composite index optimizes queries that filter orders by customer\nand sort by creation date, commonly used for customer order history\nand time-range lookups. The index reduces full table scans and improves\nquery performance for these access patterns.\n```\n\n**Alternative, more concise version:**\n\n```\nAdd index on orders(customer_id, created_at)\n\nImproves performance of customer order history queries by enabling\nefficient filtering and sorting on the indexed columns.\n```\n\n**Notes:**\n- Use imperative mood (\"Add\" not \"Adds\")\n- Keep the subject line under 50 characters\n- The body explains the *why* \u2014 performance improvement for customer-related queries\n- Mention it's a composite/multi-column index if that's noteworthy for your team\n- Reference any issue/ticket if applicable (e.g., `Fixes #123` or `Relates to ticket XYZ`)\n\nChoose the length based on your project's convention \u2014 some teams prefer the concise version; others expect more context."
+  ],
+  "stderr_tail": ""
+}

@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "explain-03",
+  "cat": "explain",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 45.4,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.031991,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 5618,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 4149,
+    "output_tokens_details": {
+      "thinking_tokens": 3871
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5618,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 4149,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 5618,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5618
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 187,
+    "sentences": 23,
+    "mean_sentence_words": 7.7,
+    "longest_sentence_words": 13,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 3,
+      "synonym_rotation": 0
+    },
+    "violations_total": 3,
+    "violations_per_100w": 1.6
+  },
+  "text": "## git merge vs git rebase\n\n**git merge** combines two branches. It creates a new commit that ties both branches together. The history shows exactly when branches were created and merged. This keeps all original commits intact.\n\n**git rebase** replays your feature branch commits on top of the main branch. It rewrites commit history to look like a straight line. The final history is cleaner, but individual commits are reordered.\n\n**Key differences:**\n- Merge preserves history exactly. Rebase simplifies it.\n- Merge creates an extra commit. Rebase does not.\n- Merge is safer for shared branches. Rebase changes commit IDs.\n\n**Choose rebase if:**\n- The branch is not yet shared.\n- Your team prefers a clean, linear history.\n- You do not publish commits to a shared remote.\n\n**Choose merge if:**\n- The branch is public or shared.\n- You want to preserve when branches existed.\n- You prefer a simpler, safer operation.\n\n**Recommendation for most teams:** Rebase feature branches before you merge them to main. This keeps the main branch history clean and linear. It helps you track when changes were added. Check what your team or lead prefers before you decide.",
+  "texts": [
+    "## git merge vs git rebase\n\n**git merge** combines two branches. It creates a new commit that ties both branches together. The history shows exactly when branches were created and merged. This keeps all original commits intact.\n\n**git rebase** replays your feature branch commits on top of the main branch. It rewrites commit history to look like a straight line. The final history is cleaner, but individual commits are reordered.\n\n**Key differences:**\n- Merge preserves history exactly. Rebase simplifies it.\n- Merge creates an extra commit. Rebase does not.\n- Merge is safer for shared branches. Rebase changes commit IDs.\n\n**Choose rebase if:**\n- The branch is not yet shared.\n- Your team prefers a clean, linear history.\n- You do not publish commits to a shared remote.\n\n**Choose merge if:**\n- The branch is public or shared.\n- You want to preserve when branches existed.\n- You prefer a simpler, safer operation.\n\n**Recommendation for most teams:** Rebase feature branches before you merge them to main. This keeps the main branch history clean and linear. It helps you track when changes were added. Check what your team or lead prefers before you decide."
+  ],
+  "stderr_tail": ""
+}

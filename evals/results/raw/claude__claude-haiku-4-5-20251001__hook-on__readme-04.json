@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "readme-04",
+  "cat": "docs",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 83.5,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.0681984,
+  "usage": {
+    "input_tokens": 20,
+    "cache_creation_input_tokens": 11906,
+    "cache_read_input_tokens": 5614,
+    "output_tokens": 8761,
+    "output_tokens_details": {
+      "thinking_tokens": 8281
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 11906,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 8358,
+        "cache_read_input_tokens": 5614,
+        "cache_creation_input_tokens": 6292,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 6292
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 176,
+    "sentences": 18,
+    "mean_sentence_words": 8.9,
+    "longest_sentence_words": 24,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "## Troubleshooting: The app fails to start with EADDRINUSE\n\n**What is this error?**\n\nThe EADDRINUSE error means that the port where the app tries to start is already in use by another process. The app cannot start until that port is free.\n\n**To fix the issue:**\n\n1. Open a terminal.\n2. Identify which process uses the port. Run the command for your system:\n   - macOS or Linux: `lsof -i :<port>`\n   - Windows: `netstat -ano | findstr :<port>`\n3. Replace `<port>` with the app port (default is 3000).\n4. Write down the process ID (PID) from the output.\n5. Stop the process using one of these methods:\n   - Quit the application that uses the port.\n   - Run `kill <PID>` (macOS, Linux) or `taskkill /PID <PID> /F` (Windows), where `<PID>` is the ID from step 4.\n6. Start the app again.\n\n**To prevent this issue:**\n\n- Close all instances of the app before you start a new one.\n- If you use a development server, make sure that it stops properly when you close it.\n- To change the port, edit `config.json`.\n- Set the key `port` to a new value.\n- Start the app again.",
+  "texts": [
+    "## Troubleshooting: The app fails to start with EADDRINUSE\n\n**What is this error?**\n\nThe EADDRINUSE error means that the port where the app tries to start is already in use by another process. The app cannot start until that port is free.\n\n**To fix the issue:**\n\n1. Open a terminal.\n2. Identify which process uses the port. Run the command for your system:\n   - macOS or Linux: `lsof -i :<port>`\n   - Windows: `netstat -ano | findstr :<port>`\n3. Replace `<port>` with the app port (default is 3000).\n4. Write down the process ID (PID) from the output.\n5. Stop the process using one of these methods:\n   - Quit the application that uses the port.\n   - Run `kill <PID>` (macOS, Linux) or `taskkill /PID <PID> /F` (Windows), where `<PID>` is the ID from step 4.\n6. Start the app again.\n\n**To prevent this issue:**\n\n- Close all instances of the app before you start a new one.\n- If you use a development server, make sure that it stops properly when you close it.\n- To change the port, edit `config.json`.\n- Set the key `port` to a new value.\n- Start the app again."
+  ],
+  "stderr_tail": ""
+}

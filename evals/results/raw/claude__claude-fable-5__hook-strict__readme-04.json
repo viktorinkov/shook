@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "readme-04",
+  "cat": "docs",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 28.0,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.34734699999999996,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 12041,
+    "cache_read_input_tokens": 12837,
+    "output_tokens": 1873,
+    "output_tokens_details": {
+      "thinking_tokens": 1109
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12041,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 1650,
+        "cache_read_input_tokens": 8414,
+        "cache_creation_input_tokens": 8050,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 8050
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 318,
+    "sentences": 31,
+    "mean_sentence_words": 9.8,
+    "longest_sentence_words": 20,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 1,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.31
+  },
+  "text": "Here is the Troubleshooting section. I classified the cause description as descriptive text and the steps as procedural text.\n\n---\n\n## Troubleshooting\n\n### The app does not start and shows `EADDRINUSE`\n\n**Description**\n\nThe app starts a local server on a network port. The error `EADDRINUSE` occurs when a different process already uses this port. The app then stops. The error message shows the port number.\n\nThe usual causes are:\n\n- A previous instance of the app did not stop.\n- A different application uses the same port.\n- The operating system did not release the port after a crash of the app.\n\n**Procedure**\n\n1. Close all windows of the app.\n2. Open the task manager (Windows) or the Activity Monitor (macOS).\n3. If a process of the app is in the list, stop this process.\n4. Start the app again.\n5. If the error occurs again, find the process that uses the port. Use the port number from the error message.\n\n   On macOS or Linux, enter this command:\n\n   ```sh\n   lsof -i :<port>\n   ```\n\n   On Windows, enter this command:\n\n   ```sh\n   netstat -ano | findstr :<port>\n   ```\n\n6. CAUTION: Do not stop a process that you do not know. The process can be a system service.\n7. If the process is not necessary, stop this process.\n8. If the process is necessary, change the port of the app in the settings.\n9. Start the app again.\n10. If the error occurs again, restart the computer.\n11. If the error occurs after the restart, examine the log of the app. Then send the log to support.\n\n---\n\n**Recap:** The section has a short description of the cause and one procedure with 11 steps. All sentences are under 20 words for steps and 25 words for descriptions. I did not name a product, a port number, or a settings path, because the request did not give them. Replace `<port>` and \"the settings\" with the exact values for your app. In strict mode, full compliance needs a check against the official ASD-STE100 dictionary (free at asd-ste100.org).",
+  "texts": [
+    "I will load the Simple English skill, then write the Troubleshooting section.",
+    "Here is the Troubleshooting section. I classified the cause description as descriptive text and the steps as procedural text.\n\n---\n\n## Troubleshooting\n\n### The app does not start and shows `EADDRINUSE`\n\n**Description**\n\nThe app starts a local server on a network port. The error `EADDRINUSE` occurs when a different process already uses this port. The app then stops. The error message shows the port number.\n\nThe usual causes are:\n\n- A previous instance of the app did not stop.\n- A different application uses the same port.\n- The operating system did not release the port after a crash of the app.\n\n**Procedure**\n\n1. Close all windows of the app.\n2. Open the task manager (Windows) or the Activity Monitor (macOS).\n3. If a process of the app is in the list, stop this process.\n4. Start the app again.\n5. If the error occurs again, find the process that uses the port. Use the port number from the error message.\n\n   On macOS or Linux, enter this command:\n\n   ```sh\n   lsof -i :<port>\n   ```\n\n   On Windows, enter this command:\n\n   ```sh\n   netstat -ano | findstr :<port>\n   ```\n\n6. CAUTION: Do not stop a process that you do not know. The process can be a system service.\n7. If the process is not necessary, stop this process.\n8. If the process is necessary, change the port of the app in the settings.\n9. Start the app again.\n10. If the error occurs again, restart the computer.\n11. If the error occurs after the restart, examine the log of the app. Then send the log to support.\n\n---\n\n**Recap:** The section has a short description of the cause and one procedure with 11 steps. All sentences are under 20 words for steps and 25 words for descriptions. I did not name a product, a port number, or a settings path, because the request did not give them. Replace `<port>` and \"the settings\" with the exact values for your app. In strict mode, full compliance needs a check against the official ASD-STE100 dictionary (free at asd-ste100.org)."
+  ],
+  "stderr_tail": ""
+}

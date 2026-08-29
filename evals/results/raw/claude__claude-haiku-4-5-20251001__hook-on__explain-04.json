@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-on",
+  "id": "explain-04",
+  "cat": "explain",
+  "model": "claude-haiku-4-5-20251001",
+  "exit": 0,
+  "seconds": 13.1,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.017102,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 5631,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 1166,
+    "output_tokens_details": {
+      "thinking_tokens": 845
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 5631,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 10,
+        "output_tokens": 1166,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 5631,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 5631
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 186,
+    "sentences": 13,
+    "mean_sentence_words": 14.3,
+    "longest_sentence_words": 20,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 1,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.54
+  },
+  "text": "**Why the query is slow:**\n\nThe database must scan all 50 million rows. The WHERE clause filters on `created_at`, but without an index, the engine cannot use a shortcut. The function `NOW()` is evaluated once per query, but the engine still reads every row to test the condition. The `SELECT *` returns all columns for every matching row, which consumes memory and network bandwidth.\n\n**What helps:**\n\nCreate a B-tree index on the `created_at` column:\n\n```sql\nCREATE INDEX idx_orders_created_at ON orders(created_at);\n```\n\nThe database can then seek directly to rows created in the last 24 hours. The index stores timestamps in sorted order, so the engine finds the start point and reads only the qualifying rows. This reduces I/O from full table scans to index range scans.\n\n**Optional optimization:**\n\nIf you select only a few columns, create a covering index that includes those columns:\n\n```sql\nCREATE INDEX idx_orders_created_at_covering \nON orders(created_at) INCLUDE (customer_id, order_total);\n```\n\nThe engine finds matching rows in the index and does not need to read the main table. This eliminates a second disk access.\n\n**Verify the index is used:**\n\nRun `EXPLAIN` or `EXPLAIN ANALYZE` before and after index creation. The plan should show an index scan instead of a full table scan.",
+  "texts": [
+    "**Why the query is slow:**\n\nThe database must scan all 50 million rows. The WHERE clause filters on `created_at`, but without an index, the engine cannot use a shortcut. The function `NOW()` is evaluated once per query, but the engine still reads every row to test the condition. The `SELECT *` returns all columns for every matching row, which consumes memory and network bandwidth.\n\n**What helps:**\n\nCreate a B-tree index on the `created_at` column:\n\n```sql\nCREATE INDEX idx_orders_created_at ON orders(created_at);\n```\n\nThe database can then seek directly to rows created in the last 24 hours. The index stores timestamps in sorted order, so the engine finds the start point and reads only the qualifying rows. This reduces I/O from full table scans to index range scans.\n\n**Optional optimization:**\n\nIf you select only a few columns, create a covering index that includes those columns:\n\n```sql\nCREATE INDEX idx_orders_created_at_covering \nON orders(created_at) INCLUDE (customer_id, order_total);\n```\n\nThe engine finds matching rows in the index and does not need to read the main table. This eliminates a second disk access.\n\n**Verify the index is used:**\n\nRun `EXPLAIN` or `EXPLAIN ANALYZE` before and after index creation. The plan should show an index scan instead of a full table scan."
+  ],
+  "stderr_tail": ""
+}

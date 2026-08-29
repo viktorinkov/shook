@@ -1,0 +1,75 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "readme-08",
+  "cat": "docs",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 30.1,
+  "skill_available": true,
+  "skill_used": true,
+  "assistant_text_messages": 2,
+  "strict_blocks": 0,
+  "num_turns": 3,
+  "cost_usd": 0.363499,
+  "usage": {
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 12010,
+    "cache_read_input_tokens": 12859,
+    "output_tokens": 2208,
+    "output_tokens_details": {
+      "thinking_tokens": 1282
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 12010,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2017,
+        "cache_read_input_tokens": 8436,
+        "cache_creation_input_tokens": 7997,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 7997
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 340,
+    "sentences": 32,
+    "mean_sentence_words": 10.3,
+    "longest_sentence_words": 26,
+    "violations": {
+      "sentence_over_limit": 1,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 1,
+    "violations_per_100w": 0.29
+  },
+  "text": "## Create an invoice\n\n`POST /v1/invoices` creates one invoice for a customer. The endpoint returns the id of the new invoice. You use this id in all later requests for the invoice.\n\n### Request\n\nSend a JSON body with these fields:\n\n| Field | Type | Required | Description |\n|---|---|---|---|\n| `customer_id` | string | Yes | The id of the customer. The customer must exist before you send the request. |\n| `amount_cents` | integer | Yes | The amount of the invoice in cents. For example, `4500` is 45.00 in the currency of the customer. |\n| `due_date` | string | No | The date on which the payment is due, in `YYYY-MM-DD` format. |\n\nExample request:\n\n```bash\ncurl -X POST https://api.example.com/v1/invoices \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"customer_id\": \"cus_123\", \"amount_cents\": 4500, \"due_date\": \"2026-09-30\"}'\n```\n\n### Response\n\nIf the request succeeds, the endpoint returns the status code `201 Created`. The body contains the id of the new invoice:\n\n```json\n{\n  \"id\": \"inv_789\"\n}\n```\n\n### Errors\n\nIf the request fails, the endpoint returns one of these status codes:\n\n| Status | Cause |\n|---|---|\n| `400 Bad Request` | The body is not valid JSON, or a required field is missing or has the wrong type. |\n| `401 Unauthorized` | The request has no valid API key. |\n| `404 Not Found` | No customer exists with the given `customer_id`. |\n\nThe error body contains a `message` field with the cause.\n\n### Steps\n\n1. Get the id of the customer.\n2. Send the request with `customer_id` and `amount_cents`.\n3. If the invoice has a due date, add `due_date` to the body.\n4. Make sure that the status code is `201`.\n5. Save the `id` from the response.\n\n---\n\nRecap: The section is above. I wrote it in strict Simplified Technical English. The request did not give some facts, so I made these assumptions:\n\n- The date format is `YYYY-MM-DD`.\n- The base URL is `https://api.example.com`.\n- The API uses a bearer token.\n- The error codes are `400`, `401`, and `404`, and the error body has a `message` field.\n\nIf the real API differs, change those values. Full compliance with ASD-STE100 needs a check against the official dictionary at asd-ste100.org.",
+  "texts": [
+    "I will load the Simple English skill, then write the guide section.",
+    "## Create an invoice\n\n`POST /v1/invoices` creates one invoice for a customer. The endpoint returns the id of the new invoice. You use this id in all later requests for the invoice.\n\n### Request\n\nSend a JSON body with these fields:\n\n| Field | Type | Required | Description |\n|---|---|---|---|\n| `customer_id` | string | Yes | The id of the customer. The customer must exist before you send the request. |\n| `amount_cents` | integer | Yes | The amount of the invoice in cents. For example, `4500` is 45.00 in the currency of the customer. |\n| `due_date` | string | No | The date on which the payment is due, in `YYYY-MM-DD` format. |\n\nExample request:\n\n```bash\ncurl -X POST https://api.example.com/v1/invoices \\\n  -H \"Authorization: Bearer $API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"customer_id\": \"cus_123\", \"amount_cents\": 4500, \"due_date\": \"2026-09-30\"}'\n```\n\n### Response\n\nIf the request succeeds, the endpoint returns the status code `201 Created`. The body contains the id of the new invoice:\n\n```json\n{\n  \"id\": \"inv_789\"\n}\n```\n\n### Errors\n\nIf the request fails, the endpoint returns one of these status codes:\n\n| Status | Cause |\n|---|---|\n| `400 Bad Request` | The body is not valid JSON, or a required field is missing or has the wrong type. |\n| `401 Unauthorized` | The request has no valid API key. |\n| `404 Not Found` | No customer exists with the given `customer_id`. |\n\nThe error body contains a `message` field with the cause.\n\n### Steps\n\n1. Get the id of the customer.\n2. Send the request with `customer_id` and `amount_cents`.\n3. If the invoice has a due date, add `due_date` to the body.\n4. Make sure that the status code is `201`.\n5. Save the `id` from the response.\n\n---\n\nRecap: The section is above. I wrote it in strict Simplified Technical English. The request did not give some facts, so I made these assumptions:\n\n- The date format is `YYYY-MM-DD`.\n- The base URL is `https://api.example.com`.\n- The API uses a bearer token.\n- The error codes are `400`, `401`, and `404`, and the error body has a `message` field.\n\nIf the real API differs, change those values. Full compliance with ASD-STE100 needs a check against the official dictionary at asd-ste100.org."
+  ],
+  "stderr_tail": ""
+}

@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "hook-strict",
+  "id": "error-02",
+  "cat": "error",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 7.1,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.098713,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 3991,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 289,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 3991,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 289,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 3991,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 3991
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 116,
+    "sentences": 11,
+    "mean_sentence_words": 10.2,
+    "longest_sentence_words": 18,
+    "violations": {
+      "sentence_over_limit": 0,
+      "contraction": 0,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 0,
+      "latin_abbrev": 0,
+      "slop_word": 0,
+      "trailing_condition": 0,
+      "synonym_rotation": 0
+    },
+    "violations_total": 0,
+    "violations_per_100w": 0.0
+  },
+  "text": "I will write the error message that the CLI prints for a syntax error in the config file.\n\n```\nerror: cannot parse config file\n\n  file: ~/.tool/config.toml\n  line: 12\n\n  12 | timeout = 30s\n     |           ^^^\n  expected a number, a string, or a table. found `30s`.\n\nFix the syntax on line 12. Then run the command again.\nFor the config format, see: https://example.com/docs/config\n```\n\nNotes on the message:\n\n- The first line gives the error in a short form. The reader sees the problem at once.\n- The next lines give the file path and the line number. These lines let the reader find the error fast.\n- The code excerpt shows the bad line with a caret under the bad token. The message then tells the reader what the parser expected.\n- The last two lines tell the reader what to do next.\n\nThe excerpt and the \"expected\" text are examples. Replace them with the real output from the TOML parser.",
+  "texts": [
+    "I will write the error message that the CLI prints for a syntax error in the config file.\n\n```\nerror: cannot parse config file\n\n  file: ~/.tool/config.toml\n  line: 12\n\n  12 | timeout = 30s\n     |           ^^^\n  expected a number, a string, or a table. found `30s`.\n\nFix the syntax on line 12. Then run the command again.\nFor the config format, see: https://example.com/docs/config\n```\n\nNotes on the message:\n\n- The first line gives the error in a short form. The reader sees the problem at once.\n- The next lines give the file path and the line number. These lines let the reader find the error fast.\n- The code excerpt shows the bad line with a caret under the bad token. The message then tells the reader what the parser expected.\n- The last two lines tell the reader what to do next.\n\nThe excerpt and the \"expected\" text are examples. Replace them with the real output from the TOML parser."
+  ],
+  "stderr_tail": ""
+}

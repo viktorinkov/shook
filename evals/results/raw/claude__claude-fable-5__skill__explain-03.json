@@ -1,0 +1,74 @@
+{
+  "harness": "claude",
+  "arm": "skill",
+  "id": "explain-03",
+  "cat": "explain",
+  "model": "claude-fable-5",
+  "exit": 0,
+  "seconds": 15.3,
+  "skill_available": true,
+  "skill_used": false,
+  "assistant_text_messages": 1,
+  "strict_blocks": 0,
+  "num_turns": 1,
+  "cost_usd": 0.11009400000000001,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 2763,
+    "cache_read_input_tokens": 4423,
+    "output_tokens": 988,
+    "output_tokens_details": {
+      "thinking_tokens": 26
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 2763,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 988,
+        "cache_read_input_tokens": 4423,
+        "cache_creation_input_tokens": 2763,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2763
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "lint": {
+    "type": "descriptive",
+    "words": 408,
+    "sentences": 22,
+    "mean_sentence_words": 18.4,
+    "longest_sentence_words": 100,
+    "violations": {
+      "sentence_over_limit": 2,
+      "contraction": 7,
+      "banned_modal": 0,
+      "perfect_tense": 0,
+      "ing_clause": 0,
+      "semicolon": 2,
+      "latin_abbrev": 1,
+      "slop_word": 0,
+      "trailing_condition": 3,
+      "synonym_rotation": 0
+    },
+    "violations_total": 15,
+    "violations_per_100w": 3.68
+  },
+  "text": "Here's how I'd explain it to a teammate.\n\n## The short version\n\nBoth bring changes from one branch into another, but they build different histories:\n\n- **`git merge`** creates a new \"merge commit\" that ties two branches together. History is preserved exactly as it happened, including the fork and the join.\n- **`git rebase`** replays your branch's commits on top of another branch, as if you had started your work from there. History becomes a straight line, but the original commits are rewritten (new hashes).\n\n## Picture it\n\nSay `main` moved on while you worked on `feature`:\n\n```\nA---B---C  main\n     \\\n      D---E  feature\n```\n\n**Merge** (`git checkout feature && git merge main`):\n\n```\nA---B---C------  main\n     \\        \\\n      D---E---M  feature   (M = merge commit)\n```\n\n**Rebase** (`git checkout feature && git rebase main`):\n\n```\nA---B---C  main\n         \\\n          D'---E'  feature   (D' and E' are new commits with the same changes)\n```\n\n## Which one for a feature branch?\n\nThe usual, well-tested workflow is:\n\n1. **While the feature is in progress, rebase onto `main`** to keep up to date. `git rebase main` on your feature branch. This keeps your branch clean and makes conflicts easier to resolve one commit at a time. It's fine because it's *your* branch and nobody else is building on it.\n2. **When the feature is done, merge it into `main`** (typically via a PR, often with `--no-ff` or \"squash and merge\"). This keeps `main`'s history accurate about when the feature landed, and never rewrites `main`.\n\n## The one rule that matters\n\n**Never rebase commits that others have already pulled.** Rebasing rewrites commits, so anyone with the old ones ends up with duplicated/diverged history. Rebasing your own unshared feature branch is safe; rebasing `main` or a shared branch is not. If you rebase a branch you've already pushed (only when you're sure nobody else has built on it), you'll need `git push --force-with-lease`.\n\n## Quick decision guide\n\n| Situation | Use |\n|---|---|\n| Catching your feature branch up to `main` | `rebase` |\n| Cleaning up your own commits before review (`rebase -i`) | `rebase` |\n| Landing a finished feature into `main` | `merge` (via PR) |\n| The branch is shared with other people | `merge` |\n| You want history to show exactly what happened, warts and all | `merge` |\n| You want a linear, readable `git log` | `rebase` |\n\n**Recap:** merge preserves history and adds a merge commit; rebase rewrites your commits onto a new base for a linear history. For a feature branch, rebase onto `main` while you work, then merge into `main` when done, and never rebase anything other people have already pulled. If your team's repo has a policy (e.g., \"squash and merge\" on PRs), follow that, since it's the real answer for how the branch ends up in `main`.",
+  "texts": [
+    "Here's how I'd explain it to a teammate.\n\n## The short version\n\nBoth bring changes from one branch into another, but they build different histories:\n\n- **`git merge`** creates a new \"merge commit\" that ties two branches together. History is preserved exactly as it happened, including the fork and the join.\n- **`git rebase`** replays your branch's commits on top of another branch, as if you had started your work from there. History becomes a straight line, but the original commits are rewritten (new hashes).\n\n## Picture it\n\nSay `main` moved on while you worked on `feature`:\n\n```\nA---B---C  main\n     \\\n      D---E  feature\n```\n\n**Merge** (`git checkout feature && git merge main`):\n\n```\nA---B---C------  main\n     \\        \\\n      D---E---M  feature   (M = merge commit)\n```\n\n**Rebase** (`git checkout feature && git rebase main`):\n\n```\nA---B---C  main\n         \\\n          D'---E'  feature   (D' and E' are new commits with the same changes)\n```\n\n## Which one for a feature branch?\n\nThe usual, well-tested workflow is:\n\n1. **While the feature is in progress, rebase onto `main`** to keep up to date. `git rebase main` on your feature branch. This keeps your branch clean and makes conflicts easier to resolve one commit at a time. It's fine because it's *your* branch and nobody else is building on it.\n2. **When the feature is done, merge it into `main`** (typically via a PR, often with `--no-ff` or \"squash and merge\"). This keeps `main`'s history accurate about when the feature landed, and never rewrites `main`.\n\n## The one rule that matters\n\n**Never rebase commits that others have already pulled.** Rebasing rewrites commits, so anyone with the old ones ends up with duplicated/diverged history. Rebasing your own unshared feature branch is safe; rebasing `main` or a shared branch is not. If you rebase a branch you've already pushed (only when you're sure nobody else has built on it), you'll need `git push --force-with-lease`.\n\n## Quick decision guide\n\n| Situation | Use |\n|---|---|\n| Catching your feature branch up to `main` | `rebase` |\n| Cleaning up your own commits before review (`rebase -i`) | `rebase` |\n| Landing a finished feature into `main` | `merge` (via PR) |\n| The branch is shared with other people | `merge` |\n| You want history to show exactly what happened, warts and all | `merge` |\n| You want a linear, readable `git log` | `rebase` |\n\n**Recap:** merge preserves history and adds a merge commit; rebase rewrites your commits onto a new base for a linear history. For a feature branch, rebase onto `main` while you work, then merge into `main` when done, and never rebase anything other people have already pulled. If your team's repo has a policy (e.g., \"squash and merge\" on PRs), follow that, since it's the real answer for how the branch ends up in `main`."
+  ],
+  "stderr_tail": ""
+}
