@@ -24,8 +24,6 @@ claude plugin marketplace add AminBlg/SimpleEnglish && claude plugin install sim
 
 Then start a new session and type `/ste strict`.
 
-Open the block for your harness.
-
 <details>
 <summary><strong>Claude Code</strong></summary>
 
