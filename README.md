@@ -22,7 +22,10 @@ Quick start (Claude Code):
 claude plugin marketplace add AminBlg/SimpleEnglish && claude plugin install simple-english@simple-english && claude plugin marketplace add viktorinkov/shook && claude plugin install simple-english-hook@simple-english-hook
 ```
 
-Then start a new session, type `/ste strict`, and ask Claude to install the STE status line badge. Or run the badge script yourself:
+Then start a new session and type `/ste strict`. For the status line badge:
+
+- Ask Claude: Install the STE status line badge.
+- Or install manually: Run the script from the plugin cache.
 
 ```bash
 bash "$(ls -d ~/.claude/plugins/cache/simple-english-hook/simple-english-hook/*/ | tail -1)statusline-install.sh"
@@ -59,7 +62,10 @@ Start a new session and type the mode.
 
 Toggle: `/ste on`, `/ste strict`, `/ste off`, or `/ste status`.
 
-Status line badge (optional): ask Claude to "install the STE status line badge". Or run the script from the plugin cache.
+Status line badge (optional):
+
+- Ask Claude: Install the STE status line badge.
+- Or install manually: Run the script from the plugin cache.
 
 ```bash
 bash "$(ls -d ~/.claude/plugins/cache/simple-english-hook/simple-english-hook/*/ | tail -1)statusline-install.sh"
