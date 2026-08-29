@@ -14,14 +14,209 @@
 
 This plugin is a companion to **[AminBlg/SimpleEnglish](https://github.com/AminBlg/SimpleEnglish)**, the simple-english plugin. That plugin brings ASD-STE100 Simplified Technical English to Claude Code and other agents. It is a prerequisite. The full rule set and the linter `ste_lint.py` come from it at run time. This plugin adds the hooks, the `/ste` command, the status line badge, and the benchmark.
 
-## 📦 Claude Code Install
+## 📦 Installation
 
-First install the [simple-english plugin](https://github.com/AminBlg/SimpleEnglish#-install), the prerequisite. Then install this plugin:
+Quick start (Claude Code):
+
+```bash
+claude plugin marketplace add AminBlg/SimpleEnglish && claude plugin install simple-english@simple-english && claude plugin marketplace add viktorinkov/shook && claude plugin install simple-english-hook@simple-english-hook
+```
+
+Then start a new session and type `/ste strict`.
+
+The hooks need bash and `jq`. Strict mode also needs `python3`. Open the block for your harness. For a comparison of the harnesses, see the table in [docs/other-harnesses.md](docs/other-harnesses.md).
+
+<details open>
+<summary><strong>Claude Code</strong></summary>
+
+**1. Prerequisite**
+
+Install the [simple-english plugin](https://github.com/AminBlg/SimpleEnglish#-install). The rules and the linter come from it.
+
+```bash
+claude plugin marketplace add AminBlg/SimpleEnglish
+claude plugin install simple-english@simple-english
+```
+
+**2. Install SHOOK**
 
 ```bash
 claude plugin marketplace add viktorinkov/shook
 claude plugin install simple-english-hook@simple-english-hook
 ```
+
+**3. Enable**
+
+Start a new session and type the mode.
+
+```
+/ste strict
+```
+
+Toggle: `/ste on`, `/ste strict`, `/ste off`, or `/ste status`.
+
+Status line badge (optional): ask Claude to "install the STE status line badge". Or run the script from the plugin cache.
+
+```bash
+bash "$(ls -d ~/.claude/plugins/cache/simple-english-hook/simple-english-hook/*/ | tail -1)statusline-install.sh"
+```
+
+The script adds one line to your status line script. If you have no status line script, it creates one. The badge shows `[STE]` in `on` mode and `[STE:STRICT 0.3]` in `strict` mode.
+
+- Works: `on`, `strict`, and the badge. The rules load at session start, each prompt gets the reminder, and the Stop hook sends a failed reply back once.
+
+</details>
+
+<details>
+<summary><strong>Codex CLI</strong></summary>
+
+**1. Prerequisite**
+
+Codex does not install the [simple-english plugin](https://github.com/AminBlg/SimpleEnglish#-install). Clone it and point `STE_PLUGIN_DIR` at the clone. Put the `export` line in your shell profile.
+
+```bash
+git clone https://github.com/AminBlg/SimpleEnglish ~/SimpleEnglish
+export STE_PLUGIN_DIR=~/SimpleEnglish
+```
+
+**2. Install SHOOK**
+
+```bash
+codex plugin marketplace add viktorinkov/shook
+codex plugin add simple-english-hook@simple-english-hook
+```
+
+**3. Enable**
+
+Start Codex in a project. At the first start, Codex asks you to review the hooks. Choose `Review hooks` and trust the `simple-english-hook` entry in each event. The `/hooks` panel shows the same list at any time. Then type the mode. The `$` opens the Codex skill picker.
+
+```
+$ste strict
+```
+
+Toggle: `$ste on`, `$ste strict`, `$ste off`, or `$ste status`.
+
+- Works: `on` and `strict`. The rules load at session start, each prompt gets the reminder, and the Stop hook sends a failed reply back once.
+- Does not work: the status line badge. Codex has no status line. The mode shows as a system message at session start and after each toggle.
+
+Details: [Codex CLI](docs/other-harnesses.md#codex-cli) in the harness docs.
+
+</details>
+
+<details>
+<summary><strong>Antigravity CLI</strong></summary>
+
+**1. Prerequisite**
+
+Antigravity does not install the [simple-english plugin](https://github.com/AminBlg/SimpleEnglish#-install). Clone it and point `STE_PLUGIN_DIR` at the clone. Put the `export` line in your shell profile.
+
+```bash
+git clone https://github.com/AminBlg/SimpleEnglish ~/SimpleEnglish
+export STE_PLUGIN_DIR=~/SimpleEnglish
+```
+
+**2. Install SHOOK**
+
+The command also takes the path of a local clone.
+
+```bash
+agy plugin install https://github.com/viktorinkov/shook
+```
+
+**3. Enable**
+
+Start a new `agy` session and type the mode.
+
+```
+/ste strict
+```
+
+Toggle: `/ste on`, `/ste strict`, `/ste off`, or `/ste status`.
+
+- Works: `on` and `strict`. The rules load at session start, each model call gets the reminder, and the Stop hook lints the reply from the transcript.
+- Does not work: the badge. In print mode (`agy -p`) outside a project, the hooks do not read the per-repo file. Use the global flag or `STE_MODE`.
+
+Details: [Antigravity CLI](docs/other-harnesses.md#antigravity-cli) in the harness docs.
+
+</details>
+
+<details>
+<summary><strong>Copilot CLI</strong></summary>
+
+**1. Prerequisite**
+
+Copilot does not install the [simple-english plugin](https://github.com/AminBlg/SimpleEnglish#-install). Clone it and point `STE_PLUGIN_DIR` at the clone. Put the `export` line in your shell profile.
+
+```bash
+git clone https://github.com/AminBlg/SimpleEnglish ~/SimpleEnglish
+export STE_PLUGIN_DIR=~/SimpleEnglish
+```
+
+**2. Install SHOOK**
+
+```bash
+copilot plugin marketplace add viktorinkov/shook
+copilot plugin install simple-english-hook@simple-english-hook
+```
+
+**3. Enable**
+
+Start a new Copilot session and type the mode. The new mode applies at the next session start.
+
+```
+/simple-english-hook:ste on
+```
+
+Toggle: `/simple-english-hook:ste on` or `/simple-english-hook:ste off`. To set the mode for one session, start Copilot with `STE_MODE=on copilot`.
+
+- Works: `on`. The rules load at session start.
+- Does not work: the reminder on each prompt, `strict`, and the badge. Copilot sends no reply text to its stop hook, so the hooks treat `strict` as `on`.
+
+Details: [GitHub Copilot CLI](docs/other-harnesses.md#github-copilot-cli) in the harness docs.
+
+</details>
+
+<details>
+<summary><strong>Cursor</strong></summary>
+
+Cursor loads no plugins, so an install script writes the files that Cursor reads: an always-on rule file and four hooks. This support comes from the Cursor docs and from simulated tests. No live Cursor session verified it.
+
+**1. Prerequisite**
+
+Cursor does not install the [simple-english plugin](https://github.com/AminBlg/SimpleEnglish#-install). Clone it and point `STE_PLUGIN_DIR` at the clone. Put the `export` line in your shell profile.
+
+```bash
+git clone https://github.com/AminBlg/SimpleEnglish ~/SimpleEnglish
+export STE_PLUGIN_DIR=~/SimpleEnglish
+```
+
+**2. Install SHOOK**
+
+Clone this repo. The hooks run from the clone, so keep it.
+
+```bash
+git clone https://github.com/viktorinkov/shook ~/shook
+```
+
+**3. Enable**
+
+Run the install script in your project with a mode. It writes the rule file and the hooks into the project.
+
+```bash
+cd <your-project>
+bash ~/shook/cursor-install.sh strict
+```
+
+Toggle: `/ste on`, `/ste strict`, `/ste off`, or `/ste status` in the Agent chat. Or run `bash ~/shook/cursor-install.sh <mode>` from the shell.
+
+- Works: `on` and `strict`. The rule file applies the rules to every request, and the `stop` hook sends a failed reply back once.
+- Does not work: the badge, a reminder injected on each prompt, an `ste` skill, and cloud agents. The always-on rule file replaces the reminder.
+
+Details: [Cursor](docs/other-harnesses.md#cursor) in the harness docs.
+
+</details>
+
+There is no `npx` install. The skills CLI installs skills only, and this plugin is hooks.
 
 ## Use
 
@@ -33,8 +228,10 @@ claude plugin install simple-english-hook@simple-english-hook
 | `/ste status` | Shows the current mode and its source. |
 | `/ste project <mode>` | Sets `on`, `strict`, or `off` for the current repo only. `/ste project clear` removes it. |
 | `/ste config` | Shows every lint gate setting, its value, and its source. |
-| `/ste set <key> <value>` | Writes a lint gate setting. See [Tune the lint gate](#tune-the-lint-gate). |
+| `/ste set <key> <value>` | Writes a lint gate setting. See [Tune the lint gate](#-tune-the-lint-gate). |
 | `/ste uninstall` | Removes the badge and the state files. Then run the plugin uninstall command. |
+
+The commands above are the Claude Code spelling. Each block in [Installation](#-installation) gives the spelling for its harness.
 
 ## 🚥 The status line
 
@@ -46,8 +243,7 @@ The hooks enforce the mode, so the badge is how you see that the mode is on and 
 | `[STE:STRICT 0.3]` | Mode `strict`, with the lint score of the last reply. |
 | nothing | Mode `off`. |
 
-- Ask Claude: Install the STE status line badge.
-- Or install manually: Run `statusline-install.sh` from this plugin's folder.
+To install the badge, see **3. Enable** in the Claude Code block of [Installation](#-installation).
 
 ## Enable it
 
@@ -115,7 +311,7 @@ The reminder on every prompt is the part that an output style cannot do. A syste
 
 ## 🔧 Tune the lint gate
 
-The gate blocks a reply when all three conditions are true:
+When all three conditions are true, the gate blocks a reply:
 
 - The reply has at least `min-words` words.
 - The reply has at least `min-total` violations.
@@ -161,73 +357,6 @@ The gate reads each key from the first place that has it:
 
 STE is flat by design. Use it for docs, reviews, runbooks, error messages, and explanations. Turn it off for a blog post.
 
-## Codex CLI
-
-```bash
-git clone https://github.com/AminBlg/SimpleEnglish ~/SimpleEnglish
-export STE_PLUGIN_DIR=~/SimpleEnglish
-codex plugin marketplace add viktorinkov/shook
-codex plugin add simple-english-hook@simple-english-hook
-```
-
-Put the `export` line in your shell profile. Codex does not install the simple-english plugin, so the hooks read the rules and the linter from the clone.
-
-Toggle: `$ste on`, `$ste strict`, `$ste off`, or `$ste status`. The `$` opens the Codex skill picker.
-
-- Works: `on` and `strict`. The rules load at session start, each prompt gets the reminder, and the Stop hook sends a failed reply back once.
-- Does not work: the status line badge. Codex has no status line. The mode shows as a system message at session start and after each toggle.
-
-At the first start, Codex asks you to review the hooks. See [Codex CLI](docs/other-harnesses.md#codex-cli) in the harness docs.
-
-## Antigravity CLI
-
-```bash
-git clone https://github.com/AminBlg/SimpleEnglish ~/SimpleEnglish
-export STE_PLUGIN_DIR=~/SimpleEnglish
-agy plugin install https://github.com/viktorinkov/shook
-```
-
-Put the `export` line in your shell profile.
-
-Toggle: `/ste on`, `/ste strict`, `/ste off`, or `/ste status`.
-
-- Works: `on` and `strict`. The rules load at session start, each model call gets the reminder, and the Stop hook lints the reply from the transcript.
-- Does not work: the badge. In print mode (`agy -p`) outside a project, the hooks do not read the per-repo file. Use the global flag or `STE_MODE`.
-
-See [Antigravity CLI](docs/other-harnesses.md#antigravity-cli) in the harness docs.
-
-## Copilot CLI
-
-```bash
-git clone https://github.com/AminBlg/SimpleEnglish ~/SimpleEnglish
-export STE_PLUGIN_DIR=~/SimpleEnglish
-copilot plugin marketplace add viktorinkov/shook
-copilot plugin install simple-english-hook@simple-english-hook
-```
-
-Put the `export` line in your shell profile.
-
-Toggle: `/simple-english-hook:ste on` or `/simple-english-hook:ste off`. The new mode applies at the next session start.
-
-- Works: `on`. The rules load at session start.
-- Does not work: the reminder on each prompt, `strict`, and the badge. Copilot sends no reply text to its stop hook, so the hooks treat `strict` as `on`.
-
-See [GitHub Copilot CLI](docs/other-harnesses.md#github-copilot-cli) in the harness docs.
-
-## Cursor
-
-Cursor loads no plugins, so an install script writes the files that Cursor reads: an always-on rule file and four hooks.
-
-```bash
-git clone https://github.com/AminBlg/SimpleEnglish ~/SimpleEnglish
-export STE_PLUGIN_DIR=~/SimpleEnglish
-git clone https://github.com/viktorinkov/shook ~/shook
-cd <your-project>
-bash ~/shook/cursor-install.sh strict
-```
-
-Toggle with `/ste on`, `/ste strict`, `/ste off`, or `/ste status` in the Agent chat, or with `cursor-install.sh <mode>` from the shell. Modes `on` and `strict` both work: the rule file applies the rules to every request, and the `stop` hook sends a failed reply back once. Details: [docs/other-harnesses.md](docs/other-harnesses.md#cursor).
-
 ## ❓ FAQ
 
 **Why not just prompt it?** A prompt line is one instruction among many. In the benchmark, the simple-english skill fired on its own in 27 of 50 replies on Fable 5. This plugin does not depend on a decision. It runs every turn.
@@ -248,7 +377,7 @@ claude plugin update simple-english-hook@simple-english-hook
 1. Type `/ste uninstall`. It removes the status line badge, the state files, and the mode and config files in the current repo.
 2. Run `claude plugin uninstall simple-english-hook@simple-english-hook`.
 
-If other repos have a `.claude/ste-mode` or `.claude/ste-config.json` file, delete those by hand. To remove the [simple-english plugin](https://github.com/AminBlg/SimpleEnglish) too, follow the steps in its README.
+If other repos have a `.claude/ste-mode` or `.claude/ste-config.json` file, delete those by hand. To remove the [simple-english plugin](https://github.com/AminBlg/SimpleEnglish) too, follow the steps in its README. For Codex, Antigravity, Copilot, and Cursor, see the uninstall steps in [docs/other-harnesses.md](docs/other-harnesses.md).
 
 ---
 
