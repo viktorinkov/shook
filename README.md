@@ -67,7 +67,7 @@ Start a new session. Type `/ste on` for the reminder on every prompt, or `/ste s
 
 Requirements: Claude Code, `jq`, and `python3` (strict mode only). No Node. No telemetry. Six shell files.
 
-The same hooks run in Codex CLI and Gemini CLI, with strict mode. In Copilot CLI, the rules load at session start only. See [`docs/other-harnesses.md`](docs/other-harnesses.md).
+The same hooks run in Codex CLI and Antigravity CLI, with strict mode. In Copilot CLI, the rules load at session start only. See [`docs/other-harnesses.md`](docs/other-harnesses.md).
 
 ## Numbers
 

@@ -1,0 +1,13 @@
+{
+  "simple-english-hook": {
+    "SessionStart": [
+      { "type": "command", "command": "STE_HARNESS=antigravity bash hooks/session-start.sh", "timeout": 15 }
+    ],
+    "PreInvocation": [
+      { "type": "command", "command": "STE_HARNESS=antigravity bash hooks/user-prompt-submit.sh", "timeout": 15 }
+    ],
+    "Stop": [
+      { "type": "command", "command": "STE_HARNESS=antigravity bash hooks/stop-gate.sh", "timeout": 30 }
+    ]
+  }
+}

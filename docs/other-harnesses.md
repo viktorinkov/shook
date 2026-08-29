@@ -1,13 +1,13 @@
 # Other harnesses
 
-The hook scripts in `hooks/` are plain bash. They run under four harnesses: Claude Code, OpenAI Codex CLI, GitHub Copilot CLI, and Gemini CLI. `hooks/common.sh` detects the harness and prints the output format that the harness expects. Each harness has its own manifest in this repo.
+The hook scripts in `hooks/` are plain bash. They run under four harnesses: Claude Code, OpenAI Codex CLI, GitHub Copilot CLI, and Antigravity CLI. `hooks/common.sh` detects the harness and prints the output format that the harness expects. Each harness has its own manifest in this repo.
 
 | Harness | Rules at session start | Reminder on each prompt | Strict (lint gate) | Toggle command | Skill | Badge |
 |---|---|---|---|---|---|---|
 | Claude Code | yes | yes | yes | `/ste on` | `/ste` | status line |
 | Codex CLI | yes | yes | yes | `$ste on` | `$ste` | system message |
 | Copilot CLI | yes | no | no | `/simple-english-hook:ste on` (next session) | `/simple-english-hook:ste` | no |
-| Gemini CLI | yes | yes | yes | `/ste on` | `/ste` | system message |
+| Antigravity CLI | yes | yes (each model call) | yes | `/ste on` | `/ste` | no |
 
 Requirements: bash, `jq`, and `python3` (strict mode only).
 
@@ -28,10 +28,10 @@ Put the `export` line in your shell profile. The hooks read `STE_PLUGIN_DIR` fir
 |---|---|---|
 | Codex CLI | `PLUGIN_DATA` is set | `$PLUGIN_DATA/.simple-english-active` |
 | Copilot CLI | `COPILOT_PLUGIN_DATA` is set | `$COPILOT_PLUGIN_DATA/.simple-english-active` |
-| Gemini CLI | `GEMINI_SESSION_ID` is set | `~/.gemini/.simple-english-active` |
+| Antigravity CLI | `STE_HARNESS=antigravity` from the root `hooks.json`, or `ANTIGRAVITY_CONVERSATION_ID` is set | `~/.gemini/config/.simple-english-active` |
 | Claude Code | none of the above | `~/.claude/.simple-english-active` |
 
-Each harness keeps its own global flag. A toggle in Codex does not change the mode in Claude Code. The per-repo file `.claude/ste-mode` and the `STE_MODE` variable apply to all harnesses. The hooks read the project directory from the `cwd` field of the hook input. `STE_HARNESS=<name>` forces a harness. The tests use it.
+Each harness keeps its own global flag. A toggle in Codex does not change the mode in Claude Code. The per-repo file `.claude/ste-mode` and the `STE_MODE` variable apply to all harnesses. The hooks read the project directory from the `cwd` field of the hook input. Antigravity sends `workspacePaths` instead. `STE_HARNESS=<name>` forces a harness. The tests use it.
 
 ## Codex CLI
 
@@ -106,43 +106,54 @@ copilot plugin uninstall simple-english-hook
 
 Then delete `.simple-english-active` from the plugin data directory under `~/.copilot`.
 
-## Gemini CLI
+## Antigravity CLI
 
-Gemini CLI loads `hooks/hooks.json` from the root of an extension. That file holds the Claude Code events, and Gemini uses other event names (`BeforeAgent`, `AfterAgent`). So the Gemini extension lives in the `gemini/` folder. Its `hooks/hooks.json` maps the Gemini events to the shared scripts through `${extensionPath}/../hooks/`. The extension must stay inside the clone, so link it. Do not copy it.
+Antigravity CLI (`agy`) replaced Gemini CLI. It reads a plugin from a directory with `plugin.json` and `hooks.json` at the root. The root `hooks.json` in this repo is that file. It uses named hooks: the top-level key is the hook name, and the event lists sit under it. Claude Code and Codex read `hooks/hooks.json`, so the two files do not conflict.
+
+The events differ from Claude Code. `SessionStart` runs once per conversation. `PreInvocation` runs before every model call, also after tool calls. `Stop` runs when the turn ends. The Gemini CLI names (`BeforeAgent`, `AfterAgent`) do nothing in `agy`. It ignores them without an error.
 
 ### Install
 
 ```bash
 git clone https://github.com/AminBlg/SimpleEnglish ~/SimpleEnglish
-git clone https://github.com/viktorinkov/simple-english-hook ~/simple-english-hook
-gemini extensions link ~/simple-english-hook/gemini
+export STE_PLUGIN_DIR=~/SimpleEnglish
+agy plugin install https://github.com/viktorinkov/simple-english-hook
 ```
 
-Gemini asks you to accept the hooks. Set `STE_PLUGIN_DIR` as shown above. Start a new Gemini session.
+`agy plugin install` also takes a local clone path. It copies the whole directory to `~/.gemini/config/plugins/simple-english-hook/`. Run `agy plugin validate .` in the clone to check the manifest. Then start a new `agy` session.
 
 ### Toggle
 
-Type `/ste on`, `/ste strict`, `/ste off`, or `/ste status`. `gemini/commands/ste.toml` defines the command. It sends `/ste <args>` as the prompt, and the `BeforeAgent` hook reads it. `/ste project on` writes `.claude/ste-mode` in the current repo.
+Type `/ste on`, `/ste strict`, `/ste off`, or `/ste status`. Antigravity sends no prompt text to its hooks. The `PreInvocation` hook reads the newest user message from the transcript file. The text arrives verbatim, so `/ste project strict` also works. The confirmation line reaches the model as an ephemeral message, and the model repeats it.
 
 ### What works
 
-- `on`: the rules load at session start. Each prompt gets a reminder.
-- `strict`: the `AfterAgent` hook lints `prompt_response`. On failure it returns `decision: block`, and Gemini runs a retry turn with the reason.
-- Skill: `gemini/skills` links to the shared `skills/` folder.
-- Badge: Gemini shows `STE mode: on` as a system message at session start and after each toggle.
+- `on`: the rules load at session start as a system message. That message stays in the conversation. Each model call gets the reminder as an ephemeral message.
+- `strict`: the `Stop` hook lints the last model reply from the transcript. On failure it returns `{"decision": "continue", "reason": ...}`. Antigravity shows the reason to the model as a system message and runs one more call. The hook finds that message in the transcript and does not block twice.
+- Skill: `agy` lists `ste` under `/skills`. In print mode, `agy -p "/ste strict"` reaches the hook as plain text.
+- Global flag: `~/.gemini/config/.simple-english-active`. The score file sits next to it.
 
 ### What does not work
 
-- `gemini extensions install`. The copied extension loses the link to `hooks/`. Use `link`.
-- The status line badge.
+- The badge. Antigravity has no status line and no UI slot for hook messages.
+- The per-repo file when `workspacePaths` is empty. In print mode (`agy -p`) outside a project, `agy` sends no workspace path. Use the global flag or `STE_MODE`.
+- `${extensionPath}` in hook commands. `agy` 1.1.22 expands it to an empty string. The commands use relative paths, because `agy` runs hooks from the plugin directory.
 
 ### Uninstall
 
 ```bash
-gemini extensions uninstall simple-english-hook
+agy plugin uninstall simple-english-hook
 ```
 
-Then delete `~/.gemini/.simple-english-active`.
+Then delete `~/.gemini/config/.simple-english-active` and `~/.gemini/config/.simple-english-score`.
+
+### Hook contract (agy 1.1.22)
+
+Observed in live runs. Stdin is one JSON object with camelCase keys. Common fields: `conversationId`, `workspacePaths`, `transcriptPath`, `artifactDirectoryPath`, `modelName`. `PreInvocation` adds `invocationNum` and `initialNumSteps`. `Stop` adds `executionNum`, `terminationReason`, `error`, and `fullyIdle`. No field holds the prompt or the reply. The environment holds `ANTIGRAVITY_CONVERSATION_ID`.
+
+The transcript is JSON lines with `step_index`, `source`, `type`, and `content`. The user message is `type: USER_INPUT`, with the text inside `<USER_REQUEST>` tags. The reply is `source: MODEL`, `type: PLANNER_RESPONSE`. A Stop continuation appears as `type: SYSTEM_MESSAGE` with the reason.
+
+Output: `SessionStart` and `PreInvocation` take `{"injectSteps": [...]}`. A step is `{"ephemeralMessage": "..."}` or `{"systemMessage": {"systemMessage": "..."}}`. `Stop` takes `{"decision": "continue", "reason": "..."}`. Any other decision lets the agent stop.
 
 ## Notes on the sources
 
@@ -152,10 +163,11 @@ Where the docs and the ponytail plugin differ, the hooks follow the docs:
 
 - Codex docs say `systemMessage` surfaces as a warning in the UI. Ponytail sends it on every prompt. These hooks send it at session start and after a toggle only.
 - Copilot docs say `userPromptSubmitted` output is dropped. Ponytail prints `{}`. These hooks print nothing.
-- Ponytail ships no hooks for Gemini. These hooks use the Gemini events from the hooks reference. They live in a subfolder, so Claude Code and Gemini do not read the same `hooks/hooks.json`.
+- Ponytail ships no hooks for Antigravity. These hooks use the events from the hooks guide inside the `agy` binary, plus `SessionStart`. That event is not in the guide, but a live run confirmed it.
 
-Three points are not verified in a live session:
+Four points are not verified in a live session:
 
 - Codex: the exact prompt text that the hook sees after a `$ste` skill mention.
 - Copilot: the `COPILOT_PLUGIN_DATA` variable at hook run time. The plugin reference documents it.
-- Gemini: the `/ste` command expands before the `BeforeAgent` hook runs. The custom command docs say so.
+- Antigravity: interactive sessions and `--continue`. All four live runs used print mode (`agy -p`).
+- Antigravity: `agy plugin install` from a GitHub URL. The local clone path is verified.

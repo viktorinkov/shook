@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Stop hook (AfterAgent on Gemini CLI): in "strict" mode, lint the last reply. Block the stop when it fails.
+# Stop hook (Stop on Antigravity CLI too): in "strict" mode, lint the last reply. Block the stop when it fails.
 # The model then gets the reason and rewrites the reply. Runs at most one retry per turn.
 # Copilot CLI's agentStop event carries no reply text, so this hook is a no-op there.
 set -u
@@ -11,12 +11,18 @@ input="$(cat)"
 ste_project_from_input "$input"
 [ "$(ste_mode)" = "strict" ] || exit 0
 
-# The harness sets stop_hook_active when a Stop hook already forced a continuation.
-# Exit here, or the rewrite could loop forever.
-[ "$(printf '%s' "$input" | jq -r '.stop_hook_active // false')" = "true" ] && exit 0
+STE_BLOCK_MARK="STE LINT FAILED"
 
-# Claude Code and Codex send last_assistant_message. Gemini CLI sends prompt_response.
-message="$(printf '%s' "$input" | jq -r '.last_assistant_message // .prompt_response // ""')"
+# The harness sets stop_hook_active when a Stop hook already forced a continuation.
+# Exit here, or the rewrite could loop forever. Antigravity has no such field: its
+# transcript shows the earlier block as a system message in the same turn.
+[ "$(printf '%s' "$input" | jq -r '.stop_hook_active // false')" = "true" ] && exit 0
+[ "$STE_HARNESS_NAME" = "antigravity" ] && ste_transcript_has_block "$input" "$STE_BLOCK_MARK" && exit 0
+
+# Claude Code and Codex send last_assistant_message. Antigravity sends no reply
+# text (finalModelOutput stays empty in 1.1.x), so read the transcript instead.
+message="$(printf '%s' "$input" | jq -r '.last_assistant_message // .finalModelOutput // ""')"
+[ -z "$message" ] && [ "$STE_HARNESS_NAME" = "antigravity" ] && message="$(ste_transcript_reply "$input")"
 [ -z "$message" ] && exit 0
 
 lint="$(ste_lint_script)" || exit 0
@@ -50,9 +56,8 @@ PY
 detail="$(printf '%s' "$report" | jq -r '.violations | to_entries | map(select(.value > 0)) | map("\(.key)=\(.value)") | join(", ")')"
 longest="$(printf '%s' "$report" | jq -r '.longest_sentence_words')"
 
-reason="STE LINT FAILED (${total} violations in ${words} words, ${per100} per 100 words; longest sentence ${longest} words). Found: ${detail}. Rewrite your whole last reply in ASD-STE100 Simplified Technical English. Keep every fact and every code block unchanged. Fix each listed violation: split long sentences, remove contractions and should/would/may/might/could, replace present perfect and -ing clauses with simple tenses, remove semicolons and filler words, and use one word per meaning. Do not mention this lint message. Output only the rewritten reply."
+reason="${STE_BLOCK_MARK} (${total} violations in ${words} words, ${per100} per 100 words; longest sentence ${longest} words). Found: ${detail}. Rewrite your whole last reply in ASD-STE100 Simplified Technical English. Keep every fact and every code block unchanged. Fix each listed violation: split long sentences, remove contractions and should/would/may/might/could, replace present perfect and -ing clauses with simple tenses, remove semicolons and filler words, and use one word per meaning. Do not mention this lint message. Output only the rewritten reply."
 
-[ -n "${STE_LOG:-}" ] && printf '%s block %s %s\n' "$(date -u +%FT%TZ)" "$(printf '%s' "$input" | jq -r '.session_id // "-"')" "$per100" >> "$STE_LOG"
-# Claude Code, Codex and Gemini CLI all read {"decision":"block","reason":...}.
-jq -n --arg r "$reason" '{decision:"block", reason:$r}'
+[ -n "${STE_LOG:-}" ] && printf '%s block %s %s\n' "$(date -u +%FT%TZ)" "$(printf '%s' "$input" | jq -r '.session_id // .conversationId // "-"')" "$per100" >> "$STE_LOG"
+ste_emit_block "$reason"
 exit 0

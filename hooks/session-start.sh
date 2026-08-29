@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # SessionStart hook: when STE mode is on, load the full rule set as context.
-# Runs under Claude Code, Codex, Copilot CLI and Gemini CLI. common.sh picks the output format.
+# Runs under Claude Code, Codex, Copilot CLI and Antigravity CLI. common.sh picks the output format.
 set -u
 source "$(dirname "${BASH_SOURCE[0]}")/common.sh"
 
