@@ -179,8 +179,15 @@ def report(records):
     for r in records:
         key = (r.get("harness", HARNESS), r["model"])
         groups.setdefault(key, {}).setdefault(r["arm"], []).append(r)
-    # Claude harness first, then the rest by name; inside a harness, by model name.
-    keys = sorted(groups, key=lambda k: (k[0] != HARNESS, k[0], k[1]))
+    # Claude harness first. Inside a harness, the most powerful model first.
+    POWER = ["claude-fable", "claude-opus", "claude-sonnet", "claude-haiku",
+             "gpt-5.6", "gpt-5.4", "gpt-5"]
+    def power_rank(model):
+        for i, prefix in enumerate(POWER):
+            if model.startswith(prefix):
+                return i
+        return len(POWER)
+    keys = sorted(groups, key=lambda k: (k[0] != HARNESS, k[0], power_rank(k[1]), k[1]))
     prompt_ids = sorted(set(r["id"] for r in records))
 
     lines = ["# Results", "",

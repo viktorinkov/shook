@@ -75,11 +75,11 @@ The benchmark sends the same 50 writing prompts (docs, code reviews, error messa
 | Model | n prompts | skill alone (v/100w) | hook on (v/100w) | hook strict (v/100w) | reduction (strict vs skill) |
 |---|---:|---:|---:|---:|---:|
 | `claude-fable-5` (claude) | 50 | 2.41 | 0.51 | 0.22 | 91% |
-| `claude-haiku-4-5-20251001` (claude) | 50 | 2.74 | 0.97 | 0.71 | 74% |
 | `claude-opus-5` (claude) | 50 | 2.68 | 0.41 | 0.45 | 83% |
 | `claude-sonnet-5` (claude) | 50 | 2.38 | 0.47 | 0.32 | 87% |
-| `gpt-5.4-mini` (codex) | 50 | 1.66 | 0.51 | 0.63 | 62% |
+| `claude-haiku-4-5-20251001` (claude) | 50 | 2.74 | 0.97 | 0.71 | 74% |
 | `gpt-5.6-sol` (codex) | 50 | 0.94 | 0.59 | 0.34 | 64% |
+| `gpt-5.4-mini` (codex) | 50 | 1.66 | 0.51 | 0.63 | 62% |
 
 The per-model table for Claude Fable 5 shows the three-row shape:
 
