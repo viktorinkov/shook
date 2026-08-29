@@ -115,13 +115,26 @@ The reminder on every prompt is the part that an output style cannot do. A syste
 
 ## 🔧 Tune the lint gate
 
-When all three conditions are true, the gate blocks the reply:
+The gate blocks a reply when all three conditions are true:
 
-- The reply has at least `min-words` words (default 40).
-- The reply has at least `min-total` violations (default 2).
-- The density is above `max-per-100w` violations per 100 words (default 1.0).
+- The reply has at least `min-words` words.
+- The reply has at least `min-total` violations.
+- The density is above `max-per-100w` violations per 100 words.
 
 A tight gate makes Claude rewrite short, correct replies. A loose gate lets slop through. The gate runs at most one rewrite per turn.
+
+### Keys
+
+| Key | What it sets | Default | Env variable |
+|---|---|---:|---|
+| `min-words` | Shortest reply the gate checks, in words. | 40 | `STE_MIN_WORDS` |
+| `min-total` | Fewest violations that can block a reply. | 2 | `STE_MIN_TOTAL` |
+| `max-per-100w` | Highest violation density the gate allows, per 100 words. | 1.0 | `STE_MAX_PER_100W` |
+| `lint-type` | Rule set the linter uses: `descriptive` or `procedural`. | `descriptive` | `STE_LINT_TYPE` |
+
+Use the env variables for CI and scripts.
+
+### Commands
 
 | Command | What it does |
 |---|---|
@@ -130,9 +143,14 @@ A tight gate makes Claude rewrite short, correct replies. A loose gate lets slop
 | `/ste project set <key> <value>` | Writes the setting for the current repo. |
 | `/ste unset <key>`, `/ste project unset <key>` | Removes one setting. |
 
-Keys: `min-words`, `min-total`, `max-per-100w`, and `lint-type` (`descriptive` or `procedural`, default `descriptive`).
+### Where settings live
 
-Files: global `~/.claude/simple-english-hook.json`, per repo `<repo>/.claude/ste-config.json`. The repo file is safe to commit. Precedence: environment variable, then the repo file, then the global file, then the default. For CI and scripts, the environment variables `STE_MIN_WORDS`, `STE_MIN_TOTAL`, `STE_MAX_PER_100W`, and `STE_LINT_TYPE` still work.
+The gate reads each key from the first place that has it:
+
+1. Env variable
+2. Repo file: `<repo>/.claude/ste-config.json`. Safe to commit.
+3. Global file: `~/.claude/simple-english-hook.json`
+4. Default
 
 ## What it does not touch
 
@@ -201,18 +219,20 @@ See [GitHub Copilot CLI](docs/other-harnesses.md#github-copilot-cli) in the harn
 Cursor loads no plugins, so an install script writes the files that Cursor reads: an always-on rule file and four hooks.
 
 ```bash
+git clone https://github.com/AminBlg/SimpleEnglish ~/SimpleEnglish
+export STE_PLUGIN_DIR=~/SimpleEnglish
 git clone https://github.com/viktorinkov/shook ~/shook
 cd <your-project>
 bash ~/shook/cursor-install.sh strict
 ```
 
-Toggle with `/ste on`, `/ste strict`, `/ste off`, or `/ste status` in the Agent chat, or with `cursor-install.sh <mode>` from the shell. Modes `on` and `strict` both work: the rule file applies the rules to every request, and the `stop` hook sends a failed reply back once. No badge, and no live Cursor session verified it yet. Details: [docs/other-harnesses.md](docs/other-harnesses.md#cursor).
+Toggle with `/ste on`, `/ste strict`, `/ste off`, or `/ste status` in the Agent chat, or with `cursor-install.sh <mode>` from the shell. Modes `on` and `strict` both work: the rule file applies the rules to every request, and the `stop` hook sends a failed reply back once. Details: [docs/other-harnesses.md](docs/other-harnesses.md#cursor).
 
 ## ❓ FAQ
 
 **Why not just prompt it?** A prompt line is one instruction among many. In the benchmark, the simple-english skill fired on its own in 27 of 50 replies on Fable 5. This plugin does not depend on a decision. It runs every turn.
 
-**Why not the simple-english output style?** The output style is a good one-shot. It has no reminder per turn and no gate. See the five-arm table for Sonnet 5 in [`evals/results/RESULTS.md`](evals/results/RESULTS.md).
+**Why not the simple-english output style?** The output style is a good one-shot. It has no reminder per turn and no gate.
 
 **What does strict mode cost?** If a reply fails, one extra rewrite. In the benchmark, strict mode blocked 6 of 50 replies on Fable 5. See the token column.
 
