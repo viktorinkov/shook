@@ -26,7 +26,7 @@ message="$(printf '%s' "$input" | jq -r '.last_assistant_message // .finalModelO
 [ -z "$message" ] && exit 0
 
 lint="$(ste_lint_script)" || exit 0
-report="$(printf '%s' "$message" | python3 "$lint" --type "${STE_LINT_TYPE:-descriptive}" - 2>/dev/null)" || exit 0
+report="$(printf '%s' "$message" | python3 "$lint" --type "$(ste_setting lint_type)" - 2>/dev/null)" || exit 0
 
 # Record the score for the status line badge: "<per100> <total> <words>".
 printf '%s' "$report" | jq -r '"\(.violations_per_100w) \(.violations_total) \(.words)"' > "$STE_SCORE" 2>/dev/null || true
@@ -42,11 +42,13 @@ per100="$(printf '%s' "$report" | jq -r '.violations_per_100w')"
 # The linter is a regex pass. It undercounts, and it flags some valid words
 # (for example "could" in a quoted user sentence). A gate that is too tight
 # makes Claude rewrite short, correct replies. A gate that is too loose lets
-# slop through. Defaults below: skip short replies, allow one slip, block when
-# the density of violations is above STE_MAX_PER_100W.
-min_words="${STE_MIN_WORDS:-40}"
-max_per100="${STE_MAX_PER_100W:-1.0}"
-min_total="${STE_MIN_TOTAL:-2}"
+# slop through. Defaults: skip short replies, allow one slip, block when the
+# density of violations is above max-per-100w. Tune the gate with "/ste config"
+# and "/ste set <key> <value>". ste_setting in common.sh resolves each value:
+# environment variable, then project file, then global file, then default.
+min_words="$(ste_setting min_words)"
+max_per100="$(ste_setting max_per_100w)"
+min_total="$(ste_setting min_total)"
 
 should_block=$(python3 - "$words" "$total" "$per100" "$min_words" "$max_per100" "$min_total" <<'PY'
 import sys

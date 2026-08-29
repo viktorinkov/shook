@@ -1,6 +1,6 @@
 {
   "name": "simple-english-hook",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Enforces ASD-STE100 Simplified Technical English on every Codex reply. Hooks, $ste toggle, strict lint gate. Companion to the simple-english plugin.",
   "author": {
     "name": "Viktor Minchev",

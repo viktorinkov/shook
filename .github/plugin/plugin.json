@@ -1,7 +1,7 @@
 {
   "name": "simple-english-hook",
   "description": "Enforces ASD-STE100 Simplified Technical English on every Copilot CLI reply. Loads the rules at session start. Companion to the simple-english plugin.",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "author": {
     "name": "Viktor Minchev",
     "url": "https://github.com/viktorinkov"

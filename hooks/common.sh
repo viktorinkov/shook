@@ -161,6 +161,119 @@ ste_set_project_mode() {
   esac
 }
 
+# --- settings ---
+# Strict-mode gate settings. Keys are snake_case in the files and kebab-case on
+# the command line (min-words, min-total, max-per-100w, lint-type).
+#   min_words     integer >= 1              default 40           shorter replies skip the gate
+#   min_total     integer >= 1              default 2            fewer violations skip the gate
+#   max_per_100w  number >= 0               default 1.0          block above this density
+#   lint_type     descriptive | procedural  default descriptive  linter profile
+#
+# Resolution order for each key, first hit wins:
+#   1. environment variable: STE_MIN_WORDS, STE_MIN_TOTAL, STE_MAX_PER_100W, STE_LINT_TYPE
+#   2. <project>/.claude/ste-config.json          written by "/ste project set"
+#   3. $STE_STATE_DIR/simple-english-hook.json    written by "/ste set"
+#   4. the default
+STE_SETTING_KEYS="min_words min_total max_per_100w lint_type"
+
+ste_config_file() { printf '%s' "$STE_STATE_DIR/simple-english-hook.json"; }
+# The project file follows STE_PROJECT_DIR, which ste_project_from_input can change.
+ste_project_config_file() { printf '%s' "${STE_PROJECT_DIR:+$STE_PROJECT_DIR/.claude/ste-config.json}"; }
+
+ste_setting_default() {
+  case "$1" in
+    min_words)    printf '40' ;;
+    min_total)    printf '2' ;;
+    max_per_100w) printf '1.0' ;;
+    lint_type)    printf 'descriptive' ;;
+  esac
+}
+
+# min_words -> STE_MIN_WORDS
+ste_setting_env() { printf 'STE_%s' "$(printf '%s' "$1" | tr '[:lower:]' '[:upper:]')"; }
+# min_words -> min-words
+ste_setting_cli() { printf '%s' "$1" | tr '_' '-'; }
+# min-words -> min_words. Fails on an unknown key.
+ste_setting_key() {
+  local k
+  k="$(printf '%s' "$1" | tr '-' '_')"
+  case " $STE_SETTING_KEYS " in *" $k "*) printf '%s' "$k" ;; *) return 1 ;; esac
+}
+
+# True when the value is valid for the key.
+ste_setting_valid() {
+  case "$1" in
+    min_words|min_total) printf '%s' "$2" | grep -Eq '^[1-9][0-9]*$' ;;
+    max_per_100w)        printf '%s' "$2" | grep -Eq '^([0-9]+\.?[0-9]*|\.[0-9]+)$' ;;
+    lint_type)           case "$2" in descriptive|procedural) return 0 ;; *) return 1 ;; esac ;;
+    *) return 1 ;;
+  esac
+}
+
+# One key from one config file. Prints nothing when the file, the key, or a valid value is missing.
+ste_setting_from_file() {
+  local f="$1" key="$2" v
+  [ -n "$f" ] && [ -f "$f" ] || return 0
+  v="$(jq -r --arg k "$key" '.[$k] // "" | tostring' "$f" 2>/dev/null)"
+  ste_setting_valid "$key" "$v" && printf '%s' "$v"
+  return 0
+}
+
+# Where the active value comes from: env | project | global | default
+ste_setting_source() {
+  local key="$1" name
+  name="$(ste_setting_env "$key")"
+  [ -n "${!name:-}" ] && ste_setting_valid "$key" "${!name}" && { printf 'env'; return; }
+  [ -n "$(ste_setting_from_file "$(ste_project_config_file)" "$key")" ] && { printf 'project'; return; }
+  [ -n "$(ste_setting_from_file "$(ste_config_file)" "$key")" ] && { printf 'global'; return; }
+  printf 'default'
+}
+
+# The active value of one key.
+ste_setting() {
+  local key="$1" name
+  case "$(ste_setting_source "$key")" in
+    env)     name="$(ste_setting_env "$key")"; printf '%s' "${!name}" ;;
+    project) ste_setting_from_file "$(ste_project_config_file)" "$key" ;;
+    global)  ste_setting_from_file "$(ste_config_file)" "$key" ;;
+    *)       ste_setting_default "$key" ;;
+  esac
+}
+
+# ste_write_setting <file> <snake_key> <value>   An empty value removes the key.
+# Writes a JSON object with jq. Numbers stay numbers. Atomic: temp file, then mv.
+ste_write_setting() {
+  local f="$1" key="$2" v="$3" cur tmp
+  [ -n "$f" ] || return 1
+  mkdir -p "$(dirname "$f")" || return 1
+  cur="$( [ -f "$f" ] && jq -c 'if type == "object" then . else {} end' "$f" 2>/dev/null )"
+  [ -n "$cur" ] || cur='{}'
+  tmp="$(mktemp "$(dirname "$f")/.ste-config.XXXXXX")" || return 1
+  if printf '%s' "$cur" | jq --arg k "$key" --arg v "$v" \
+       'if $v == "" then del(.[$k]) else .[$k] = (if $k == "lint_type" then $v else ($v | tonumber) end) end' \
+       > "$tmp" 2>/dev/null; then
+    mv "$tmp" "$f"
+  else
+    rm -f "$tmp"; return 1
+  fi
+}
+
+# The table that "/ste config" prints. One line per key: value, source, env name.
+ste_config_table() {
+  local key f
+  printf 'STE CONFIG (mode: %s, source: %s):\n' "$(ste_mode)" "$(ste_mode_source)"
+  printf '  %-13s %-12s %-8s %s\n' key value source env
+  for key in $STE_SETTING_KEYS; do
+    printf '  %-13s %-12s %-8s %s\n' "$(ste_setting_cli "$key")" "$(ste_setting "$key")" \
+      "$(ste_setting_source "$key")" "$(ste_setting_env "$key")"
+  done
+  f="$(ste_config_file)"
+  printf '  global file:  %s (%s)\n' "$f" "$([ -f "$f" ] && printf 'present' || printf 'absent')"
+  f="$(ste_project_config_file)"
+  printf '  project file: %s (%s)\n' "${f:-none}" "$([ -n "$f" ] && [ -f "$f" ] && printf 'present' || printf 'absent')"
+}
+# --- end settings ---
+
 # The toggle command as the user types it in this harness.
 ste_cmd() {
   case "$STE_HARNESS_NAME" in
